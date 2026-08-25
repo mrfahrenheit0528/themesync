@@ -13,22 +13,27 @@ class NodeInstantiator:
         """
         Assigns worst-case baseline geometric tensors (w, h) based on the 
         Spatial Hierarchy Index to establish the Implicit Geometric Hierarchy.
-        Lower index = Higher priority (larger footprint).
         """
         if struct_class == "repeating_group":
-            # Signature blocks are constrained to the bottom quadrant
             return [self.canvas_w * 0.2, self.canvas_h * 0.1]
             
-        # Calculate text nodes
+        if struct_class == "image_node" and hierarchy_index == 0:
+            # Institution Logo: Restrict to a compact, square-like bounding box
+            return [self.canvas_w * 0.15, self.canvas_w * 0.15]
+            
+        # Calculate text nodes based on shifted hierarchy
         if hierarchy_index == 1:
-            # Primary Header (e.g., Student Name)
-            return [self.canvas_w * 0.6, self.canvas_h * 0.15]
+            # Issuing Organization
+            return [self.canvas_w * 0.5, self.canvas_h * 0.08]
         elif hierarchy_index == 2:
-            # Secondary Header (e.g., Course Title)
-            return [self.canvas_w * 0.4, self.canvas_h * 0.08]
+            # Certificate Title
+            return [self.canvas_w * 0.6, self.canvas_h * 0.15]
+        elif hierarchy_index == 4:
+            # Student Name
+            return [self.canvas_w * 0.5, self.canvas_h * 0.1]
         else:
-            # Default fallback tensor
-            return [self.canvas_w * 0.25, self.canvas_h * 0.05]
+            # Default fallback tensor for standard text lines (Presentation Line, Date, etc.)
+            return [self.canvas_w * 0.3, self.canvas_h * 0.05]
 
     def instantiate_payload(self, payload_path):
         """
