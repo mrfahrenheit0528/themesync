@@ -11,32 +11,54 @@ class HeuristicEvaluator:
         self.beta = 0.5   
         self.gamma = 2.0  
 
+    def _clamp_coordinates(self, bbox):
+        """
+        Mathematically enforces coordinate boundaries to prevent 
+        off-canvas state mutations from skewing penalty metrics.
+        """
+        x, y, w, h = bbox
+        
+        clamped_x = max(0.0, min(float(x), self.canvas_w - w))
+        clamped_y = max(0.0, min(float(y), self.canvas_h - h))
+        
+        return [clamped_x, clamped_y, w, h]
+
     def calculate_alignment_penalty(self, nodes):
-        """Penalizes deviation from the vertical center axis."""
+        """Penalizes deviation from the vertical center axis, normalized by node count."""
         center_axis = self.canvas_w / 2.0
-        penalty = 0.0
+        penalty_sum = 0.0
+        valid_nodes = 0
         
         for node in nodes:
-            # Skip repeating groups for central axis calculation
             if node.get('structural_class') == 'repeating_group':
                 continue
                 
-            node_cx = node['bbox'][0] + (node['bbox'][2] / 2.0)
-            deviation = abs(center_axis - node_cx)
-            penalty += deviation / self.canvas_w
+            clamped_bbox = self._clamp_coordinates(node['bbox'])
+            node_cx = clamped_bbox[0] + (clamped_bbox[2] / 2.0)
             
-        return penalty
+            deviation = abs(center_axis - node_cx)
+            penalty_sum += deviation / self.canvas_w
+            valid_nodes += 1
+            
+        # Avert ZeroDivisionError and normalize the penalty metric
+        return (penalty_sum / valid_nodes) if valid_nodes > 0 else 0.0
 
     def calculate_whitespace_penalty(self, nodes):
         """Evaluates spatial distribution by measuring vertical crowding."""
+        if len(nodes) < 2:
+            return 0.0
+            
         penalty = 0.0
         
-        # Sort vertically to measure sequential gaps
-        sorted_nodes = sorted(nodes, key=lambda n: n['bbox'][1])
+        # Sort vertically using clamped coordinates to ensure accurate sequential gaps
+        sorted_nodes = sorted(nodes, key=lambda n: self._clamp_coordinates(n['bbox'])[1])
         
         for i in range(len(sorted_nodes) - 1):
-            current_bottom = sorted_nodes[i]['bbox'][1] + sorted_nodes[i]['bbox'][3]
-            next_top = sorted_nodes[i+1]['bbox'][1]
+            current_bbox = self._clamp_coordinates(sorted_nodes[i]['bbox'])
+            next_bbox = self._clamp_coordinates(sorted_nodes[i+1]['bbox'])
+            
+            current_bottom = current_bbox[1] + current_bbox[3]
+            next_top = next_bbox[1]
             gap = next_top - current_bottom
             
             # Penalize exceptionally tight spatial gaps
@@ -49,14 +71,15 @@ class HeuristicEvaluator:
 
     def calculate_legibility_penalty(self, nodes):
         """
-        Penalizes text nodes placed in structurally risky zones.
-        In a full run, this evaluates overlap with the SIFT saliency map.
+        Penalizes text nodes placed in structurally risky boundary zones.
         """
         penalty = 0.0
         
         for node in nodes:
             if node.get('structural_class') == 'text_node':
-                x, y, w, h = node['bbox']
+                clamped_bbox = self._clamp_coordinates(node['bbox'])
+                x, y, w, h = clamped_bbox
+                
                 # Penalize text pushing into the 50px outer margins
                 if x < 50 or (x + w) > (self.canvas_w - 50):
                     penalty += 0.8
@@ -84,10 +107,9 @@ class HeuristicEvaluator:
         }
 
 def test_optimization():
-    print("Executing Phase 3: Heuristic Layout Evaluation...")
+    print("Executing Phase 3: Heuristic Layout Evaluation (Fortified)...")
     evaluator = HeuristicEvaluator()
     
-    # Target the layout state file edited during Phase 2
     state_file = "data/processed/layout_state_v1_edited.json"
     
     try:
@@ -97,7 +119,6 @@ def test_optimization():
         print(f" -> Whitespace Penalty (P_space): {scores['P_space']}")
         print(f" -> Legibility Penalty (P_legibility): {scores['P_legibility']}")
         print(f"\nTotal Layout Cost (C_total): {scores['Total_Cost']}")
-        print("Objective: The GNN will be trained to minimize this C_total variable.")
         
     except Exception as e:
         print(f"Optimization Engine Failure: {e}")
