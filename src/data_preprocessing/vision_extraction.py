@@ -14,8 +14,8 @@ class VisionExtractor:
 
     def extract_lab_centroids(self, image_array):
         """
-        Converts images to CIE L*a*b* space and executes K-Means clustering 
-        directly on the GPU utilizing PyTorch tensor operations.
+        Converts images to CIE L*a*b* space and conditionally executes K-Means clustering.
+        Includes a variance check to prevent algorithm failure on grayscale assets.
         """
         img = np.array(image_array)
         if len(img.shape) == 2:
@@ -24,13 +24,33 @@ class VisionExtractor:
         img_resized = cv2.resize(img, (150, 150), interpolation=cv2.INTER_AREA)
         lab_image = cv2.cvtColor(img_resized, cv2.COLOR_RGB2LAB)
         
-        # Flatten and convert to a PyTorch tensor on the GPU
-        pixels = lab_image.reshape((-1, 3))
-        pixels_tensor = torch.tensor(pixels, dtype=torch.float32, device=self.device)
+        # Calculate statistical variance across the a* and b* chromatic channels
+        a_variance = np.var(lab_image[:, :, 1])
+        b_variance = np.var(lab_image[:, :, 2])
+        epsilon = 1e-4 
         
-        # GPU-Accelerated K-Means execution
-        centroids = self._kmeans_cuda(pixels_tensor)
-        return centroids
+        if a_variance < epsilon and b_variance < epsilon:
+            # Fallback: Perform 1D clustering strictly on the L* (Luminance) channel via CPU
+            l_channel = lab_image[:, :, 0].reshape(-1, 1)
+            
+            from sklearn.cluster import KMeans
+            kmeans = KMeans(n_clusters=self.n_colors, random_state=42, n_init=10)
+            kmeans.fit(l_channel)
+            
+            # Reconstruct the 3D centroids by padding a* and b* with 128.0 (neutral gray)
+            safe_centroids = np.zeros((self.n_colors, 3))
+            safe_centroids[:, 0] = kmeans.cluster_centers_.flatten()
+            safe_centroids[:, 1] = 128.0 
+            safe_centroids[:, 2] = 128.0
+            
+            return safe_centroids.tolist()
+            
+        else:
+            # Chromatic variance is optimal; execute standard 3D clustering on the GPU
+            pixels = lab_image.reshape((-1, 3))
+            pixels_tensor = torch.tensor(pixels, dtype=torch.float32, device=self.device)
+            centroids = self._kmeans_cuda(pixels_tensor)
+            return centroids
 
     def _kmeans_cuda(self, pixels_tensor, max_iter=100):
         """
