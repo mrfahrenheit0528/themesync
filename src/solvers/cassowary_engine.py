@@ -36,28 +36,60 @@ class ConstraintSolverEngine:
         
         return v
 
+    def _calculate_dynamic_height(self, node, tensor_w, tensor_h):
+        """
+        Calculates vertical tensor wrapping if the maximum character limit
+        exceeds the estimated horizontal capacity.
+        """
+        # Retrieve max_characters if it exists in the payload mapping
+        max_chars = node.get('max_characters', 0)
+        if max_chars > 0 and node.get('structural_class') == 'text_node':
+            # Heuristic: Assume average character width is 12 pixels
+            estimated_text_width = max_chars * 12.0
+            if estimated_text_width > tensor_w:
+                rows_required = int((estimated_text_width // tensor_w) + 1)
+                # Expand the mathematical height to accommodate the wrapped rows
+                return tensor_h * rows_required
+        return tensor_h
+
     def execute_relational_logic(self, instantiated_nodes):
         sorted_nodes = sorted(instantiated_nodes, key=lambda n: n['spatial_hierarchy'])
         
         singular_nodes = [n for n in sorted_nodes if n['structural_class'] != 'repeating_group']
         repeating_nodes = [n for n in sorted_nodes if n['structural_class'] == 'repeating_group']
         
+        # Registry to detect overlapping Hard Constraints
+        locked_coordinates = set()
+        
         # 1. Apply Hard Constraints and Variable Initialization
         for node in sorted_nodes:
             node_id = node['node_id']
-            tensor_w, tensor_h = node['bbox'][2], node['bbox'][3]
+            tensor_w = node['bbox'][2]
+            
+            # Dynamically recalculate height to prevent text overflow
+            tensor_h = self._calculate_dynamic_height(node, tensor_w, node['bbox'][3])
+            
             current_var = self._initialize_node_variables(node_id, tensor_w, tensor_h)
             
             if node.get('constraint_type') == "Hard":
-                # Isolate the human-edited coordinates and lock them strictly
                 human_x, human_y = node['bbox'][0], node['bbox'][1]
-                self.solver.addConstraint(current_var['left'] == human_x)
-                self.solver.addConstraint(current_var['top'] == human_y)
+                coord_key = f"{human_x}_{human_y}"
+                
+                # Spatial Conflict Resolution
+                if coord_key in locked_coordinates:
+                    print(f"Warning: Hard Constraint Collision detected for {node_id} at [{human_x}, {human_y}]. Applying spatial offset.")
+                    # Offset the node and downgrade to a strong soft constraint to prevent a solver crash
+                    self.solver.addConstraint((current_var['left'] == human_x + 20) | kiwi.strength.strong)
+                    self.solver.addConstraint((current_var['top'] == human_y + tensor_h + 10) | kiwi.strength.strong)
+                else:
+                    self.solver.addConstraint(current_var['left'] == human_x)
+                    self.solver.addConstraint(current_var['top'] == human_y)
+                    locked_coordinates.add(coord_key)
 
         # 2. Compute Fluid Vertical Flow for Soft Singular Nodes
         for i, node in enumerate(singular_nodes):
             if node.get('constraint_type') == "Hard":
-                continue # Bypass relational positioning for locked nodes
+                continue 
                 
             node_id = node['node_id']
             current_var = self.variables[node_id]
@@ -98,39 +130,13 @@ class ConstraintSolverEngine:
 
         self.solver.updateVariables()
         
-        print(f"Optimal Vertical Gap Calculated: {round(self.v_gap.value(), 2)} pixels")
-        
         resolved_nodes = []
         for node in instantiated_nodes:
             v = self.variables[node['node_id']]
             node['bbox'][0] = round(v['left'].value(), 2)
             node['bbox'][1] = round(v['top'].value(), 2)
+            # Serialize the potentially recalculated dynamic height
+            node['bbox'][3] = round(v['bottom'].value() - v['top'].value(), 2) 
             resolved_nodes.append(node)
             
         return resolved_nodes
-
-def test_state_ingestion():
-    print("Executing Phase 2: State Synchronization and Recalculation...")
-    engine = ConstraintSolverEngine()
-    
-    state_file = "data/processed/layout_state_v1_edited.json"
-    
-    if not os.path.exists(state_file):
-        print(f"Error: {state_file} missing. Run state_manager.py first.")
-        return
-        
-    try:
-        with open(state_file, 'r') as f:
-            edited_nodes = json.load(f)
-            
-        recalculated_nodes = engine.execute_relational_logic(edited_nodes)
-        
-        print("\nSpatial Coordinates Recalculated with Hard Constraints:")
-        for n in recalculated_nodes:
-            print(f" -> Node: {n['node_id']} | Computed [X, Y]: [{n['bbox'][0]}, {n['bbox'][1]}] | Constraint: {n.get('constraint_type', 'Soft')}")
-            
-    except Exception as e:
-        print(f"Constraint Solver Failure: {e}")
-
-if __name__ == "__main__":
-    test_state_ingestion()
