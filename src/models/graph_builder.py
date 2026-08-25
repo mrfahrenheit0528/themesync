@@ -99,6 +99,7 @@ class LayoutGraphBuilder:
         graph = Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
         return graph
 
+
 def test_builder():
     print("Loading processed tensor dataset...")
     dataset = ds.load_from_disk("data/processed/cgl_tensor_dataset")
