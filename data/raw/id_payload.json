@@ -1,0 +1,36 @@
+{
+    "domain_context": "identification_card",
+    "target_aspect_ratio": "2:3",
+    "variable_schema": {
+        "{{Institution_Logo}}": {
+            "structural_class": "image_node",
+            "spatial_hierarchy": 0,
+            "lock_aspect_ratio": true
+        },
+        "{{ID_Photo}}": {
+            "structural_class": "image_node",
+            "spatial_hierarchy": 1,
+            "lock_aspect_ratio": true
+        },
+        "{{Student_Name}}": {
+            "structural_class": "text_node",
+            "spatial_hierarchy": 2,
+            "max_characters": 50
+        },
+        "{{Department_Title}}": {
+            "structural_class": "text_node",
+            "spatial_hierarchy": 3,
+            "max_characters": 60
+        },
+        "{{Student_ID_Number}}": {
+            "structural_class": "text_node",
+            "spatial_hierarchy": 4,
+            "max_characters": 20
+        },
+        "{{Barcode_Block}}": {
+            "structural_class": "image_node",
+            "spatial_hierarchy": 5,
+            "lock_aspect_ratio": false
+        }
+    }
+}
