@@ -1,0 +1,240 @@
+{
+  "payload": "data/raw/academic_payload.json",
+  "canvas": {
+    "w": 1200,
+    "h": 900
+  },
+  "trials": 3,
+  "gnn_guided": [
+    {
+      "timings_ms": {
+        "instantiation_ms": 0.12,
+        "gnn_inference_ms": 537.51,
+        "csp_resolution_ms": 0.54,
+        "ranking_ms": 5.94,
+        "total_ms": 544.11
+      },
+      "mean_iou": 0.0909,
+      "per_node_iou": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "constraint_f1": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hard_preserved": 0,
+        "total_hard": 0
+      },
+      "heuristic_fitness": {
+        "P_align": 0.2747,
+        "P_space": 0.0,
+        "P_legibility": 1.6,
+        "C_total": 3.4747
+      },
+      "winner_candidate": "Candidate_1_Metaheuristic",
+      "num_nodes": 11
+    },
+    {
+      "timings_ms": {
+        "instantiation_ms": 0.09,
+        "gnn_inference_ms": 19.97,
+        "csp_resolution_ms": 0.46,
+        "ranking_ms": 6.04,
+        "total_ms": 26.56
+      },
+      "mean_iou": 0.0909,
+      "per_node_iou": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "constraint_f1": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hard_preserved": 0,
+        "total_hard": 0
+      },
+      "heuristic_fitness": {
+        "P_align": 0.2623,
+        "P_space": 0.5,
+        "P_legibility": 1.6,
+        "C_total": 3.7123
+      },
+      "winner_candidate": "Candidate_1_Metaheuristic",
+      "num_nodes": 11
+    },
+    {
+      "timings_ms": {
+        "instantiation_ms": 0.08,
+        "gnn_inference_ms": 20.47,
+        "csp_resolution_ms": 0.44,
+        "ranking_ms": 9.48,
+        "total_ms": 30.47
+      },
+      "mean_iou": 0.0909,
+      "per_node_iou": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "constraint_f1": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hard_preserved": 0,
+        "total_hard": 0
+      },
+      "heuristic_fitness": {
+        "P_align": 0.2674,
+        "P_space": 1.0,
+        "P_legibility": 1.6,
+        "C_total": 3.9674
+      },
+      "winner_candidate": "Candidate_4_Metaheuristic",
+      "num_nodes": 11
+    }
+  ],
+  "baseline": [
+    {
+      "timings_ms": {
+        "instantiation_ms": 0.09,
+        "gnn_inference_ms": 0.0,
+        "csp_resolution_ms": 0.45,
+        "ranking_ms": 9.11,
+        "total_ms": 9.65
+      },
+      "mean_iou": 0.0909,
+      "per_node_iou": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "constraint_f1": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hard_preserved": 0,
+        "total_hard": 0
+      },
+      "heuristic_fitness": {
+        "P_align": 0.2826,
+        "P_space": 1.5,
+        "P_legibility": 3.2,
+        "C_total": 7.4326
+      },
+      "winner_candidate": "Candidate_4_Metaheuristic",
+      "num_nodes": 11
+    },
+    {
+      "timings_ms": {
+        "instantiation_ms": 0.09,
+        "gnn_inference_ms": 0.0,
+        "csp_resolution_ms": 0.45,
+        "ranking_ms": 6.37,
+        "total_ms": 6.91
+      },
+      "mean_iou": 0.0909,
+      "per_node_iou": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "constraint_f1": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hard_preserved": 0,
+        "total_hard": 0
+      },
+      "heuristic_fitness": {
+        "P_align": 0.2808,
+        "P_space": 1.0,
+        "P_legibility": 2.4,
+        "C_total": 5.5808
+      },
+      "winner_candidate": "Candidate_1_Metaheuristic",
+      "num_nodes": 11
+    },
+    {
+      "timings_ms": {
+        "instantiation_ms": 0.09,
+        "gnn_inference_ms": 0.0,
+        "csp_resolution_ms": 0.57,
+        "ranking_ms": 6.26,
+        "total_ms": 6.92
+      },
+      "mean_iou": 0.0909,
+      "per_node_iou": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "constraint_f1": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "hard_preserved": 0,
+        "total_hard": 0
+      },
+      "heuristic_fitness": {
+        "P_align": 0.2894,
+        "P_space": 0.0,
+        "P_legibility": 3.2,
+        "C_total": 6.6894
+      },
+      "winner_candidate": "Candidate_2_Metaheuristic",
+      "num_nodes": 11
+    }
+  ]
+}
