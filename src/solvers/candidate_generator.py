@@ -108,9 +108,18 @@ def execute_exploration():
             predicted_coords = model(graph_data)
             
         # Update payload with intelligent predictions (Slice strictly the first 4 spatial tensors)
+        # Update payload with intelligent predictions (Strict X, Y isolation)
         for idx, node in enumerate(raw_nodes):
-            # Apply the [:4] slice to isolate x, y, w, h from the 8D output
-            node['bbox'] = predicted_coords[idx][:4].cpu().numpy().tolist()
+            # 1. Extract the predicted origins
+            pred_x = predicted_coords[idx][0].item()
+            pred_y = predicted_coords[idx][1].item()
+            
+            # 2. Preserve the mathematically instantiated footprints
+            original_w = node['bbox'][2]
+            original_h = node['bbox'][3]
+            
+            # 3. Reconstruct the tensor: [Predicted X, Predicted Y, Static W, Static H]
+            node['bbox'] = [round(pred_x, 2), round(pred_y, 2), original_w, original_h]
             
     # 3. Resolve Constraints via Cassowary
     print(" -> Enforcing Hard Constraints via Cassowary...")

@@ -58,53 +58,42 @@ class ConstraintSolverEngine:
         singular_nodes = [n for n in sorted_nodes if n['structural_class'] != 'repeating_group']
         repeating_nodes = [n for n in sorted_nodes if n['structural_class'] == 'repeating_group']
         
-        # Registry to detect overlapping Hard Constraints
         locked_coordinates = set()
         
-        # 1. Apply Hard Constraints and Variable Initialization
+        # 1. Initialization and Dynamic Height Calculation
         for node in sorted_nodes:
             node_id = node['node_id']
             tensor_w = node['bbox'][2]
-            
-            # Dynamically recalculate height to prevent text overflow
             tensor_h = self._calculate_dynamic_height(node, tensor_w, node['bbox'][3])
             
             current_var = self._initialize_node_variables(node_id, tensor_w, tensor_h)
             
+            human_x, human_y = node['bbox'][0], node['bbox'][1]
+            coord_key = f"{human_x}_{human_y}"
+            
             if node.get('constraint_type') == "Hard":
-                human_x, human_y = node['bbox'][0], node['bbox'][1]
-                coord_key = f"{human_x}_{human_y}"
-                
-                # Spatial Conflict Resolution
                 if coord_key in locked_coordinates:
-                    print(f"Warning: Hard Constraint Collision detected for {node_id} at [{human_x}, {human_y}]. Applying spatial offset.")
-                    # Offset the node and downgrade to a strong soft constraint to prevent a solver crash
                     self.solver.addConstraint((current_var['left'] == human_x + 20) | kiwi.strength.strong)
                     self.solver.addConstraint((current_var['top'] == human_y + tensor_h + 10) | kiwi.strength.strong)
                 else:
                     self.solver.addConstraint(current_var['left'] == human_x)
                     self.solver.addConstraint(current_var['top'] == human_y)
                     locked_coordinates.add(coord_key)
-
-        # 2. Compute Fluid Vertical Flow for Soft Singular Nodes
-        for i, node in enumerate(singular_nodes):
-            if node.get('constraint_type') == "Hard":
-                continue 
-                
-            node_id = node['node_id']
-            current_var = self.variables[node_id]
-            tensor_w = node['bbox'][2]
-            
-            center_x = (self.canvas_w - tensor_w) / 2
-            self.solver.addConstraint(current_var['left'] == center_x)
-            
-            if i == 0:
-                self.solver.addConstraint(current_var['top'] == 40)
             else:
-                prev_var = self.variables[singular_nodes[i-1]['node_id']]
-                self.solver.addConstraint(current_var['top'] >= prev_var['bottom'] + self.v_gap)
+                # 2. THE CORRECTION: Ingest GNN predictions as medium-strength pull constraints
+                # This mathematically encourages the solver to respect the neural prediction
+                self.solver.addConstraint((current_var['left'] == human_x) | kiwi.strength.medium)
+                self.solver.addConstraint((current_var['top'] == human_y) | kiwi.strength.medium)
 
-        # 3. Compute Horizontal Distribution for Soft Repeating Groups
+        # 3. Enforce Strict Non-Overlap (Strong Constraints)
+        for i in range(1, len(singular_nodes)):
+            curr_var = self.variables[singular_nodes[i]['node_id']]
+            prev_var = self.variables[singular_nodes[i-1]['node_id']]
+            
+            # Prevent occlusion, but allow the GNN's vertical gaps to dictate the final placement
+            self.solver.addConstraint((curr_var['top'] >= prev_var['bottom'] + self.v_gap) | kiwi.strength.strong)
+
+        # 4. Compute Horizontal Distribution for Soft Repeating Groups
         if repeating_nodes:
             count = len(repeating_nodes)
             total_w = sum(n['bbox'][2] for n in repeating_nodes)
@@ -123,9 +112,9 @@ class ConstraintSolverEngine:
                 
                 if singular_nodes:
                     last_singular_var = self.variables[singular_nodes[-1]['node_id']]
-                    self.solver.addConstraint(current_var['top'] >= last_singular_var['bottom'] + self.v_gap)
+                    self.solver.addConstraint((current_var['top'] >= last_singular_var['bottom'] + self.v_gap) | kiwi.strength.strong)
                 
-                self.solver.addConstraint(current_var['left'] == current_x)
+                self.solver.addConstraint((current_var['left'] == current_x) | kiwi.strength.weak)
                 current_x += (tensor_w + gap)
 
         self.solver.updateVariables()
@@ -135,7 +124,6 @@ class ConstraintSolverEngine:
             v = self.variables[node['node_id']]
             node['bbox'][0] = round(v['left'].value(), 2)
             node['bbox'][1] = round(v['top'].value(), 2)
-            # Serialize the potentially recalculated dynamic height
             node['bbox'][3] = round(v['bottom'].value() - v['top'].value(), 2) 
             resolved_nodes.append(node)
             
