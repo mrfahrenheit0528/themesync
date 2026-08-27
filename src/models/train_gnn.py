@@ -47,7 +47,7 @@ class DifferentiableHeuristicLoss(nn.Module):
 
 def execute_training():
     print("Initializing Fortified HPC Training Environment...")
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda:2' if torch.cuda.is_available() else 'cpu')
     
     dataset = ds.load_from_disk("data/processed/cgl_tensor_dataset")
     builder = LayoutGraphBuilder()
@@ -93,6 +93,11 @@ def execute_training():
         avg_loss = total_loss / len(loader)
         if (epoch + 1) % 10 == 0:
             print(f" -> Epoch [{epoch+1}/{epochs}] | Converged Loss: {avg_loss:.4f}")
+
+# APPEND THIS TO SAVE THE CONVERGED WEIGHTS
+    save_path = "themesync_gnn_v1.pth"
+    torch.save(model.state_dict(), save_path)
+    print(f"\nTraining Complete. Neural Network weights serialized to: {save_path}")
 
 if __name__ == "__main__":
     execute_training()

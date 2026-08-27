@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+<rect width="1200" height="900" fill="#FFFFFF" />
+<rect x="510.0" y="40.0" width="180.0" height="179.87" fill="#FFCC00" stroke="#003366" stroke-width="2" opacity="0.8" />
+<text x="600.0" y="129.935" font-family="Montserrat, sans-serif" font-size="14" fill="#003366" text-anchor="middle" dominant-baseline="middle">[{{Institution_Logo}}]</text>
+<rect x="300.0" y="234.87" width="600.0" height="-1.0" fill="none" stroke="#003366" stroke-width="1" stroke-dasharray="4" />
+<text x="600.0" y="234.37" font-family="Montserrat, sans-serif" font-weight="700" font-size="24" fill="#003366" text-anchor="middle" dominant-baseline="middle">{{Issuing_Organization}}</text>
+<rect x="240.0" y="248.87" width="720.0" height="-0.04" fill="none" stroke="#003366" stroke-width="1" stroke-dasharray="4" />
+<text x="600.0" y="248.85" font-family="Montserrat, sans-serif" font-weight="700" font-size="24" fill="#003366" text-anchor="middle" dominant-baseline="middle">{{Certificate_Title}}</text>
+<rect x="420.0" y="263.83" width="360.0" height="-1.0" fill="none" stroke="#003366" stroke-width="1" stroke-dasharray="4" />
+<text x="600.0" y="263.33" font-family="Montserrat, sans-serif" font-weight="700" font-size="24" fill="#003366" text-anchor="middle" dominant-baseline="middle">{{Presentation_Line}}</text>
+<rect x="300.0" y="277.83" width="600.0" height="-1.0" fill="none" stroke="#003366" stroke-width="1" stroke-dasharray="4" />
+<text x="600.0" y="277.33" font-family="Montserrat, sans-serif" font-weight="700" font-size="24" fill="#003366" text-anchor="middle" dominant-baseline="middle">{{Student_Name}}</text>
+<rect x="420.0" y="291.83" width="360.0" height="-1.0" fill="none" stroke="#003366" stroke-width="1" stroke-dasharray="4" />
+<text x="600.0" y="291.33" font-family="Montserrat, sans-serif" font-weight="700" font-size="24" fill="#003366" text-anchor="middle" dominant-baseline="middle">{{Citation_Body}}</text>
+<rect x="420.0" y="305.83" width="360.0" height="-1.0" fill="none" stroke="#003366" stroke-width="1" stroke-dasharray="4" />
+<text x="600.0" y="305.33" font-family="Montserrat, sans-serif" font-weight="700" font-size="24" fill="#003366" text-anchor="middle" dominant-baseline="middle">{{Date_Issued}}</text>
+<rect x="420.0" y="319.83" width="360.0" height="-1.0" fill="none" stroke="#003366" stroke-width="1" stroke-dasharray="4" />
+<text x="600.0" y="319.33" font-family="Montserrat, sans-serif" font-weight="700" font-size="24" fill="#003366" text-anchor="middle" dominant-baseline="middle">{{Certificate_ID}}</text>
+</svg>
