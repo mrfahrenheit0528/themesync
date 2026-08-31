@@ -1,0 +1,232 @@
+{
+  "run_id": "20260827_225737",
+  "timestamp": "2026-08-27T22:57:37.141213",
+  "config": {
+    "trials": 3,
+    "domains": [
+      "certificate",
+      "id"
+    ],
+    "population": 5
+  },
+  "results": {
+    "certificate": {
+      "domain_label": "Academic Certificate (4:3)",
+      "gnn_trials": [
+        {
+          "use_gnn": true,
+          "timings_ms": {
+            "instantiation": 0.13,
+            "gnn_inference": 438.63,
+            "csp_resolution": 0.52,
+            "ranking": 4.27,
+            "total": 443.55
+          },
+          "mean_iou": 0.0909,
+          "C_total": 5.5761,
+          "P_align": 0.2761,
+          "P_space": 1.0,
+          "P_legibility": 2.4,
+          "num_nodes": 11,
+          "latency_total": 443.55
+        },
+        {
+          "use_gnn": true,
+          "timings_ms": {
+            "instantiation": 0.13,
+            "gnn_inference": 13.05,
+            "csp_resolution": 0.45,
+            "ranking": 4.73,
+            "total": 18.36
+          },
+          "mean_iou": 0.0909,
+          "C_total": 5.0839,
+          "P_align": 0.2839,
+          "P_space": 0.0,
+          "P_legibility": 2.4,
+          "num_nodes": 11,
+          "latency_total": 18.36
+        },
+        {
+          "use_gnn": true,
+          "timings_ms": {
+            "instantiation": 0.13,
+            "gnn_inference": 12.9,
+            "csp_resolution": 0.46,
+            "ranking": 4.66,
+            "total": 18.16
+          },
+          "mean_iou": 0.0909,
+          "C_total": 6.6889,
+          "P_align": 0.2889,
+          "P_space": 0.0,
+          "P_legibility": 3.2,
+          "num_nodes": 11,
+          "latency_total": 18.16
+        }
+      ],
+      "base_trials": [
+        {
+          "use_gnn": false,
+          "timings_ms": {
+            "instantiation": 0.14,
+            "gnn_inference": 0.01,
+            "csp_resolution": 0.6,
+            "ranking": 3.68,
+            "total": 4.43
+          },
+          "mean_iou": 0.0909,
+          "C_total": 7.4281,
+          "P_align": 0.2781,
+          "P_space": 1.5,
+          "P_legibility": 3.2,
+          "num_nodes": 11,
+          "latency_total": 4.43
+        },
+        {
+          "use_gnn": false,
+          "timings_ms": {
+            "instantiation": 0.1,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.44,
+            "ranking": 4.33,
+            "total": 4.87
+          },
+          "mean_iou": 0.0909,
+          "C_total": 6.6898,
+          "P_align": 0.2898,
+          "P_space": 0.0,
+          "P_legibility": 3.2,
+          "num_nodes": 11,
+          "latency_total": 4.87
+        },
+        {
+          "use_gnn": false,
+          "timings_ms": {
+            "instantiation": 0.14,
+            "gnn_inference": 0.01,
+            "csp_resolution": 0.49,
+            "ranking": 3.82,
+            "total": 4.46
+          },
+          "mean_iou": 0.0909,
+          "C_total": 5.3265,
+          "P_align": 0.2765,
+          "P_space": 0.5,
+          "P_legibility": 2.4,
+          "num_nodes": 11,
+          "latency_total": 4.46
+        }
+      ]
+    },
+    "id": {
+      "domain_label": "Identification Card (2:3)",
+      "gnn_trials": [
+        {
+          "use_gnn": true,
+          "timings_ms": {
+            "instantiation": 0.11,
+            "gnn_inference": 12.23,
+            "csp_resolution": 0.26,
+            "ranking": 2.71,
+            "total": 15.31
+          },
+          "mean_iou": 0.2024,
+          "C_total": 1.5283,
+          "P_align": 0.2783,
+          "P_space": 2.5,
+          "P_legibility": 0.0,
+          "num_nodes": 6,
+          "latency_total": 15.31
+        },
+        {
+          "use_gnn": true,
+          "timings_ms": {
+            "instantiation": 0.07,
+            "gnn_inference": 11.88,
+            "csp_resolution": 0.22,
+            "ranking": 3.19,
+            "total": 15.36
+          },
+          "mean_iou": 0.2024,
+          "C_total": 0.5485,
+          "P_align": 0.2985,
+          "P_space": 0.5,
+          "P_legibility": 0.0,
+          "num_nodes": 6,
+          "latency_total": 15.36
+        },
+        {
+          "use_gnn": true,
+          "timings_ms": {
+            "instantiation": 0.07,
+            "gnn_inference": 11.52,
+            "csp_resolution": 0.21,
+            "ranking": 3.51,
+            "total": 15.31
+          },
+          "mean_iou": 0.2024,
+          "C_total": 0.5287,
+          "P_align": 0.2787,
+          "P_space": 0.5,
+          "P_legibility": 0.0,
+          "num_nodes": 6,
+          "latency_total": 15.31
+        }
+      ],
+      "base_trials": [
+        {
+          "use_gnn": false,
+          "timings_ms": {
+            "instantiation": 0.07,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.23,
+            "ranking": 3.6,
+            "total": 3.91
+          },
+          "mean_iou": 0.2024,
+          "C_total": 1.9102,
+          "P_align": 0.3102,
+          "P_space": 0.0,
+          "P_legibility": 0.8,
+          "num_nodes": 6,
+          "latency_total": 3.91
+        },
+        {
+          "use_gnn": false,
+          "timings_ms": {
+            "instantiation": 0.11,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.26,
+            "ranking": 3.25,
+            "total": 3.63
+          },
+          "mean_iou": 0.2024,
+          "C_total": 0.2876,
+          "P_align": 0.2876,
+          "P_space": 0.0,
+          "P_legibility": 0.0,
+          "num_nodes": 6,
+          "latency_total": 3.63
+        },
+        {
+          "use_gnn": false,
+          "timings_ms": {
+            "instantiation": 0.08,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.2,
+            "ranking": 3.1,
+            "total": 3.37
+          },
+          "mean_iou": 0.2024,
+          "C_total": 1.8798,
+          "P_align": 0.2798,
+          "P_space": 0.0,
+          "P_legibility": 0.8,
+          "num_nodes": 6,
+          "latency_total": 3.37
+        }
+      ]
+    }
+  }
+}
