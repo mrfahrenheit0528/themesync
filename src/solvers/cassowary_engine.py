@@ -7,15 +7,14 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'm
 from dynamic_instantiation import NodeInstantiator
 
 class ConstraintSolverEngine:
-    def __init__(self, canvas_width=1200, canvas_height=900):
+    def __init__(self, canvas_width=1200, canvas_height=900, margin=50.0, default_vgap=16.0):
+        self.canvas_w = float(canvas_width)
+        self.canvas_h = float(canvas_height)
+        self.margin_x = float(margin)
+        self.margin_y = float(margin)
+        self.default_vgap = float(default_vgap)
         self.solver = kiwi.Solver()
-        self.canvas_w = canvas_width
-        self.canvas_h = canvas_height
         self.variables = {}
-        
-        self.v_gap = kiwi.Variable('vertical_gap')
-        self.solver.addConstraint(self.v_gap >= 5)
-        self.solver.addConstraint((self.v_gap == 15) | kiwi.strength.strong)
 
     def _initialize_node_variables(self, node_id, width, height):
         v = {
@@ -26,96 +25,95 @@ class ConstraintSolverEngine:
         }
         self.variables[node_id] = v
         
+        # Dimensions are exact for the given tensor
         self.solver.addConstraint(v['right'] == v['left'] + width)
         self.solver.addConstraint(v['bottom'] == v['top'] + height)
         
-        self.solver.addConstraint(v['left'] >= 0)
-        self.solver.addConstraint(v['top'] >= 0)
-        self.solver.addConstraint(v['right'] <= self.canvas_w)
-        self.solver.addConstraint(v['bottom'] <= self.canvas_h)
+        # Margins & boundary containment
+        self.solver.addConstraint((v['left'] >= self.margin_x) | kiwi.strength.strong)
+        self.solver.addConstraint((v['top'] >= self.margin_y) | kiwi.strength.strong)
+        self.solver.addConstraint((v['right'] <= self.canvas_w - self.margin_x) | kiwi.strength.strong)
+        self.solver.addConstraint((v['bottom'] <= self.canvas_h - self.margin_y) | kiwi.strength.strong)
         
         return v
 
-    def _calculate_dynamic_height(self, node, tensor_w, tensor_h):
-        """
-        Calculates vertical tensor wrapping if the maximum character limit
-        exceeds the estimated horizontal capacity.
-        """
-        # Retrieve max_characters if it exists in the payload mapping
-        max_chars = node.get('max_characters', 0)
-        if max_chars > 0 and node.get('structural_class') == 'text_node':
-            # Heuristic: Assume average character width is 12 pixels
-            estimated_text_width = max_chars * 12.0
-            if estimated_text_width > tensor_w:
-                rows_required = int((estimated_text_width // tensor_w) + 1)
-                # Expand the mathematical height to accommodate the wrapped rows
-                return tensor_h * rows_required
-        return tensor_h
-
     def execute_relational_logic(self, instantiated_nodes):
-        sorted_nodes = sorted(instantiated_nodes, key=lambda n: n['spatial_hierarchy'])
+        self.solver = kiwi.Solver()
+        self.variables = {}
         
-        singular_nodes = [n for n in sorted_nodes if n['structural_class'] != 'repeating_group']
-        repeating_nodes = [n for n in sorted_nodes if n['structural_class'] == 'repeating_group']
+        self.v_gap = kiwi.Variable('vertical_gap')
+        self.solver.addConstraint(self.v_gap >= 6.0)
+        self.solver.addConstraint((self.v_gap == self.default_vgap) | kiwi.strength.medium)
+
+        sorted_nodes = sorted(instantiated_nodes, key=lambda n: n['spatial_hierarchy'])
+        singular_nodes = [n for n in sorted_nodes if n.get('structural_class') != 'repeating_group']
+        repeating_nodes = [n for n in sorted_nodes if n.get('structural_class') == 'repeating_group']
         
         locked_coordinates = set()
         
-        # 1. Initialization and Dynamic Height Calculation
-        for node in sorted_nodes:
+        # 1. Singular Nodes Initialization and Centering
+        for node in singular_nodes:
             node_id = node['node_id']
-            tensor_w = node['bbox'][2]
-            tensor_h = self._calculate_dynamic_height(node, tensor_w, node['bbox'][3])
+            tensor_w = float(node['bbox'][2])
+            tensor_h = float(node['bbox'][3])
             
             current_var = self._initialize_node_variables(node_id, tensor_w, tensor_h)
-            
-            human_x, human_y = node['bbox'][0], node['bbox'][1]
+            human_x, human_y = float(node['bbox'][0]), float(node['bbox'][1])
             coord_key = f"{human_x}_{human_y}"
             
             if node.get('constraint_type') == "Hard":
-                if coord_key in locked_coordinates:
-                    self.solver.addConstraint((current_var['left'] == human_x + 20) | kiwi.strength.strong)
-                    self.solver.addConstraint((current_var['top'] == human_y + tensor_h + 10) | kiwi.strength.strong)
-                else:
-                    self.solver.addConstraint(current_var['left'] == human_x)
-                    self.solver.addConstraint(current_var['top'] == human_y)
-                    locked_coordinates.add(coord_key)
+                self.solver.addConstraint(current_var['left'] == human_x)
+                self.solver.addConstraint(current_var['top'] == human_y)
+                locked_coordinates.add(coord_key)
             else:
-                # 2. THE CORRECTION: Ingest GNN predictions as medium-strength pull constraints
-                # This mathematically encourages the solver to respect the neural prediction
-                self.solver.addConstraint((current_var['left'] == human_x) | kiwi.strength.medium)
-                self.solver.addConstraint((current_var['top'] == human_y) | kiwi.strength.medium)
+                # Center alignment preference
+                target_center_x = max(self.margin_x, (self.canvas_w - tensor_w) / 2.0)
+                self.solver.addConstraint((current_var['left'] == target_center_x) | kiwi.strength.medium)
+                
+                # Soft vertical suggestion from GNN prediction if available
+                if human_y > self.margin_y:
+                    self.solver.addConstraint((current_var['top'] == human_y) | kiwi.strength.weak)
 
-        # 3. Enforce Strict Non-Overlap (Strong Constraints)
+        # 2. Strict Top-to-Bottom Stacking (Non-Overlap)
         for i in range(1, len(singular_nodes)):
             curr_var = self.variables[singular_nodes[i]['node_id']]
             prev_var = self.variables[singular_nodes[i-1]['node_id']]
-            
-            # Prevent occlusion, but allow the GNN's vertical gaps to dictate the final placement
             self.solver.addConstraint((curr_var['top'] >= prev_var['bottom'] + self.v_gap) | kiwi.strength.strong)
 
-        # 4. Compute Horizontal Distribution for Soft Repeating Groups
+        # 3. Repeating Groups (Signature Blocks)
         if repeating_nodes:
             count = len(repeating_nodes)
-            total_w = sum(n['bbox'][2] for n in repeating_nodes)
-            gap = (self.canvas_w - total_w) / (count + 1)
+            total_w = sum(float(n['bbox'][2]) for n in repeating_nodes)
+            avail_w = max(0.0, self.canvas_w - (2.0 * self.margin_x))
+            gap = max(15.0, (avail_w - total_w) / (count + 1))
             
-            current_x = gap
+            first_rep_var = None
             for i, node in enumerate(repeating_nodes):
-                if node.get('constraint_type') == "Hard":
-                    continue
-                    
                 node_id = node['node_id']
-                current_var = self.variables[node_id]
-                tensor_w = node['bbox'][2]
+                tensor_w = float(node['bbox'][2])
+                tensor_h = float(node['bbox'][3])
                 
-                self.solver.addConstraint(current_var['bottom'] <= self.canvas_h - 40)
+                current_var = self._initialize_node_variables(node_id, tensor_w, tensor_h)
                 
+                if first_rep_var is None:
+                    first_rep_var = current_var
+                else:
+                    self.solver.addConstraint((current_var['top'] == first_rep_var['top']) | kiwi.strength.strong)
+
+                if node.get('constraint_type') == "Hard":
+                    human_x, human_y = float(node['bbox'][0]), float(node['bbox'][1])
+                    self.solver.addConstraint(current_var['left'] == human_x)
+                    self.solver.addConstraint(current_var['top'] == human_y)
+                else:
+                    # Distribute repeating nodes evenly across the width
+                    target_x = self.margin_x + gap + (i * (tensor_w + gap))
+                    self.solver.addConstraint((current_var['left'] == target_x) | kiwi.strength.strong)
+                    self.solver.addConstraint((current_var['bottom'] <= self.canvas_h - self.margin_y) | kiwi.strength.strong)
+                
+                # Must be strictly below the last singular element
                 if singular_nodes:
                     last_singular_var = self.variables[singular_nodes[-1]['node_id']]
                     self.solver.addConstraint((current_var['top'] >= last_singular_var['bottom'] + self.v_gap) | kiwi.strength.strong)
-                
-                self.solver.addConstraint((current_var['left'] == current_x) | kiwi.strength.weak)
-                current_x += (tensor_w + gap)
 
         self.solver.updateVariables()
         

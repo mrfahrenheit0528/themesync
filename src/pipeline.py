@@ -205,9 +205,9 @@ def stage_csp_resolve(nodes: list, canvas_w: int, canvas_h: int):
     return resolved, elapsed
 
 
-def stage_rank_candidates(resolved_nodes: list, population: int):
+def stage_rank_candidates(resolved_nodes: list, population: int, canvas_w: int, canvas_h: int):
     t0 = time.perf_counter()
-    explorer = MetaheuristicStateExplorer()
+    explorer = MetaheuristicStateExplorer(canvas_width=canvas_w, canvas_height=canvas_h)
     ranked = explorer.generate_and_rank_candidates(resolved_nodes, population_size=population)
     elapsed = time.perf_counter() - t0
     _print_stage("4. Metaheuristic Candidate Ranking", elapsed)
@@ -342,7 +342,7 @@ def run_pipeline(
     # ------------------------------------------------------------------
     # Stage 4 — Metaheuristic Ranking
     # ------------------------------------------------------------------
-    ranked_candidates, timings["ranking"] = stage_rank_candidates(resolved_nodes, population)
+    ranked_candidates, timings["ranking"] = stage_rank_candidates(resolved_nodes, population, canvas_w, canvas_h)
 
     # ------------------------------------------------------------------
     # Stage 5 — Render winner
