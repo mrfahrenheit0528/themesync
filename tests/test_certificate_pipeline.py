@@ -70,15 +70,15 @@ def _run_pipeline(use_gnn: bool):
                 [0.0, 51.0, 102.0], [255.0, 204.0, 0.0], [255.0, 255.0, 255.0]
             ],
             "extracted_saliency_weight": 0.75,
+            "canvas_w": CANVAS_W,
+            "canvas_h": CANVAS_H,
         }
         graph_data = builder.build_graph(gnn_payload)
         if graph_data is not None:
             graph_data = graph_data.to(device)
             with torch.no_grad():
                 predicted = model(graph_data)
-            for idx, node in enumerate(nodes):
-                node["bbox"][0] = round(max(0.0, min(predicted[idx][0].item(), CANVAS_W - node["bbox"][2])), 2)
-                node["bbox"][1] = round(max(0.0, min(predicted[idx][1].item(), CANVAS_H - node["bbox"][3])), 2)
+            builder.apply_predictions(nodes, predicted, CANVAS_W, CANVAS_H)
 
     engine = ConstraintSolverEngine(canvas_width=CANVAS_W, canvas_height=CANVAS_H)
     resolved = engine.execute_relational_logic(nodes)

@@ -170,6 +170,8 @@ def stage_gnn_inference(nodes: list, canvas_w: int, canvas_h: int,
         "extracted_nodes":           nodes,
         "extracted_color_centroids": color_centroids,   # ← real or fallback
         "extracted_saliency_weight": saliency_weight,   # ← real or fallback
+        "canvas_w":                  canvas_w,
+        "canvas_h":                  canvas_h,
     }
 
     graph_data = builder.build_graph(gnn_payload)
@@ -180,11 +182,7 @@ def stage_gnn_inference(nodes: list, canvas_w: int, canvas_h: int,
         with torch.no_grad():
             predicted_coords = model(graph_data)
 
-        for idx, node in enumerate(nodes):
-            pred_x = max(0.0, min(predicted_coords[idx][0].item(), canvas_w - node["bbox"][2]))
-            pred_y = max(0.0, min(predicted_coords[idx][1].item(), canvas_h - node["bbox"][3]))
-            node["bbox"][0] = round(pred_x, 2)
-            node["bbox"][1] = round(pred_y, 2)
+        builder.apply_predictions(nodes, predicted_coords, canvas_w, canvas_h)
         predicted = True
 
     elapsed = time.perf_counter() - t0
@@ -205,9 +203,12 @@ def stage_csp_resolve(nodes: list, canvas_w: int, canvas_h: int):
     return resolved, elapsed
 
 
-def stage_rank_candidates(resolved_nodes: list, population: int, canvas_w: int, canvas_h: int):
+def stage_rank_candidates(resolved_nodes: list, population: int, canvas_w: int, canvas_h: int,
+                          saliency_map: dict = None):
     t0 = time.perf_counter()
-    explorer = MetaheuristicStateExplorer(canvas_width=canvas_w, canvas_height=canvas_h)
+    explorer = MetaheuristicStateExplorer(
+        canvas_width=canvas_w, canvas_height=canvas_h, saliency_map=saliency_map
+    )
     ranked = explorer.generate_and_rank_candidates(resolved_nodes, population_size=population)
     elapsed = time.perf_counter() - t0
     _print_stage("4. Metaheuristic Candidate Ranking", elapsed)
@@ -291,10 +292,12 @@ def run_pipeline(
     # Stage 0 — Template Ingestion (optional)
     # ------------------------------------------------------------------
     image_wh = None
+    saliency_map = None
     if template_image:
         ingestion_result, timings["template_ingestion"] = stage_template_ingestion(template_image)
         color_centroids = ingestion_result["color_centroids"]
         saliency_weight = ingestion_result["saliency_weight"]
+        saliency_map    = ingestion_result["saliency_map"]
         image_wh        = ingestion_result["image_wh"]
         ingestion_mode  = f"real image → {ingestion_result['palette_hex']}"
     else:
@@ -342,7 +345,9 @@ def run_pipeline(
     # ------------------------------------------------------------------
     # Stage 4 — Metaheuristic Ranking
     # ------------------------------------------------------------------
-    ranked_candidates, timings["ranking"] = stage_rank_candidates(resolved_nodes, population, canvas_w, canvas_h)
+    ranked_candidates, timings["ranking"] = stage_rank_candidates(
+        resolved_nodes, population, canvas_w, canvas_h, saliency_map=saliency_map
+    )
 
     # ------------------------------------------------------------------
     # Stage 5 — Render winner

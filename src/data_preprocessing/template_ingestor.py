@@ -71,6 +71,8 @@ class TemplateIngestor:
         dict with keys:
             color_centroids  : list of [L, a, b] triples (OpenCV convention)
             saliency_weight  : float in [0.0, 1.0]
+            saliency_map     : dict {"heatmap": [[...]], "image_wh": (w, h)} —
+                                per-region visual-noise density (Formula 3.15)
             image_wh         : tuple (width, height) in pixels
             palette_hex      : list of hex colour strings (for display/logging)
 
@@ -96,6 +98,9 @@ class TemplateIngestor:
         # Extract SIFT saliency weight (same call as in build_feature_tensors.py)
         saliency = self._extractor.calculate_saliency_weight(image_array)
 
+        # Extract the spatial saliency heatmap for per-node legibility scoring
+        saliency_map = self._extractor.calculate_saliency_map(image_array)
+
         # Convert centroids to readable hex strings for logging
         palette_hex = [self._lab_to_hex(c) for c in centroids]
 
@@ -105,6 +110,7 @@ class TemplateIngestor:
         return {
             "color_centroids": centroids,
             "saliency_weight": saliency,
+            "saliency_map":    saliency_map,
             "image_wh":        (w, h),
             "palette_hex":     palette_hex,
         }

@@ -161,6 +161,8 @@ def _run_once(payload_path: str, canvas_w: int, canvas_h: int,
                 [0.0, 51.0, 102.0], [255.0, 204.0, 0.0], [255.0, 255.0, 255.0]
             ],
             "extracted_saliency_weight": 0.75,
+            "canvas_w": canvas_w,
+            "canvas_h": canvas_h,
         }
         graph_data = builder.build_graph(gnn_payload)
 
@@ -168,13 +170,7 @@ def _run_once(payload_path: str, canvas_w: int, canvas_h: int,
             graph_data = graph_data.to(device)
             with torch.no_grad():
                 predicted_coords = model(graph_data)
-            for idx, node in enumerate(raw_nodes):
-                node["bbox"][0] = round(
-                    max(0.0, min(predicted_coords[idx][0].item(), canvas_w - node["bbox"][2])), 2
-                )
-                node["bbox"][1] = round(
-                    max(0.0, min(predicted_coords[idx][1].item(), canvas_h - node["bbox"][3])), 2
-                )
+            builder.apply_predictions(raw_nodes, predicted_coords, canvas_w, canvas_h)
             # Record post-GNN predictions for IoU calculation
             pre_csp_nodes = [dict(n, bbox=list(n["bbox"])) for n in raw_nodes]
 

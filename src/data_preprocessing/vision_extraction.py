@@ -46,40 +46,83 @@ class VisionExtractor:
             return safe_centroids.tolist()
             
         else:
-            # Chromatic variance is optimal; execute standard 3D clustering on the GPU
+            # Chromatic variance is optimal; execute standard 3D clustering on the GPU.
+            # k is not fixed — it is selected via the Elbow Method (Formula 3.1's
+            # WCSS, evaluated across a small range of k) so the extracted palette
+            # reflects the template's actual perceptual complexity rather than an
+            # assumed constant cluster count.
             pixels = lab_image.reshape((-1, 3))
             pixels_tensor = torch.tensor(pixels, dtype=torch.float32, device=self.device)
-            centroids = self._kmeans_cuda(pixels_tensor)
+            centroids = self._select_optimal_k_centroids(pixels_tensor)
             return centroids
 
-    def _kmeans_cuda(self, pixels_tensor, max_iter=100):
+    def _kmeans_cuda(self, pixels_tensor, k, max_iter=100):
         """
-        Internal mathematical solver for minimizing WCSS on CUDA hardware.
+        Internal mathematical solver for minimizing WCSS (Formula 3.1) on CUDA
+        hardware for a given k. Returns the fitted centroids and their WCSS.
         """
         # Randomly initialize centroids
-        idx = torch.randperm(pixels_tensor.shape[0], device=self.device)[:self.n_colors]
+        idx = torch.randperm(pixels_tensor.shape[0], device=self.device)[:k]
         centroids = pixels_tensor[idx]
-        
+
         for _ in range(max_iter):
             # Calculate Euclidean distances using PyTorch cdist
             distances = torch.cdist(pixels_tensor, centroids)
             labels = torch.argmin(distances, dim=1)
-            
+
             new_centroids = torch.zeros_like(centroids)
-            for k in range(self.n_colors):
-                mask = labels == k
+            for c in range(k):
+                mask = labels == c
                 if mask.any():
-                    new_centroids[k] = pixels_tensor[mask].mean(dim=0)
+                    new_centroids[c] = pixels_tensor[mask].mean(dim=0)
                 else:
-                    new_centroids[k] = centroids[k]
-                    
+                    new_centroids[c] = centroids[c]
+
             # Check for mathematical convergence
-            if torch.allclose(centroids, new_centroids, atol=1e-4):
-                break
+            converged = torch.allclose(centroids, new_centroids, atol=1e-4)
             centroids = new_centroids
-            
+            if converged:
+                break
+
+        distances = torch.cdist(pixels_tensor, centroids)
+        labels = torch.argmin(distances, dim=1)
+        wcss = sum(
+            ((pixels_tensor[labels == c] - centroids[c]) ** 2).sum().item()
+            for c in range(k) if (labels == c).any()
+        )
+
         # Return coordinates to CPU for JSON serialization
-        return centroids.cpu().tolist()
+        return centroids.cpu().tolist(), wcss
+
+    def _select_optimal_k_centroids(self, pixels_tensor, k_min=2, k_max=6):
+        """
+        Fits K-Means across k in [k_min, k_max], then selects k via the Elbow
+        Method: the k whose WCSS point has the greatest perpendicular distance
+        from the chord connecting the first and last points of the WCSS-vs-k
+        decay curve (the standard "knee" heuristic).
+        """
+        runs = {k: self._kmeans_cuda(pixels_tensor, k) for k in range(k_min, k_max + 1)}
+        ks = list(runs.keys())
+        wcss_vals = [runs[k][1] for k in ks]
+
+        best_k = self._find_elbow(ks, wcss_vals)
+        return runs[best_k][0]
+
+    @staticmethod
+    def _find_elbow(ks, wcss_vals):
+        x1, y1 = ks[0], wcss_vals[0]
+        x2, y2 = ks[-1], wcss_vals[-1]
+        line_len = ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
+        if line_len == 0:
+            return ks[0]
+
+        best_k, best_dist = ks[0], -1.0
+        for x, y in zip(ks, wcss_vals):
+            dist = abs((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - y2 * x1) / line_len
+            if dist > best_dist:
+                best_dist = dist
+                best_k = x
+        return best_k
 
     def calculate_saliency_weight(self, image_array):
         """
@@ -96,5 +139,33 @@ class VisionExtractor:
         total_pixels = gray_image.shape[0] * gray_image.shape[1]
         density = len(keypoints) / total_pixels if total_pixels > 0 else 0
         normalized_weight = min(density / 0.05, 1.0)
-        
+
         return normalized_weight
+
+    def calculate_saliency_map(self, image_array, grid_size=(20, 20)):
+        """
+        Bins SIFT keypoints into a coarse grid_size heatmap over the image,
+        giving a per-region visual-noise density map (see manuscript Figure 1,
+        panels c/d) rather than a single global scalar. Used by
+        HeuristicEvaluator.calculate_legibility_penalty (Formula 3.15) to
+        cross-reference text node bboxes against actual background noise.
+        """
+        img = np.array(image_array)
+        gray_image = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY) if len(img.shape) == 3 else img
+        h, w = gray_image.shape[:2]
+
+        keypoints = self.sift.detect(gray_image, None)
+
+        rows, cols = grid_size
+        heatmap = np.zeros((rows, cols), dtype=np.float32)
+        for kp in keypoints:
+            x, y = kp.pt
+            col = min(int((x / w) * cols), cols - 1) if w > 0 else 0
+            row = min(int((y / h) * rows), rows - 1) if h > 0 else 0
+            heatmap[row, col] += 1.0
+
+        max_count = heatmap.max()
+        if max_count > 0:
+            heatmap = heatmap / max_count
+
+        return {"heatmap": heatmap.tolist(), "image_wh": (w, h)}

@@ -92,15 +92,15 @@ def _run_single_trial(
                 [0.0, 51.0, 102.0], [255.0, 204.0, 0.0], [255.0, 255.0, 255.0]
             ],
             "extracted_saliency_weight": 0.75,
+            "canvas_w": canvas_w,
+            "canvas_h": canvas_h,
         }
         graph_data = builder.build_graph(gnn_payload)
         if graph_data is not None:
             graph_data = graph_data.to(device)
             with torch.no_grad():
                 predicted = model(graph_data)
-            for idx, node in enumerate(nodes):
-                node["bbox"][0] = round(max(0.0, min(predicted[idx][0].item(), canvas_w - node["bbox"][2])), 2)
-                node["bbox"][1] = round(max(0.0, min(predicted[idx][1].item(), canvas_h - node["bbox"][3])), 2)
+            builder.apply_predictions(nodes, predicted, canvas_w, canvas_h)
             pre_csp_nodes = [dict(n, bbox=list(n["bbox"])) for n in nodes]
     t_gnn = time.perf_counter() - t0
 

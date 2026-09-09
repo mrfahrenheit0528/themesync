@@ -13,11 +13,14 @@ from gnn_model import ThemeSyncGNN
 from graph_builder import LayoutGraphBuilder
 
 class MetaheuristicStateExplorer:
-    def __init__(self, canvas_width=1200, canvas_height=900, output_dir="data/processed/"):
+    def __init__(self, canvas_width=1200, canvas_height=900, output_dir="data/processed/",
+                 saliency_map=None):
         self.canvas_w = float(canvas_width)
         self.canvas_h = float(canvas_height)
         self.output_dir = output_dir
-        self.evaluator = HeuristicEvaluator(canvas_width=canvas_width, canvas_height=canvas_height)
+        self.evaluator = HeuristicEvaluator(
+            canvas_width=canvas_width, canvas_height=canvas_height, saliency_map=saliency_map
+        )
         os.makedirs(self.output_dir, exist_ok=True)
 
     def generate_and_rank_candidates(self, base_nodes, population_size=5):
@@ -94,7 +97,9 @@ def execute_exploration():
             [255.0, 204.0, 0.0],
             [255.0, 255.0, 255.0]
         ],
-        "extracted_saliency_weight": 0.75
+        "extracted_saliency_weight": 0.75,
+        "canvas_w": 1200.0,
+        "canvas_h": 900.0,
     }
     
     graph_data = builder.build_graph(gnn_payload)
@@ -102,12 +107,9 @@ def execute_exploration():
         graph_data = graph_data.to(device)
         with torch.no_grad():
             predicted_coords = model(graph_data)
-            
-        for idx, node in enumerate(raw_nodes):
-            pred_x = max(0.0, min(predicted_coords[idx][0].item(), 1200.0 - node['bbox'][2]))
-            pred_y = max(0.0, min(predicted_coords[idx][1].item(), 900.0 - node['bbox'][3]))
-            node['bbox'] = [round(pred_x, 2), round(pred_y, 2), node['bbox'][2], node['bbox'][3]]
-            
+
+        builder.apply_predictions(raw_nodes, predicted_coords, 1200.0, 900.0)
+
     # 3. Metaheuristic Ranking
     print(" -> Executing AAPA Heuristic Evaluation...")
     explorer = MetaheuristicStateExplorer(canvas_width=1200, canvas_height=900)

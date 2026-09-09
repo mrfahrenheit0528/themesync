@@ -58,28 +58,42 @@ class LayoutGraphBuilder:
     def build_graph(self, layout_data):
         """
         Constructs the h_i node vectors and e_ij edge matrices.
+
+        Positional features (bbox, dx/dy) are normalized by the layout's own
+        canvas dimensions so they sit on the same ~[0, 1] scale as colour
+        (/255) and saliency (already [0, 1]). Without this, raw pixel-scale
+        coordinates (up to 1000+) swamp the other features and the GRU-based
+        message passing degenerates to a near-constant output. Canvas size is
+        read from `canvas_w`/`canvas_h` (inference call sites) or falls back
+        to the CGL dataset's own `width`/`height` fields (training data),
+        then to the 1200x900 certificate default.
         """
         raw_nodes = layout_data['extracted_nodes']
-        
+
         # Apply the mathematical filter to reject negative or zero-area tensors
         nodes = [n for n in raw_nodes if self.validate_bounding_tensor(n['bbox'], n.get('semantic_category', 'unknown'))]
         num_nodes = len(nodes)
-        
+
         if num_nodes == 0:
             return None
+
+        canvas_w = float(layout_data.get('canvas_w', layout_data.get('width', 1200.0)) or 1200.0)
+        canvas_h = float(layout_data.get('canvas_h', layout_data.get('height', 900.0)) or 900.0)
 
         # 1. Construct Node Feature Vector: h_i = [x, y, w, h, c_r, c_g, c_b, s]
         node_features = []
         centroids = layout_data['extracted_color_centroids']
         saliency = layout_data['extracted_saliency_weight']
-        
+
         primary_color = centroids[0] if len(centroids) > 0 else [0.0, 0.0, 0.0]
+        norm_color = [c / 255.0 for c in primary_color]
 
         for node in nodes:
             bbox = node['bbox']
-            h_i = [bbox[0], bbox[1], bbox[2], bbox[3]] + primary_color + [saliency]
+            norm_bbox = [bbox[0] / canvas_w, bbox[1] / canvas_h, bbox[2] / canvas_w, bbox[3] / canvas_h]
+            h_i = norm_bbox + norm_color + [saliency]
             node_features.append(h_i)
-            
+
         x = torch.tensor(node_features, dtype=torch.float32)
 
         # 2. Construct Edge Index and Edge Features (e_ij)
@@ -91,13 +105,13 @@ class LayoutGraphBuilder:
                 if i != j:
                     box_i = nodes[i]['bbox']
                     box_j = nodes[j]['bbox']
-                    
-                    dx = box_j[0] - box_i[0]
-                    dy = box_j[1] - box_i[1]
-                    
+
+                    dx = (box_j[0] - box_i[0]) / canvas_w
+                    dy = (box_j[1] - box_i[1]) / canvas_h
+
                     iou = self.calculate_iou(box_i, box_j)
                     alignment = self.calculate_alignment(box_i, box_j)
-                    
+
                     edge_indices.append([i, j])
                     edge_attr.append([dx, dy, iou, alignment])
 
@@ -106,6 +120,29 @@ class LayoutGraphBuilder:
 
         graph = Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
         return graph
+
+    @staticmethod
+    def apply_predictions(nodes, predicted_coords, canvas_w, canvas_h):
+        """
+        Writes the GNN's predicted (x, y) back onto each node's bbox and marks
+        it with `gnn_predicted = True`, so downstream solvers (CSP) can tell a
+        real prediction apart from the untouched [0, 0] instantiation default
+        instead of guessing from the coordinate value.
+
+        The model predicts x, y as fractions of canvas_w/canvas_h (see
+        `build_graph`'s normalization) — this scales them back to pixels
+        before clamping to the node's valid on-canvas range.
+
+        Assumes `predicted_coords` is aligned 1:1 with `nodes` by index — true
+        as long as no node was filtered out by `build_graph`'s bbox validation.
+        """
+        for idx, node in enumerate(nodes):
+            pred_x = predicted_coords[idx][0].item() * canvas_w
+            pred_y = predicted_coords[idx][1].item() * canvas_h
+            node["bbox"][0] = round(max(0.0, min(pred_x, canvas_w - node["bbox"][2])), 2)
+            node["bbox"][1] = round(max(0.0, min(pred_y, canvas_h - node["bbox"][3])), 2)
+            node["gnn_predicted"] = True
+        return nodes
 
 
 def test_builder():

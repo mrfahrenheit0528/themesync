@@ -65,14 +65,19 @@ class ConstraintSolverEngine:
                 self.solver.addConstraint(current_var['left'] == human_x)
                 self.solver.addConstraint(current_var['top'] == human_y)
                 locked_coordinates.add(coord_key)
+            elif node.get('gnn_predicted', False):
+                # Honor the GNN's spatial prediction as the primary soft preference
+                # for both axes. Strength is `medium` — strong enough to actually
+                # win (nothing else competes for x/y at this tier), but still
+                # yields to margins/containment and the non-overlap stacking
+                # order, which stay at `strong`/`required`.
+                self.solver.addConstraint((current_var['left'] == human_x) | kiwi.strength.medium)
+                self.solver.addConstraint((current_var['top'] == human_y) | kiwi.strength.medium)
             else:
-                # Center alignment preference
+                # No GNN prediction available (baseline mode) — fall back to
+                # center alignment for x; y is left to the stacking order below.
                 target_center_x = max(self.margin_x, (self.canvas_w - tensor_w) / 2.0)
                 self.solver.addConstraint((current_var['left'] == target_center_x) | kiwi.strength.medium)
-                
-                # Soft vertical suggestion from GNN prediction if available
-                if human_y > self.margin_y:
-                    self.solver.addConstraint((current_var['top'] == human_y) | kiwi.strength.weak)
 
         # 2. Strict Top-to-Bottom Stacking (Non-Overlap)
         for i in range(1, len(singular_nodes)):

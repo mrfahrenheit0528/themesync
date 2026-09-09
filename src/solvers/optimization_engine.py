@@ -2,10 +2,11 @@ import json
 import os
 
 class HeuristicEvaluator:
-    def __init__(self, canvas_width=1200, canvas_height=900):
+    def __init__(self, canvas_width=1200, canvas_height=900, saliency_map=None,
+                 fallback_saliency=0.75, grid_margin=50.0):
         self.canvas_w = float(canvas_width)
         self.canvas_h = float(canvas_height)
-        
+
         # Static scalar weights calibrated per Chapter 3 (§3.2 / Formula 3.11)
         # alpha is assigned the highest weight to strictly penalize element overlap
         self.alpha = 50.0   # P_collision weight
@@ -13,6 +14,16 @@ class HeuristicEvaluator:
         self.gamma = 1.0    # P_whitespace weight
         self.delta = 1.5    # P_legibility weight
         self.r_target = 0.65 # Optimal whitespace ratio
+
+        # Formula 3.13: margin used to derive the dynamic structural grid G.
+        self.grid_margin = float(grid_margin)
+
+        # Formula 3.15: per-region background visual-noise density, from
+        # VisionExtractor.calculate_saliency_map. When no real template image
+        # is available (synthetic-fallback pipeline runs), a flat density is
+        # used instead of leaving the penalty at a permanent zero.
+        self.saliency_map = saliency_map
+        self.fallback_saliency = float(fallback_saliency)
 
     def _clamp_coordinates(self, bbox):
         x, y, w, h = bbox
@@ -50,23 +61,36 @@ class HeuristicEvaluator:
 
     def calculate_alignment_penalty(self, nodes):
         """
-        Formula 3.13: Measures pixel variance from the primary symmetry axis (centerline).
+        Formula 3.13: distance from each node's baseline x-coordinate to the
+        nearest gridline in a dynamically generated structural grid G. G is
+        derived from the canvas width and grid_margin (left margin, quarter,
+        center, three-quarter, right margin) rather than a single fixed
+        centerline, so nodes aligned to any structural column are rewarded,
+        not only ones aligned to dead-center.
         """
-        center_axis = self.canvas_w / 2.0
+        span = max(0.0, self.canvas_w - (2.0 * self.grid_margin))
+        grid = [
+            self.grid_margin,
+            self.grid_margin + span / 4.0,
+            self.grid_margin + span / 2.0,
+            self.grid_margin + (3.0 * span) / 4.0,
+            self.canvas_w - self.grid_margin,
+        ]
+
         penalty_sum = 0.0
         valid_nodes = 0
-        
+
         for node in nodes:
             if node.get('structural_class') == 'repeating_group':
                 continue
-                
+
             clamped_bbox = self._clamp_coordinates(node['bbox'])
             node_cx = clamped_bbox[0] + (clamped_bbox[2] / 2.0)
-            
-            deviation = abs(center_axis - node_cx)
-            penalty_sum += deviation / self.canvas_w
+
+            nearest_dist = min(abs(node_cx - g) for g in grid)
+            penalty_sum += nearest_dist / self.canvas_w
             valid_nodes += 1
-            
+
         return (penalty_sum / valid_nodes) if valid_nodes > 0 else 0.0
 
     def calculate_whitespace_penalty(self, nodes):
@@ -83,25 +107,62 @@ class HeuristicEvaluator:
 
     def calculate_legibility_penalty(self, nodes):
         """
-        Formula 3.15: Penalizes elements placed too close to canvas boundaries
-        or colliding with margin safety boundaries.
+        Formula 3.15: cross-references each text node's bbox (B_t) against the
+        SIFT/SURF-derived background Saliency Map (S) — text sitting over a
+        visually busy background is penalized, regardless of its distance
+        from the canvas margin (margin containment is already strictly
+        enforced by the CSP solver itself, so it isn't duplicated here).
+
+        Averaged across text nodes (rather than summed, as the raw pixel-sum
+        in Formula 3.15 would be) to keep this term on the same ~[0, 1] scale
+        as P_align/P_space/P_collision — otherwise, with alpha=50 weighting
+        collision as the dominant term by design, an unnormalized sum here
+        would silently swamp collision whenever it's near-zero (the CSP
+        guarantees zero overlap by construction), which contradicts that
+        design intent.
         """
-        penalty = 0.0
-        margin_threshold = 40.0
-        
-        for node in nodes:
-            x, y, w, h = node['bbox']
-            # Penalize protruding beyond margins
-            if x < margin_threshold:
-                penalty += (margin_threshold - x) / self.canvas_w
-            if (x + w) > (self.canvas_w - margin_threshold):
-                penalty += ((x + w) - (self.canvas_w - margin_threshold)) / self.canvas_w
-            if y < margin_threshold:
-                penalty += (margin_threshold - y) / self.canvas_h
-            if (y + h) > (self.canvas_h - margin_threshold):
-                penalty += ((y + h) - (self.canvas_h - margin_threshold)) / self.canvas_h
-                
-        return penalty
+        text_nodes = [n for n in nodes if n.get('structural_class') == 'text_node']
+        if not text_nodes:
+            return 0.0
+
+        penalty_sum = sum(self._mean_saliency_in_bbox(n['bbox']) for n in text_nodes)
+        return penalty_sum / len(text_nodes)
+
+    def _mean_saliency_in_bbox(self, bbox):
+        """
+        Samples the saliency heatmap over the region a text node's bbox
+        covers, scaling from canvas coordinates to the heatmap's native image
+        dimensions. Returns a flat fallback density when no real per-image
+        saliency map was supplied (synthetic-fallback pipeline runs).
+        """
+        if self.saliency_map is None:
+            return self.fallback_saliency
+
+        heatmap = self.saliency_map.get("heatmap") or []
+        rows = len(heatmap)
+        cols = len(heatmap[0]) if rows else 0
+        if rows == 0 or cols == 0:
+            return self.fallback_saliency
+
+        img_w, img_h = self.saliency_map.get("image_wh", (self.canvas_w, self.canvas_h))
+        scale_x = (img_w / self.canvas_w) if self.canvas_w > 0 else 1.0
+        scale_y = (img_h / self.canvas_h) if self.canvas_h > 0 else 1.0
+
+        x, y, w, h = bbox
+        x0, y0 = x * scale_x, y * scale_y
+        x1, y1 = (x + w) * scale_x, (y + h) * scale_y
+
+        col_start = max(0, min(cols - 1, int((x0 / img_w) * cols))) if img_w > 0 else 0
+        col_end   = max(0, min(cols - 1, int((x1 / img_w) * cols))) if img_w > 0 else 0
+        row_start = max(0, min(rows - 1, int((y0 / img_h) * rows))) if img_h > 0 else 0
+        row_end   = max(0, min(rows - 1, int((y1 / img_h) * rows))) if img_h > 0 else 0
+
+        values = [
+            heatmap[r][c]
+            for r in range(row_start, row_end + 1)
+            for c in range(col_start, col_end + 1)
+        ]
+        return (sum(values) / len(values)) if values else self.fallback_saliency
 
     def evaluate_layout(self, filepath_or_nodes):
         if isinstance(filepath_or_nodes, str):
