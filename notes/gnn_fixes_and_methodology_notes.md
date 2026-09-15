@@ -395,9 +395,31 @@ but the highest confidence among them is 0.11; `YOUR_TEMPLATE.png` produces
 Root cause: this isn't a bug, it's a genuine train/inference domain gap. The
 model generalizes fine *within* CGL-Dataset's own domain (mAP50=0.539 on its
 own held-out images — real-world advertising/e-commerce posters: product
-photography, dense marketing graphics). ThemeSync's actual target templates
-(formal academic certificates, ID cards — sparse, mostly whitespace,
-navy/gold institutional styling) are a visually different genre entirely.
+photography, dense marketing graphics).
+
+**Clarified with the group lead (2026-09-10), two rounds of correction:**
+first pass here wrongly assumed the 3 test files represented "certificates/
+ID cards"; second pass (while scoping the annotation batch) noted they're
+actually CSPC SSC event posters and concluded they were the *wrong* test
+images entirely. Neither is right. The group lead clarified the actual
+system design: a "master layout" in ThemeSync is **any generic branded
+design** a user uploads (poster, banner, letterhead) — YOLO parses it only
+to extract a visual *theme* (colors, logo style, decorative motifs), which
+then gets synced onto a certificate/ID layout generated separately via the
+existing JSON schema payload (`dynamic_instantiation.py`). YOLO never
+processes a certificate/ID image directly — those are a structurally
+different, already-working path. So `YOUR_TEMPLATE.png`/`YOUR_TEMPLATE2.jpg`
+(CSPC SSC event posters "La Serata"/"YUGTO 2026") **are exactly the right
+genre of test image** after all — the domain gap is real, just correctly
+characterized as *CGL's photographic/e-commerce ad imagery vs. ThemeSync's
+actual master-layout uploads (stylized, illustrated event-poster/branding
+graphics)* — not "posters vs. certificates" as either earlier pass assumed.
+This also resolves the open "replace vs. run alongside" integration
+question below: it's "alongside" by design — YOLO/OCR and the JSON schema
+payload serve two different concerns (master-layout theme extraction vs.
+certificate/ID structural generation), not two competing implementations of
+the same thing.
+
 This is the *same underlying issue* already flagged for the GNN back in
 Part 1, finding 1.2/1.3 — CGL-Dataset is out-of-domain relative to
 ThemeSync's actual use case — just now confirmed for YOLO too, and more
@@ -408,22 +430,23 @@ two separate ones: **both of ThemeSync's learned components share a training
 corpus that doesn't represent its actual deployment domain.**
 
 This means the "full build" as currently trained is **not yet usable on
-ThemeSync's real templates** — it works, but only on CGL-Dataset's own kind
-of imagery. Fixing this properly needs either (a) a small set of *real*
-certificate/ID master templates, hand-annotated with logo/text/underlay
-boxes, to fine-tune further on top of the CGL base (transfer learning from
-a reasonable starting point, rather than from scratch), or (b) accepting
-this as a documented limitation and future-work item alongside the GNN's
-own domain-mismatch finding. Did not attempt (a) this session — no such
-annotated set exists yet, and creating one is a data-collection task in its
-own right, not a code fix.
+ThemeSync's real master-layout uploads** — it works, but only on
+CGL-Dataset's own kind of imagery. Fixing this properly needs either (a) a
+small set of *real* master-layout images (event posters/branding assets —
+see `notes/annotation_guidelines.md`), hand-annotated with logo/text/
+underlay boxes, to fine-tune further on top of the CGL base (transfer
+learning from a reasonable starting point, rather than from scratch), or
+(b) accepting this as a documented limitation and future-work item
+alongside the GNN's own domain-mismatch finding. Option (a) is now in
+progress — see 3.6.
 
 **Integration (deliberately not done yet):** `layout_extractor.py` is
-standalone, not wired into `pipeline.py`'s default flow. Whether it should
-*replace* the JSON-schema-payload path or run *alongside* it (YOLO/OCR for
-the master template's own structural analysis, schema payload still for
-per-record dynamic content substitution) is an open design question — same
-treatment as the CNN, kept out of scope until you decide.
+standalone, not wired into `pipeline.py`'s default flow yet. As clarified
+above, the design intent is for it to run *alongside* the JSON-schema-payload
+path, not replace it — YOLO/OCR handles master-layout theme extraction,
+the schema payload still handles certificate/ID structural generation and
+per-record dynamic content. Actually wiring the two together is still
+pending, but the *design question* itself is resolved.
 
 ---
 
@@ -431,13 +454,213 @@ treatment as the CNN, kept out of scope until you decide.
 
 Gaps 1–5 are now addressed (5 via distillation for now, MOS retraining to
 follow once enough ratings exist). Item 6 (YOLOv8/OCR) is **confirmed** (not
-ambiguous — Chapter 3 p. 50 explicitly commits to it), **built and working
-on CGL-Dataset's own domain (mAP50=0.539), but confirmed NOT to transfer to
-ThemeSync's real templates** (certificates/ID cards) — a genuine domain-gap
-finding, not a bug, and the same underlying issue already flagged for the
-GNN. Not wired into the live pipeline (open design question either way, see
-3.5) — and shouldn't be, until the domain-gap is addressed, since it
-currently wouldn't detect anything useful on real inputs. The core
-architecture (CSP, GNN message-passing, FSM, hard/soft constraint typing)
-matches closely and is now working correctly end-to-end. Not yet
+ambiguous — Chapter 3 p. 50 explicitly commits to it), **built, initially
+confirmed NOT to transfer from CGL-Dataset's domain to ThemeSync's real
+master-layout uploads (generic branded designs — event posters, banners),
+then that gap was measurably closed** via a 65-image real-annotated
+fine-tuning batch — see 3.7. mAP50 on held-out real images rose from
+functionally zero to 0.325; a clean 3-image generalization check showed
+detection confidence rising from 0.20–0.46 to 0.69–0.74. Underlay detection
+remains weak pending more annotated instances. Not yet wired into the live
+pipeline — the design question of *how* it should integrate (alongside the
+JSON-schema-payload path, not replacing it) is resolved, just not
+implemented; when it is, it should load `themesync_yolo_v2.pt`, not `v1`.
+The core architecture (CSP, GNN message-passing, FSM, hard/soft constraint
+typing) matches closely and is now working correctly end-to-end. Not yet
 audited: Chapter 3 past p.49 (MOS protocol wording, Annexes) — see 2.5.
+
+### 3.6 Group decision (pending adviser sign-off): proceed with master-layout annotation
+
+Group lead's decision, made **without adviser consultation yet**: proceed
+with hand-annotating real master-layout images to fine-tune the YOLOv8
+detector, on the reasoning that extracting logo/text/underlay elements from
+the actual master layout is necessary to capture each upload's theme, and
+this is squarely within the manuscript's own commitment (p. 50) rather than
+a scope addition. Working plan: a 20–30 image feasibility batch first, then
+80–120 if it proves out; `embellishment` deliberately excluded (already
+failed on CGL's own data at 2.5% instance share, and is the least
+structurally important class here).
+
+**Target images, clarified 2026-09-10 (see also the corrected CRITICAL
+finding above):** master layouts are generic branded designs — event
+posters, banners, org promotional graphics — not certificate/ID templates.
+`YOUR_TEMPLATE.png`/`YOUR_TEMPLATE2.jpg`/`YOUR_TEMPLATE3.jpg`/
+`YOUR_TEMPLATE4.jpg` (CSPC SSC event posters, already in `data/raw/`) are
+valid examples of this genre; the batch should gather ~20–30 *more* images
+like them (more CSPC SSC posters, other orgs' posters/banners, stock
+poster/flyer templates to pad diversity if needed) — full sourcing and
+per-class annotation guidance is in `notes/annotation_guidelines.md`.
+Scaffold created this session: `data/raw/master_layout_batch/{images,
+labels}/` + `classes.txt`, and LabelImg installed into `themesync_env` as
+an offline annotation option (Roboflow also documented as a collaborative
+alternative).
+
+Full checklist of what to run past the adviser — this decision plus every
+other open question from this session — is now tracked separately in
+`notes/adviser_consultation_checklist.md`, so it doesn't get lost.
+
+**Correction caught mid-annotation (2026-09-11):** initial live guidance
+told the annotator to box an entire poster's background illustration as one
+`underlay` box, reasoning it "matches CGL's own convention" — that claim
+wasn't actually checked against real data and turned out to be wrong.
+Pulled real bounding boxes from CGL-Dataset-v2's train split directly:
+`underlay` boxes cover ~1–18% of canvas area and are consistently
+panel/bar-shaped (a colored strip behind a specific text line), never the
+full background; `embellishment` boxes are consistently under 1% of canvas
+area. No example checked had anything close to a full-canvas box — large
+background illustrations/characters are never annotated at all in CGL,
+regardless of visual prominence. Guidelines file corrected with the
+verified numbers; any full-canvas boxes already drawn need deleting.
+
+### 3.7 Fine-tuning result (2026-09-15): domain gap substantially closed
+
+Annotation batch completed: 65 real master-layout images (event posters —
+CSPC SSC and others), 1,103 hand-drawn boxes, 50 train / 15 valid split,
+exported from Roboflow. Two silent-failure-grade data issues caught and
+fixed before training, both worth remembering for next time:
+- **Class-order mismatch:** Roboflow's exported class order
+  (`embellishment, logo, text, underlay` — alphabetical by first-use order)
+  didn't match the pretrained checkpoint's fixed order
+  (`logo, text, underlay, embellishment`, from `CGL_CATEGORIES`).
+  Fine-tuning without catching this would have silently taught the model
+  wrong associations for every box, no error, just corrupted results —
+  caught only by actually reading the exported `data.yaml` instead of
+  assuming. Remapped before training.
+- **106 of 1,103 boxes were polygon annotations**, not standard bounding
+  boxes — some images got annotated with Roboflow's polygon tool instead
+  of the rectangle tool. The YOLOv8 export doesn't auto-convert these; it
+  dumps raw vertex lists that don't parse as `class cx cy w h`. Recovered
+  by computing each polygon's axis-aligned bounding box (min/max of its
+  vertices) rather than dropping the annotation work — no re-annotation
+  needed. (This also explains an earlier false alarm this session where a
+  rough box count came up short by exactly this many — the boxes were
+  never lost, just in a format that needed converting.)
+
+**Training:** `src/models/finetune_yolo_master_layout.py` (new) — second
+fine-tuning stage on top of `themesync_yolo_v1.pt` (the CGL-trained
+checkpoint) rather than from scratch, with the first 10 layers (backbone)
+frozen to reduce overfitting risk on a 65-image dataset. 80 epochs max,
+early-stopped via `patience=15`. Saved to `themesync_yolo_v2.pt` — `v1` left
+untouched for comparison.
+
+**Held-out validation (15 real images, never trained on):** mAP50 0.325,
+mAP50-95 0.186 — up from functionally zero before. Per-class: logo
+(0.515/0.359) and text (0.538/0.251) solid; embellishment moderate
+(0.218/0.119); **underlay weak** (0.0288/0.0139 — only 17 val instances,
+too few to learn from, consistent with the same small-class-sample problem
+`embellishment` hit in the original CGL training, see 3.5).
+
+**Direct confidence comparison, v1 vs v2, on the original 4 poster images
+this session's domain-gap finding was based on:** 3 of the 4
+(`YOUR_TEMPLATE.png`/"La Serata", `YOUR_TEMPLATE3.jpg`/"TAN-AW",
+`YOUR_TEMPLATE4.jpg`/"LODT") were never part of the annotation batch — a
+clean generalization test. Top detection confidence rose from
+0.20–0.46 (v1) to 0.69–0.74 (v2) on these three, with 8–13 detections per
+image now clearing the usable 0.25 threshold, versus 0–1 before. The 4th
+(`YOUR_TEMPLATE2.jpg`/"YUGTO 2026") **was** one of the 65 annotated
+training images (`YUGTO_2026_jpg...` in `train/images`) — its 0.74
+confidence partly reflects recalling a training example, not pure
+generalization, and shouldn't be cited as held-out evidence on its own.
+
+**Bottom line:** the domain-gap finding from 3.5 is confirmed fixable, not
+just a documented limitation — a 65-image feasibility batch measurably
+closed it for logo/text/embellishment detection, though underlay still
+needs more annotated instances to learn properly.
+
+### 3.8 `layout_extractor.py` wired into `pipeline.py` (2026-09-15)
+
+Implemented the "alongside" integration resolved in section B of
+`notes/adviser_consultation_checklist.md`. New **Stage 0b — Semantic
+Layout Parsing** in `pipeline.py` (`stage_layout_parsing()`), runs
+immediately after Stage 0 whenever `--template_image` is given:
+
+- Loads `themesync_yolo_v2.pt` by default (falls back to `v1` if `v2`
+  isn't present on a given machine; skips the stage gracefully, not a hard
+  failure, if neither exists — so the rest of the pipeline still runs
+  without a YOLO checkpoint).
+- Runs `LayoutExtractor.extract()` on the same master-layout image Stage 0
+  already ingests for colour/saliency, printing a per-node summary (logo/
+  text/underlay/embellishment, confidence, OCR text preview for text nodes)
+  matching Chapter 3 Figure 2's UI mockup style.
+- Persists the full detection list to
+  `<output_dir>/ThemeSync_<domain>_detected_master_layout.json` — previously
+  this only ever existed as console output from a standalone test script,
+  now it's a real artifact of every pipeline run with a template image.
+- Deliberately does **not** feed detected nodes into Stage 1's node
+  instantiation or the certificate/ID being generated — stays independent,
+  per the resolved design decision. It reports on the master layout's own
+  structure; it doesn't restructure the output document.
+
+**Verified:** ran end-to-end on `YOUR_TEMPLATE3.jpg` ("TAN-AW" — not one of
+the 65 training images, a clean test) — 13 nodes detected (2 logo, 11 text),
+confidences 0.25–0.73, OCR extracted for several (quality is rough on the
+posters' heavily stylized fonts, e.g. "@cspcssc" mis-read as "(Xd
+@cspcessc" — a real Tesseract limitation on decorative typography, not an
+integration bug; flagging as a known limitation rather than silently
+accepting garbled OCR). Both `tests/test_certificate_pipeline.py` and
+`tests/test_id_pipeline.py` still pass — no regressions. Fallback mode (no
+`--template_image`) still works and correctly skips both Stage 0 and 0b.
+
+New CLI flag: `--yolo_weights` (defaults to the v2→v1 fallback logic above).
+
+### 3.9 Two dashboard-surfaced bugs fixed (2026-09-15): output aspect ratio + palette role assignment
+
+Building the Figure 2 dashboard (section 3.8 continued — see
+`src/dashboard/app.py`) and actually driving real uploads through it
+surfaced two real bugs that unit tests hadn't caught, because both only
+show up when a real master-layout image is combined with a target format
+whose aspect ratio differs from that image's own.
+
+**Bug 1 — output canvas silently ignored the selected target format.**
+`_derive_canvas()` in `pipeline.py` prioritized the uploaded master-layout
+image's native pixel dimensions over the payload's own
+`target_aspect_ratio`. Uploading a square (2048×2048) poster and selecting
+"Identification Card (2:3)" produced a **1:1 square ID**, not the intended
+638×1014 portrait — the image's incidental size silently overrode the
+selected domain format. Root cause: this priority ordering predates the
+"master layout ≠ the literal cert/ID template" clarification (section 3.5)
+and was never revisited once that changed — back when the uploaded image
+*was* assumed to be the literal template, using its native size as the
+canvas made sense; it stopped making sense the moment "master layout"
+became "a generic poster used only to extract a theme." Fixed by removing
+the native-image-size branch entirely; canvas dimensions now come from
+explicit CLI args or the payload's own domain default, never the source
+image. Verified: re-ran the ID pipeline against the same square poster —
+canvas correctly resolved to 638×1014.
+
+**Bug 2 — palette derivation assumed a fixed 3 centroids; Elbow Method
+(section 3.3) can return 2–6.** The previous session's fix to
+`_palette_from_centroids()` (using all 3 K-Means centroids instead of
+silently dropping the 3rd) assumed centroids are always length-3. But
+`VisionExtractor._select_optimal_k_centroids()` already implements the
+Elbow Method from section 3.3, so real images return anywhere from 2 to 6
+centroids depending on perceptual complexity — a fixed-3 assumption would
+truncate extra centroids (discarding real extracted colour data again, the
+same class of bug as before) or fall through to the entirely-hardcoded
+default palette whenever an image happened to elbow-select only 2.
+Generalized the role-assignment logic to handle any count in `[2, 6]`:
+darkest centroid → primary, lightest → background, most chromatic
+(furthest from neutral grey in LAB a*/b*) of whatever remains → accent; if
+only 2 centroids exist (no true "middle" one), accent is instead a
+punchier same-hue tint of primary rather than an unrelated hardcoded gold.
+Verified directly against synthetic centroid lists of length 1, 2, 3, and
+5 (all four produced sensible, non-crashing palettes; k=5's test
+deliberately embedded one high-chroma and two low-chroma middle
+centroids, confirming the high-chroma one was correctly selected as
+accent) — actual images tested this session all happened to elbow-select
+k=3, so the 2/4/5/6 paths are verified via direct unit-level calls, not
+yet observed end-to-end on a real image.
+
+Both fixes verified against the real "CSPC SSC — Assistants & Committee
+Directors" poster (uploaded via the dashboard); both existing test suites
+still pass with no regressions.
+
+**Open item, not addressed by this fix:** the grayscale/degenerate-image
+fallback path in `extract_lab_centroids()` (1D L-channel clustering) still
+hardcodes `n_colors=3` rather than using the Elbow Method — already
+tracked in `adviser_consultation_checklist.md` section C. Your adviser
+raising "elbow method" independently in conversation is worth confirming
+at your next meeting as tacit validation of the section 3.3 approach
+already implemented — and a natural moment to ask her directly whether
+this fallback-path gap needs the same treatment before defense, since she
+raised the topic herself.
