@@ -5,6 +5,13 @@ Entry-point for the full end-to-end ThemeSync layout generation pipeline.
 
 Execution order:
   0. Template Ingestion          (image → LAB centroids + SIFT saliency)  [optional]
+  0b. Semantic Layout Parsing    (image → detected logo/text/underlay/
+                                   embellishment nodes via YOLO+OCR)      [optional]
+                                  Independent of Stage 0 and of Stage 1 below —
+                                  reports on the master layout's own structure,
+                                  does not feed the certificate/ID being built.
+                                  See notes/gnn_fixes_and_methodology_notes.md
+                                  section 3.7.
   1. Dynamic Node Instantiation  (payload → node tensors)
   2. GNN Inference               (spatial position prediction)
   3. CSP Resolution              (Cassowary hard + soft constraints)
@@ -55,12 +62,18 @@ from candidate_generator import MetaheuristicStateExplorer
 from aesthetic_renderer import AestheticSVGRenderer
 from state_manager import StateManager
 from template_ingestor import TemplateIngestor
+from layout_extractor import LayoutExtractor
 
 # ---------------------------------------------------------------------------
 # Constants — synthetic fallback values (used when no template image is given)
 # These match the values used during GNN training for the CSPC institution.
 # ---------------------------------------------------------------------------
 DEFAULT_WEIGHTS = os.path.join(os.path.dirname(_SRC), "themesync_gnn_v1.pth")
+# v2 (fine-tuned on real master-layout images) preferred over v1 (CGL-only) —
+# see notes/gnn_fixes_and_methodology_notes.md section 3.7.
+_YOLO_V2 = os.path.join(os.path.dirname(_SRC), "themesync_yolo_v2.pt")
+_YOLO_V1 = os.path.join(os.path.dirname(_SRC), "themesync_yolo_v1.pt")
+DEFAULT_YOLO_WEIGHTS = _YOLO_V2 if os.path.exists(_YOLO_V2) else _YOLO_V1
 SEPARATOR = "=" * 66
 
 _FALLBACK_CENTROIDS = [
@@ -90,19 +103,24 @@ def _load_json(path: str) -> dict:
         return json.load(f)
 
 
-def _derive_canvas(payload_meta: dict, canvas_w: int, canvas_h: int,
-                   image_wh: tuple = None):
+def _derive_canvas(payload_meta: dict, canvas_w: int, canvas_h: int):
     """
     Canvas resolution priority:
       1. Explicit CLI args (--canvas_w / --canvas_h)
-      2. Native dimensions of the template image (if provided)
-      3. Domain defaults from the payload (1200×900 cert / 638×1014 ID)
+      2. Domain defaults from the payload (1200×900 cert / 638×1014 ID),
+         matching each payload's own target_aspect_ratio.
+
+    The uploaded master-layout image's own pixel dimensions are deliberately
+    NOT consulted here. The master layout is a generic branded design used
+    only to extract a visual theme (colour, typography, detected structure)
+    — its aspect ratio has nothing to do with the certificate/ID format the
+    user actually selected. Using it was a leftover from before that
+    distinction was clarified (see notes/gnn_fixes_and_methodology_notes.md
+    sections 3.5-3.7) and caused a 2:3 ID request to silently render as a
+    1:1 square whenever a square poster was uploaded as the theme source.
     """
     if canvas_w and canvas_h:
         return int(canvas_w), int(canvas_h)
-
-    if image_wh:
-        return image_wh  # native image size
 
     domain = payload_meta.get("domain_context", "academic_certificate")
     return (638, 1014) if domain == "identification_card" else (1200, 900)
@@ -130,6 +148,47 @@ def stage_template_ingestion(template_image_path: str) -> dict:
     print(f"     → Saliency: {result['saliency_weight']:.4f}  "
           f"| Native size: {result['image_wh'][0]}×{result['image_wh'][1]} px")
     return result, elapsed
+
+
+def stage_layout_parsing(template_image_path: str, weights_path: str) -> tuple:
+    """
+    Stage 0b — Semantic Layout Parsing (Chapter 3, p. 50).
+
+    Runs the fine-tuned YOLOv8 detector + Tesseract OCR on the uploaded
+    master-layout image, independently of Stage 0's colour/saliency
+    extraction and independently of the JSON-schema-driven certificate/ID
+    node instantiation (Stage 1) — this stage reports on the *master
+    layout's own* structure ("Logo detected: True," per Figure 2's UI
+    mockup), it does not feed those nodes into the certificate/ID being
+    generated. See notes/gnn_fixes_and_methodology_notes.md sections 3.5-3.7
+    for why these stay separate for now.
+
+    Gracefully skipped (not a hard failure) if no fine-tuned weights file is
+    present, so the rest of the pipeline still runs on a machine that hasn't
+    gone through YOLO fine-tuning.
+    """
+    t0 = time.perf_counter()
+    if not os.path.exists(weights_path):
+        print("\n  ⊘  Stage 0b skipped — no YOLO weights found at "
+              f"'{weights_path}' (run src/models/train_yolo_extractor.py "
+              "and/or finetune_yolo_master_layout.py first)")
+        return None, 0.0
+
+    extractor = LayoutExtractor(weights_path=weights_path)
+    nodes = extractor.extract(template_image_path)
+    elapsed = time.perf_counter() - t0
+
+    _print_stage("0b. Semantic Layout Parsing (YOLO+OCR)", elapsed)
+    print(f"     → Weights: {os.path.basename(weights_path)}")
+    print(f"     → {len(nodes)} node(s) detected on the master layout")
+    for n in nodes:
+        detail = f"conf={n['detection_confidence']:.2f}"
+        if n["structural_class"] == "text_node" and n.get("ocr_text"):
+            preview = n["ocr_text"].replace("\n", " ")[:40]
+            detail += f"  ocr=\"{preview}\""
+        print(f"       · {n['node_id']:<22} {detail}")
+
+    return nodes, elapsed
 
 
 def stage_instantiate(payload_path: str, canvas_w: int, canvas_h: int):
@@ -224,12 +283,15 @@ def stage_rank_candidates(resolved_nodes: list, population: int, canvas_w: int, 
 
 def stage_render(winner_filepath: str, canvas_w: int, canvas_h: int,
                  payload_meta: dict, output_dir: str,
-                 color_centroids: list, content_data: dict = None):
+                 color_centroids: list, content_data: dict = None,
+                 font_family: str = None):
     """
     Stage 5 — Aesthetic SVG rendering.
 
     Now receives real colour centroids from Stage 0 and real content strings
-    from --content_data — both replacing hardcoded defaults.
+    from --content_data — both replacing hardcoded defaults. font_family is
+    the "User Injected" administrative typography constraint from Table 1
+    (p. 49), e.g. set via the dashboard's Visual DNA panel.
     """
     t0 = time.perf_counter()
     domain = payload_meta.get("domain_context", "layout")
@@ -242,6 +304,7 @@ def stage_render(winner_filepath: str, canvas_w: int, canvas_h: int,
         color_centroids=color_centroids,     # ← drives palette from real image
         mock_data=content_data,              # ← real user content, or None → domain defaults
         domain_context=domain,
+        font_family=font_family,
     )
     renderer.render_layout(winner_filepath, output_dir=output_dir, with_border=True)
     elapsed = time.perf_counter() - t0
@@ -272,7 +335,9 @@ def run_pipeline(
     population: int = 5,
     use_gnn: bool = True,
     weights_path: str = DEFAULT_WEIGHTS,
+    yolo_weights_path: str = DEFAULT_YOLO_WEIGHTS,
     output_dir: str = "data/rendered/",
+    font_family: str = None,
 ):
     _print_header("ThemeSync — Design Orchestration Pipeline")
 
@@ -291,24 +356,32 @@ def run_pipeline(
     # ------------------------------------------------------------------
     # Stage 0 — Template Ingestion (optional)
     # ------------------------------------------------------------------
-    image_wh = None
     saliency_map = None
     if template_image:
         ingestion_result, timings["template_ingestion"] = stage_template_ingestion(template_image)
         color_centroids = ingestion_result["color_centroids"]
         saliency_weight = ingestion_result["saliency_weight"]
         saliency_map    = ingestion_result["saliency_map"]
-        image_wh        = ingestion_result["image_wh"]
         ingestion_mode  = f"real image → {ingestion_result['palette_hex']}"
+
+        # Stage 0b — Semantic Layout Parsing (YOLO+OCR on the same image).
+        # Independent of the colour/saliency extraction above and of the
+        # schema-driven node instantiation below — see stage_layout_parsing's
+        # docstring for why these three stay separate for now.
+        detected_layout_nodes, timings["layout_parsing"] = stage_layout_parsing(
+            template_image, yolo_weights_path
+        )
     else:
         color_centroids = _FALLBACK_CENTROIDS
         saliency_weight = _FALLBACK_SALIENCY
         timings["template_ingestion"] = 0.0
+        timings["layout_parsing"] = 0.0
+        detected_layout_nodes = None
         ingestion_mode  = "synthetic fallback (no --template_image provided)"
         print(f"\n  ⊘  Stage 0 skipped — {ingestion_mode}")
 
-    # Resolve canvas dimensions (CLI > image size > domain default)
-    canvas_w, canvas_h = _derive_canvas(payload_meta, canvas_w, canvas_h, image_wh)
+    # Resolve canvas dimensions (CLI > domain default — see _derive_canvas)
+    canvas_w, canvas_h = _derive_canvas(payload_meta, canvas_w, canvas_h)
 
     print(f"\n  Payload        : {payload_path}")
     print(f"  Domain         : {payload_meta.get('domain_context', 'N/A')}")
@@ -357,12 +430,25 @@ def run_pipeline(
         winner["filepath"], canvas_w, canvas_h, payload_meta, output_dir,
         color_centroids=color_centroids,
         content_data=content_data,
+        font_family=font_family,
     )
 
     # ------------------------------------------------------------------
     # Stage 6 — Serialize FSM state
     # ------------------------------------------------------------------
     timings["serialization"] = stage_serialize_state(resolved_nodes)
+
+    # Persist Stage 0b's detections too, if any — otherwise they only ever
+    # existed as console output.
+    detected_layout_path = None
+    if detected_layout_nodes is not None:
+        os.makedirs(output_dir, exist_ok=True)
+        domain_stem = payload_meta.get("domain_context", "layout").replace("_", "-")
+        detected_layout_path = os.path.join(
+            output_dir, f"ThemeSync_{domain_stem}_detected_master_layout.json"
+        )
+        with open(detected_layout_path, "w") as f:
+            json.dump(detected_layout_nodes, f, indent=2)
 
     # ------------------------------------------------------------------
     # Summary
@@ -373,6 +459,7 @@ def run_pipeline(
     print(f"  {'-'*42} {'-'*10}")
     labels = {
         "template_ingestion": "0. Template Ingestion",
+        "layout_parsing":     "0b. Semantic Layout Parsing (YOLO+OCR)",
         "instantiation":      "1. Dynamic Node Instantiation",
         "gnn_inference":      "2. GNN Spatial Inference",
         "csp_resolution":     "3. Cassowary CSP Resolution",
@@ -393,6 +480,8 @@ def run_pipeline(
     rendered_path = os.path.join(output_dir, f"ThemeSync_{stem}_populated.svg")
     print(f"  Winner   : {winner['candidate_id']} (C_total = {winner['c_total']:.4f})")
     print(f"  Output   : {rendered_path}")
+    if detected_layout_path:
+        print(f"  Detected master-layout nodes : {detected_layout_path}")
     print()
 
     return {
@@ -402,6 +491,8 @@ def run_pipeline(
         "rendered_path":  rendered_path,
         "color_centroids": color_centroids,
         "saliency_weight": saliency_weight,
+        "detected_master_layout_nodes": detected_layout_nodes,
+        "detected_master_layout_path":  detected_layout_path,
     }
 
 
@@ -462,8 +553,22 @@ Examples:
         help="Path to trained GNN weights .pth file",
     )
     parser.add_argument(
+        "--yolo_weights", type=str, default=DEFAULT_YOLO_WEIGHTS,
+        help="Path to fine-tuned YOLOv8 weights for Stage 0b Semantic Layout "
+             "Parsing. Defaults to themesync_yolo_v2.pt (fine-tuned on real "
+             "master-layout images) if present, else themesync_yolo_v1.pt "
+             "(CGL-Dataset only). Stage 0b is skipped gracefully if neither "
+             "exists.",
+    )
+    parser.add_argument(
         "--output_dir", type=str, default="data/rendered/",
         help="Directory to write SVG output (default: data/rendered/)",
+    )
+    parser.add_argument(
+        "--font_family", type=str, default=None,
+        help="CSS font-family stack to inject as the administrative "
+             "typography constraint (Table 1, p. 49). Defaults to the "
+             "renderer's built-in Montserrat stack if omitted.",
     )
 
     args = parser.parse_args()
@@ -477,7 +582,9 @@ Examples:
         population=args.population,
         use_gnn=not args.no_gnn,
         weights_path=args.weights,
+        yolo_weights_path=args.yolo_weights,
         output_dir=args.output_dir,
+        font_family=args.font_family,
     )
 
 

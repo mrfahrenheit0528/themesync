@@ -1,3 +1,4 @@
+import colorsys
 import json
 import os
 import textwrap
@@ -26,12 +27,75 @@ def _lab_centroid_to_hex(lab: list) -> str:
         return "#1A202C"
 
 
+def _hex_to_rgb01(hexcode: str) -> tuple:
+    hexcode = hexcode.lstrip("#")
+    return tuple(int(hexcode[i:i + 2], 16) / 255.0 for i in (0, 2, 4))
+
+
+def _rgb01_to_hex(rgb: tuple) -> str:
+    r, g, b = (max(0.0, min(1.0, c)) for c in rgb)
+    return f"#{int(round(r * 255)):02X}{int(round(g * 255)):02X}{int(round(b * 255)):02X}"
+
+
+def _lighten(hexcode: str, amount: float) -> str:
+    """Blends a colour toward white by `amount` (0 = unchanged, 1 = white)."""
+    r, g, b = _hex_to_rgb01(hexcode)
+    return _rgb01_to_hex((r + (1.0 - r) * amount, g + (1.0 - g) * amount, b + (1.0 - b) * amount))
+
+
+def _muted_variant(base_hex: str, background_is_light: bool) -> str:
+    """
+    Derives a legible secondary/caption colour from the extracted primary
+    colour (same hue, desaturated), instead of a fixed slate grey that has
+    no relationship to the source image.
+    """
+    r, g, b = _hex_to_rgb01(base_hex)
+    h, l, s = colorsys.rgb_to_hls(r, g, b)
+    target_l = 0.42 if background_is_light else 0.72
+    r2, g2, b2 = colorsys.hls_to_rgb(h, target_l, min(s, 0.35))
+    return _rgb01_to_hex((r2, g2, b2))
+
+
+def _accent_from_hue(base_hex: str) -> str:
+    """
+    Derives a punchier, same-hue accent tint from a base colour. Used when
+    K-Means (via the Elbow Method) finds only 2 clusters, leaving no 3rd
+    centroid to draw a distinct accent from.
+    """
+    r, g, b = _hex_to_rgb01(base_hex)
+    h, l, s = colorsys.rgb_to_hls(r, g, b)
+    r2, g2, b2 = colorsys.hls_to_rgb(h, 0.58, max(s, 0.45))
+    return _rgb01_to_hex((r2, g2, b2))
+
+
+def _chroma(lab: list) -> float:
+    """OpenCV LAB a*/b* are stored centred at 128; distance from that centre
+    is a proxy for how saturated/colourful (vs. neutral grey) a centroid is."""
+    a, b = float(lab[1]) - 128.0, float(lab[2]) - 128.0
+    return (a * a + b * b) ** 0.5
+
+
 def _palette_from_centroids(centroids: list) -> dict:
     """
-    Derives a high-contrast 3-colour palette (primary, accent, background).
-    Ensures background is clean and text has strong visual contrast.
+    Derives a role-based colour palette (primary, accent, background) plus
+    a derived muted tone from the master layout's K-Means centroids.
+
+    The Elbow Method (VisionExtractor._select_optimal_k_centroids) means the
+    centroid count varies per image — k in [2, 6] — rather than always
+    being exactly 3, so this assigns roles by perceptual lightness/chroma
+    instead of assuming a fixed-length list:
+      - darkest centroid                      -> primary
+      - lightest centroid                     -> background
+      - most chromatic of the remaining ones  -> accent
+      - only 2 centroids (no 3rd to draw an accent from) -> accent is a
+        punchier same-hue tint of primary instead
+
+    Previously this only ever used exactly 2 of a *fixed* 3 centroids — a
+    3rd was computed and silently discarded — and background/muted were
+    hardcoded regardless of the source image, so a master layout's own
+    background/border colours never actually reached the rendered output.
     """
-    if not centroids or len(centroids) < 3:
+    if not centroids or len(centroids) < 2:
         return {
             "primary":    "#003366",   # Deep Navy
             "accent":     "#D4AF37",   # Metallic Gold
@@ -39,17 +103,34 @@ def _palette_from_centroids(centroids: list) -> dict:
             "card_bg":    "#FFFFFF",
             "muted":      "#5A6A80"
         }
-        
-    c1 = _lab_centroid_to_hex(centroids[0])
-    c2 = _lab_centroid_to_hex(centroids[1])
-    c3 = _lab_centroid_to_hex(centroids[2])
-    
+
+    entries = sorted(
+        ((float(c[0]), _chroma(c), _lab_centroid_to_hex(c)) for c in centroids),
+        key=lambda e: e[0],
+    )  # (lightness, chroma, hex), ascending lightness
+
+    _,          _, primary_hex    = entries[0]    # darkest
+    lightest_l, _, background_hex = entries[-1]   # lightest
+    middle_entries = entries[1:-1]
+
+    if middle_entries:
+        _, _, accent_hex = max(middle_entries, key=lambda e: e[1])  # most chromatic
+    else:
+        accent_hex = _accent_from_hue(primary_hex)
+
+    # Guard against illegible canvases: if even the lightest extracted
+    # centroid is still fairly dark (e.g. a bold, saturated poster with no
+    # light region), lighten it toward white rather than rendering text on
+    # a dark, low-contrast background.
+    if lightest_l < 170:
+        background_hex = _lighten(background_hex, amount=0.6)
+
     return {
-        "primary":    c1,
-        "accent":     c2,
-        "background": "#FCFDFE",
+        "primary":    primary_hex,
+        "accent":     accent_hex,
+        "background": background_hex,
         "card_bg":    "#FFFFFF",
-        "muted":      "#64748B"
+        "muted":      _muted_variant(primary_hex, background_is_light=lightest_l >= 128),
     }
 
 
@@ -94,6 +175,7 @@ class AestheticSVGRenderer:
         color_centroids: list = None,
         mock_data: dict = None,
         domain_context: str = "academic_certificate",
+        font_family: str = None,
     ):
         self.canvas_w = float(canvas_width)
         self.canvas_h = float(canvas_height)
@@ -102,7 +184,11 @@ class AestheticSVGRenderer:
 
         # Palette and fonts
         self.palette = _palette_from_centroids(color_centroids)
-        self.font_family = "Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        # Table 1 (p. 49): administrative_typography (font_family) is a
+        # user-injected constraint, not machine-extracted — caller (e.g. the
+        # dashboard's "User Injected" panel) may override the default stack.
+        self.font_family = font_family or \
+            "Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
 
         # Content mapping
         if mock_data:
