@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 data/processed/
 data/rendered/
-# data/raw/
+data/raw/
+runs/
 *.arrow
 repomix-output.xml

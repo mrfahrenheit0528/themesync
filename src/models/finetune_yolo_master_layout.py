@@ -1,0 +1,120 @@
+"""
+ThemeSync — YOLOv8 Fine-Tuning on Real Master-Layout Images
+================================================================
+Second-stage fine-tune, on top of the CGL-Dataset-trained checkpoint
+(`themesync_yolo_v1.pt`, see train_yolo_extractor.py), using a small batch
+of real, hand-annotated master-layout images (event posters / branding
+assets — see notes/annotation_guidelines.md) instead of synthetic/public
+data.
+
+Why a second stage rather than training from scratch: `themesync_yolo_v1.pt`
+already generalizes mAP50=0.539 within CGL-Dataset's own domain (real-world
+ad/poster imagery), but was measured at near-zero confidence (0.03-0.11) on
+ThemeSync's actual master-layout uploads — see
+notes/gnn_fixes_and_methodology_notes.md section 3.5's "CRITICAL finding."
+Starting from that checkpoint rather than from COCO weights gives the
+model a real head start (it already knows what logos/text/underlays look
+like in general), so this stage only has to close the remaining domain
+gap, not learn object detection from zero on a 65-image dataset.
+
+Backbone freezing: with only 50 training images, fine-tuning the entire
+network risks catastrophic forgetting of what v1 already learned and
+overfitting to this small batch. `--freeze N` freezes the first N layers
+(default 10, YOLOv8n's backbone) so only the head and later layers adapt to
+the new domain, a standard low-data transfer-learning mitigation. Pass
+`--freeze 0` to fine-tune the whole network if you want to compare.
+
+Usage:
+  python src/models/finetune_yolo_master_layout.py
+  python src/models/finetune_yolo_master_layout.py --epochs 80 --freeze 0
+"""
+
+import argparse
+import os
+
+from ultralytics import YOLO
+
+_THIS = os.path.dirname(os.path.abspath(__file__))
+_SRC = os.path.dirname(_THIS)
+_ROOT = os.path.dirname(_SRC)
+
+DATA_YAML = os.path.join(_ROOT, "data", "raw", "master_layout_batch", "data.yaml")
+BASE_CHECKPOINT = os.path.join(_ROOT, "themesync_yolo_v1.pt")
+RUN_NAME = "themesync_master_layout_finetune"
+
+
+def finetune(epochs=80, imgsz=640, batch=8, freeze=10, patience=15):
+    if not os.path.exists(DATA_YAML):
+        raise FileNotFoundError(
+            f"No dataset config at {DATA_YAML}. "
+            "Annotate and export the master-layout batch first — see "
+            "notes/annotation_guidelines.md."
+        )
+
+    if not os.path.exists(BASE_CHECKPOINT):
+        raise FileNotFoundError(
+            f"Base checkpoint not found at {BASE_CHECKPOINT}. "
+            "This script fine-tunes ON TOP of the CGL-trained model — run "
+            "src/models/train_yolo_extractor.py first if it's missing."
+        )
+
+    print(f"Loading base checkpoint: {BASE_CHECKPOINT}")
+    print(f"  (CGL-Dataset-trained — mAP50=0.539 on CGL's own domain, "
+          f"measured near-zero confidence on real master-layout images)")
+    model = YOLO(BASE_CHECKPOINT)
+
+    freeze_arg = list(range(freeze)) if freeze > 0 else None
+    print(f"Freezing first {freeze} layers (backbone)" if freeze > 0
+          else "No layers frozen — fine-tuning the full network")
+
+    results = model.train(
+        data=DATA_YAML,
+        epochs=epochs,
+        imgsz=imgsz,
+        batch=batch,
+        freeze=freeze_arg,
+        project=os.path.join(_ROOT, "runs", "yolo"),
+        name=RUN_NAME,
+        exist_ok=True,
+        patience=patience,
+        amp=False,  # skips ultralytics' AMP sanity-check reference-model download
+    )
+
+    best_weights = os.path.join(_ROOT, "runs", "yolo", RUN_NAME, "weights", "best.pt")
+    # v2, not v1 — keep the CGL-only checkpoint intact for comparison/fallback.
+    target_path = os.path.join(_ROOT, "themesync_yolo_v2.pt")
+    if os.path.exists(best_weights):
+        import shutil
+        shutil.copy(best_weights, target_path)
+        print(f"\nBest weights copied -> {target_path}")
+        print(f"(v1 checkpoint at {BASE_CHECKPOINT} left untouched for comparison)")
+    else:
+        print(f"\nWARNING: expected weights not found at {best_weights}")
+
+    return results
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Fine-tune themesync_yolo_v1.pt on real master-layout images"
+    )
+    parser.add_argument("--epochs", type=int, default=80,
+                         help="Higher default than the CGL stage (30) since this "
+                              "run relies on early stopping (--patience) rather "
+                              "than a fixed budget, given the small dataset.")
+    parser.add_argument("--imgsz", type=int, default=640)
+    parser.add_argument("--batch", type=int, default=8,
+                         help="Smaller default than the CGL stage (16) — only "
+                              "50 training images this round.")
+    parser.add_argument("--freeze", type=int, default=10,
+                         help="Freeze the first N layers (backbone). 0 = fine-tune "
+                              "the whole network.")
+    parser.add_argument("--patience", type=int, default=15,
+                         help="Early-stopping patience (epochs without val "
+                              "improvement).")
+    args = parser.parse_args()
+    finetune(args.epochs, args.imgsz, args.batch, args.freeze, args.patience)
+
+
+if __name__ == "__main__":
+    main()
