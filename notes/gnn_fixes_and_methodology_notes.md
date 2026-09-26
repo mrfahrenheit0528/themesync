@@ -664,3 +664,285 @@ at your next meeting as tacit validation of the section 3.3 approach
 already implemented — and a natural moment to ask her directly whether
 this fallback-path gap needs the same treatment before defense, since she
 raised the topic herself.
+
+### 3.10 Chapter 3 p.49+ audit (2026-09-15): MOS rubric mismatch, GNN per-node feature schema gap, Appendix B confirmed
+
+Closing the last unaudited item in `adviser_consultation_checklist.md`
+section D — cross-checking Chapter 3 past p.49 (Evaluation Metrics
+section, Theoretical Framework, Annexes A & B) word-for-word against the
+actual code, rather than trusting the "looks consistent" note that had
+never actually been verified. Three real findings, one confirmed match.
+
+**Finding 1 — `mos_collector.py`'s 4 dimensions don't match the
+manuscript's 3.** p.57 specifies exactly three named MOS parameters:
+*Visual Hierarchy Preservation*, *Brand and Typographic Consistency*, and
+*Constraint and Whitespace Harmony* — each scored against Table 2's single
+5-level rubric (5 = Excellent / "No noticeable flaws" ... 1 = Fail /
+"Severe structural overlap or typographic failure"). The actual
+`DIMENSIONS` list in `mos_collector.py` implements four *differently
+named* dimensions instead: `aesthetic_quality`, `spatial_coherence`,
+`legibility`, `layout_balance`. These don't map cleanly onto the
+manuscript's three — "Brand and Typographic Consistency" (checking
+font/palette hallucination against the extracted Visual DNA) has no
+equivalent among the code's four, while "legibility" and "layout_balance"
+aren't named anywhere in the manuscript's three at all.
+`system_development_progress.md`'s Phase 4 table previously claimed these
+matched — that claim was wrong, written without actually re-reading
+`mos_collector.py`'s dimension list against the manuscript text; corrected
+alongside this entry.
+
+**Finding 2 — Table 2's descriptive rubric anchors are never shown to the
+evaluator.** Table 2 (p.58) gives each of the 5 score levels a specific
+qualitative anchor, not just a number (5 = Excellent, 4 = Good, 3 =
+Acceptable, 2 = Poor, 1 = Fail, each with its own description). The
+manuscript's text is explicit that "the expert will assign a numerical
+score based on the MOS rating scale shown in Table 2" — implying the
+evaluator sees and applies those descriptions per rating. `_prompt_rating()`
+in `mos_collector.py` only ever prints a bare "(1=Poor, 5=Excellent)" hint
+and reads a digit; Table 2's actual anchor text is never surfaced during a
+collection session, which matters for score consistency across whichever
+evaluator(s) end up rating layouts.
+
+**Finding 3 — GNN per-node feature schema (Appendix A) doesn't match the
+training pipeline, and it's a bigger gap than previously flagged.**
+Appendix A (p.66) shows each preprocessed node carrying its own `node_id`,
+`extracted_color_centroids`, `extracted_saliency_weight`, and — for text
+nodes — `text_features` (`content`, `font_size_scale`, `alignment`). The
+actual training pipeline (`build_feature_tensors.py` → `graph_builder.py`,
+which prepares CGL-Dataset examples for GNN training) computes
+`extracted_color_centroids` and `extracted_saliency_weight` **once per
+whole image**, not per node — `graph_builder.py`'s `build_graph()` (lines
+85-94) then broadcasts that single global color/saliency pair identically
+into *every* node's feature vector (`h_i = norm_bbox + norm_color +
+[saliency]`, same `norm_color`/`saliency` reused in the loop over all
+nodes). There is no `node_id` anywhere in `extracted_nodes`, and
+`text_features` is actively dropped — it's named directly in the
+`remove_columns` list in both `preprocess_cgl.py` and
+`build_feature_tensors.py`. This sharpens the existing checklist item
+(section B: "GNN's `s_i` saliency is one global scalar, not per-node") —
+color centroids turn out to have the identical problem, and `node_id` /
+`text_features` aren't just under-specified, they're structurally absent
+from the training pipeline's output entirely, so per-node typography
+features can't reach the GNN at all right now regardless of Table 1
+intent.
+Worth noting as a contrast: the *runtime* Stage 0b path
+(`layout_extractor.py`, used on real uploaded master-layout images, not
+CGL training data) already does assign a `node_id` per node and attaches
+OCR text for text nodes — so this specific gap is confined to the
+CGL training-data prep pipeline, not the live extraction path used by the
+dashboard.
+
+**Appendix B — confirmed matching, no gap found.** Its sample schema
+(`domain_context`, `target_aspect_ratio`, `variable_schema` with
+`structural_class` / `spatial_hierarchy` / `max_characters` /
+`repeating_group` + `instantiation_count` / `lock_aspect_ratio`) matches
+`data/raw/academic_payload.json` and `id_payload.json` field-for-field,
+and the same field names are consumed consistently across
+`dynamic_instantiation.py`, `cassowary_engine.py`, `optimization_engine.py`,
+`aesthetic_renderer.py`, and `dashboard/app.py`. No action needed here.
+
+**No separate "statistical treatment" section exists.** pp.55-58's
+"Evaluation Metrics" section (Intersection over Union, Algorithmic
+Latency, Structural Accuracy Rate / F1-Score, the Heuristic Fitness
+Function, then MOS) appears to be the complete evaluation-methodology
+content in Chapter 3 — there's no distinct classical-statistics
+subsection (t-test/ANOVA/etc.) to separately cross-check. Noting this so
+it isn't mistaken for an unaudited gap later.
+
+**Not yet fixed by this entry** — this session only audited and
+documented; Findings 1 and 2 (the MOS rubric mismatch) are cheap to fix
+right now since zero real evaluator data has been collected yet (nothing
+to migrate), but haven't been touched pending a decision on whether to
+just fix them or run the manuscript-vs-code discrepancy past the adviser
+first (see `adviser_consultation_checklist.md` section C).
+
+### 3.11 Wired Stage 0b's detected logo aspect ratio into `lock_aspect_ratio` (2026-09-15) — Figure 2's "Affine scaling"
+
+Figure 2's UI mockup (p. 51) lists "Affine scaling: Unlocked" under the
+SIFT/SURF Keypoints readout, and both real payload files
+(`academic_payload.json`, `id_payload.json`) already declare a
+`lock_aspect_ratio` field per image node — but a full-codebase grep turned
+up **zero** call sites reading that field anywhere. `NodeInstantiator
+._calculate_baseline_tensor()` forced every logo into a fixed square
+(`[logo_dim, logo_dim]`) regardless of what the payload said, and
+`cassowary_engine.py` / `optimization_engine.py` / `aesthetic_renderer.py`
+never referenced `lock_aspect_ratio` either. So this wasn't just "detected
+ratio never gets fed in" (the original framing when this was offered as a
+next step) — the constraint itself was inert from the start. Since the
+CSPC SSC poster's actual logo lockup is nowhere near square (confirmed
+below), every generated cert/ID has been silently squishing it into a 1:1
+box the whole time.
+
+**Fix:**
+- `pipeline.py`: new `_detect_logo_aspect_ratio()` takes Stage 0b's
+  detected nodes, picks the highest-confidence `semantic_category ==
+  "logo"` detection, and returns its bbox width/height ratio (`None` if
+  Stage 0b didn't run or found no logo).
+- `stage_instantiate()` now threads that ratio into
+  `NodeInstantiator.instantiate_payload(..., detected_logo_ratio=...)`.
+- `_calculate_baseline_tensor()` applies it narrowly: only to the schema
+  node whose var_name contains "logo" *and* which the payload marks
+  `lock_aspect_ratio: true` — every other node (ID photo, barcode, text)
+  is completely untouched. When applied, the node keeps the same area
+  budget the old square used (`min(canvas_w * k1, canvas_h * k2)`) but
+  splits it into width/height using the real ratio instead of forcing
+  1:1. No detection (or no `--template_image`) falls back to the
+  pre-existing square exactly as before — verified explicitly (see below).
+- Updated `stage_layout_parsing()`'s docstring to narrow its previous
+  "Stage 0b's detections never feed into Stage 1" claim: that's still true
+  for the detected *nodes/positions*, but the logo's *aspect ratio* (one
+  derived scalar) is now a deliberate, narrow exception.
+
+**Verified end-to-end** against `YOUR_TEMPLATE3.jpg` (real, unseen poster)
+through the ID pipeline: Stage 0b detected two logo candidates
+(conf 0.51, 0.25); the higher-confidence one's bbox gave a 0.89:1 ratio;
+pipeline output printed `Logo aspect ratio locked to detected 0.89:1
+(Stage 0b, Affine scaling)`; the serialized FSM state confirms
+`{{Institution_Logo}}`'s final bbox is `[108.64, 121.68]` (0.893:1) —
+not the old forced square. Re-ran with no `--template_image` (fallback
+mode) and confirmed the "Logo aspect ratio locked" line no longer prints
+and the node reverts to the original square sizing. Both
+`tests/test_certificate_pipeline.py` and `tests/test_id_pipeline.py`
+(which don't pass `--template_image`) still pass unchanged.
+
+**Not addressed by this fix:** `lock_aspect_ratio: false` on `Barcode_Block`
+and the ID-photo case are still just descriptive (no code path locks *or*
+actively resizes-to-fit for them either) — this fix only makes the `true`
+case on the logo do something. Extending real aspect-lock enforcement to
+other node types wasn't asked for and isn't needed by anything in the
+manuscript beyond the logo case Figure 2 depicts.
+
+### 3.12 Second annotation batch (65 -> 124 images): a real export bug, fixed, then `themesync_yolo_v3.pt` (2026-09-22)
+
+The group annotated 59 more real master-layout images in Roboflow (124
+total now), exported as this project's dataset "version 2." Checking it
+before using it for training turned up two real problems — verified with
+actual code, not assumed from the earlier polygon-tool discussion (section
+"do we need bounding boxes" from conversation on 2026-09-15, which had
+guessed this would be fine at export time — it wasn't, see below).
+
+**Bug 1 — mixed annotation formats caused silent data loss.** Many of the
+124 label files contained a mix of plain bounding-box rows (5 numbers:
+`class cx cy w h`) and polygon/segment rows (9-195 numbers: variable-length
+vertex lists) *within the same file* — different annotators (or the same
+annotator on different images) used Roboflow's rectangle tool and its
+polygon/smart-poly tool inconsistently. Verified by actually running a real
+1-epoch training probe rather than reasoning about it: Ultralytics'
+`YOLODataset` loader discards an **entire** image+label pair the moment its
+file mixes both formats (`ignoring corrupt image/label: labels mix segment
+and detection rows`) — no partial use, no auto-conversion. This silently
+dropped 18 of 99 train images and 11 of 25 valid images (~23% of the whole
+batch) with nothing louder than a scroll-past warning line in a long log.
+
+**Bug 2 — class index order shifted between exports.** The original
+65-image export used `logo=0, text=1, underlay=2, embellishment=3`
+(matching `annotation_guidelines.md`'s documented order, and baked into
+`themesync_yolo_v2.pt`'s output layer). This new 124-image export
+alphabetized its `data.yaml` to `embellishment=0, logo=1, text=2,
+underlay=3`. Continuing fine-tuning from the v2 checkpoint on this data
+as-is would have silently retrained "the neuron that already learned
+logo" against embellishment examples instead — no crash, just quietly
+wrong, the worse kind of bug.
+
+**Fix:** backed up the as-exported batch to
+`data/raw/master_layout_batch/_raw_v3_backup/` (same pattern as the
+existing `_raw_v1_backup`/`_raw_v2_backup`), then for all 124 label files:
+converted every polygon row to its minimal enclosing axis-aligned box (min/
+max x and y across its vertex pairs — normalized coordinates, so this
+needed no image-dimension lookups), and remapped every class index back to
+the original documented order. Restored `data.yaml`'s `names` list to
+match. Re-ran the same verification probe: **99/99 and 25/25 images now
+load with 0 corrupt** — confirmed via direct Ultralytics scan output, not
+inferred.
+
+**`finetune_yolo_master_layout.py` generalized.** The script previously
+hardcoded its base checkpoint (`themesync_yolo_v1.pt`), output path
+(`themesync_yolo_v2.pt`), and run name — meaning re-running it as-is on
+new data would have overwritten the v2 checkpoint *and* v2's
+`results.csv`, destroying the ability to compare stages. Added
+`--base_checkpoint`/`--output_checkpoint`/`--run_name` CLI args (defaults
+unchanged, so a no-args run still reproduces the original v1->v2 behavior).
+
+**Real v3 retrain**, continuing from `themesync_yolo_v2.pt` (not from v1 —
+v2 already has a head start on this exact real-poster domain, and the new
+124 images are a superset of the original 65, so this is straightforward
+continued fine-tuning on more of the same domain, not a fresh domain
+transfer): same recipe as v2 (80 epochs, `freeze=10`, `patience=15`,
+`batch=8`), run name `themesync_master_layout_finetune_v3` (v2's own run
+directory and checkpoint file untouched, so both stages stay directly
+comparable). Saved to `themesync_yolo_v3.pt`.
+
+**Held-out validation (25 real images — the batch's own valid split, now
+larger since it grew along with train):**
+
+| | v2 (65 img, 15 val) | v3 (124 img, 25 val) |
+|---|---|---|
+| overall mAP50 / mAP50-95 | 0.320 / 0.183 | 0.370 / 0.215 |
+| logo | 0.515 / 0.359 | 0.620 / 0.414 |
+| text | 0.538 / 0.251 | 0.595 / 0.316 |
+| underlay | 0.0288 / 0.0139 | 0.0499 / 0.0187 |
+| embellishment | 0.218 / 0.119 | 0.213 / 0.112 |
+
+**Reading this honestly:** logo and text — the two structurally important
+classes — both improved meaningfully. Underlay improved somewhat but is
+still weak (still a small-instance-count class, 44 validation instances now
+vs 17 before — better, not yet enough). Embellishment stayed flat
+(essentially unchanged, within noise) despite the batch nearly doubling —
+consistent with the group's earlier decision not to prioritize hunting for
+embellishment instances during annotation. None of these numbers are
+directly comparable to v1's CGL-domain 0.539 (different dataset, different
+distribution) — this table is v2 vs v3 only, both measured the same way on
+this project's own real-poster data.
+
+**Not yet done:** the domain-gap generalization check (v1 vs v2's
+confidence rise on 3 completely unseen posters, section 3.7) hasn't been
+re-run against v3 — would need to re-run `layout_extractor.py` against
+those same 3 images with the new checkpoint to get a clean v2-vs-v3
+comparison on genuinely unseen data, rather than the batch's own held-out
+split (which, being a superset of the original 65, isn't a fully
+independent test the way those 3 posters are).
+
+### 3.13 MOS collector aligned to the manuscript's 3 parameters + Table 2 (2026-09-26)
+
+Closes §3.10 Findings 1-2. `src/evaluation/mos_collector.py` rewritten
+against the actual p.57-58 text (re-read from the PDF this session, not
+from memory):
+
+- **Dimensions:** the old 4 (`aesthetic_quality`, `spatial_coherence`,
+  `legibility`, `layout_balance`) replaced with the manuscript's 3, named
+  verbatim — `visual_hierarchy_preservation`,
+  `brand_typographic_consistency`, `constraint_whitespace_harmony`. Each
+  prompt also shows the evaluator the manuscript's own one-line criterion
+  for that parameter (e.g., "the recipient's name or certificate title
+  remains the primary focal point").
+- **Table 2 surfaced:** the full 5-level scale (score / rating /
+  description, verbatim from p.58) is printed at the start of every
+  session and can be re-displayed at any prompt by typing `?`; each entered
+  score is echoed back with its rating word ("→ 4 (Good)") so a mistyped
+  digit is noticed immediately.
+- **Randomized presentation:** p.57 says the expert evaluates "a randomized
+  sample of the generated layouts"; the old code presented files in sorted
+  filename order. Now shuffled (or sampled with `--sample_size N`) using a
+  seed that's recorded on every rating (`order_seed`,
+  `presentation_order`), so the exact order shown to the evaluator is
+  reproducible. `--seed` fixes it explicitly.
+- **Report:** per-layout means for the 3 parameters, per-parameter mean
+  and SD across the whole tested dataset, and the overall MOS (p.58's
+  "final validation metric") with SD and nearest Table 2 rating word.
+- **Instrument tag:** every entry carries `"instrument":
+  "manuscript_ch3_table2_3param"`; the report ignores (and counts) any
+  entry without it, so ratings from a different rubric can never be
+  silently averaged together.
+
+No migration needed — `results/mos_results.json` didn't exist (zero real
+ratings collected). Verified with a scripted smoke session (valid scores,
+`?`, non-numeric and out-of-range input, `--sample_size 2 --seed 7`)
+written to a scratch path; the real `results/` directory was left
+untouched.
+
+**Still open (not code):** Phase 4 itself — generating the fixed set of
+outputs to be rated and running a session with the actual domain expert.
+Also, the citations backing the Likert/MOS instrument (TSA's question,
+`adviser_consultation_checklist.md` §D2) are still unverified/not added —
+this fix makes the *instrument* match the manuscript, it doesn't add the
+manuscript's missing grounding.

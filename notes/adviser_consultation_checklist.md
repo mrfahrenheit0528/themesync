@@ -31,9 +31,17 @@ explain and defend it, or roll it back if they push back.
   batch (`themesync_yolo_v2.pt`) raised held-out validation mAP50 from
   functionally zero to 0.325. On 3 genuinely unseen poster images, top
   detection confidence rose from 0.20–0.46 to 0.69–0.74. Full numbers in
-  `notes/gnn_fixes_and_methodology_notes.md` section 3.7. This is a real,
-  positive result worth presenting, not just a decision needing retroactive
-  justification — but still worth telling your adviser *how* it came about:
+  `notes/gnn_fixes_and_methodology_notes.md` section 3.7.
+  **Updated (2026-09-22): batch scaled to 124 images, `themesync_yolo_v3.pt`
+  fine-tuned from v2.** Held-out mAP50 rose again, 0.320 → 0.370 (v2 → v3);
+  logo 0.515 → 0.620, text 0.538 → 0.595. A real annotation-export bug was
+  also caught and fixed along the way (mixed polygon/box label formats
+  silently dropping ~23% of images, plus a class-index reorder that would
+  have corrupted the continued fine-tune) — worth mentioning as a
+  verification-discipline point, not hiding. Full numbers in section 3.12 of
+  the same file. This is a real, positive result worth presenting, not just a
+  decision needing retroactive justification — but still worth telling your
+  adviser *how* it came about:
   the YOLO model trained cleanly on CGL-Dataset (mAP50 0.539) but produced
   near-zero-confidence detections (0.03–0.11) on the 4 real CSPC posters
   originally — a real, measured domain gap between the public training
@@ -44,17 +52,19 @@ explain and defend it, or roll it back if they push back.
   - Whether they're fine with a "train on public dataset → measure domain
     gap → fine-tune on small real-annotated set → gap closes" narrative for
     Chapter 4, since that's what actually happened, evidence and all.
-  - **Whether 65 images is enough to call this result defensible**, or
-    whether they'd want it scaled up toward the 80–120 range originally
-    discussed as a stretch goal, given it's already past the 20–30
-    feasibility-only floor and produced a real measured result.
-  - **Underlay detection is still weak** (mAP50 0.029 on held-out data — only
-    17 validation instances) and `embellishment` was intentionally not
-    prioritized during annotation (already failed on CGL's own data at 2.5%
-    of instances, and is the least structurally important class for this
-    genre — decorative flourishes/stickers, not load-bearing content).
-    Confirm the adviser is fine with both being reported as residual
-    limitations rather than further remediated before defense.
+  - ~~Whether 65 images is enough to call this result defensible~~ —
+    **overtaken by events**: the group scaled to 124 on its own initiative,
+    past the 80–120 stretch-goal range originally discussed. Worth a
+    one-line mention rather than an open question now.
+  - **Underlay detection is still weak** (mAP50 0.050 on held-out data as of
+    v3 — 44 validation instances now, up from 17, better but still not
+    enough) and `embellishment` stayed flat despite the batch nearly
+    doubling (intentionally not prioritized during annotation — already
+    failed on CGL's own data at 2.5% of instances, and is the least
+    structurally important class for this genre — decorative flourishes/
+    stickers, not load-bearing content). Confirm the adviser is fine with
+    both being reported as residual limitations rather than further
+    remediated before defense.
   - Who did the annotation (whole group vs. you) and what tool
     (CVAT/Roboflow/LabelImg — the latter two already set up this session) —
     logistics your adviser may want a say in if it's being treated as a
@@ -94,14 +104,38 @@ explain and defend it, or roll it back if they push back.
   acceptable, and ask whether MOS-retraining is a hard requirement before
   defense or can be reported as a forward step.
 
+- [ ] **GNN training data has no real per-node color/saliency/typography
+  features — confirmed by the 2026-09-15 audit, worse than previously
+  tracked.** `graph_builder.py` broadcasts one global color centroid + one
+  global saliency scalar into *every* node's feature vector when preparing
+  CGL-Dataset training examples; there's no per-node `node_id`, and
+  `text_features` (font size / alignment) is dropped entirely during
+  preprocessing. Full evidence in `gnn_fixes_and_methodology_notes.md`
+  §3.10 (Finding 3). This absorbs and sharpens the older saliency-only item
+  below — ask the adviser whether full Table 1/Appendix A per-node fidelity
+  here is expected before defense, or reportable as a forward-work
+  limitation like the domain-gap finding in section A.
+
 ## C. Smaller follow-ups — mention, but low priority
 
+- [x] ~~MOS collector's 4 rating dimensions don't match the manuscript's 3
+  named ones, and Table 2's descriptive rubric is never shown to the
+  evaluator.~~ **Fixed 2026-09-26** (`gnn_fixes_and_methodology_notes.md`
+  §3.13): code changed to match the manuscript, not the other way round —
+  the 3 named parameters verbatim, Table 2 shown to the evaluator, layouts
+  presented in a seeded random order per p.57's "randomized sample." Zero
+  real ratings existed, so nothing to migrate. Just a one-line mention to
+  your TA now — no decision needed unless she'd have preferred rewording
+  the manuscript instead.
 - [ ] Manuscript says SIFT **and** SURF for stylistic markers; code only
   actually invokes SIFT. Ask if this discrepancy needs a manuscript wording
   fix or a code fix, or is fine as-is.
 - [ ] GNN's own `s_i` saliency input feature is still one global scalar per
   template (Table 1 implies it should be per-node, same as the legibility
-  penalty now is). Ask if full Table 1 fidelity here is expected or optional.
+  penalty now is). **See section B for the sharpened version of this item**
+  (color centroids have the same problem, plus `node_id`/`text_features`
+  are absent entirely) — kept here as a pointer so this line isn't mistaken
+  for a separate, smaller issue.
 - [ ] Grayscale/degenerate-image K-Means fallback path still uses a fixed
   `n_colors=3` — the Elbow Method k-selection fix (gap 4) wasn't extended to
   this fallback path. Likely low priority (rare fallback case) — confirm.
@@ -111,13 +145,47 @@ explain and defend it, or roll it back if they push back.
   specific fallback-path gap needs fixing before defense, since she brought
   it up unprompted.
 
-## D. Not yet audited — do before claiming full Ch.3 alignment
+## D2. Raised by the Thesis Subject Adviser (TSA), 2026-09-22 — a separate role from your TA
 
-- [ ] Chapter 3 past p. 49: Materials/Evaluation Methods, statistical tools,
-  MOS protocol wording, Annexes A & B. The MOS collector
-  (`src/evaluation/mos_collector.py`) *looks* consistent (4 dimensions,
-  1–5 scale) but hasn't been cross-checked word-for-word against the
-  manuscript's actual Materials section yet.
+TSA (distinct from TA and from your consultant) asked, in her own
+consultation: whether Table 2's Likert scale, the 3 named MOS dimensions,
+and the domain-expert evaluator concept are each "backed with study," and
+whether the annotated dataset has been checked by anyone besides the
+group. Checked the manuscript's actual text rather than assuming — its
+*only* citation anywhere for MOS is [18], a Twilio marketing-glossary page
+(Chapter 1, Definition of Terms); Chapter 3's own Table 2/Phase 4 text has
+no citation at all, and the 124-image annotated batch isn't mentioned in
+Chapter 3's prose whatsoever (only CGL-Dataset is described as a Research
+Instrument there).
+
+- [ ] **Response in progress:** real candidate citations identified —
+  Likert (1932) for the scale itself, ITU-T Recommendation P.800 for the
+  MOS methodology specifically, Nielsen & Molich (1990, heuristic
+  evaluation) for why a small number of domain experts is methodologically
+  valid. Not yet added to the manuscript — still needs bibliographic
+  verification and an explicit go-ahead before editing Chapter 1/2/3 prose.
+- [ ] **Expert validation of the annotated dataset arranged** — a sample of
+  15 images sent to a graphic design/layout expert for review against the
+  annotation class definitions, separate from Phase 4's expert-evaluates-
+  *outputs* step. Update this line once the review comes back.
+- [ ] Once both land, Chapter 3 should get a new subsection describing the
+  124-image master-layout batch as its own Research Instrument (parallel
+  to how CGL-Dataset is already described) — currently the manuscript
+  doesn't document this dataset's existence at all.
+
+## D. Audited (2026-09-15) — Chapter 3 p.49+
+
+- [x] ~~Chapter 3 past p. 49: Materials/Evaluation Methods, statistical
+  tools, MOS protocol wording, Annexes A & B.~~ **Done.** Full findings in
+  `gnn_fixes_and_methodology_notes.md` §3.10; actionable items moved to
+  sections B (GNN per-node feature gap) and C (MOS rubric mismatch) above.
+  Summary: MOS collector's dimensions/rubric don't match the manuscript
+  (now tracked in C), Appendix A's per-node feature schema doesn't match
+  the GNN training pipeline (now tracked in B, sharper than the old
+  saliency-only item), Appendix B's payload schema matches the real code
+  exactly (no action needed), and no separate "statistical treatment"
+  section exists to further cross-check (Evaluation Metrics, pp.55-58,
+  appears to be the complete content).
 
 ---
 

@@ -7,3 +7,4 @@ data/raw/
 runs/
 *.arrow
 repomix-output.xml
+.ipynb_checkpoints/

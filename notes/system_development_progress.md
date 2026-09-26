@@ -60,10 +60,10 @@ human expert MOS validation (Phase 4), both currently near 0%.
 
 | Component | Manuscript requirement | Status |
 |---|---|---|
-| MOS collection tool | 5-point Likert scale, 3 dimensions (Visual Hierarchy Preservation, Brand & Typographic Consistency, Constraint & Whitespace Harmony) | **Built, unused** — `mos_collector.py` implements rating collection and a report generator |
+| MOS collection tool | 5-point Likert scale, 3 named dimensions (Visual Hierarchy Preservation, Brand & Typographic Consistency, Constraint & Whitespace Harmony), each scored via Table 2's descriptive rubric, on a randomized sample of outputs | **Built and matches the manuscript (fixed 2026-09-26).** `mos_collector.py` now uses the 3 named parameters verbatim, shows Table 2's full score/rating/description scale to the evaluator (start of session + `?` at any prompt), and presents layouts in a seeded random order (`--sample_size`, `--seed`). Previously implemented a different 4-dimension rubric — found in the 2026-09-15 audit (§3.10), fixed in §3.13 of `gnn_fixes_and_methodology_notes.md`. |
 | Actual expert evaluation data | A designated domain expert (professional layout artist/graphic designer) rates a randomized subset of generated outputs | **Not done — 0%.** No MOS results file exists anywhere in `data/processed/` or `results/`. This requires recruiting and running an actual outside expert, which hasn't happened yet |
 
-**Phase 4 estimate: ~15%** — infrastructure ready to go the moment a real expert is available; no real evaluation data collected.
+**Phase 4 estimate: ~20%** — the collection instrument now matches the manuscript and is ready to use; no real evaluation data collected yet. Remaining: pick the fixed set of generated outputs to be rated, recruit the domain expert, run the session.
 
 ---
 
