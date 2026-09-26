@@ -10,11 +10,35 @@ class NodeInstantiator:
         self.canvas_w = float(canvas_width)
         self.canvas_h = float(canvas_height)
 
-    def _calculate_baseline_tensor(self, hierarchy_index, struct_class, domain_context):
+    def _calculate_baseline_tensor(self, hierarchy_index, struct_class, domain_context,
+                                    var_name=None, lock_aspect_ratio=False,
+                                    detected_logo_ratio=None):
         """
-        Assigns proportional geometric tensors relative to the current canvas dimensions 
+        Assigns proportional geometric tensors relative to the current canvas dimensions
         and the structural domain (Certificate vs. ID).
+
+        `detected_logo_ratio` (width/height) is Stage 0b's real measurement of the
+        detected logo on the uploaded master layout ("Affine scaling," per Figure
+        2's mockup, p. 51). It's applied narrowly here: only to the schema node
+        whose name identifies it as the logo *and* which the payload itself
+        marks `lock_aspect_ratio: true` — every other node (ID photo, barcode,
+        text) is untouched, so this stays a single derived scalar riding into
+        Stage 1's sizing math, not Stage 0b's detected nodes/positions
+        themselves feeding into the generated document (see
+        stage_layout_parsing's docstring in pipeline.py for that boundary).
+        Without a real detection (no --template_image, or YOLO found no logo),
+        this falls back to the previous fixed-square footprint.
         """
+        is_logo_node = bool(var_name) and "logo" in var_name.lower()
+        if (struct_class == "image_node" and is_logo_node and lock_aspect_ratio
+                and detected_logo_ratio):
+            logo_budget = (min(self.canvas_w * 0.22, self.canvas_h * 0.12)
+                           if domain_context == "identification_card"
+                           else min(self.canvas_w * 0.09, self.canvas_h * 0.11))
+            if detected_logo_ratio >= 1.0:
+                return [logo_budget, logo_budget / detected_logo_ratio]
+            return [logo_budget * detected_logo_ratio, logo_budget]
+
         if domain_context == "identification_card":
             # Vertical ID Stack Logic (CR80 Portrait)
             if struct_class == "image_node":
@@ -63,22 +87,27 @@ class NodeInstantiator:
         # System Failsafe fallback
         return [self.canvas_w * 0.35, self.canvas_h * 0.04]
 
-    def instantiate_payload(self, payload_path):
+    def instantiate_payload(self, payload_path, detected_logo_ratio=None):
         if not os.path.exists(payload_path):
             raise FileNotFoundError(f"Payload schema not found at {payload_path}")
-            
+
         with open(payload_path, 'r') as file:
             payload = json.load(file)
-            
+
         domain = payload.get("domain_context", "academic_certificate")
         schema = payload.get("variable_schema", {})
         instantiated_nodes = []
-        
+
         for var_name, properties in schema.items():
             struct_class = properties.get("structural_class")
             hierarchy = properties.get("spatial_hierarchy", 99)
-            
-            tensor_w, tensor_h = self._calculate_baseline_tensor(hierarchy, struct_class, domain)
+
+            tensor_w, tensor_h = self._calculate_baseline_tensor(
+                hierarchy, struct_class, domain,
+                var_name=var_name,
+                lock_aspect_ratio=properties.get("lock_aspect_ratio", False),
+                detected_logo_ratio=detected_logo_ratio,
+            )
             count = properties.get("instantiation_count", 1)
             
             for i in range(count):

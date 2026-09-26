@@ -39,11 +39,23 @@ _SRC = os.path.dirname(_THIS)
 _ROOT = os.path.dirname(_SRC)
 
 DATA_YAML = os.path.join(_ROOT, "data", "raw", "master_layout_batch", "data.yaml")
-BASE_CHECKPOINT = os.path.join(_ROOT, "themesync_yolo_v1.pt")
-RUN_NAME = "themesync_master_layout_finetune"
+DEFAULT_BASE_CHECKPOINT = os.path.join(_ROOT, "themesync_yolo_v1.pt")
+DEFAULT_OUTPUT_CHECKPOINT = os.path.join(_ROOT, "themesync_yolo_v2.pt")
+DEFAULT_RUN_NAME = "themesync_master_layout_finetune"
 
 
-def finetune(epochs=80, imgsz=640, batch=8, freeze=10, patience=15):
+def finetune(epochs=80, imgsz=640, batch=8, freeze=10, patience=15,
+             base_checkpoint=DEFAULT_BASE_CHECKPOINT,
+             output_checkpoint=DEFAULT_OUTPUT_CHECKPOINT,
+             run_name=DEFAULT_RUN_NAME):
+    """
+    `base_checkpoint`/`output_checkpoint`/`run_name` default to the original
+    v1->v2 stage, but are overridable so a later re-annotation batch (e.g.
+    the 124-image superset of the original 65) can continue from the
+    *previous* fine-tune rather than always restarting from the CGL-only
+    checkpoint, while writing to a new run/output name so the prior stage's
+    results.csv and checkpoint aren't overwritten -- both stay comparable.
+    """
     if not os.path.exists(DATA_YAML):
         raise FileNotFoundError(
             f"No dataset config at {DATA_YAML}. "
@@ -51,17 +63,15 @@ def finetune(epochs=80, imgsz=640, batch=8, freeze=10, patience=15):
             "notes/annotation_guidelines.md."
         )
 
-    if not os.path.exists(BASE_CHECKPOINT):
+    if not os.path.exists(base_checkpoint):
         raise FileNotFoundError(
-            f"Base checkpoint not found at {BASE_CHECKPOINT}. "
-            "This script fine-tunes ON TOP of the CGL-trained model — run "
+            f"Base checkpoint not found at {base_checkpoint}. "
+            "This script fine-tunes ON TOP of an existing checkpoint — run "
             "src/models/train_yolo_extractor.py first if it's missing."
         )
 
-    print(f"Loading base checkpoint: {BASE_CHECKPOINT}")
-    print(f"  (CGL-Dataset-trained — mAP50=0.539 on CGL's own domain, "
-          f"measured near-zero confidence on real master-layout images)")
-    model = YOLO(BASE_CHECKPOINT)
+    print(f"Loading base checkpoint: {base_checkpoint}")
+    model = YOLO(base_checkpoint)
 
     freeze_arg = list(range(freeze)) if freeze > 0 else None
     print(f"Freezing first {freeze} layers (backbone)" if freeze > 0
@@ -74,20 +84,18 @@ def finetune(epochs=80, imgsz=640, batch=8, freeze=10, patience=15):
         batch=batch,
         freeze=freeze_arg,
         project=os.path.join(_ROOT, "runs", "yolo"),
-        name=RUN_NAME,
+        name=run_name,
         exist_ok=True,
         patience=patience,
         amp=False,  # skips ultralytics' AMP sanity-check reference-model download
     )
 
-    best_weights = os.path.join(_ROOT, "runs", "yolo", RUN_NAME, "weights", "best.pt")
-    # v2, not v1 — keep the CGL-only checkpoint intact for comparison/fallback.
-    target_path = os.path.join(_ROOT, "themesync_yolo_v2.pt")
+    best_weights = os.path.join(_ROOT, "runs", "yolo", run_name, "weights", "best.pt")
     if os.path.exists(best_weights):
         import shutil
-        shutil.copy(best_weights, target_path)
-        print(f"\nBest weights copied -> {target_path}")
-        print(f"(v1 checkpoint at {BASE_CHECKPOINT} left untouched for comparison)")
+        shutil.copy(best_weights, output_checkpoint)
+        print(f"\nBest weights copied -> {output_checkpoint}")
+        print(f"(base checkpoint at {base_checkpoint} left untouched for comparison)")
     else:
         print(f"\nWARNING: expected weights not found at {best_weights}")
 
@@ -112,8 +120,21 @@ def main():
     parser.add_argument("--patience", type=int, default=15,
                          help="Early-stopping patience (epochs without val "
                               "improvement).")
+    parser.add_argument("--base_checkpoint", type=str, default=DEFAULT_BASE_CHECKPOINT,
+                         help="Checkpoint to continue fine-tuning from "
+                              "(default: v1, the CGL-only checkpoint).")
+    parser.add_argument("--output_checkpoint", type=str, default=DEFAULT_OUTPUT_CHECKPOINT,
+                         help="Where to copy the best weights to when done "
+                              "(default: themesync_yolo_v2.pt).")
+    parser.add_argument("--run_name", type=str, default=DEFAULT_RUN_NAME,
+                         help="Subdirectory name under runs/yolo/ for this "
+                              "run's logs/results.csv (default: "
+                              f"'{DEFAULT_RUN_NAME}').")
     args = parser.parse_args()
-    finetune(args.epochs, args.imgsz, args.batch, args.freeze, args.patience)
+    finetune(args.epochs, args.imgsz, args.batch, args.freeze, args.patience,
+              base_checkpoint=args.base_checkpoint,
+              output_checkpoint=args.output_checkpoint,
+              run_name=args.run_name)
 
 
 if __name__ == "__main__":

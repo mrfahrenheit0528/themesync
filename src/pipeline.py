@@ -69,11 +69,16 @@ from layout_extractor import LayoutExtractor
 # These match the values used during GNN training for the CSPC institution.
 # ---------------------------------------------------------------------------
 DEFAULT_WEIGHTS = os.path.join(os.path.dirname(_SRC), "themesync_gnn_v1.pth")
-# v2 (fine-tuned on real master-layout images) preferred over v1 (CGL-only) —
-# see notes/gnn_fixes_and_methodology_notes.md section 3.7.
+# v3 (124-image real-poster fine-tune) preferred over v2 (65-image) over v1
+# (CGL-only) — see notes/gnn_fixes_and_methodology_notes.md sections 3.7, 3.12.
+_YOLO_V3 = os.path.join(os.path.dirname(_SRC), "themesync_yolo_v3.pt")
 _YOLO_V2 = os.path.join(os.path.dirname(_SRC), "themesync_yolo_v2.pt")
 _YOLO_V1 = os.path.join(os.path.dirname(_SRC), "themesync_yolo_v1.pt")
-DEFAULT_YOLO_WEIGHTS = _YOLO_V2 if os.path.exists(_YOLO_V2) else _YOLO_V1
+DEFAULT_YOLO_WEIGHTS = (
+    _YOLO_V3 if os.path.exists(_YOLO_V3)
+    else _YOLO_V2 if os.path.exists(_YOLO_V2)
+    else _YOLO_V1
+)
 SEPARATOR = "=" * 66
 
 _FALLBACK_CENTROIDS = [
@@ -159,9 +164,17 @@ def stage_layout_parsing(template_image_path: str, weights_path: str) -> tuple:
     extraction and independently of the JSON-schema-driven certificate/ID
     node instantiation (Stage 1) — this stage reports on the *master
     layout's own* structure ("Logo detected: True," per Figure 2's UI
-    mockup), it does not feed those nodes into the certificate/ID being
-    generated. See notes/gnn_fixes_and_methodology_notes.md sections 3.5-3.7
-    for why these stay separate for now.
+    mockup); its detected nodes/positions still do not feed into the
+    certificate/ID being generated. See notes/gnn_fixes_and_methodology_notes.md
+    sections 3.5-3.7 for why these stay separate.
+
+    One narrow, deliberate exception (section 3.11): the detected logo's own
+    *aspect ratio* (not its position, not any other node) flows into Stage
+    1's sizing math for whichever schema node the payload itself marks
+    `lock_aspect_ratio: true` and names as the logo — see
+    `_detect_logo_aspect_ratio()` and `NodeInstantiator._calculate_baseline_tensor()`.
+    This is Figure 2's "Affine scaling" readout, previously computed nowhere
+    and consumed nowhere despite the schema already declaring the field.
 
     Gracefully skipped (not a hard failure) if no fine-tuned weights file is
     present, so the rest of the pipeline still runs on a machine that hasn't
@@ -191,14 +204,35 @@ def stage_layout_parsing(template_image_path: str, weights_path: str) -> tuple:
     return nodes, elapsed
 
 
-def stage_instantiate(payload_path: str, canvas_w: int, canvas_h: int):
+def stage_instantiate(payload_path: str, canvas_w: int, canvas_h: int,
+                       detected_logo_ratio: float = None):
     t0 = time.perf_counter()
     instantiator = NodeInstantiator(canvas_width=canvas_w, canvas_height=canvas_h)
-    nodes = instantiator.instantiate_payload(payload_path)
+    nodes = instantiator.instantiate_payload(payload_path, detected_logo_ratio=detected_logo_ratio)
     elapsed = time.perf_counter() - t0
     _print_stage("1. Dynamic Node Instantiation", elapsed)
     print(f"     → {len(nodes)} node(s) instantiated for canvas {canvas_w}×{canvas_h}")
+    if detected_logo_ratio:
+        print(f"     → Logo aspect ratio locked to detected {detected_logo_ratio:.2f}:1 "
+              "(Stage 0b, Affine scaling)")
     return nodes, elapsed
+
+
+def _detect_logo_aspect_ratio(detected_layout_nodes: list):
+    """
+    Derives the "Affine scaling" ratio (Figure 2, p. 51) from Stage 0b's
+    detected logo bbox — width/height of the highest-confidence detection
+    with semantic_category == "logo". Returns None if Stage 0b didn't run or
+    found no logo, so callers fall back to the fixed-square default.
+    """
+    if not detected_layout_nodes:
+        return None
+    logo_nodes = [n for n in detected_layout_nodes if n.get("semantic_category") == "logo"]
+    if not logo_nodes:
+        return None
+    best = max(logo_nodes, key=lambda n: n.get("detection_confidence", 0.0))
+    _, _, w, h = best["bbox"]
+    return (w / h) if h > 0 else None
 
 
 def stage_gnn_inference(nodes: list, canvas_w: int, canvas_h: int,
@@ -396,7 +430,10 @@ def run_pipeline(
     # ------------------------------------------------------------------
     # Stage 1 — Instantiation
     # ------------------------------------------------------------------
-    nodes, timings["instantiation"] = stage_instantiate(payload_path, canvas_w, canvas_h)
+    detected_logo_ratio = _detect_logo_aspect_ratio(detected_layout_nodes)
+    nodes, timings["instantiation"] = stage_instantiate(
+        payload_path, canvas_w, canvas_h, detected_logo_ratio=detected_logo_ratio
+    )
 
     # ------------------------------------------------------------------
     # Stage 2 — GNN Inference
@@ -555,9 +592,9 @@ Examples:
     parser.add_argument(
         "--yolo_weights", type=str, default=DEFAULT_YOLO_WEIGHTS,
         help="Path to fine-tuned YOLOv8 weights for Stage 0b Semantic Layout "
-             "Parsing. Defaults to themesync_yolo_v2.pt (fine-tuned on real "
-             "master-layout images) if present, else themesync_yolo_v1.pt "
-             "(CGL-Dataset only). Stage 0b is skipped gracefully if neither "
+             "Parsing. Defaults to themesync_yolo_v3.pt (124-image real-poster "
+             "fine-tune) if present, else v2 (65-image), else v1 (CGL-Dataset "
+             "only). Stage 0b is skipped gracefully if none "
              "exists.",
     )
     parser.add_argument(
