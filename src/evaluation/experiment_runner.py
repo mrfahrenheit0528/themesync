@@ -112,7 +112,7 @@ def _run_single_trial(
 
     # Stage 4: Ranking
     t0 = time.perf_counter()
-    explorer = MetaheuristicStateExplorer()
+    explorer = MetaheuristicStateExplorer(canvas_width=canvas_w, canvas_height=canvas_h)
     ranked = explorer.generate_and_rank_candidates(resolved, population_size=population)
     t_rank = time.perf_counter() - t0
 

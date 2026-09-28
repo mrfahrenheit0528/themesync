@@ -1155,3 +1155,112 @@ rendering Phase 4 images, so the expert sees the intended typeface.
   fixes. Certificate C_total there was 5.58 vs. ~1.2 now, so it's stale
   for *both* formats, and the ID half now also describes a template that
   no longer exists. It needs a re-run before any Chapter 4 use.
+
+### 3.16 Empty bottom space fixed with a vertical-balance soft constraint, checked against the manuscript first (2026-09-28)
+
+**Problem (§3.14–3.15):** in baseline (no-GNN) mode both formats left the
+bottom 20–25% of the canvas empty. Cassowary stacked the nodes with
+inequalities only (`top >= prev.bottom + gap`, `top >= margin`) and
+nothing pinned the stack vertically, so the solver parked it on the top
+margin.
+
+**Manuscript check before touching code (the user's request):**
+
+| Option | Where | Verdict |
+|---|---|---|
+| **A. Soft "equal top/bottom margins" constraint** | Cassowary | ✅ **Aligned.** p.39: "Soft Constraints: Standard design rules (e.g., default margins)… are assigned finite weights… minimizing the total error" (Formula 3.5); p.38: margins/padding as linear relations (Formula 3.3). Balanced vertical margins is a standard design rule of exactly that kind. Hard constraints (manual nudges, Formula 3.4) still override it, so HITL is untouched. No change to Formulas 3.11–3.15, the Appendix B schema, or the AAPA parameters. Also matches Optimization Theory's "geometric balance, whitespace distribution" (p.61) and MOS's "negative space aligns with professional composition standards" (p.58). |
+| B. Stretch the vertical gaps to fill the page | Cassowary | ⚠️ Conflicts with AAPA, whose candidates deliberately vary the vertical gap (margins / vertical gaps / element density); stretching overrides that parameter. |
+| C. Schema field to anchor the role/signature rows to the bottom | payload | ❌ Changes Appendix B's schema (currently an exact match to the code). |
+| D. New "vertical balance" penalty term | Formula 3.11 | ❌ A fifth term in a four-term formula: a Chapter 3 rewrite. |
+
+**Implemented A** (`cassowary_engine.py`, step 4):
+`first.top + last.bottom == canvas_h` at `strong`, the same tier as the
+margin rules. "Last" is the signature row when there is one.
+
+- **Why above the GNN:** the GNN's position hints are `medium`, so the GNN
+  still decides the arrangement *within* the stack, and the balance rule
+  decides where the stack sits on the canvas.
+- **First attempt stretched rather than moved the stack.** The gaps were
+  only lower-bounded, so the solver satisfied the balance equation by
+  opening a big hole under the certificate logo. I added a `weak`
+  preference for each gap to equal the candidate's vgap. Being weak, it
+  is only a tie-breaker (the GNN's `medium` positions still win), but it
+  keeps the stack compact so it moves as a block.
+
+**Verified:**
+- YUGTO event ID and certificate, with and without the GNN (Cairo
+  renders). All four are balanced top and bottom.
+- `test_vertical_solver.py`: top gap 157.25 px = bottom gap 157.25 px.
+- All tests pass.
+- The GNN certificate still shows its own ~300 px logo gap (§1.4). That is
+  GNN behavior, deliberately left alone.
+
+**Finding for Chapter 4: the fitness function can't see this problem.**
+The certificate test's C_total stayed at exactly GNN 1.2029 / base 1.1876
+after the stack moved, because in synthetic mode every penalty is
+invariant to vertical translation:
+- P_align measures x only (Formula 3.13 as implemented);
+- P_whitespace is a global area ratio (Formula 3.14, position-blind by
+  definition);
+- collision is zero;
+- legibility is flat without a real saliency map.
+
+So Formula 3.14 cannot distinguish a balanced layout from a top-heavy
+one. That is a concrete, documentable reason why the MOS step (Phase 4)
+is needed on top of the fitness function, which is exactly what the
+manuscript argues on p.58 and p.62.
+
+**AAPA side effect:** the margin parameter now affects the vertical
+position only when the content overflows, so in baseline mode candidates
+differ mainly by vgap. This slightly narrows candidate diversity, a
+limitation already noted in §1.4.
+
+### 3.17 Montserrat bundled in the repo for rendering on the HPC server (2026-09-28)
+
+**Problem:** the renderer's default typeface (Montserrat) isn't installed
+on the school HPC server, so every render fell back to DejaVu Sans. The
+user may not be allowed to install system fonts there.
+
+**Fix, nothing installed:**
+- Montserrat's static TTFs (Regular, Italic, SemiBold, Bold, BoldItalic,
+  Black) come from the upstream repo (github.com/JulietaUla/Montserrat).
+  They're committed under `assets/fonts/montserrat/` with `OFL.txt`; the
+  SIL Open Font License permits bundling.
+- The new `src/renderers/rasterize.py` generates a fontconfig file that
+  includes the normal system config plus `assets/fonts/`, and points
+  `FONTCONFIG_FILE` at it for **its own process only**. It then exposes
+  `svg_to_png()` / `svg_to_pdf()` via cairosvg.
+  - The config uses an absolute path, generated at runtime, because
+    fontconfig 2.13 (the server's version) silently ignored a relative
+    `<dir prefix="relative">`.
+- Verified: `fc-match Montserrat:bold` resolves to `Montserrat-Bold.ttf`
+  inside the process (DejaVu Sans outside it), and the ID and certificate
+  render in Montserrat.
+- `cairosvg==2.9.1` added to `requirements.txt`. That file is UTF-16 with
+  CRLF line endings, so edit it with an encoding-aware tool; `sed` silently
+  does nothing on it.
+
+**Limits:**
+- CairoSVG picks fonts through Cairo's basic API, which only knows normal
+  and bold, so SVG weights 600–900 all render with the Bold face.
+- SVGs opened in a *browser* (dashboard, downloads) still depend on the
+  viewer's own fonts. Embedding the font in the SVG would fix that but
+  adds ~0.5 MB per file. Not done; only rasterized output (the Phase 4
+  packet) needed it.
+
+### 3.18 ID candidates were being ranked on a certificate-sized canvas (2026-09-28)
+
+Found while preparing the Phase 3 re-run. `experiment_runner.py`,
+`evaluate.py`, and both test files created `MetaheuristicStateExplorer()`
+without a canvas size, so it defaulted to 1200×900. Each AAPA candidate
+is re-solved by Cassowary inside the explorer, so **every ID candidate in
+those runs was laid out and scored on a landscape certificate canvas.**
+
+- `pipeline.py` always passed the size, so real pipeline outputs were
+  never affected.
+- The old `results/experiment_log.json` ID numbers were affected, on top
+  of being pre-§3.1 (§3.15).
+- Fixed in all four places.
+- The ID test now also checks that the ranked winner stays inside the
+  canvas; it previously checked only the first solve, which is why this
+  went unnoticed.

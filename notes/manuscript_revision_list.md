@@ -243,6 +243,17 @@ system now generates that format.
 **Tell the TA.** It narrows the ID format rather than adding scope, but
 it changes wording she has already read.
 
+### 3.7c 🟡 Optional: name the vertical-balance rule among Cassowary's soft constraints (pp.38–39)
+
+**Now:** p.39 says soft constraints are "standard design rules (e.g.,
+default margins)." The solver now also applies an equal top/bottom margin
+("vertical balance") soft constraint (notes §3.16).
+
+**Fix (optional):** add it to the examples, e.g. "default margins and
+balanced vertical margins." This isn't strictly required, since it is
+already covered by "standard design rules." It's worth it only if the TA
+wants every soft constraint named.
+
 ### 3.8 🟡 Phase 4 sampling isn't specified (p.54, p.57)
 
 **Now:** "a randomized subset of the algorithmically generated multi-format

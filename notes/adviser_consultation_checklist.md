@@ -186,6 +186,25 @@ Instrument there).
   to how CGL-Dataset is already described) — currently the manuscript
   doesn't document this dataset's existence at all.
 
+## D3. Format changes to tell the TA about (2026-09-28)
+
+- [ ] **The ID format is now an event ID (lanyard pass), not a student ID
+  card.**
+  - Based on the group's own 18 real CSPC event IDs: logo row, event
+    title, name, role; no photo, student number, or barcode (notes §3.15).
+  - The manuscript still says "Student Identification Cards" on pp.48,
+    49, and 54. The wording fix is listed in `manuscript_revision_list.md`
+    item 3.7b.
+  - It narrows the format rather than adding scope, but she has read the
+    old wording, so tell her before revising.
+- [ ] **Layouts now keep equal top/bottom margins**, via a soft Cassowary
+  constraint (notes §3.16).
+  - Checked against Chapter 3 first: it's a "standard design rule" soft
+    constraint (p.39, Formula 3.5), with no formula or schema change.
+  - Worth one line, plus the Chapter 4 finding that came with it: the
+    fitness function's whitespace penalty can't see *where* empty space
+    is, which supports why Phase 4's MOS is needed.
+
 ## D. Audited (2026-09-15) — Chapter 3 p.49+
 
 - [x] ~~Chapter 3 past p. 49: Materials/Evaluation Methods, statistical

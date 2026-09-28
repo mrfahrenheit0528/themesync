@@ -84,6 +84,11 @@ class ConstraintSolverEngine:
             curr_var = self.variables[singular_nodes[i]['node_id']]
             prev_var = self.variables[singular_nodes[i-1]['node_id']]
             self.solver.addConstraint((curr_var['top'] >= prev_var['bottom'] + self.v_gap) | kiwi.strength.strong)
+            # Weak preference for exactly the candidate's gap: only a
+            # tie-breaker (the GNN's `medium` positions still win), but it
+            # keeps the stack compact so the vertical-balance rule (4) moves
+            # the whole stack rather than stretching the gaps to fill the page.
+            self.solver.addConstraint((curr_var['top'] == prev_var['bottom'] + self.v_gap) | kiwi.strength.weak)
 
         # 3. Repeating Groups (Signature Blocks)
         if repeating_nodes:
@@ -119,6 +124,24 @@ class ConstraintSolverEngine:
                 if singular_nodes:
                     last_singular_var = self.variables[singular_nodes[-1]['node_id']]
                     self.solver.addConstraint((current_var['top'] >= last_singular_var['bottom'] + self.v_gap) | kiwi.strength.strong)
+                    self.solver.addConstraint((current_var['top'] == last_singular_var['bottom'] + self.v_gap) | kiwi.strength.weak)
+
+        # 4. Vertical balance — equal top and bottom margins for the whole
+        # stack (top_gap == bottom_gap, i.e. first.top + last.bottom == H).
+        # A standard design rule expressed as a soft constraint (Chapter 3,
+        # p.39, Formulas 3.3/3.5), at the same `strong` tier as the margin
+        # rules: without it nothing pinned the stack vertically in baseline
+        # mode, so it collapsed onto the top margin and left the bottom
+        # 20-25% of every format empty. It sits above the GNN's `medium`
+        # position preferences — the GNN still decides the arrangement
+        # *within* the stack, this decides where the stack sits on the
+        # canvas — and below Hard (manual) constraints, which stay `required`.
+        if singular_nodes or repeating_nodes:
+            first_var = self.variables[(singular_nodes or repeating_nodes)[0]['node_id']]
+            last_var = self.variables[(repeating_nodes or singular_nodes)[-1]['node_id']]
+            self.solver.addConstraint(
+                (first_var['top'] + last_var['bottom'] == self.canvas_h) | kiwi.strength.strong
+            )
 
         self.solver.updateVariables()
         

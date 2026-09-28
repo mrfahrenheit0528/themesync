@@ -86,7 +86,7 @@ def _run_id_pipeline(use_gnn: bool = True):
     engine = ConstraintSolverEngine(canvas_width=CANVAS_W, canvas_height=CANVAS_H)
     resolved = engine.execute_relational_logic(nodes)
 
-    explorer = MetaheuristicStateExplorer()
+    explorer = MetaheuristicStateExplorer(canvas_width=CANVAS_W, canvas_height=CANVAS_H)
     ranked = explorer.generate_and_rank_candidates(resolved, population_size=3)
 
     return resolved, ranked
@@ -97,8 +97,11 @@ def _run_id_pipeline(use_gnn: bool = True):
 # ---------------------------------------------------------------------------
 
 def test_all_id_nodes_within_canvas():
-    resolved, _ = _run_id_pipeline()
-    for node in resolved:
+    resolved, ranked = _run_id_pipeline()
+    # Check the ranked winner too, not just the first solve: the winner is
+    # re-solved by the candidate explorer, which once silently used a
+    # 1200x900 landscape canvas for IDs because it wasn't given the size.
+    for node in resolved + ranked[0]["nodes"]:
         x, y, w, h = node["bbox"]
         assert x >= 0,              f"Node {node['node_id']} x={x} is off left edge"
         assert y >= 0,              f"Node {node['node_id']} y={y} is off top edge"

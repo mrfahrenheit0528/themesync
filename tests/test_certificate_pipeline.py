@@ -83,7 +83,7 @@ def _run_pipeline(use_gnn: bool):
     engine = ConstraintSolverEngine(canvas_width=CANVAS_W, canvas_height=CANVAS_H)
     resolved = engine.execute_relational_logic(nodes)
 
-    explorer = MetaheuristicStateExplorer()
+    explorer = MetaheuristicStateExplorer(canvas_width=CANVAS_W, canvas_height=CANVAS_H)
     ranked = explorer.generate_and_rank_candidates(resolved, population_size=3)
 
     return resolved, ranked

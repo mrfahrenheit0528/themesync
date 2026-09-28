@@ -184,7 +184,7 @@ def _run_once(payload_path: str, canvas_w: int, canvas_h: int,
 
     # -- Stage 4: Ranking -------------------------------------------------
     t0 = time.perf_counter()
-    explorer = MetaheuristicStateExplorer()
+    explorer = MetaheuristicStateExplorer(canvas_width=canvas_w, canvas_height=canvas_h)
     ranked = explorer.generate_and_rank_candidates(resolved_nodes, population_size=5)
     timings["ranking_ms"] = round((time.perf_counter() - t0) * 1000, 2)
 
