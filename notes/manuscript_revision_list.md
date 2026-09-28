@@ -254,23 +254,27 @@ balanced vertical margins." This isn't strictly required, since it is
 already covered by "standard design rules." It's worth it only if the TA
 wants every soft constraint named.
 
-### 3.8 🟡 Phase 4 sampling isn't specified (p.54, p.57)
+### 3.8 🔴 Phase 4 sampling and design aren't specified, and a baseline condition was added (p.54, p.57)
 
 **Now:** "a randomized subset of the algorithmically generated multi-format
-layouts" and "a randomized sample." Neither gives a size or says how the
-sample is drawn.
+layouts" and "a randomized sample." No size, no source, no comparison
+condition.
 
-**Add:**
-- How many layouts are rated. For reference, both CGL papers used 60
-  random test images.
-- How many master layouts they're generated from.
-- Per format: certificate vs. ID.
-- That presentation order is randomized with a recorded seed. This is
-  already implemented (§3.13).
-
-**Also:** p.54 says the expert compares outputs "against the original
-Master Layout." The rating packet has to show each output next to its
-master layout. That is a Phase 4 prep task, not a text change.
+**What the group decided (notes §3.20), to write into Chapter 3:**
+- 15 unseen master layouts (event pubmats not used in YOLO training) × 2
+  formats × 2 conditions = 60 layouts.
+- **New: a blind no-GNN baseline condition.** The same posters and
+  content, with the GNN turned off, are mixed into the packet unlabelled.
+  This lets Phase 4 compare GNN-guided and baseline outputs as rated by a
+  human, not only by the fitness function (which currently favours the
+  baseline by alignment alone; notes §3.19). It *adds* to the manuscript's
+  Phase 4, so the TA should approve it.
+- Printed packet, with each page showing the master layout next to the
+  generated layout, since p.54 already says the expert compares against
+  the master layout. Random sample codes, page order randomized per
+  expert, same-poster pages never adjacent.
+- Cite the 60-layout size to CGL-GAN/RADM's user studies (60 random test
+  images).
 
 ### 3.9 🔴 The promised statistical treatment doesn't exist (p.45 "Materials and Evaluation Methods" → pp.55–58)
 
@@ -287,6 +291,9 @@ MOS, but no statistical tools (§3.10 audit, 2026-09-15).
 - GNN-guided vs. baseline fitness comparison: the test used on
   `experiment_log.json`.
 - Detection: mAP50 / mAP50-95.
+- GNN vs. baseline MOS (item 3.8): a paired comparison per poster and
+  format, e.g. a Wilcoxon signed-rank test (ordinal data, paired
+  samples). Confirm the choice with the consultant.
 
 This is also where the consultant (statistics focus) is most likely to
 push, so it's worth confirming with her.

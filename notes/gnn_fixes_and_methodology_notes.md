@@ -1274,7 +1274,7 @@ those runs was laid out and scored on a landscape certificate canvas.**
 All result artifacts were re-generated, and `notebooks/results_analysis.ipynb`
 was re-executed (0 errors, 4 charts):
 
-- **Domain gap, v1 → v2 → v3, on the 3 unseen posters.** Now a script,
+- **Domain gap, v1 → v2 → v3, on 3 posters outside the 65-image batch.** Now a script,
   `src/evaluation/yolo_domain_gap_check.py`, writing
   `results/yolo_domain_gap_check.json`, instead of hand-typed notebook
   values.
@@ -1292,6 +1292,13 @@ was re-executed (0 errors, 4 charts):
     La Serata value matches the original §3.5 log (0.035).
   - v3's lower detection count on two posters can't be judged without
     ground truth there. Accuracy comes from the held-out mAP.
+  - *Correction, same day (found by §3.20's duplicate check):* **TAN-AW is
+    in v3's training data.** It was added to the 124-image batch under its
+    Roboflow name `TAN-AW_jpg.rf.1169….jpg`. It was unseen by v1/v2 only.
+    The check now records `seen_in_training` per checkpoint (image hash vs.
+    each checkpoint's train folder), and the notebook hatches TAN-AW's v3
+    bars. Clean v3 generalisation evidence is La Serata (0.843) and LODT
+    (0.793), which no model trained on.
 - **Phase 3, 10 trials per format** (`experiment_runner.py --trials 10
   --domains both`), replacing the 2026-08-27 run:
 
@@ -1314,3 +1321,69 @@ was re-executed (0 errors, 4 charts):
 - **GNN-vs-solver IoU is labelled a diagnostic, not a manuscript metric**
   (Chapter 3 confines IoU to Phase 1, pp.55–56). Certificate 0.168,
   ID 0.0 (see §3.16).
+
+### 3.20 Phase 4 rating packet: design and dry run (2026-09-28)
+
+**Design (agreed with the user):**
+- **15 new, unseen master layouts** (the group is collecting event pubmats)
+  × **2 formats** (certificate, event ID) × **2 conditions** (GNN-guided,
+  no-GNN baseline, mixed in blind) = **60 layouts**, 180 ratings. The
+  baseline condition is new relative to the manuscript; see revision
+  list 3.8.
+  - 60 matches the designer user studies of both CGL-Dataset papers
+    (CGL-GAN §5, RADM): 60 random test images, 5 professional + 20 novice
+    designers.
+- **Printed packet.** Each page shows the master layout (a small
+  reference, left) next to the generated layout (large, right). This is
+  p.54's "comparing them against the original Master Layout". The three
+  MOS parameters and Table 2's scale are circled on the same page.
+- **Blinding:**
+  - Pages carry only a random code (S01–S60, from a seeded shuffle).
+  - Both conditions of a poster get identical content (fictional names,
+    the poster's own event title/date/venue), so only the layout differs.
+  - Pages from the same poster are never adjacent.
+  - The instructions don't mention GNN or baseline.
+  - `phase4_key.csv` (code → poster/format/condition) is never printed.
+- **Multiple experts** (1 vs 3–5 still pending the TA): same codes,
+  own page order per expert (`--order_seed`).
+
+**Code:**
+- **`src/evaluation/phase4_packet.py`:**
+  - `template` lists the posters in `data/raw/phase4_posters/` and writes
+    `manifest.csv` (event_title, event_date, event_venue,
+    organization_header, optional logo_files) for the group to fill in.
+  - `generate` checks that every poster is unseen, runs the full pipeline
+    4× per poster, rasterizes with Montserrat (§3.17), and writes the
+    private key. It also records whether a poster's GNN and baseline
+    outputs came out identical.
+  - `packet` builds one PDF plus a score-entry CSV per expert.
+- **`src/evaluation/poster_overlap.py`:** a difference-hash near-duplicate
+  check against the annotated batch (and per-checkpoint training folders).
+  It survives Roboflow renaming and re-encoding, and refuses seen posters
+  unless `--allow_seen` is passed (dry runs only).
+- **`mos_collector.py --import_scores <csv> --key <key> --evaluator
+  <name>`:** validates every row before saving anything (code in key, no
+  duplicates, no missing samples, scores exactly 1–5), refuses a second
+  import of the same expert, and tags each rating with
+  poster/format/condition. `--report` adds a format × condition table.
+- The packet PDF is built from 200-dpi JPEG pages, because a vector PDF
+  re-stored the posters as raw pixels: 42 MB for 15 pages, ~170 MB
+  projected for 64. JPEG pages give ~4.7 MB per 15 pages, ~20 MB for the
+  real packet, at exact A4.
+
+**Dry run** (scratchpad only; real folders untouched):
+- Posters used: La Serata, LODT, TAN-AW, with `--allow_seen`. The
+  duplicate check correctly refused TAN-AW and YUGTO without that flag.
+- 12 layouts generated in 49 s, so ~4 min for 60.
+- Two packets (15 pages each) with different orders, no same-poster
+  neighbours.
+- First layout had the certificate too small (body text ~4–5 pt printed).
+  Rebalanced: output panel ~690×560 px, three rating scales in one row.
+- The import round trip passed: a bad sheet was rejected with line
+  numbers, a good sheet imported, and a re-import was refused.
+
+**Still needed before printing:**
+1. The group's 15 new pubmats, plus the filled manifest.
+2. The TA's answer on 1 vs 3–5 experts; this affects only how many
+   `packet` runs are needed.
+3. A colour test print, on the same printer for every copy.

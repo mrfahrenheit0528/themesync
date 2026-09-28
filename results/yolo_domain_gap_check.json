@@ -4,6 +4,23 @@
     "TAN-AW": "data/raw/YOUR_TEMPLATE3.jpg",
     "LODT": "data/raw/YOUR_TEMPLATE4.jpg"
   },
+  "seen_in_training": {
+    "v1": {
+      "La Serata": false,
+      "TAN-AW": false,
+      "LODT": false
+    },
+    "v2": {
+      "La Serata": false,
+      "TAN-AW": false,
+      "LODT": false
+    },
+    "v3": {
+      "La Serata": false,
+      "TAN-AW": true,
+      "LODT": false
+    }
+  },
   "checkpoints": {
     "v1": "themesync_yolo_v1.pt",
     "v2": "themesync_yolo_v2.pt",

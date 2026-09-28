@@ -10,9 +10,12 @@ fine-tune) and each unseen poster, records:
   - top_conf : highest detection confidence (predict floor conf=0.01)
   - n_ge_025 : number of detections at conf >= 0.25 (a usable threshold)
 
-The three posters (La Serata, TAN-AW, LODT) are the CSPC samples that were
-never in the annotation batch. YOUR_TEMPLATE2.jpg (YUGTO 2026) is excluded
-on purpose: it *was* one of the annotated training images (§3.7).
+The three posters (La Serata, TAN-AW, LODT) were outside the original
+65-image annotation batch. TAN-AW was later added to the 124-image batch,
+so it is unseen by v1/v2 but *in v3's training data*; `seen_in_training`
+records this per checkpoint (via poster_overlap), so v3's TAN-AW number is
+never mistaken for a generalisation result. YOUR_TEMPLATE2.jpg (YUGTO 2026)
+is excluded: it was in every fine-tune's training data.
 
 Writes results/yolo_domain_gap_check.json (read by
 notebooks/results_analysis.ipynb).
@@ -25,6 +28,8 @@ import json
 import os
 
 from ultralytics import YOLO
+
+import poster_overlap
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -57,8 +62,18 @@ def run_check() -> dict:
             print(f"  {version}  {name:<10} top_conf={results[version][name]['top_conf']:.3f}  "
                   f"n>={USABLE_CONF}: {results[version][name]['n_ge_025']}")
 
+    seen = {version: {name: bool(poster_overlap.find_match(
+                          os.path.join(_ROOT, rel_path), poster_overlap.training_images(version)))
+                      for name, rel_path in UNSEEN_POSTERS.items()}
+            for version in CHECKPOINTS}
+    for version, per_poster in seen.items():
+        for name, was_seen in per_poster.items():
+            if was_seen:
+                print(f"  note: {name} is in {version}'s training data — not unseen for {version}")
+
     output = {
         "posters": UNSEEN_POSTERS,
+        "seen_in_training": seen,
         "checkpoints": CHECKPOINTS,
         "metric": (f"top detection confidence, and count of detections >= {USABLE_CONF} "
                    f"(predict conf floor {PREDICT_CONF_FLOOR})"),

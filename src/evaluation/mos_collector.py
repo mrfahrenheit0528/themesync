@@ -23,9 +23,16 @@ Usage:
   python src/evaluation/mos_collector.py --rendered_dir data/rendered/ --evaluator "Evaluator A"
   python src/evaluation/mos_collector.py --rendered_dir data/rendered/ --sample_size 10 --seed 42
   python src/evaluation/mos_collector.py --report              # View existing results
+
+  # Paper packets (src/evaluation/phase4_packet.py): after typing an expert's
+  # circled scores into their scores_<expert>.csv, import them against the
+  # private answer key so each rating is tagged with its format and condition.
+  python src/evaluation/mos_collector.py --import_scores data/phase4/packets/Evaluator_A/scores_Evaluator_A.csv \
+      --key data/phase4/phase4_key.csv --evaluator "Evaluator A"
 """
 
 import argparse
+import csv
 import glob
 import json
 import os
@@ -185,6 +192,76 @@ def collect_ratings(rendered_dir: str, evaluator_name: str,
 
 
 # ---------------------------------------------------------------------------
+# Import from a paper packet
+# ---------------------------------------------------------------------------
+
+def import_scores(scores_csv: str, key_csv: str, evaluator_name: str) -> None:
+    """
+    Imports one expert's transcribed paper ratings. Every row is checked
+    before anything is saved: each code must be in the answer key and appear
+    once, and each of the three scores must be a whole number 1-5 — a typo
+    stops the import instead of silently entering a wrong score.
+    """
+    with open(key_csv, newline="", encoding="utf-8") as f:
+        key = {row["code"]: row for row in csv.DictReader(f)}
+    with open(scores_csv, newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+
+    problems, seen = [], set()
+    for n, row in enumerate(rows, start=2):  # line 1 is the header
+        code = (row.get("code") or "").strip()
+        if code not in key:
+            problems.append(f"line {n}: code '{code}' is not in the answer key")
+            continue
+        if code in seen:
+            problems.append(f"line {n}: code {code} appears twice")
+        seen.add(code)
+        for dim_key, dim_name, _ in DIMENSIONS:
+            raw = (row.get(dim_key) or "").strip()
+            if raw not in {"1", "2", "3", "4", "5"}:
+                problems.append(f"line {n} ({code}): {dim_name} = '{raw}' (must be 1-5)")
+    missing = set(key) - seen
+    if missing:
+        problems.append(f"{len(missing)} sample(s) have no row: {', '.join(sorted(missing))}")
+    if problems:
+        print("  ✘  Nothing imported — fix these in the CSV first:")
+        for p in problems:
+            print(f"     - {p}")
+        sys.exit(1)
+
+    data = _load_results()
+    already = {(e.get("evaluator"), e.get("sample_code")) for e in data["evaluations"]}
+    if any((evaluator_name, row["code"].strip()) in already for row in rows):
+        print(f"  ✘  Scores from '{evaluator_name}' for these samples are already in {RESULTS_PATH}.")
+        sys.exit(1)
+
+    session_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    for row in rows:
+        code = row["code"].strip()
+        k = key[code]
+        scores = {dim_key: int(row[dim_key]) for dim_key, _, _ in DIMENSIONS}
+        data["evaluations"].append({
+            "session_id":         session_id,
+            "instrument":         INSTRUMENT,
+            "source":             "paper_packet",
+            "evaluator":          evaluator_name,
+            "layout_file":        code,
+            "sample_code":        code,
+            "poster_file":        k["poster_file"],
+            "format":             k["format"],
+            "condition":          k["condition"],
+            "presentation_order": int(row["page"]) if (row.get("page") or "").isdigit() else None,
+            "timestamp":          datetime.datetime.now().isoformat(timespec="seconds"),
+            "scores":             scores,
+            "mean_mos":           round(sum(scores.values()) / len(scores), 2),
+            "comment":            (row.get("comment") or "").strip() or None,
+        })
+    _save_results(data)
+    print(f"  ✔  Imported {len(rows)} rating(s) from {evaluator_name} → {RESULTS_PATH}")
+    print_report()
+
+
+# ---------------------------------------------------------------------------
 # Reporting
 # ---------------------------------------------------------------------------
 
@@ -236,6 +313,22 @@ def print_report() -> None:
         values = [e["scores"][dim_key] for e in evals]
         print(f"  {dim_name:<36} {statistics.mean(values):>6.2f} {_fmt_sd(values):>6}")
 
+    # Breakdown by format and condition (paper-packet imports carry these)
+    tagged = [e for e in evals if e.get("condition") and e.get("format")]
+    if tagged:
+        print(f"\n  {'Format':<14} {'Condition':<10} {'N':>4} {'Hierarchy':>10} {'Brand/Typo':>11} "
+              f"{'Whitespace':>11} {'MOS':>6} {'SD':>6}")
+        print(f"  {'-'*14} {'-'*10} {'-'*4} {'-'*10} {'-'*11} {'-'*11} {'-'*6} {'-'*6}")
+        for fmt in sorted({e["format"] for e in tagged}):
+            for cond in sorted({e["condition"] for e in tagged}):
+                group = [e for e in tagged if e["format"] == fmt and e["condition"] == cond]
+                if not group:
+                    continue
+                means = [statistics.mean(e["scores"][k] for e in group) for k, _, _ in DIMENSIONS]
+                mos_values = [e["mean_mos"] for e in group]
+                print(f"  {fmt:<14} {cond:<10} {len(group):>4} {means[0]:>10.2f} {means[1]:>11.2f} "
+                      f"{means[2]:>11.2f} {statistics.mean(mos_values):>6.2f} {_fmt_sd(mos_values):>6}")
+
     # Overall MOS — the manuscript's final validation metric
     all_mos = [e["mean_mos"] for e in evals]
     overall = statistics.mean(all_mos)
@@ -271,10 +364,20 @@ def main():
         "--report", action="store_true",
         help="Print a summary report of all collected MOS scores and exit",
     )
+    parser.add_argument(
+        "--import_scores", type=str, default=None,
+        help="CSV of one expert's transcribed paper-packet scores (from phase4_packet.py)",
+    )
+    parser.add_argument(
+        "--key", type=str, default="data/phase4/phase4_key.csv",
+        help="Private answer key written by phase4_packet.py generate",
+    )
     args = parser.parse_args()
 
     if args.report:
         print_report()
+    elif args.import_scores:
+        import_scores(args.import_scores, args.key, args.evaluator)
     else:
         collect_ratings(args.rendered_dir, args.evaluator, args.sample_size, args.seed)
 
