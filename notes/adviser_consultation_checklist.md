@@ -158,12 +158,25 @@ no citation at all, and the 124-image annotated batch isn't mentioned in
 Chapter 3's prose whatsoever (only CGL-Dataset is described as a Research
 Instrument there).
 
-- [ ] **Response in progress:** real candidate citations identified —
-  Likert (1932) for the scale itself, ITU-T Recommendation P.800 for the
-  MOS methodology specifically, Nielsen & Molich (1990, heuristic
-  evaluation) for why a small number of domain experts is methodologically
-  valid. Not yet added to the manuscript — still needs bibliographic
-  verification and an explicit go-ahead before editing Chapter 1/2/3 prose.
+- [x] ~~Citations identified but unverified.~~ **Verified 2026-09-28**
+  against the primary sources; see `notes/mos_parameter_grounding.md`.
+  - Each of the 3 MOS parameters now has an internal counterpart (Formulas
+    12/14, the Visual DNA, the hierarchy sizing) and external sources:
+    O'Donovan et al. 2014, Wheeler 2013 and CGL-GAN 2022, with quotes.
+  - Table 2 is an adaptation of ITU-T P.800's 5-point ACR scale, which
+    should replace the Twilio [18] citation.
+  - CGL-Dataset V2's source (Li et al. 2023, CIKM) was found for Ch.3 p.46.
+  - Still not added to the manuscript; that needs your explicit go-ahead.
+- [ ] **New issue these sources raised (ask the TA): single expert vs.
+  3–5.**
+  - The manuscript specifies one designated expert (p.54, p.57).
+  - Nielsen & Molich (1990) found that single evaluators catch only
+    20–51% of problems, and aggregates of 3–5 do well.
+  - Both CGL-Dataset papers used 5 professional + 20 novice designers.
+  - So citing these sources *for a single expert* contradicts them.
+  - Ask whether to revise Phase 4 to 3–5 professional designers, with
+    inter-rater agreement reported. That is a Chapter 3 change, so it
+    needs her sign-off. The code already handles multiple evaluators.
 - [ ] **Expert validation of the annotated dataset arranged** — a sample of
   15 images sent to a graphic design/layout expert for review against the
   annotation class definitions, separate from Phase 4's expert-evaluates-

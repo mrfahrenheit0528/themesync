@@ -11,7 +11,8 @@ a screenshot instead.
 **Status check before you send anything — read this first:**
 - [x] YOLO dataset fix applied and re-verified, **and the real retrain is done** — `themesync_yolo_v3.pt`, mAP50 0.370 (up from v2's 0.320). Full numbers: `gnn_fixes_and_methodology_notes.md` §3.12.
 - [x] `mos_collector.py`'s dimensions fixed to match the manuscript's 3 named parameters, with Table 2 shown to the evaluator (fixed 2026-09-26, `gnn_fixes_and_methodology_notes.md` §3.13). Message 6 is now safe to send.
-- [ ] Citations for the MOS instrument (Likert 1932, ITU-T P.800, Nielsen & Molich 1990) verified bibliographically. Until then, name them in chat as sources you're *adding*, not ones already in the manuscript.
+- [x] Citations verified against primary sources (2026-09-28): `notes/mos_parameter_grounding.md`. They're verified but **not yet in the manuscript**, so present them in chat as sources you're adding.
+- [ ] Ask the TA about 1 expert vs. 3–5 before sending Message 3.5's evaluator line (see `adviser_consultation_checklist.md` §D2).
 
 ---
 
@@ -47,11 +48,12 @@ a screenshot instead.
 > problem our Phase 1 solves, not a general-purpose scrape. It's already
 > named as a formal research instrument in our Chapter 3 (p. 46).
 
-**Before sending this one:** pull the actual citation from the dataset's
-Hugging Face card (`creative-graphic-design/CGL-Dataset-v2`) and add
-author/venue to the message. Don't send this without the citation in hand —
-if she asks "is this peer-reviewed?" you want the answer ready, not a
-follow-up promise.
+> It's peer-reviewed. CGL-Dataset V2 was published by Li et al. at CIKM
+> 2023 (an ACM conference). It extends the original CGL-Dataset from Zhou et
+> al. at IJCAI 2022, which introduced the logo/text/underlay/embellishment
+> classes we also use for our own annotations. It has 60,548 annotated
+> training posters. Chapter 3 names the dataset but doesn't cite it yet;
+> we're adding both references.
 
 ## Message 3.5 — Update from our TSA consultation
 
@@ -59,11 +61,20 @@ follow-up promise.
 > questions last week — whether our Phase 4 MOS scoring (the Likert scale,
 > our 3 rating dimensions, and who evaluates) is backed by actual
 > literature, and whether our annotated dataset has been checked by anyone
-> besides our own group. We're addressing both: pulling real citations into
-> Chapters 1–3 (Likert 1932 and ITU-T P.800 for the MOS methodology,
-> Nielsen & Molich 1990 for why a small number of domain experts is a valid
-> evaluation approach), and we've sent our annotated sample out for expert
-> review before presenting it further.
+> besides our own group. We're addressing both.
+>
+> For the scale: Table 2 is adapted from ITU-T Recommendation P.800, the
+> standard that defines MOS (its 5-point Excellent-to-Bad scale).
+>
+> For the 3 parameters: each maps to an established layout-quality
+> criterion. Visual hierarchy and whitespace/overlap come from O'Donovan
+> et al. 2014 (IEEE TVCG) and the CGL-GAN paper behind our dataset. Brand
+> consistency comes from Wheeler's *Designing Brand Identity*.
+>
+> For the evaluator: our sources point to 3–5 expert raters rather than
+> one (Nielsen & Molich 1990). We're raising that with our adviser now.
+>
+> We've also sent our annotated sample out for expert review.
 
 ## Message 4 — Defending the annotated master-layout batch (124 images)
 
@@ -94,11 +105,13 @@ follow-up promise.
 
 ## Message 6 — Defending the MOS scoring parameters
 
-> Our expert-evaluation instrument (MOS) uses a 1–5 Likert scale, the
-> standard method for subjective quality evaluation in general. Our 3
+> Our expert-evaluation instrument (MOS) uses a 1–5 rating scale adapted
+> from ITU-T P.800, the standard that defines Mean Opinion Score. Our 3
 > rating dimensions — Visual Hierarchy Preservation, Brand & Typographic
 > Consistency, Constraint & Whitespace Harmony — map onto standard graphic
-> design evaluation principles rather than criteria we invented, and each
+> design evaluation principles rather than criteria we invented (visual
+> hierarchy and whitespace/overlap: O'Donovan et al. 2014, IEEE TVCG; brand
+> consistency: Wheeler, Designing Brand Identity), and each
 > score level has a concrete written description (Table 2) so different
 > raters apply it consistently. Our collection tool shows the evaluator
 > Table 2 and each parameter's definition while they rate, and it presents
