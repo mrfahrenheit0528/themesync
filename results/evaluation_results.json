@@ -8,11 +8,11 @@
   "gnn_guided": [
     {
       "timings_ms": {
-        "instantiation_ms": 0.3,
-        "gnn_inference_ms": 591.3,
-        "csp_resolution_ms": 2.29,
-        "ranking_ms": 19.45,
-        "total_ms": 613.34
+        "instantiation_ms": 0.14,
+        "gnn_inference_ms": 551.86,
+        "csp_resolution_ms": 1.99,
+        "ranking_ms": 11.46,
+        "total_ms": 565.45
       },
       "mean_iou": 0.1682,
       "per_node_iou": [
@@ -46,11 +46,11 @@
     },
     {
       "timings_ms": {
-        "instantiation_ms": 0.27,
-        "gnn_inference_ms": 25.41,
-        "csp_resolution_ms": 2.18,
-        "ranking_ms": 19.47,
-        "total_ms": 47.33
+        "instantiation_ms": 0.11,
+        "gnn_inference_ms": 11.82,
+        "csp_resolution_ms": 1.88,
+        "ranking_ms": 11.92,
+        "total_ms": 25.73
       },
       "mean_iou": 0.1682,
       "per_node_iou": [
@@ -86,11 +86,11 @@
   "baseline": [
     {
       "timings_ms": {
-        "instantiation_ms": 0.33,
+        "instantiation_ms": 0.13,
         "gnn_inference_ms": 0.0,
-        "csp_resolution_ms": 0.81,
-        "ranking_ms": 12.05,
-        "total_ms": 13.19
+        "csp_resolution_ms": 0.97,
+        "ranking_ms": 8.07,
+        "total_ms": 9.17
       },
       "mean_iou": 0.0,
       "per_node_iou": [
@@ -124,11 +124,11 @@
     },
     {
       "timings_ms": {
-        "instantiation_ms": 0.34,
+        "instantiation_ms": 0.12,
         "gnn_inference_ms": 0.0,
-        "csp_resolution_ms": 0.85,
-        "ranking_ms": 16.13,
-        "total_ms": 17.32
+        "csp_resolution_ms": 0.96,
+        "ranking_ms": 8.22,
+        "total_ms": 9.3
       },
       "mean_iou": 0.0,
       "per_node_iou": [

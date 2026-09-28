@@ -1,0 +1,57 @@
+{
+  "posters": {
+    "La Serata": "data/raw/YOUR_TEMPLATE.png",
+    "TAN-AW": "data/raw/YOUR_TEMPLATE3.jpg",
+    "LODT": "data/raw/YOUR_TEMPLATE4.jpg"
+  },
+  "checkpoints": {
+    "v1": "themesync_yolo_v1.pt",
+    "v2": "themesync_yolo_v2.pt",
+    "v3": "themesync_yolo_v3.pt"
+  },
+  "metric": "top detection confidence, and count of detections >= 0.25 (predict conf floor 0.01)",
+  "results": {
+    "v1": {
+      "La Serata": {
+        "top_conf": 0.035,
+        "n_ge_025": 0
+      },
+      "TAN-AW": {
+        "top_conf": 0.204,
+        "n_ge_025": 0
+      },
+      "LODT": {
+        "top_conf": 0.211,
+        "n_ge_025": 0
+      }
+    },
+    "v2": {
+      "La Serata": {
+        "top_conf": 0.74,
+        "n_ge_025": 16
+      },
+      "TAN-AW": {
+        "top_conf": 0.735,
+        "n_ge_025": 13
+      },
+      "LODT": {
+        "top_conf": 0.694,
+        "n_ge_025": 8
+      }
+    },
+    "v3": {
+      "La Serata": {
+        "top_conf": 0.843,
+        "n_ge_025": 10
+      },
+      "TAN-AW": {
+        "top_conf": 0.753,
+        "n_ge_025": 9
+      },
+      "LODT": {
+        "top_conf": 0.793,
+        "n_ge_025": 11
+      }
+    }
+  }
+}

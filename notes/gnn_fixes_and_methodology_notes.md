@@ -949,7 +949,7 @@ manuscript's missing grounding.
 
 ### 3.14 Output rendering made rate-ready for Phase 4: real logo, photo slot, barcode (2026-09-28)
 
-**Found while preparing Phase 4.** I ran the full pipeline on a real, unseen
+**Found while preparing Phase 4.** I ran the full pipeline on a real
 poster (`YOUR_TEMPLATE2.jpg`, YUGTO 2026) for both formats and looked at the
 outputs the way the expert would. Every `image_node` was rendered by the
 same `_render_logo_badge()`: a circle with the node's placeholder text on
@@ -1011,6 +1011,10 @@ wrong.
 
 **Verified:**
 - YUGTO certificate and ID, before/after compared visually.
+  *Correction (2026-09-28): YUGTO is **not** an unseen poster. It was one of
+  the annotated training images (§3.7), so its logo detection is partly
+  recall. The unseen posters are `YOUR_TEMPLATE.png`, `YOUR_TEMPLATE3.jpg`,
+  and `YOUR_TEMPLATE4.jpg`.*
 - The `--logo_image` override (reports "uploaded logo", writes no crop).
 - The no-template fallback (drawn badge, no ratio lock).
 - Both test suites pass; the dashboard starts cleanly.
@@ -1264,3 +1268,49 @@ those runs was laid out and scored on a landscape certificate canvas.**
 - The ID test now also checks that the ranked winner stays inside the
   canvas; it previously checked only the first solve, which is why this
   went unnoticed.
+
+### 3.19 Results notebook refreshed against the current system (2026-09-28)
+
+All result artifacts were re-generated, and `notebooks/results_analysis.ipynb`
+was re-executed (0 errors, 4 charts):
+
+- **Domain gap, v1 → v2 → v3, on the 3 unseen posters.** Now a script,
+  `src/evaluation/yolo_domain_gap_check.py`, writing
+  `results/yolo_domain_gap_check.json`, instead of hand-typed notebook
+  values.
+
+  | | La Serata | TAN-AW | LODT |
+  |---|---|---|---|
+  | v1 top conf | 0.035 | 0.204 | 0.211 |
+  | v2 top conf | 0.740 | 0.735 | 0.694 |
+  | v3 top conf | 0.843 | 0.753 | 0.793 |
+  | usable detections (≥ 0.25), v1 / v2 / v3 | 0 / 16 / 10 | 0 / 13 / 9 | 0 / 8 / 11 |
+
+  - v2 matches the earlier measurement.
+  - The notebook's previous hand-typed v1 values (0.20 / 0.46 / 0.31)
+    matched no saved measurement and were replaced. The re-measured v1
+    La Serata value matches the original §3.5 log (0.035).
+  - v3's lower detection count on two posters can't be judged without
+    ground truth there. Accuracy comes from the held-out mAP.
+- **Phase 3, 10 trials per format** (`experiment_runner.py --trials 10
+  --domains both`), replacing the 2026-08-27 run:
+
+  | | GNN C_total | Baseline C_total |
+  |---|---|---|
+  | Certificate | 1.2029 | 1.1876 |
+  | Event ID | 1.3012 | 1.2834 |
+
+  - **Baseline is narrowly better on both formats.** The whole gap is
+    β·P_align (the GNN's x placements miss the structural grid).
+    P_space and P_legibility are identical; legibility is a flat 1.125
+    for every layout in synthetic mode.
+  - C_total has zero variance across trials (the pipeline is
+    deterministic); trials only measure latency.
+  - The old "GNN better on average" reading came from the pre-§3.1 code
+    and, for IDs, from the certificate-canvas bug (§3.18). It no longer
+    holds, and the notebook text now says so.
+- **Fixed comparison** (`evaluate.py --trials 2`, certificate): unchanged
+  (1.2029 / 1.1876) and now consistent with the battery.
+- **GNN-vs-solver IoU is labelled a diagnostic, not a manuscript metric**
+  (Chapter 3 confines IoU to Phase 1, pp.55–56). Certificate 0.168,
+  ID 0.0 (see §3.16).

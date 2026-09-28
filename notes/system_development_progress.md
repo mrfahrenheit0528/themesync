@@ -56,6 +56,12 @@ human expert MOS validation (Phase 4), both currently near 0%.
 
 **Phase 3 estimate: ~85%** — this is the strongest phase: not only implemented but already run and producing real quantitative results. UI presentation layer is the only missing piece.
 
+*Update 2026-09-28:* results were re-run against the current system (10 trials
+per format, event-ID format, format-correct canvases; notes §3.18–3.19).
+Baseline is now narrowly better than GNN-guided on both formats (certificate
+1.1876 vs 1.2029, event ID 1.2834 vs 1.3012), entirely through the alignment
+penalty. That's a real result to report honestly, not a regression in the code.
+
 ### Phase 4: Expert Aesthetic Validation (p. 54, 57-58)
 
 | Component | Manuscript requirement | Status |
