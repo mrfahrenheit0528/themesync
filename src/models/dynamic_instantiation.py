@@ -40,23 +40,26 @@ class NodeInstantiator:
             return [logo_budget * detected_logo_ratio, logo_budget]
 
         if domain_context == "identification_card":
-            # Vertical ID Stack Logic (CR80 Portrait)
+            # Vertical event-ID stack (A6 portrait lanyard pass). Proportions
+            # follow the group's 18 real CSPC event IDs (data/raw/ID_layouts,
+            # notes §3.15): logo row on top, a dominant event title, then the
+            # participant's name and role as the lower focal pair.
             if struct_class == "image_node":
-                if hierarchy_index == 0:  # Institution Logo
-                    logo_dim = min(self.canvas_w * 0.22, self.canvas_h * 0.12)
-                    return [logo_dim, logo_dim]
-                elif hierarchy_index == 1:  # ID Photo (1:1 ratio)
-                    photo_dim = min(self.canvas_w * 0.45, self.canvas_h * 0.28)
-                    return [photo_dim, photo_dim]
-                elif hierarchy_index == 5:  # Barcode Block
-                    return [self.canvas_w * 0.75, self.canvas_h * 0.08]
+                if hierarchy_index == 0:  # Organization logo row
+                    return [self.canvas_w * 0.62, self.canvas_h * 0.075]
+                return [self.canvas_w * 0.30, self.canvas_w * 0.30]
             elif struct_class == "text_node":
-                if hierarchy_index == 2:  # Student Name
-                    return [self.canvas_w * 0.85, self.canvas_h * 0.055]
-                elif hierarchy_index == 3:  # Department / Course
+                if hierarchy_index == 1:  # Organization header (small, 1-2 lines)
                     return [self.canvas_w * 0.80, self.canvas_h * 0.045]
-                else:  # ID Numbers / Labels
-                    return [self.canvas_w * 0.65, self.canvas_h * 0.035]
+                elif hierarchy_index == 2:  # Event title (dominant block)
+                    return [self.canvas_w * 0.86, self.canvas_h * 0.25]
+                elif hierarchy_index == 3:  # Tagline / date / venue
+                    return [self.canvas_w * 0.78, self.canvas_h * 0.055]
+                elif hierarchy_index == 4:  # Participant name (on a pill)
+                    return [self.canvas_w * 0.84, self.canvas_h * 0.11]
+                elif hierarchy_index == 5:  # Participant role (footer band)
+                    return [self.canvas_w * 0.84, self.canvas_h * 0.09]
+                return [self.canvas_w * 0.65, self.canvas_h * 0.035]
 
         else:
             # Horizontal Academic Certificate Logic (A4 Landscape / 4:3)

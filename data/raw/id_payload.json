@@ -1,36 +1,36 @@
 {
     "domain_context": "identification_card",
-    "target_aspect_ratio": "2:3",
+    "target_aspect_ratio": "1:1.414 (A6 event ID)",
     "variable_schema": {
-        "{{Institution_Logo}}": {
+        "{{Organization_Logos}}": {
             "structural_class": "image_node",
             "spatial_hierarchy": 0,
-            "lock_aspect_ratio": true
+            "lock_aspect_ratio": false
         },
-        "{{ID_Photo}}": {
-            "structural_class": "image_node",
+        "{{Organization_Header}}": {
+            "structural_class": "text_node",
             "spatial_hierarchy": 1,
-            "lock_aspect_ratio": true
+            "max_characters": 90
         },
-        "{{Student_Name}}": {
+        "{{Event_Title}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 2,
-            "max_characters": 50
+            "max_characters": 40
         },
-        "{{Department_Title}}": {
+        "{{Event_Details}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 3,
-            "max_characters": 60
+            "max_characters": 80
         },
-        "{{Student_ID_Number}}": {
+        "{{Participant_Name}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 4,
-            "max_characters": 20
+            "max_characters": 30
         },
-        "{{Barcode_Block}}": {
-            "structural_class": "image_node",
+        "{{Participant_Role}}": {
+            "structural_class": "text_node",
             "spatial_hierarchy": 5,
-            "lock_aspect_ratio": false
+            "max_characters": 24
         }
     }
 }

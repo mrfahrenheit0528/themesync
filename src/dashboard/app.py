@@ -253,17 +253,19 @@ with col_right:
         st.session_state["base_size"] = st.number_input("Base Size (px)", min_value=8, max_value=120, value=48)
         st.session_state["font_family_stack"] = FONT_OPTIONS[font_label]
 
-        st.markdown("**User Injected — Institution Logo (optional)**")
+        st.markdown("**User Injected — Organisation Logos (optional)**")
         st.caption(
-            "Leave empty to use the logo Stage 0b detected on the master layout "
-            "(highest confidence, background removed). Upload a file to override "
-            "it, e.g. when the detector picked an event emblem instead of the "
-            "institutional seal. A transparent PNG gives the cleanest result."
+            "Leave empty to use the logo row Stage 0b detected along the top of "
+            "the master layout (backgrounds removed). Upload files to override "
+            "it, in left-to-right order, e.g. when the detector missed a logo or "
+            "picked a footer icon. The first file is the certificate's seal. "
+            "Transparent PNGs give the cleanest result."
         )
-        logo_upload = st.file_uploader(
-            "Institution logo", type=["png", "jpg", "jpeg", "webp"], key="logo_upload",
+        logo_uploads = st.file_uploader(
+            "Organisation logos", type=["png", "jpg", "jpeg", "webp"],
+            accept_multiple_files=True, key="logo_upload",
         )
-        st.session_state["logo_image_path"] = _save_upload(logo_upload) if logo_upload else None
+        st.session_state["logo_image_paths"] = [_save_upload(f) for f in logo_uploads] or None
 
     st.markdown("---")
     st.subheader("Target Initialization")
@@ -305,7 +307,7 @@ with col_right:
                     template_image=st.session_state.get("image_path"),
                     content_data_path=content_path if use_real_content else None,
                     font_family=st.session_state.get("font_family_stack"),
-                    logo_image=st.session_state.get("logo_image_path"),
+                    logo_images=st.session_state.get("logo_image_paths"),
                 )
             st.session_state["orchestration_result"] = result
             st.rerun()

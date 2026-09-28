@@ -1025,3 +1025,133 @@ expert to judge:**
   meant to catch (Chapter 3 p.58).
 - The ID leaves its bottom ~30% empty, and the certificate logo sits
   ~28px left of centre (GNN placement).
+
+### 3.15 ID format redesigned as an event ID, from the group's 18 real samples (2026-09-28)
+
+**Trigger.** The user pointed out that the certificate layout is standard,
+but the ID target isn't a generic student ID (photo, full name, student
+number, address). The group's real IDs are event lanyard passes. They
+uploaded 18 of their own to `data/raw/ID_layouts/`, all CSPC/CCS/SSC/JPCS
+events: HALUBILO, bycit, Youth Leadership Development, Software Fest, Tech
+Quake, Research Colloquium, Freshmen Connect, Commencement, Hakbang, and
+others.
+
+**What the samples contain (n = 18, from a visual inventory):**
+
+| Element | Count | Notes |
+|---|---|---|
+| Organisation logo row, top-centre | 18 | usually 2–4 logos |
+| Name | 18 | nickname only in 11, full name in 7; ~10 on a light pill/band |
+| Role / designation | 17 | ORGANIZER ×9, PARTICIPANT, DELEGATE, SSC OFFICER, STUDENT COACH…; usually a bold footer band |
+| Event title / wordmark | 14 | the dominant element |
+| Small institutional header | 13 | |
+| Tagline / date / venue | 10 | |
+| Photo | 3 | cut-out or circle, never a 2x2 box |
+| QR code | 2 | |
+| Sponsor/partner strip | 2 | |
+| Barcode, student number, course | 0–1 | |
+
+**Proportions:** mean width/height 0.700 (range 0.671–0.778, hand-cropped
+scans). That's A-series (1:√2 = 0.707), not CR80 (0.630).
+
+**Why this strengthens the thesis:** every sample is visibly derived from
+its event poster (same title, palette and logo row). That is the
+poster-to-format synchronisation ThemeSync claims to automate, and it
+matches the 124 event-poster master layouts the YOLO model was fine-tuned
+on. A student ID shares almost nothing with an event poster.
+
+**Decisions (confirmed with the user):**
+- Replace the student-ID template with an event ID; don't keep both.
+- Core fields only. Photo, QR and sponsor strip are left out for now.
+
+**Changes:**
+- **`data/raw/id_payload.json`**, top to bottom:
+  - `{{Organization_Logos}}` (image, h0)
+  - `{{Organization_Header}}` (h1)
+  - `{{Event_Title}}` (h2)
+  - `{{Event_Details}}` (h3)
+  - `{{Participant_Name}}` (h4)
+  - `{{Participant_Role}}` (h5)
+
+  `domain_context` stays `identification_card`, so nothing downstream
+  needed renaming. `sample_content_id.json` now holds YUGTO 2026 content.
+- **Canvas:** 744×1052 (A6 proportion), replacing 638×1014. Updated in
+  `pipeline._derive_canvas`, `experiment_runner.py`,
+  `generate_cnn_training_data.py`, `test_vertical_solver.py` and
+  `tests/test_id_pipeline.py`.
+- **Baseline tensors** (`dynamic_instantiation.py`), as fractions of
+  canvas W × H:
+
+  | Element | Size |
+  |---|---|
+  | logo row | 0.62W × 0.075H |
+  | header | 0.80W × 0.045H |
+  | **title** | **0.86W × 0.25H** |
+  | details | 0.78W × 0.055H |
+  | name | 0.84W × 0.11H |
+  | role | 0.84W × 0.09H |
+
+  Proportions eyeballed from the samples.
+- **Logo row (`pipeline._select_logo_row`):**
+  - Rule: Stage 0b logos whose centre is in the top 20% of the master,
+    conf ≥ 0.4, overlapping duplicates dropped, at most 4, ordered left
+    to right. Falls back to the single best logo.
+  - Checked on 10 posters: institutional logos sit at y ≈ 0.02–0.13, and
+    the other "logo" detections are footer icons at y ≈ 0.84–0.97.
+  - Fixed a latent bug in §3.14's "highest confidence anywhere" rule: on
+    `YOUR_TEMPLATE3` the footer icon (0.75) outscored the seal (0.71). The
+    certificate's single logo is now the most confident logo *in the
+    row*.
+  - `--logo_image` accepts several files (dashboard: multi-upload),
+    first = certificate seal.
+- **Renderer:**
+  - The logo row lays the logos out side by side at a shared height.
+  - `Participant_Name` is heavy caps on a white pill.
+  - `Participant_Role` is light caps on a primary-colour band.
+  - `Event_Title` is heavy caps, split at most into two balanced lines
+    (`_balanced_two_lines`). A 3-line textwrap overflowed into the
+    header.
+  - Header and details text are small muted caps.
+  - All text is now XML-escaped (an "&" in an event name would have
+    broken the SVG).
+  - The §3.14 photo-frame and barcode renderers were removed as dead code
+    (no photo in the core template; 0/18 samples have a barcode).
+- **Legibility guard (`_ensure_contrast`), affects both formats:**
+  primary text is darkened until it has ≥ 4.5:1 contrast (WCAG 2.1
+  SC 1.4.3) against the background *and* the white pill/card; muted
+  captions get ≥ 4.5:1 against the background. This mirrors the existing
+  "lighten a too-dark background" guard. It was found on 19TH PASOA,
+  whose darkest K-Means centroid is a mid grey-violet, giving washed-out
+  text on the light-blue background.
+
+**Rendering fidelity (affects how previews are judged):** ImageMagick's
+built-in MSVG renderer, used for previews until now, grossly exaggerates
+SVG `letter-spacing` ("A N G E L A"), so text looked like it overflowed
+when it didn't. The same distortion was in the §3.14 certificate
+previews. `cairosvg` 2.9.1 was installed into `themesync_env` (it uses
+the system libcairo), and all previews from here on use it. It isn't in
+`requirements.txt` yet because no code imports it; add it when the
+Phase 4 packet generator does. Also, **Montserrat (the default font) is
+not installed on this machine**, so every local render falls back to
+DejaVu Sans, which is wider. Worth fixing (install the Google Font) before
+rendering Phase 4 images, so the expert sees the intended typeface.
+
+**Verified:**
+- Cairo renders of YUGTO (sample content), AGAPAY (long title, full
+  name, 3-line header, long role), and 19TH PASOA (default content, 2
+  detected logos).
+- Certificate on PASOA with the contrast guard.
+- All three test suites pass; the certificate's Phase 3 numbers are
+  unchanged (1.2029 / 1.1876).
+
+**Not changed (system behavior, flagged for the user):**
+- Cassowary stacks nodes from the top margin, so both formats leave the
+  bottom ~20–25% empty in baseline mode. Real event IDs anchor the role
+  band to the bottom edge. Changing that means a solver change (e.g.,
+  a soft constraint to centre or distribute the stack), which is a
+  methodology decision.
+- `results/experiment_log.json` (Phase 3 multi-trial GNN vs. baseline,
+  shown in the notebook) is from 2026-08-27, before §3.1–3.3's penalty
+  fixes. Certificate C_total there was 5.58 vs. ~1.2 now, so it's stale
+  for *both* formats, and the ID half now also describes a template that
+  no longer exists. It needs a re-run before any Chapter 4 use.

@@ -48,8 +48,8 @@ DOMAINS = {
     },
     "id": {
         "payload":  os.path.join(_ROOT, "data", "raw", "id_payload.json"),
-        "canvas_w": 638,
-        "canvas_h": 1014,
+        "canvas_w": 744,
+        "canvas_h": 1052,
     },
 }
 

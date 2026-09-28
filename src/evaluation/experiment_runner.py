@@ -160,10 +160,10 @@ DOMAIN_CONFIGS = {
         "canvas_h":   900,
     },
     "id": {
-        "label":      "Identification Card (2:3)",
+        "label":      "Event ID (A6, 1:1.414)",
         "payload":    os.path.join(_ROOT, "data", "raw", "id_payload.json"),
-        "canvas_w":   638,
-        "canvas_h":   1014,
+        "canvas_w":   744,
+        "canvas_h":   1052,
     },
 }
 

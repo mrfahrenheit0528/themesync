@@ -9,7 +9,7 @@ def execute_vertical_diagnostic():
     print("Initializing Phase 2: Cassowary Solver (Vertical ID Domain)...")
     
     # 1. Instantiate the nodes with CR80 baseline dimensions
-    instantiator = NodeInstantiator(canvas_width=638, canvas_height=1014)
+    instantiator = NodeInstantiator(canvas_width=744, canvas_height=1052)
     payload_path = "data/raw/id_payload.json"
     
     if not os.path.exists(payload_path):
@@ -19,7 +19,7 @@ def execute_vertical_diagnostic():
     id_nodes = instantiator.instantiate_payload(payload_path)
     
     # 2. Execute the constraint solver using matching CR80 canvas limits
-    engine = ConstraintSolverEngine(canvas_width=638, canvas_height=1014)
+    engine = ConstraintSolverEngine(canvas_width=744, canvas_height=1052)
     
     try:
         resolved_nodes = engine.execute_relational_logic(id_nodes)

@@ -1,6 +1,5 @@
 import base64
 import colorsys
-import hashlib
 import io
 import json
 import os
@@ -14,28 +13,45 @@ from PIL import Image
 # ---------------------------------------------------------------------------
 
 def _fit_font_size(text: str, max_width: float, max_size: float,
-                   letter_spacing: float = 0.0, min_size: float = 6.0) -> float:
+                   letter_spacing: float = 0.0, min_size: float = 6.0,
+                   em_per_glyph: float = 0.62) -> float:
     """Largest font size (<= max_size) whose estimated rendered width fits
-    max_width. Uses ~0.62em per glyph — a conservative average for the bold
-    sans stacks this renderer uses — plus the letter-spacing between glyphs."""
+    max_width. `em_per_glyph` is the average glyph advance: ~0.62em suits
+    regular/bold sans text; heavy (800-900) capitals need ~0.75em — checked
+    against Cairo renders with the DejaVu Sans fallback, the widest of the
+    fonts these stacks resolve to."""
     n = max(len(text), 1)
-    fitted = (max_width - letter_spacing * (n - 1)) / (0.62 * n)
+    fitted = (max_width - letter_spacing * (n - 1)) / (em_per_glyph * n)
     return max(min_size, min(max_size, fitted))
 
 
-def _image_to_data_uri(path: str, max_side: int = 512) -> str:
-    """Loads an image file (PNG/JPG/WebP...) and returns it as a base64 PNG
-    data URI, downscaled so the SVG stays small. Returns None if unreadable."""
+def _balanced_two_lines(text: str) -> list:
+    """Splits text at the word boundary that makes its two lines closest in
+    length (e.g. "TECH SUMMIT / 2026" rather than a 3-line textwrap), so a
+    title never exceeds two lines. Single words stay on one line."""
+    words = text.split()
+    if len(words) < 2:
+        return [text]
+    best = min(range(1, len(words)),
+               key=lambda i: max(len(" ".join(words[:i])), len(" ".join(words[i:]))))
+    return [" ".join(words[:best]), " ".join(words[best:])]
+
+
+def _load_image(path: str, max_side: int = 512) -> tuple:
+    """Loads an image file (PNG/JPG/WebP...) and returns (base64 PNG data URI,
+    width/height), downscaled so the SVG stays small. (None, None) if
+    unreadable."""
     try:
         with Image.open(path) as img:
             img = img.convert("RGBA")
             img.thumbnail((max_side, max_side))
+            aspect = img.width / img.height if img.height else 1.0
             buf = io.BytesIO()
             img.save(buf, format="PNG")
     except (OSError, ValueError) as e:
         print(f"  ⚠  Could not load logo image '{path}': {e} — using drawn badge")
-        return None
-    return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
+        return None, None
+    return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode("ascii"), aspect
 
 
 def _lab_centroid_to_hex(lab: list) -> str:
@@ -72,6 +88,39 @@ def _lighten(hexcode: str, amount: float) -> str:
     """Blends a colour toward white by `amount` (0 = unchanged, 1 = white)."""
     r, g, b = _hex_to_rgb01(hexcode)
     return _rgb01_to_hex((r + (1.0 - r) * amount, g + (1.0 - g) * amount, b + (1.0 - b) * amount))
+
+
+def _relative_luminance(hexcode: str) -> float:
+    """WCAG 2.1 relative luminance of an sRGB colour."""
+    def lin(c):
+        return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+    r, g, b = (lin(c) for c in _hex_to_rgb01(hexcode))
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def _contrast_ratio(hex_a: str, hex_b: str) -> float:
+    la, lb = sorted((_relative_luminance(hex_a), _relative_luminance(hex_b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+def _ensure_contrast(fg_hex: str, bg_hex: str, minimum: float) -> str:
+    """
+    Darkens (on a light background) or lightens (on a dark one) `fg_hex` in
+    small steps, keeping its hue, until it reaches `minimum` contrast
+    against `bg_hex` — WCAG 2.1 SC 1.4.3 asks 4.5:1 for body text. Colours
+    already legible are returned unchanged.
+    """
+    if _contrast_ratio(fg_hex, bg_hex) >= minimum:
+        return fg_hex
+    toward_black = _relative_luminance(bg_hex) >= 0.18
+    r, g, b = _hex_to_rgb01(fg_hex)
+    for step in range(1, 21):
+        t = step / 20.0
+        cand = _rgb01_to_hex((r * (1 - t), g * (1 - t), b * (1 - t)) if toward_black
+                             else (r + (1 - r) * t, g + (1 - g) * t, b + (1 - b) * t))
+        if _contrast_ratio(cand, bg_hex) >= minimum:
+            return cand
+    return "#000000" if toward_black else "#FFFFFF"
 
 
 def _muted_variant(base_hex: str, background_is_light: bool) -> str:
@@ -156,12 +205,22 @@ def _palette_from_centroids(centroids: list) -> dict:
     if lightest_l < 170:
         background_hex = _lighten(background_hex, amount=0.6)
 
+    # Legibility guard, the mirror of the background guard above: a poster
+    # whose darkest centroid is still mid-tone (e.g. a pastel design) would
+    # otherwise give washed-out text. Primary text gets 4.5:1 against both
+    # the background and the white card/pill it also sits on; muted captions
+    # get 4.5:1 against the background too (WCAG 2.1 SC 1.4.3).
+    primary_hex = _ensure_contrast(primary_hex, background_hex, 4.5)
+    primary_hex = _ensure_contrast(primary_hex, "#FFFFFF", 4.5)
+    muted_hex = _ensure_contrast(
+        _muted_variant(primary_hex, background_is_light=lightest_l >= 128), background_hex, 4.5)
+
     return {
         "primary":    primary_hex,
         "accent":     accent_hex,
         "background": background_hex,
         "card_bg":    "#FFFFFF",
-        "muted":      _muted_variant(primary_hex, background_is_light=lightest_l >= 128),
+        "muted":      muted_hex,
     }
 
 
@@ -184,12 +243,12 @@ _DEFAULT_CERT_MOCK = {
 }
 
 _DEFAULT_ID_MOCK = {
-    "{{Institution_Logo}}":    "CSPC",
-    "{{ID_Photo}}":            "PHOTO",
-    "{{Student_Name}}":        "Guiller Angelo Hermoso",
-    "{{Department_Title}}":    "Bachelor of Science in Computer Science",
-    "{{Student_ID_Number}}":   "2021-00001",
-    "{{Barcode_Block}}":       "||||| ||| ||||| || |||||",
+    "{{Organization_Logos}}":  "CSPC",
+    "{{Organization_Header}}": "Camarines Sur Polytechnic Colleges\nCollege of Computer Studies",
+    "{{Event_Title}}":         "Tech Summit 2026",
+    "{{Event_Details}}":       "August 27, 2026 · CSPC Gymnasium",
+    "{{Participant_Name}}":    "Guiller",
+    "{{Participant_Role}}":    "Organizer",
 }
 
 
@@ -208,15 +267,19 @@ class AestheticSVGRenderer:
         domain_context: str = "academic_certificate",
         font_family: str = None,
         logo_image_path: str = None,
+        logo_row_paths: list = None,
     ):
         self.canvas_w = float(canvas_width)
         self.canvas_h = float(canvas_height)
         self.original_filename = original_filename
         self.domain = domain_context
-        # Real logo artwork for the logo node — either a user-uploaded file or
-        # the Stage 0b crop of the master layout's detected logo (resolved in
-        # pipeline.py). None falls back to the drawn seal badge.
-        self.logo_data_uri = _image_to_data_uri(logo_image_path) if logo_image_path else None
+        # Real logo artwork — user-uploaded files or Stage 0b crops of the
+        # master layout's logos (resolved in pipeline.py). `logo_data_uri`
+        # fills a single logo slot (certificate seal); `logo_row` fills a
+        # multi-logo strip (event ID). None/empty falls back to a drawn badge.
+        self.logo_data_uri = _load_image(logo_image_path)[0] if logo_image_path else None
+        self.logo_row = [img for img in (_load_image(p) for p in (logo_row_paths or []))
+                         if img[0]]
 
         # Palette and fonts
         self.palette = _palette_from_centroids(color_centroids)
@@ -287,6 +350,59 @@ class AestheticSVGRenderer:
             f'preserveAspectRatio="xMidYMid meet" xlink:href="{self.logo_data_uri}" />'
         ]
 
+    def _render_logo_row(self, x, y, w, h, content) -> list:
+        """Lays the organisation logos out side by side, left to right, at a
+        shared height, centred in the node's bbox — the logo cluster every
+        one of the 18 sample event IDs carries along its top."""
+        row = self.logo_row or ([(self.logo_data_uri, 1.0)] if self.logo_data_uri else [])
+        if not row:
+            return self._render_logo_badge(x, y, w, h, content)
+        gap = h * 0.25
+        natural_w = sum(h * aspect for _, aspect in row) + gap * (len(row) - 1)
+        scale = min(1.0, w / natural_w) if natural_w > 0 else 1.0
+        logo_h = h * scale
+        cursor = x + (w - natural_w * scale) / 2.0
+        top = y + (h - logo_h) / 2.0
+        elements = []
+        for uri, aspect in row:
+            logo_w = logo_h * aspect
+            elements.append(
+                f'<image x="{cursor:.1f}" y="{top:.1f}" width="{logo_w:.1f}" height="{logo_h:.1f}" '
+                f'preserveAspectRatio="xMidYMid meet" xlink:href="{uri}" />'
+            )
+            cursor += logo_w + gap * scale
+        return elements
+
+    def _render_name_pill(self, x, y, w, h, content) -> list:
+        """Event-ID participant name: bold caps on a light rounded pill, the
+        most common name treatment in the sample IDs."""
+        p = self.palette["primary"]
+        a = self.palette["accent"]
+        text = content.upper()
+        font_size = _fit_font_size(text, max_width=w * 0.86, max_size=h * 0.56, letter_spacing=2.0,
+                                   em_per_glyph=0.75)
+        return [
+            f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="{h / 2.0:.1f}" '
+            f'fill="{self.palette["card_bg"]}" stroke="{a}" stroke-width="2.5" />',
+            f'<text x="{x + w / 2.0:.1f}" y="{y + h / 2.0:.1f}" font-family="{self.font_family}" '
+            f'font-size="{font_size:.1f}" font-weight="900" letter-spacing="2.0" fill="{p}" '
+            f'text-anchor="middle" dominant-baseline="central">{escape(text)}</text>',
+        ]
+
+    def _render_role_band(self, x, y, w, h, content) -> list:
+        """Event-ID role (ORGANIZER, PARTICIPANT...): light caps on a solid
+        band in the primary colour, like the sample IDs' footer bands."""
+        text = content.upper()
+        font_size = _fit_font_size(text, max_width=w * 0.86, max_size=h * 0.5, letter_spacing=4.0,
+                                   em_per_glyph=0.72)
+        return [
+            f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="6" '
+            f'fill="{self.palette["primary"]}" />',
+            f'<text x="{x + w / 2.0:.1f}" y="{y + h / 2.0:.1f}" font-family="{self.font_family}" '
+            f'font-size="{font_size:.1f}" font-weight="bold" letter-spacing="4.0" '
+            f'fill="{self.palette["card_bg"]}" text-anchor="middle" dominant-baseline="central">{escape(text)}</text>',
+        ]
+
     def _render_logo_badge(self, x, y, w, h, content) -> list:
         """Renders an institutional seal badge with emblem geometry."""
         p = self.palette["primary"]
@@ -306,82 +422,13 @@ class AestheticSVGRenderer:
         ]
         return elements
 
-    def _render_photo_frame(self, x, y, w, h) -> list:
-        """Renders a square 2x2 ID-photo slot with a neutral person silhouette
-        (no real faces in generated samples)."""
-        a = self.palette["accent"]
-        muted = self.palette["muted"]
-        side = min(w, h)
-        fx = x + (w - side) / 2.0
-        fy = y + (h - side) / 2.0
-        cx = fx + side / 2.0
-        head_r = side * 0.18
-        head_cy = fy + side * 0.40
-        sh_top = fy + side * 0.62
-        sh_w = side * 0.34
-        figure = _lighten(muted, 0.35)
-        # Plain shapes only (no clipPath/<g> inheritance) so the silhouette
-        # also renders in minimal SVG rasterizers, not just browsers; the
-        # shoulders already sit inside the frame, so no clipping is needed.
-        return [
-            f'<rect x="{fx:.1f}" y="{fy:.1f}" width="{side:.1f}" height="{side:.1f}" rx="4" fill="{_lighten(muted, 0.82)}" />',
-            f'<circle cx="{cx:.1f}" cy="{head_cy:.1f}" r="{head_r:.1f}" fill="{figure}" />',
-            f'<path d="M {cx - sh_w:.1f} {fy + side:.1f} '
-            f'Q {cx - sh_w:.1f} {sh_top:.1f} {cx:.1f} {sh_top:.1f} '
-            f'Q {cx + sh_w:.1f} {sh_top:.1f} {cx + sh_w:.1f} {fy + side:.1f} Z" fill="{figure}" />',
-            f'<rect x="{fx:.1f}" y="{fy:.1f}" width="{side:.1f}" height="{side:.1f}" rx="4" fill="none" stroke="{a}" stroke-width="2.5" />',
-        ]
-
-    def _render_barcode(self, x, y, w, h, content) -> list:
-        """Renders a barcode strip with its human-readable value underneath,
-        both inside the node's bbox. Bar widths are derived deterministically
-        from the value — a visual stand-in, not a scannable symbology."""
-        p = self.palette["primary"]
-        bar_h = h * 0.68
-        text_h = h - bar_h
-        # Start/stop guards around data bars/gaps of 1-3 units, with ~2px per
-        # unit so the strip reads as a real barcode at any node width.
-        guard = [2, 1, 2]
-        budget = max(20, int(w * 0.9 / 2.0)) - 2 * sum(guard)
-        digest, seed = b"", content.encode()
-        while len(digest) < budget:
-            seed = hashlib.sha256(seed).digest()
-            digest += seed
-        data, total = [], 0
-        for b in digest:
-            bw = 1 + (b % 3)
-            if total + bw > budget:
-                break
-            data.append(bw)
-            total += bw
-        if len(data) % 2 == 0:  # odd count so the data run starts and ends on a bar
-            data.append(1)
-        pattern = guard + [1] + data + [1] + guard  # [1] = separating gaps
-        unit = w * 0.9 / sum(pattern)
-        elements = []
-        cursor = x + w * 0.05
-        for i, bw in enumerate(pattern):
-            if i % 2 == 0:  # even index = bar, odd = gap
-                elements.append(
-                    f'<rect x="{cursor:.2f}" y="{y:.1f}" width="{bw * unit:.2f}" height="{bar_h:.1f}" fill="{p}" />'
-                )
-            cursor += bw * unit
-        font_size = _fit_font_size(content, max_width=w * 0.9, max_size=text_h * 0.75, letter_spacing=2.0)
-        elements.append(
-            f'<text x="{x + w / 2.0:.1f}" y="{y + bar_h + text_h * 0.8:.1f}" font-family="{self.font_family}" '
-            f'font-size="{font_size:.1f}" letter-spacing="2.0" fill="{p}" text-anchor="middle">{escape(content)}</text>'
-        )
-        return elements
-
     def _render_image_node(self, x, y, w, h, node_id, content) -> list:
         """Dispatches an image node to the renderer for its role, by schema name."""
         name = node_id.lower()
+        if "logos" in name:
+            return self._render_logo_row(x, y, w, h, content)
         if "logo" in name:
             return self._render_logo(x, y, w, h, content)
-        if "photo" in name:
-            return self._render_photo_frame(x, y, w, h)
-        if "barcode" in name:
-            return self._render_barcode(x, y, w, h, content)
         return self._render_logo_badge(x, y, w, h, content)
 
     def _render_text_node(self, x, y, w, h, node_id, content) -> list:
@@ -390,8 +437,41 @@ class AestheticSVGRenderer:
         cx = x + (w / 2.0)
         elements = []
 
+        # Event-ID nodes with their own shape treatment
+        if "Participant_Name" in node_id:
+            return self._render_name_pill(x, y, w, h, content)
+        if "Participant_Role" in node_id:
+            return self._render_role_band(x, y, w, h, content)
+
         # Determine typography style based on hierarchy
-        if "Organization" in node_id or "Issuing" in node_id:
+        if "Event_Title" in node_id:
+            # Dominant event wordmark: heavy caps, up to 2 lines, sized to fill
+            # the block (the samples' largest element).
+            text = content.upper()
+            lines = [text] if len(text) <= 12 else _balanced_two_lines(text)
+            longest = max(lines, key=len)
+            font_size = _fit_font_size(longest, max_width=w * 0.95,
+                                       max_size=h / (len(lines) * 1.35), letter_spacing=1.0,
+                                       em_per_glyph=0.75)
+            font_weight = "900"
+            letter_spacing = "1.0"
+            fill = p
+            font_style = "normal"
+        elif "Organization_Header" in node_id:
+            lines = self._wrap_text_lines(content.upper(), max_chars=60)
+            font_size = min(15.0, h / (len(lines) * 1.35))
+            font_weight = "600"
+            letter_spacing = "1.5"
+            fill = self.palette["muted"]
+            font_style = "normal"
+        elif "Event_Details" in node_id:
+            font_size = max(12.0, min(17.0, h * 0.34))
+            font_weight = "600"
+            letter_spacing = "0.8"
+            lines = self._wrap_text_lines(content, max_chars=int(w / (font_size * 0.6)))
+            fill = self.palette["muted"]
+            font_style = "normal"
+        elif "Organization" in node_id or "Issuing" in node_id:
             font_size = max(13.0, min(18.0, h * 0.4))
             font_weight = "600"
             letter_spacing = "2.0"
@@ -445,7 +525,7 @@ class AestheticSVGRenderer:
                 f'<text x="{cx}" y="{line_y:.1f}" font-family="{self.font_family}" '
                 f'font-size="{font_size:.1f}" font-weight="{font_weight}" '
                 f'font-style="{font_style}" letter-spacing="{letter_spacing}" '
-                f'fill="{fill}" text-anchor="middle">{line}</text>'
+                f'fill="{fill}" text-anchor="middle">{escape(line)}</text>'
             )
 
         return elements

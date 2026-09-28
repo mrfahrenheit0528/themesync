@@ -218,6 +218,31 @@ Citing them for one expert contradicts them.
 - Cite Nielsen & Molich 1990 and the CGL-GAN/RADM protocol.
 - Add inter-rater agreement to the statistical treatment (item 3.9).
 
+### 3.7b 🔴 "Student Identification Cards" → event identification cards (pp.48, 49, 54)
+
+**Now:**
+- p.48: "Identification Cards and Academic Certificates."
+- p.49: "specifically Academic Certificates and Student Identification
+  Cards."
+- p.54: "the synthetic Academic Certificates and Student Identification
+  Cards."
+
+**Why it changed:** the group's actual ID target is the event lanyard
+pass, not a student ID card. Evidence: 18 real CSPC event IDs in
+`data/raw/ID_layouts/` have a logo row, event title, name and role, and
+0–1 of them have a student number, barcode or course (notes §3.15). The
+system now generates that format.
+
+**Fix:**
+- Reword those three places to event identification cards / event IDs.
+- Optionally describe the ID's fields and A6 proportion alongside the
+  existing certificate description.
+- p.6 ("school-wide materials such as IDs, certificates, and posters")
+  can stay as is.
+
+**Tell the TA.** It narrows the ID format rather than adding scope, but
+it changes wording she has already read.
+
 ### 3.8 🟡 Phase 4 sampling isn't specified (p.54, p.57)
 
 **Now:** "a randomized subset of the algorithmically generated multi-format
@@ -316,7 +341,7 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
 ## Order of work
 
 1. **Can do now, no TA decision needed:** 1.1, 1.2, 3.1, 3.2, 3.3, 3.5,
-   3.6.
+   3.6, 3.7b (tell the TA about 3.7b).
    - These answer the TSA directly.
    - 3.2 needs the image source/permission details from the group.
 2. **After the consultant weighs in:** 3.4, 3.8, 3.9.

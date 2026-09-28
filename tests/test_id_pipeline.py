@@ -2,7 +2,7 @@
 ThemeSync — ID Card Pipeline Integration Test
 ==============================================
 Validates the full end-to-end pipeline for the identification card domain
-(CR80 portrait, 638 × 1014 px).
+(A6-proportioned event ID, 744 × 1052 px).
 
 Assertions:
   - All resolved nodes are within canvas boundaries
@@ -34,8 +34,8 @@ from candidate_generator import MetaheuristicStateExplorer
 # Constants
 # ---------------------------------------------------------------------------
 
-CANVAS_W = 638
-CANVAS_H = 1014
+CANVAS_W = 744
+CANVAS_H = 1052
 PAYLOAD  = os.path.join(_ROOT, "data", "raw", "id_payload.json")
 
 

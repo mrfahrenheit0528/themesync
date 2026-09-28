@@ -114,8 +114,11 @@ def _derive_canvas(payload_meta: dict, canvas_w: int, canvas_h: int):
     """
     Canvas resolution priority:
       1. Explicit CLI args (--canvas_w / --canvas_h)
-      2. Domain defaults from the payload (1200×900 cert / 638×1014 ID),
-         matching each payload's own target_aspect_ratio.
+      2. Domain defaults from the payload (1200×900 cert / 744×1052 ID),
+         matching each payload's own target_aspect_ratio. The ID default is
+         an A6-proportioned (1:√2) event lanyard pass, measured from the
+         group's 18 real CSPC event IDs (mean width/height 0.70), not a CR80
+         student card — see notes/gnn_fixes_and_methodology_notes.md §3.15.
 
     The uploaded master-layout image's own pixel dimensions are deliberately
     NOT consulted here. The master layout is a generic branded design used
@@ -130,7 +133,7 @@ def _derive_canvas(payload_meta: dict, canvas_w: int, canvas_h: int):
         return int(canvas_w), int(canvas_h)
 
     domain = payload_meta.get("domain_context", "academic_certificate")
-    return (638, 1014) if domain == "identification_card" else (1200, 900)
+    return (744, 1052) if domain == "identification_card" else (1200, 900)
 
 
 # ---------------------------------------------------------------------------
@@ -175,9 +178,9 @@ def stage_layout_parsing(template_image_path: str, weights_path: str) -> tuple:
         schema node the payload marks `lock_aspect_ratio: true` and names as
         the logo (section 3.11, Figure 2's "Affine scaling");
       - its *artwork*, cropped from the master layout, is what Stage 5
-        renders in that logo node (section 3.14), so the output carries the
-        real brand mark instead of a drawn placeholder.
-    A user-supplied `--logo_image` overrides both. See `_resolve_logo()`.
+        renders in the logo node / logo row (sections 3.14-3.15), so the
+        output carries the real brand marks instead of a drawn placeholder.
+    User-supplied `--logo_image` file(s) override both. See `_resolve_logos()`.
     Positions of detected nodes still never feed the generated document.
 
     Gracefully skipped (not a hard failure) if no fine-tuned weights file is
@@ -222,27 +225,45 @@ def stage_instantiate(payload_path: str, canvas_w: int, canvas_h: int,
     return nodes, elapsed
 
 
-def _select_logo_node(detected_layout_nodes: list):
-    """Highest-confidence Stage 0b detection with semantic_category == "logo",
-    or None if Stage 0b didn't run or found no logo."""
-    logo_nodes = [n for n in (detected_layout_nodes or []) if n.get("semantic_category") == "logo"]
-    if not logo_nodes:
-        return None
-    return max(logo_nodes, key=lambda n: n.get("detection_confidence", 0.0))
+def _overlap_ratio(a: list, b: list) -> float:
+    """Intersection area over the *smaller* box's area, for [x, y, w, h] boxes —
+    catches a small duplicate detection nested inside a larger one, which
+    plain IoU would score as low overlap."""
+    ix = max(0.0, min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0]))
+    iy = max(0.0, min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1]))
+    smaller = min(a[2] * a[3], b[2] * b[3])
+    return (ix * iy / smaller) if smaller > 0 else 0.0
 
 
-def _detect_logo_aspect_ratio(detected_layout_nodes: list):
+def _select_logo_row(detected_layout_nodes: list, image_h: float, min_conf: float = 0.4,
+                     top_frac: float = 0.2, max_logos: int = 4) -> list:
     """
-    Derives the "Affine scaling" ratio (Figure 2, p. 51) from Stage 0b's
-    detected logo bbox — width/height of the highest-confidence detection
-    with semantic_category == "logo". Returns None if Stage 0b didn't run or
-    found no logo, so callers fall back to the fixed-square default.
+    The master layout's institutional logo row, left to right.
+
+    Real posters put their organisational logos (CSPC, CCS, SC, JPCS...) in a
+    small cluster along the top, while the other "logo" detections sit in
+    the footer (social-media icons, sponsor marks), and those can outscore
+    the real ones — e.g. YOUR_TEMPLATE3's footer icon at conf 0.75 vs its
+    seal at 0.71. So: logos whose centre lies in the top `top_frac` of the
+    image, conf >= `min_conf`, overlapping duplicates dropped (keeping the
+    more confident), at most `max_logos`. If the top band has none, falls
+    back to the single most confident logo anywhere.
     """
-    best = _select_logo_node(detected_layout_nodes)
-    if best is None:
-        return None
-    _, _, w, h = best["bbox"]
-    return (w / h) if h > 0 else None
+    logos = [n for n in (detected_layout_nodes or []) if n.get("semantic_category") == "logo"]
+    if not logos:
+        return []
+    top = [n for n in logos
+           if n.get("detection_confidence", 0.0) >= min_conf
+           and (n["bbox"][1] + n["bbox"][3] / 2.0) <= top_frac * image_h]
+    top.sort(key=lambda n: -n.get("detection_confidence", 0.0))
+    kept = []
+    for n in top:
+        if all(_overlap_ratio(n["bbox"], k["bbox"]) < 0.5 for k in kept):
+            kept.append(n)
+    kept = kept[:max_logos]
+    if not kept:
+        kept = [max(logos, key=lambda n: n.get("detection_confidence", 0.0))]
+    return sorted(kept, key=lambda n: n["bbox"][0])
 
 
 def _clear_crop_background(crop: "Image.Image", thresh: int = 48,
@@ -277,39 +298,50 @@ def _clear_crop_background(crop: "Image.Image", thresh: int = 48,
     return out
 
 
-def _resolve_logo(logo_image: str, template_image: str, detected_layout_nodes: list,
-                  output_dir: str, stem: str) -> tuple:
+def _resolve_logos(logo_images: list, template_image: str, detected_layout_nodes: list,
+                   output_dir: str, stem: str) -> dict:
     """
-    Decides which logo artwork the generated document carries, and its
-    aspect ratio for Stage 1's `lock_aspect_ratio` sizing:
-      1. a user-uploaded `logo_image` file, if given (overrides detection —
-         the fix for YOLO picking the wrong mark, e.g. an event emblem
-         instead of the institutional seal);
-      2. otherwise the highest-confidence Stage 0b logo, cropped from the
-         master layout (4% padding) and saved next to the output;
-      3. otherwise (None, None, None) — renderer falls back to a drawn badge.
-    Returns (image_path, aspect_ratio, source_label).
+    Decides which logo artwork the generated document carries:
+      1. user-uploaded `logo_images`, if any (override detection — the fix
+         when YOLO picks the wrong mark or misses one), in the order given;
+      2. otherwise the master layout's Stage 0b logo row (_select_logo_row),
+         each cropped (4% padding), background cleared, and saved next to
+         the output as ThemeSync_<format>_logo_<i>.png;
+      3. otherwise nothing — the renderer falls back to a drawn badge.
+    `primary` is the one logo a single-logo slot uses (the certificate's
+    seal): the first upload, or the most confident logo in the row. Its
+    aspect ratio drives Stage 1's `lock_aspect_ratio` sizing.
     """
-    if logo_image:
-        with Image.open(logo_image) as img:
+    none = {"row": [], "primary": None, "ratio": None, "source": None}
+    if logo_images:
+        with Image.open(logo_images[0]) as img:
             w, h = img.size
-        return logo_image, (w / h if h else None), "uploaded logo"
+        return {"row": list(logo_images), "primary": logo_images[0],
+                "ratio": (w / h if h else None),
+                "source": f"uploaded logo{'s' if len(logo_images) > 1 else ''}"}
 
-    best = _select_logo_node(detected_layout_nodes)
-    if best is None or not template_image:
-        return None, None, None
-
-    x, y, w, h = best["bbox"]
+    if not template_image:
+        return none
     with Image.open(template_image) as img:
-        pad_x, pad_y = w * 0.04, h * 0.04
-        box = (max(0, int(x - pad_x)), max(0, int(y - pad_y)),
-               min(img.width, int(x + w + pad_x)), min(img.height, int(y + h + pad_y)))
-        crop = _clear_crop_background(img.convert("RGBA").crop(box))
-    os.makedirs(output_dir, exist_ok=True)
-    crop_path = os.path.join(output_dir, f"ThemeSync_{stem}_logo_crop.png")
-    crop.save(crop_path)
-    ratio = (w / h) if h > 0 else None
-    return crop_path, ratio, f"Stage 0b crop, conf={best.get('detection_confidence', 0.0):.2f}"
+        row = _select_logo_row(detected_layout_nodes, img.height)
+        if not row:
+            return none
+        os.makedirs(output_dir, exist_ok=True)
+        paths = []
+        for i, node in enumerate(row):
+            x, y, w, h = node["bbox"]
+            pad_x, pad_y = w * 0.04, h * 0.04
+            box = (max(0, int(x - pad_x)), max(0, int(y - pad_y)),
+                   min(img.width, int(x + w + pad_x)), min(img.height, int(y + h + pad_y)))
+            path = os.path.join(output_dir, f"ThemeSync_{stem}_logo_{i}.png")
+            _clear_crop_background(img.convert("RGBA").crop(box)).save(path)
+            paths.append(path)
+
+    best = max(range(len(row)), key=lambda i: row[i].get("detection_confidence", 0.0))
+    _, _, bw, bh = row[best]["bbox"]
+    confs = ", ".join(f"{n.get('detection_confidence', 0.0):.2f}" for n in row)
+    return {"row": paths, "primary": paths[best], "ratio": (bw / bh if bh > 0 else None),
+            "source": f"Stage 0b crop of {len(row)} logo(s), conf={confs}"}
 
 
 def stage_gnn_inference(nodes: list, canvas_w: int, canvas_h: int,
@@ -395,7 +427,7 @@ def stage_rank_candidates(resolved_nodes: list, population: int, canvas_w: int, 
 def stage_render(winner_filepath: str, canvas_w: int, canvas_h: int,
                  payload_meta: dict, output_dir: str,
                  color_centroids: list, content_data: dict = None,
-                 font_family: str = None, logo_image_path: str = None):
+                 font_family: str = None, logos: dict = None):
     """
     Stage 5 — Aesthetic SVG rendering.
 
@@ -416,7 +448,8 @@ def stage_render(winner_filepath: str, canvas_w: int, canvas_h: int,
         mock_data=content_data,              # ← real user content, or None → domain defaults
         domain_context=domain,
         font_family=font_family,
-        logo_image_path=logo_image_path,
+        logo_image_path=(logos or {}).get("primary"),
+        logo_row_paths=(logos or {}).get("row"),
     )
     renderer.render_layout(winner_filepath, output_dir=output_dir, with_border=True)
     elapsed = time.perf_counter() - t0
@@ -450,7 +483,7 @@ def run_pipeline(
     yolo_weights_path: str = DEFAULT_YOLO_WEIGHTS,
     output_dir: str = "data/rendered/",
     font_family: str = None,
-    logo_image: str = None,
+    logo_images: list = None,
 ):
     _print_header("ThemeSync — Design Orchestration Pipeline")
 
@@ -509,13 +542,13 @@ def run_pipeline(
     # ------------------------------------------------------------------
     # Stage 1 — Instantiation
     # ------------------------------------------------------------------
-    logo_path, logo_ratio, logo_source = _resolve_logo(
-        logo_image, template_image, detected_layout_nodes, output_dir,
+    logos = _resolve_logos(
+        logo_images, template_image, detected_layout_nodes, output_dir,
         payload_meta.get("domain_context", "layout").replace("_", "-"),
     )
     nodes, timings["instantiation"] = stage_instantiate(
         payload_path, canvas_w, canvas_h,
-        detected_logo_ratio=logo_ratio, logo_source=logo_source,
+        detected_logo_ratio=logos["ratio"], logo_source=logos["source"],
     )
 
     # ------------------------------------------------------------------
@@ -551,7 +584,7 @@ def run_pipeline(
         color_centroids=color_centroids,
         content_data=content_data,
         font_family=font_family,
-        logo_image_path=logo_path,
+        logos=logos,
     )
 
     # ------------------------------------------------------------------
@@ -614,8 +647,8 @@ def run_pipeline(
         "saliency_weight": saliency_weight,
         "detected_master_layout_nodes": detected_layout_nodes,
         "detected_master_layout_path":  detected_layout_path,
-        "logo_image_path": logo_path,
-        "logo_source":     logo_source,
+        "logo_paths":      logos["row"],
+        "logo_source":     logos["source"],
     }
 
 
@@ -684,10 +717,12 @@ Examples:
              "exists.",
     )
     parser.add_argument(
-        "--logo_image", type=str, default=None,
-        help="Path to the institution's logo file (PNG with transparency "
-             "preferred). Overrides the logo cropped from the master layout "
-             "by Stage 0b; if neither is available a drawn badge is used.",
+        "--logo_image", type=str, nargs="+", default=None,
+        help="Path(s) to organisation logo file(s), PNG with transparency "
+             "preferred. The first is used where a format has one logo slot "
+             "(certificate); all form the logo row where it has several (event "
+             "ID). Overrides the logos cropped from the master layout by "
+             "Stage 0b; if neither is available a drawn badge is used.",
     )
     parser.add_argument(
         "--output_dir", type=str, default="data/rendered/",
@@ -714,7 +749,7 @@ Examples:
         yolo_weights_path=args.yolo_weights,
         output_dir=args.output_dir,
         font_family=args.font_family,
-        logo_image=args.logo_image,
+        logo_images=args.logo_image,
     )
 
 
