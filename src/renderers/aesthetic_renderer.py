@@ -1,11 +1,42 @@
+import base64
 import colorsys
+import hashlib
+import io
 import json
 import os
 import textwrap
+from xml.sax.saxutils import escape
+
+from PIL import Image
 
 # ---------------------------------------------------------------------------
 # Colour & Luminance helpers
 # ---------------------------------------------------------------------------
+
+def _fit_font_size(text: str, max_width: float, max_size: float,
+                   letter_spacing: float = 0.0, min_size: float = 6.0) -> float:
+    """Largest font size (<= max_size) whose estimated rendered width fits
+    max_width. Uses ~0.62em per glyph — a conservative average for the bold
+    sans stacks this renderer uses — plus the letter-spacing between glyphs."""
+    n = max(len(text), 1)
+    fitted = (max_width - letter_spacing * (n - 1)) / (0.62 * n)
+    return max(min_size, min(max_size, fitted))
+
+
+def _image_to_data_uri(path: str, max_side: int = 512) -> str:
+    """Loads an image file (PNG/JPG/WebP...) and returns it as a base64 PNG
+    data URI, downscaled so the SVG stays small. Returns None if unreadable."""
+    try:
+        with Image.open(path) as img:
+            img = img.convert("RGBA")
+            img.thumbnail((max_side, max_side))
+            buf = io.BytesIO()
+            img.save(buf, format="PNG")
+    except (OSError, ValueError) as e:
+        print(f"  ⚠  Could not load logo image '{path}': {e} — using drawn badge")
+        return None
+    return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
+
 
 def _lab_centroid_to_hex(lab: list) -> str:
     """
@@ -176,11 +207,16 @@ class AestheticSVGRenderer:
         mock_data: dict = None,
         domain_context: str = "academic_certificate",
         font_family: str = None,
+        logo_image_path: str = None,
     ):
         self.canvas_w = float(canvas_width)
         self.canvas_h = float(canvas_height)
         self.original_filename = original_filename
         self.domain = domain_context
+        # Real logo artwork for the logo node — either a user-uploaded file or
+        # the Stage 0b crop of the master layout's detected logo (resolved in
+        # pipeline.py). None falls back to the drawn seal badge.
+        self.logo_data_uri = _image_to_data_uri(logo_image_path) if logo_image_path else None
 
         # Palette and fonts
         self.palette = _palette_from_centroids(color_centroids)
@@ -241,6 +277,16 @@ class AestheticSVGRenderer:
             
         return elements
 
+    def _render_logo(self, x, y, w, h, content) -> list:
+        """Places the real logo artwork, fitted inside the node's bbox without
+        distortion; falls back to the drawn seal badge when none is available."""
+        if not self.logo_data_uri:
+            return self._render_logo_badge(x, y, w, h, content)
+        return [
+            f'<image x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
+            f'preserveAspectRatio="xMidYMid meet" xlink:href="{self.logo_data_uri}" />'
+        ]
+
     def _render_logo_badge(self, x, y, w, h, content) -> list:
         """Renders an institutional seal badge with emblem geometry."""
         p = self.palette["primary"]
@@ -248,13 +294,95 @@ class AestheticSVGRenderer:
         cx = x + (w / 2.0)
         cy = y + (h / 2.0)
         r = min(w, h) * 0.42
-        
+        # Keep the label inside the inner ring: shrink the font until the
+        # estimated text width fits ~1.5r (was a fixed r*0.4, which let
+        # longer labels like "CSPC LOGO" spill past the circle).
+        font_size = _fit_font_size(content, max_width=r * 1.5, max_size=r * 0.4, letter_spacing=1.5)
+
         elements = [
             f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{self.palette["card_bg"]}" stroke="{a}" stroke-width="2.5" />',
             f'<circle cx="{cx}" cy="{cy}" r="{r - 4}" fill="none" stroke="{p}" stroke-width="1" stroke-dasharray="3,3" />',
-            f'<text x="{cx}" y="{cy}" font-family="{self.font_family}" font-weight="bold" font-size="{r*0.4:.1f}" fill="{p}" text-anchor="middle" dominant-baseline="central" letter-spacing="1.5">{content}</text>'
+            f'<text x="{cx}" y="{cy}" font-family="{self.font_family}" font-weight="bold" font-size="{font_size:.1f}" fill="{p}" text-anchor="middle" dominant-baseline="central" letter-spacing="1.5">{escape(content)}</text>'
         ]
         return elements
+
+    def _render_photo_frame(self, x, y, w, h) -> list:
+        """Renders a square 2x2 ID-photo slot with a neutral person silhouette
+        (no real faces in generated samples)."""
+        a = self.palette["accent"]
+        muted = self.palette["muted"]
+        side = min(w, h)
+        fx = x + (w - side) / 2.0
+        fy = y + (h - side) / 2.0
+        cx = fx + side / 2.0
+        head_r = side * 0.18
+        head_cy = fy + side * 0.40
+        sh_top = fy + side * 0.62
+        sh_w = side * 0.34
+        figure = _lighten(muted, 0.35)
+        # Plain shapes only (no clipPath/<g> inheritance) so the silhouette
+        # also renders in minimal SVG rasterizers, not just browsers; the
+        # shoulders already sit inside the frame, so no clipping is needed.
+        return [
+            f'<rect x="{fx:.1f}" y="{fy:.1f}" width="{side:.1f}" height="{side:.1f}" rx="4" fill="{_lighten(muted, 0.82)}" />',
+            f'<circle cx="{cx:.1f}" cy="{head_cy:.1f}" r="{head_r:.1f}" fill="{figure}" />',
+            f'<path d="M {cx - sh_w:.1f} {fy + side:.1f} '
+            f'Q {cx - sh_w:.1f} {sh_top:.1f} {cx:.1f} {sh_top:.1f} '
+            f'Q {cx + sh_w:.1f} {sh_top:.1f} {cx + sh_w:.1f} {fy + side:.1f} Z" fill="{figure}" />',
+            f'<rect x="{fx:.1f}" y="{fy:.1f}" width="{side:.1f}" height="{side:.1f}" rx="4" fill="none" stroke="{a}" stroke-width="2.5" />',
+        ]
+
+    def _render_barcode(self, x, y, w, h, content) -> list:
+        """Renders a barcode strip with its human-readable value underneath,
+        both inside the node's bbox. Bar widths are derived deterministically
+        from the value — a visual stand-in, not a scannable symbology."""
+        p = self.palette["primary"]
+        bar_h = h * 0.68
+        text_h = h - bar_h
+        # Start/stop guards around data bars/gaps of 1-3 units, with ~2px per
+        # unit so the strip reads as a real barcode at any node width.
+        guard = [2, 1, 2]
+        budget = max(20, int(w * 0.9 / 2.0)) - 2 * sum(guard)
+        digest, seed = b"", content.encode()
+        while len(digest) < budget:
+            seed = hashlib.sha256(seed).digest()
+            digest += seed
+        data, total = [], 0
+        for b in digest:
+            bw = 1 + (b % 3)
+            if total + bw > budget:
+                break
+            data.append(bw)
+            total += bw
+        if len(data) % 2 == 0:  # odd count so the data run starts and ends on a bar
+            data.append(1)
+        pattern = guard + [1] + data + [1] + guard  # [1] = separating gaps
+        unit = w * 0.9 / sum(pattern)
+        elements = []
+        cursor = x + w * 0.05
+        for i, bw in enumerate(pattern):
+            if i % 2 == 0:  # even index = bar, odd = gap
+                elements.append(
+                    f'<rect x="{cursor:.2f}" y="{y:.1f}" width="{bw * unit:.2f}" height="{bar_h:.1f}" fill="{p}" />'
+                )
+            cursor += bw * unit
+        font_size = _fit_font_size(content, max_width=w * 0.9, max_size=text_h * 0.75, letter_spacing=2.0)
+        elements.append(
+            f'<text x="{x + w / 2.0:.1f}" y="{y + bar_h + text_h * 0.8:.1f}" font-family="{self.font_family}" '
+            f'font-size="{font_size:.1f}" letter-spacing="2.0" fill="{p}" text-anchor="middle">{escape(content)}</text>'
+        )
+        return elements
+
+    def _render_image_node(self, x, y, w, h, node_id, content) -> list:
+        """Dispatches an image node to the renderer for its role, by schema name."""
+        name = node_id.lower()
+        if "logo" in name:
+            return self._render_logo(x, y, w, h, content)
+        if "photo" in name:
+            return self._render_photo_frame(x, y, w, h)
+        if "barcode" in name:
+            return self._render_barcode(x, y, w, h, content)
+        return self._render_logo_badge(x, y, w, h, content)
 
     def _render_text_node(self, x, y, w, h, node_id, content) -> list:
         """Renders a text node with proportional typography and multi-line wrapping."""
@@ -383,14 +511,14 @@ class AestheticSVGRenderer:
             content = self._clean_node_id(node_id)
 
             if struct_class == "image_node":
-                svg_elements.extend(self._render_logo_badge(x, y, w, h, content))
+                svg_elements.extend(self._render_image_node(x, y, w, h, node_id, content))
             elif struct_class == "repeating_group":
                 svg_elements.extend(self._render_signature_block(x, y, w, h, content))
             else:
                 svg_elements.extend(self._render_text_node(x, y, w, h, node_id, content))
 
         svg_content = (
-            f'<svg xmlns="http://www.w3.org/2000/svg" '
+            f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
             f'viewBox="0 0 {int(self.canvas_w)} {int(self.canvas_h)}" '
             f'width="{int(self.canvas_w)}" height="{int(self.canvas_h)}">\n'
             + "\n".join(svg_elements)

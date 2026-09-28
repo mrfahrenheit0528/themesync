@@ -7,11 +7,12 @@ Execution order:
   0. Template Ingestion          (image → LAB centroids + SIFT saliency)  [optional]
   0b. Semantic Layout Parsing    (image → detected logo/text/underlay/
                                    embellishment nodes via YOLO+OCR)      [optional]
-                                  Independent of Stage 0 and of Stage 1 below —
-                                  reports on the master layout's own structure,
-                                  does not feed the certificate/ID being built.
-                                  See notes/gnn_fixes_and_methodology_notes.md
-                                  section 3.7.
+                                  Reports on the master layout's own structure.
+                                  Only the detected *logo* feeds the certificate/
+                                  ID being built (its aspect ratio + cropped
+                                  artwork, unless --logo_image overrides); see
+                                  notes/gnn_fixes_and_methodology_notes.md
+                                  sections 3.7, 3.11, 3.14.
   1. Dynamic Node Instantiation  (payload → node tensors)
   2. GNN Inference               (spatial position prediction)
   3. CSP Resolution              (Cassowary hard + soft constraints)
@@ -44,6 +45,7 @@ import os
 import sys
 import time
 import torch
+from PIL import Image, ImageDraw
 
 # ---------------------------------------------------------------------------
 # Path bootstrap — resolve all sibling packages
@@ -168,13 +170,15 @@ def stage_layout_parsing(template_image_path: str, weights_path: str) -> tuple:
     certificate/ID being generated. See notes/gnn_fixes_and_methodology_notes.md
     sections 3.5-3.7 for why these stay separate.
 
-    One narrow, deliberate exception (section 3.11): the detected logo's own
-    *aspect ratio* (not its position, not any other node) flows into Stage
-    1's sizing math for whichever schema node the payload itself marks
-    `lock_aspect_ratio: true` and names as the logo — see
-    `_detect_logo_aspect_ratio()` and `NodeInstantiator._calculate_baseline_tensor()`.
-    This is Figure 2's "Affine scaling" readout, previously computed nowhere
-    and consumed nowhere despite the schema already declaring the field.
+    One narrow, deliberate exception — the detected logo, and nothing else:
+      - its *aspect ratio* flows into Stage 1's sizing math for whichever
+        schema node the payload marks `lock_aspect_ratio: true` and names as
+        the logo (section 3.11, Figure 2's "Affine scaling");
+      - its *artwork*, cropped from the master layout, is what Stage 5
+        renders in that logo node (section 3.14), so the output carries the
+        real brand mark instead of a drawn placeholder.
+    A user-supplied `--logo_image` overrides both. See `_resolve_logo()`.
+    Positions of detected nodes still never feed the generated document.
 
     Gracefully skipped (not a hard failure) if no fine-tuned weights file is
     present, so the rest of the pipeline still runs on a machine that hasn't
@@ -205,7 +209,7 @@ def stage_layout_parsing(template_image_path: str, weights_path: str) -> tuple:
 
 
 def stage_instantiate(payload_path: str, canvas_w: int, canvas_h: int,
-                       detected_logo_ratio: float = None):
+                       detected_logo_ratio: float = None, logo_source: str = None):
     t0 = time.perf_counter()
     instantiator = NodeInstantiator(canvas_width=canvas_w, canvas_height=canvas_h)
     nodes = instantiator.instantiate_payload(payload_path, detected_logo_ratio=detected_logo_ratio)
@@ -213,9 +217,18 @@ def stage_instantiate(payload_path: str, canvas_w: int, canvas_h: int,
     _print_stage("1. Dynamic Node Instantiation", elapsed)
     print(f"     → {len(nodes)} node(s) instantiated for canvas {canvas_w}×{canvas_h}")
     if detected_logo_ratio:
-        print(f"     → Logo aspect ratio locked to detected {detected_logo_ratio:.2f}:1 "
-              "(Stage 0b, Affine scaling)")
+        print(f"     → Logo aspect ratio locked to {detected_logo_ratio:.2f}:1 "
+              f"({logo_source or 'Stage 0b'}, Affine scaling)")
     return nodes, elapsed
+
+
+def _select_logo_node(detected_layout_nodes: list):
+    """Highest-confidence Stage 0b detection with semantic_category == "logo",
+    or None if Stage 0b didn't run or found no logo."""
+    logo_nodes = [n for n in (detected_layout_nodes or []) if n.get("semantic_category") == "logo"]
+    if not logo_nodes:
+        return None
+    return max(logo_nodes, key=lambda n: n.get("detection_confidence", 0.0))
 
 
 def _detect_logo_aspect_ratio(detected_layout_nodes: list):
@@ -225,14 +238,78 @@ def _detect_logo_aspect_ratio(detected_layout_nodes: list):
     with semantic_category == "logo". Returns None if Stage 0b didn't run or
     found no logo, so callers fall back to the fixed-square default.
     """
-    if not detected_layout_nodes:
+    best = _select_logo_node(detected_layout_nodes)
+    if best is None:
         return None
-    logo_nodes = [n for n in detected_layout_nodes if n.get("semantic_category") == "logo"]
-    if not logo_nodes:
-        return None
-    best = max(logo_nodes, key=lambda n: n.get("detection_confidence", 0.0))
     _, _, w, h = best["bbox"]
     return (w / h) if h > 0 else None
+
+
+def _clear_crop_background(crop: "Image.Image", thresh: int = 48,
+                           max_cleared: float = 0.85) -> "Image.Image":
+    """
+    Makes the poster background around a cropped logo transparent, so the
+    logo doesn't arrive on the certificate/ID as a pasted-on rectangle of
+    the master layout's artwork. Flood-fills from every border pixel whose
+    region hasn't been reached yet (tolerance `thresh`), so only background
+    *connected to the crop's edges* is cleared — the logo's own interior is
+    never touched, even where it shares the background's colour.
+
+    Safety valve: if the fill would clear more than `max_cleared` of the
+    crop (logo not visually separable from its surroundings), the original
+    crop is returned unchanged rather than a hollowed-out logo. An uploaded
+    `--logo_image` is the fix for those cases.
+    """
+    sentinel = (255, 0, 255)
+    rgb = crop.convert("RGB")
+    w, h = rgb.size
+    border = ([(x, 0) for x in range(w)] + [(x, h - 1) for x in range(w)] +
+              [(0, y) for y in range(h)] + [(w - 1, y) for y in range(h)])
+    for xy in border:
+        if rgb.getpixel(xy) != sentinel:
+            ImageDraw.floodfill(rgb, xy, sentinel, thresh=thresh)
+    mask = [px == sentinel for px in rgb.getdata()]
+    if sum(mask) > max_cleared * len(mask):
+        return crop
+    out = crop.copy()
+    out.putdata([(r, g, b, 0) if clear else (r, g, b, a)
+                 for (r, g, b, a), clear in zip(crop.getdata(), mask)])
+    return out
+
+
+def _resolve_logo(logo_image: str, template_image: str, detected_layout_nodes: list,
+                  output_dir: str, stem: str) -> tuple:
+    """
+    Decides which logo artwork the generated document carries, and its
+    aspect ratio for Stage 1's `lock_aspect_ratio` sizing:
+      1. a user-uploaded `logo_image` file, if given (overrides detection —
+         the fix for YOLO picking the wrong mark, e.g. an event emblem
+         instead of the institutional seal);
+      2. otherwise the highest-confidence Stage 0b logo, cropped from the
+         master layout (4% padding) and saved next to the output;
+      3. otherwise (None, None, None) — renderer falls back to a drawn badge.
+    Returns (image_path, aspect_ratio, source_label).
+    """
+    if logo_image:
+        with Image.open(logo_image) as img:
+            w, h = img.size
+        return logo_image, (w / h if h else None), "uploaded logo"
+
+    best = _select_logo_node(detected_layout_nodes)
+    if best is None or not template_image:
+        return None, None, None
+
+    x, y, w, h = best["bbox"]
+    with Image.open(template_image) as img:
+        pad_x, pad_y = w * 0.04, h * 0.04
+        box = (max(0, int(x - pad_x)), max(0, int(y - pad_y)),
+               min(img.width, int(x + w + pad_x)), min(img.height, int(y + h + pad_y)))
+        crop = _clear_crop_background(img.convert("RGBA").crop(box))
+    os.makedirs(output_dir, exist_ok=True)
+    crop_path = os.path.join(output_dir, f"ThemeSync_{stem}_logo_crop.png")
+    crop.save(crop_path)
+    ratio = (w / h) if h > 0 else None
+    return crop_path, ratio, f"Stage 0b crop, conf={best.get('detection_confidence', 0.0):.2f}"
 
 
 def stage_gnn_inference(nodes: list, canvas_w: int, canvas_h: int,
@@ -318,7 +395,7 @@ def stage_rank_candidates(resolved_nodes: list, population: int, canvas_w: int, 
 def stage_render(winner_filepath: str, canvas_w: int, canvas_h: int,
                  payload_meta: dict, output_dir: str,
                  color_centroids: list, content_data: dict = None,
-                 font_family: str = None):
+                 font_family: str = None, logo_image_path: str = None):
     """
     Stage 5 — Aesthetic SVG rendering.
 
@@ -339,6 +416,7 @@ def stage_render(winner_filepath: str, canvas_w: int, canvas_h: int,
         mock_data=content_data,              # ← real user content, or None → domain defaults
         domain_context=domain,
         font_family=font_family,
+        logo_image_path=logo_image_path,
     )
     renderer.render_layout(winner_filepath, output_dir=output_dir, with_border=True)
     elapsed = time.perf_counter() - t0
@@ -372,6 +450,7 @@ def run_pipeline(
     yolo_weights_path: str = DEFAULT_YOLO_WEIGHTS,
     output_dir: str = "data/rendered/",
     font_family: str = None,
+    logo_image: str = None,
 ):
     _print_header("ThemeSync — Design Orchestration Pipeline")
 
@@ -430,9 +509,13 @@ def run_pipeline(
     # ------------------------------------------------------------------
     # Stage 1 — Instantiation
     # ------------------------------------------------------------------
-    detected_logo_ratio = _detect_logo_aspect_ratio(detected_layout_nodes)
+    logo_path, logo_ratio, logo_source = _resolve_logo(
+        logo_image, template_image, detected_layout_nodes, output_dir,
+        payload_meta.get("domain_context", "layout").replace("_", "-"),
+    )
     nodes, timings["instantiation"] = stage_instantiate(
-        payload_path, canvas_w, canvas_h, detected_logo_ratio=detected_logo_ratio
+        payload_path, canvas_w, canvas_h,
+        detected_logo_ratio=logo_ratio, logo_source=logo_source,
     )
 
     # ------------------------------------------------------------------
@@ -468,6 +551,7 @@ def run_pipeline(
         color_centroids=color_centroids,
         content_data=content_data,
         font_family=font_family,
+        logo_image_path=logo_path,
     )
 
     # ------------------------------------------------------------------
@@ -530,6 +614,8 @@ def run_pipeline(
         "saliency_weight": saliency_weight,
         "detected_master_layout_nodes": detected_layout_nodes,
         "detected_master_layout_path":  detected_layout_path,
+        "logo_image_path": logo_path,
+        "logo_source":     logo_source,
     }
 
 
@@ -598,6 +684,12 @@ Examples:
              "exists.",
     )
     parser.add_argument(
+        "--logo_image", type=str, default=None,
+        help="Path to the institution's logo file (PNG with transparency "
+             "preferred). Overrides the logo cropped from the master layout "
+             "by Stage 0b; if neither is available a drawn badge is used.",
+    )
+    parser.add_argument(
         "--output_dir", type=str, default="data/rendered/",
         help="Directory to write SVG output (default: data/rendered/)",
     )
@@ -622,6 +714,7 @@ Examples:
         yolo_weights_path=args.yolo_weights,
         output_dir=args.output_dir,
         font_family=args.font_family,
+        logo_image=args.logo_image,
     )
 
 

@@ -195,6 +195,7 @@ with col_left:
             f"(C_total = {winner['c_total']:.4f}) · "
             f"**Total latency:** {result['total_ms']:.1f} ms"
         )
+        st.caption(f"Logo source: {result.get('logo_source') or 'none found — drawn badge'}")
         with st.expander("Full timing breakdown"):
             st.json(result["timings_ms"])
 
@@ -252,6 +253,18 @@ with col_right:
         st.session_state["base_size"] = st.number_input("Base Size (px)", min_value=8, max_value=120, value=48)
         st.session_state["font_family_stack"] = FONT_OPTIONS[font_label]
 
+        st.markdown("**User Injected — Institution Logo (optional)**")
+        st.caption(
+            "Leave empty to use the logo Stage 0b detected on the master layout "
+            "(highest confidence, background removed). Upload a file to override "
+            "it, e.g. when the detector picked an event emblem instead of the "
+            "institutional seal. A transparent PNG gives the cleanest result."
+        )
+        logo_upload = st.file_uploader(
+            "Institution logo", type=["png", "jpg", "jpeg", "webp"], key="logo_upload",
+        )
+        st.session_state["logo_image_path"] = _save_upload(logo_upload) if logo_upload else None
+
     st.markdown("---")
     st.subheader("Target Initialization")
 
@@ -292,6 +305,7 @@ with col_right:
                     template_image=st.session_state.get("image_path"),
                     content_data_path=content_path if use_real_content else None,
                     font_family=st.session_state.get("font_family_stack"),
+                    logo_image=st.session_state.get("logo_image_path"),
                 )
             st.session_state["orchestration_result"] = result
             st.rerun()

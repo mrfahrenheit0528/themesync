@@ -946,3 +946,82 @@ Also, the citations backing the Likert/MOS instrument (TSA's question,
 `adviser_consultation_checklist.md` §D2) are still unverified/not added —
 this fix makes the *instrument* match the manuscript, it doesn't add the
 manuscript's missing grounding.
+
+### 3.14 Output rendering made rate-ready for Phase 4: real logo, photo slot, barcode (2026-09-28)
+
+**Found while preparing Phase 4.** I ran the full pipeline on a real, unseen
+poster (`YOUR_TEMPLATE2.jpg`, YUGTO 2026) for both formats and looked at the
+outputs the way the expert would. Every `image_node` was rendered by the
+same `_render_logo_badge()`: a circle with the node's placeholder text on
+top, and the text wasn't sized to fit. The results:
+
+- **Certificate:** a "CSPC LOGO" circle with the label spilling past the
+  ring, although Stage 0b had already detected the real SSC seal on the
+  poster (conf 0.68).
+- **ID:** "2x2 PHOTO" spilling far outside a *circular* photo slot, and a
+  barcode drawn as a small circle sitting on top of its own ID text.
+
+These were display stubs, not layout decisions, so an expert would have
+been scoring the stubs rather than ThemeSync. The node bboxes were already
+right (square photo, wide 0.75×0.08 barcode strip); only rendering was
+wrong.
+
+**Decisions (confirmed with the user this session):**
+- Logo: an uploaded file overrides the Stage 0b crop.
+- ID photo: a neutral silhouette (no real faces in generated samples).
+
+**Changes:**
+- **`pipeline.py` `_resolve_logo()`** chooses the logo artwork:
+  1. `--logo_image` (upload) if given;
+  2. otherwise the highest-confidence Stage 0b logo, cropped from the
+     master (4% padding), saved as `ThemeSync_<format>_logo_crop.png`;
+  3. otherwise none, and the renderer draws the badge.
+
+  The same source now drives `lock_aspect_ratio` sizing, so the node's
+  shape always matches the artwork placed in it.
+- **This widens §3.11's boundary.** Before, only the detected logo's
+  aspect ratio crossed from Stage 0b into the generated document. Now its
+  cropped artwork does too. Positions of detected nodes still don't.
+  Supported by Chapter 3 p.50 ("converting the flattened raster pixels
+  into structured, editable nodes") and Figure 2's "Logo detected /
+  Node_01: Logo (Static)."
+- **`_clear_crop_background()`** makes the poster background around the
+  crop transparent.
+  - It flood-fills from the crop's border pixels (tolerance 48), so only
+    background connected to the edges is cleared, never the logo's
+    interior.
+  - Safety valve: if more than 85% would be cleared, the original crop is
+    kept.
+  - On YUGTO it removed the dark purple square cleanly. A few dark fringe
+    specks remain along the laurel's lower edge; an uploaded transparent
+    PNG avoids them.
+- **`aesthetic_renderer.py`** now dispatches image nodes by schema name:
+  - logo → embedded image, `preserveAspectRatio="xMidYMid meet"` (fallback:
+    the badge, now with its label fitted to the inner ring);
+  - photo → square 2x2 frame with a silhouette;
+  - barcode → a bar strip plus its human-readable value, both inside the
+    bbox. Bars are derived deterministically from the value: a visual
+    stand-in, not a scannable symbology.
+
+  Everything is plain SVG shapes (no clipPath or `<g>` inheritance), since
+  ImageMagick's built-in MSVG renderer, the only rasterizer on this
+  machine, silently dropped the clipped silhouette in the first attempt.
+- **Dashboard:** optional "Institution logo" upload under User Injected,
+  passed through as `logo_image`. The output panel shows the logo source.
+
+**Verified:**
+- YUGTO certificate and ID, before/after compared visually.
+- The `--logo_image` override (reports "uploaded logo", writes no crop).
+- The no-template fallback (drawn badge, no ratio lock).
+- Both test suites pass; the dashboard starts cleanly.
+
+**Deliberately *not* changed; these are real system behavior for the
+expert to judge:**
+- The GNN-guided certificate leaves a ~300px gap between logo and
+  institution name (§1.4: the GNN has no reading-order adjacency). The
+  no-GNN baseline is compact.
+- The heuristic fitness still ranks the gappy GNN layout as the better
+  one (C_total 0.180 vs 0.193). This is exactly the kind of case MOS is
+  meant to catch (Chapter 3 p.58).
+- The ID leaves its bottom ~30% empty, and the certificate logo sits
+  ~28px left of centre (GNN placement).
