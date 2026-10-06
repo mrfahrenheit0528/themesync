@@ -1,0 +1,51 @@
+{
+  "v3 (YOLOv8n, 640, original labels)": {
+    "mAP50": 0.363,
+    "mAP50-95": 0.213,
+    "precision": 0.526,
+    "recall": 0.324,
+    "per_class_mAP50": {
+      "logo": 0.62,
+      "text": 0.584,
+      "underlay": 0.037,
+      "embellishment": 0.212
+    },
+    "per_class_precision": {
+      "logo": 0.75,
+      "text": 0.687,
+      "underlay": 0.11,
+      "embellishment": 0.557
+    },
+    "per_class_recall": {
+      "logo": 0.551,
+      "text": 0.554,
+      "underlay": 0.024,
+      "embellishment": 0.165
+    }
+  },
+  "v4 exp (YOLOv8s, 1024, cleaned labels)": {
+    "mAP50": 0.454,
+    "mAP50-95": 0.3,
+    "precision": 0.562,
+    "recall": 0.427,
+    "per_class_mAP50": {
+      "logo": 0.818,
+      "text": 0.682,
+      "underlay": 0.115,
+      "embellishment": 0.201
+    },
+    "per_class_precision": {
+      "logo": 0.72,
+      "text": 0.714,
+      "underlay": 0.39,
+      "embellishment": 0.426
+    },
+    "per_class_recall": {
+      "logo": 0.757,
+      "text": 0.672,
+      "underlay": 0.098,
+      "embellishment": 0.182
+    }
+  },
+  "note": "both scored on the cleaned validation labels (full-poster boxes removed)"
+}

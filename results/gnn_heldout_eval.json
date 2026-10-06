@@ -1,0 +1,87 @@
+{
+  "heldout_layouts": 2900,
+  "heldout": "seeded 5% of CGL train, never trained on (CGL test has no annotations)",
+  "units": "fractions of the canvas (0-1); order_kept is a share of consecutive pairs",
+  "results": {
+    "v1 as deployed (0,0 start)": {
+      "mae_xy": 0.2104,
+      "mae_gap": 0.3494,
+      "order_kept": 0.4717,
+      "overlap": 0.002
+    },
+    "naive stack (no model)": {
+      "mae_xy": 0.175,
+      "mae_gap": 0.0766,
+      "order_kept": 1.0,
+      "overlap": 0.0
+    },
+    "v2, positions only": {
+      "mae_xy": 0.1176,
+      "mae_gap": 0.1007,
+      "order_kept": 0.9981,
+      "overlap": 0.0
+    },
+    "v2, positions + relations": {
+      "mae_xy": 0.1207,
+      "mae_gap": 0.0741,
+      "order_kept": 0.9986,
+      "overlap": 0.0
+    },
+    "v3, naive input": {
+      "mae_xy": 0.1212,
+      "mae_gap": 0.0739,
+      "order_kept": 0.9991,
+      "overlap": 0.0
+    },
+    "structure start (no model)": {
+      "mae_xy": 0.0503,
+      "mae_gap": 0.0517,
+      "order_kept": 0.9812,
+      "overlap": 0.0044
+    },
+    "v2, structure input": {
+      "mae_xy": 0.0961,
+      "mae_gap": 0.0969,
+      "order_kept": 0.9236,
+      "overlap": 0.0037
+    },
+    "v3, structure input (default)": {
+      "mae_xy": 0.0364,
+      "mae_gap": 0.0411,
+      "order_kept": 0.9708,
+      "overlap": 0.0005
+    }
+  },
+  "exact_anchors": {
+    "setup": "real centres as anchors, up to half the elements unmapped (seed 7); vertical-centre error, fractions of the height",
+    "anchored_elements": 8356,
+    "unmapped_elements": 2432,
+    "results": {
+      "start (mapping only)": {
+        "anchored": 0.0,
+        "unmapped": 0.0812,
+        "all": 0.0183
+      },
+      "v3, raw": {
+        "anchored": 0.0264,
+        "unmapped": 0.0843,
+        "all": 0.0395
+      },
+      "v3, registered": {
+        "anchored": 0.0,
+        "unmapped": 0.0746,
+        "all": 0.0168
+      },
+      "v2, raw": {
+        "anchored": 0.1219,
+        "unmapped": 0.1459,
+        "all": 0.1273
+      },
+      "v2, registered": {
+        "anchored": 0.0,
+        "unmapped": 0.1088,
+        "all": 0.0245
+      }
+    }
+  }
+}

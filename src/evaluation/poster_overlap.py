@@ -10,6 +10,7 @@ checkpoint actually trained on) and phase4_packet.py (Phase 4 needs posters
 no model has seen).
 """
 
+import functools
 import glob
 import os
 
@@ -21,12 +22,16 @@ BATCH_DIR = os.path.join(_ROOT, "data", "raw", "master_layout_batch")
 # Training images behind each YOLO checkpoint (v1 was CGL-Dataset only).
 TRAINING_IMAGES = {
     "v2": os.path.join(BATCH_DIR, "_raw_v2_backup", "train", "images"),  # 65-image batch
-    "v3": os.path.join(BATCH_DIR, "train", "images"),                     # 124-image batch
+    "v3": os.path.join(BATCH_DIR, "_raw_v4_backup", "train", "images"),  # 124-image batch
+    "v4": os.path.join(BATCH_DIR, "_raw_v4_backup", "train", "images"),  # same images, cleaned labels
+    "v5": os.path.join(BATCH_DIR, "train", "images"),                     # 200-image re-annotation (2026-10-06)
 }
 
 
+@functools.lru_cache(maxsize=None)
 def dhash(path: str, size: int = 8) -> int:
-    """64-bit difference hash, robust to resizing and re-encoding."""
+    """64-bit difference hash, robust to resizing and re-encoding. Cached per
+    path, so checking many posters hashes each annotated image only once."""
     with Image.open(path) as img:
         gray = img.convert("L").resize((size + 1, size), Image.LANCZOS)
     px = list(gray.tobytes())

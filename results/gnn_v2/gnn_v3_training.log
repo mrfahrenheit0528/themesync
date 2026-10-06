@@ -1,0 +1,15 @@
+Device: cuda | starts: ('naive', 'structure')
+epoch   5  loss 0.1373  [naive] MAE 0.1251 (start 0.1750) gap 0.0762 (start 0.0766) order 1.000  [structure] MAE 0.0415 (start 0.0503) gap 0.0479 (start 0.0517) order 0.971
+epoch  10  loss 0.1336  [naive] MAE 0.1244 (start 0.1750) gap 0.0763 (start 0.0766) order 1.000  [structure] MAE 0.0397 (start 0.0503) gap 0.0453 (start 0.0517) order 0.971
+epoch  15  loss 0.1316  [naive] MAE 0.1238 (start 0.1750) gap 0.0743 (start 0.0766) order 0.999  [structure] MAE 0.0385 (start 0.0503) gap 0.0437 (start 0.0517) order 0.969
+epoch  20  loss 0.1305  [naive] MAE 0.1235 (start 0.1750) gap 0.0756 (start 0.0766) order 1.000  [structure] MAE 0.0392 (start 0.0503) gap 0.0448 (start 0.0517) order 0.971
+epoch  25  loss 0.1294  [naive] MAE 0.1223 (start 0.1750) gap 0.0746 (start 0.0766) order 1.000  [structure] MAE 0.0375 (start 0.0503) gap 0.0424 (start 0.0517) order 0.971
+epoch  30  loss 0.1287  [naive] MAE 0.1226 (start 0.1750) gap 0.0738 (start 0.0766) order 0.999  [structure] MAE 0.0370 (start 0.0503) gap 0.0423 (start 0.0517) order 0.970
+epoch  35  loss 0.1280  [naive] MAE 0.1223 (start 0.1750) gap 0.0735 (start 0.0766) order 0.999  [structure] MAE 0.0367 (start 0.0503) gap 0.0415 (start 0.0517) order 0.972
+epoch  40  loss 0.1276  [naive] MAE 0.1237 (start 0.1750) gap 0.0753 (start 0.0766) order 0.999  [structure] MAE 0.0369 (start 0.0503) gap 0.0419 (start 0.0517) order 0.969
+epoch  45  loss 0.1272  [naive] MAE 0.1215 (start 0.1750) gap 0.0738 (start 0.0766) order 0.999  [structure] MAE 0.0365 (start 0.0503) gap 0.0414 (start 0.0517) order 0.970
+epoch  50  loss 0.1269  [naive] MAE 0.1213 (start 0.1750) gap 0.0739 (start 0.0766) order 0.999  [structure] MAE 0.0363 (start 0.0503) gap 0.0413 (start 0.0517) order 0.970
+epoch  55  loss 0.1268  [naive] MAE 0.1212 (start 0.1750) gap 0.0739 (start 0.0766) order 0.999  [structure] MAE 0.0364 (start 0.0503) gap 0.0411 (start 0.0517) order 0.971
+epoch  60  loss 0.1267  [naive] MAE 0.1212 (start 0.1750) gap 0.0739 (start 0.0766) order 0.999  [structure] MAE 0.0363 (start 0.0503) gap 0.0412 (start 0.0517) order 0.971
+
+Best (epoch 55) saved to /home/guillerangelohermoso/themesync/themesync_gnn_v3.pth; metrics in /home/guillerangelohermoso/themesync/results/gnn_v2/themesync_gnn_v3_training.json

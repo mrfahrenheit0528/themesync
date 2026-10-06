@@ -18,15 +18,19 @@ import sys
 import os
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-for _sub in ("models", "solvers", "renderers"):
+for _sub in ("models", "solvers", "renderers", "data_preprocessing"):
     _p = os.path.join(_ROOT, "src", _sub)
     if _p not in sys.path:
         sys.path.insert(0, _p)
+sys.path.insert(0, os.path.join(_ROOT, "src"))
+
+import contextlib
+import copy
+import io
 
 import torch
 from dynamic_instantiation import NodeInstantiator
-from gnn_model import ThemeSyncGNN
-from graph_builder import LayoutGraphBuilder
+from pipeline import DEFAULT_WEIGHTS, _FALLBACK_CENTROIDS, _FALLBACK_SALIENCY, stage_gnn_inference
 from cassowary_engine import ConstraintSolverEngine
 from candidate_generator import MetaheuristicStateExplorer
 
@@ -60,34 +64,17 @@ def _run_id_pipeline(use_gnn: bool = True):
     nodes = instantiator.instantiate_payload(PAYLOAD)
 
     if use_gnn:
-        model = ThemeSyncGNN(num_layers=3, node_dim=8, edge_dim=4, hidden_dim=64).to(device)
-        weights = os.path.join(_ROOT, "themesync_gnn_v1.pth")
-        if os.path.exists(weights):
-            model.load_state_dict(torch.load(weights, map_location=device, weights_only=True))
-        model.eval()
-
-        builder = LayoutGraphBuilder()
-        gnn_payload = {
-            "extracted_nodes": nodes,
-            "extracted_color_centroids": [
-                [0.0, 51.0, 102.0], [255.0, 204.0, 0.0], [255.0, 255.0, 255.0]
-            ],
-            "extracted_saliency_weight": 0.60,
-            "canvas_w": CANVAS_W,
-            "canvas_h": CANVAS_H,
-        }
-        graph_data = builder.build_graph(gnn_payload)
-        if graph_data is not None:
-            graph_data = graph_data.to(device)
-            with torch.no_grad():
-                predicted = model(graph_data)
-            builder.apply_predictions(nodes, predicted, CANVAS_W, CANVAS_H)
+        # the deployed Stage 2: naive-stack start, v2 weights (notes §3.22)
+        with contextlib.redirect_stdout(io.StringIO()):
+            nodes, _ = stage_gnn_inference(nodes, CANVAS_W, CANVAS_H, DEFAULT_WEIGHTS, device,
+                                           _FALLBACK_CENTROIDS, _FALLBACK_SALIENCY)
+    guided = copy.deepcopy(nodes)
 
     engine = ConstraintSolverEngine(canvas_width=CANVAS_W, canvas_height=CANVAS_H)
     resolved = engine.execute_relational_logic(nodes)
 
     explorer = MetaheuristicStateExplorer(canvas_width=CANVAS_W, canvas_height=CANVAS_H)
-    ranked = explorer.generate_and_rank_candidates(resolved, population_size=3)
+    ranked = explorer.generate_and_rank_candidates(guided, population_size=3)
 
     return resolved, ranked
 

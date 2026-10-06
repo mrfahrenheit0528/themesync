@@ -65,25 +65,29 @@ class NodeInstantiator:
             # Horizontal Academic Certificate Logic (A4 Landscape / 4:3)
             if struct_class == "repeating_group":
                 # Signature blocks (3 blocks across bottom)
-                return [self.canvas_w * 0.22, self.canvas_h * 0.075]
+                return [self.canvas_w * 0.22, self.canvas_h * 0.08]
             if struct_class == "image_node" and hierarchy_index == 0:
                 logo_dim = min(self.canvas_w * 0.09, self.canvas_h * 0.11)
                 return [logo_dim, logo_dim]
             
+            # Heights sized for print legibility (notes §3.23): the title
+            # and recipient name now get ~10% and ~8.5% of the page height
+            # (up from 7.5% / 6.5%, which left 40 px text on a mostly empty
+            # certificate), the citation room for three lines at ~17 px.
             if hierarchy_index == 1:  # Issuing Organization
-                return [self.canvas_w * 0.70, self.canvas_h * 0.04]
+                return [self.canvas_w * 0.70, self.canvas_h * 0.045]
             elif hierarchy_index == 2:  # Certificate Title
-                return [self.canvas_w * 0.80, self.canvas_h * 0.075]
+                return [self.canvas_w * 0.80, self.canvas_h * 0.10]
             elif hierarchy_index == 3:  # Presentation Line
-                return [self.canvas_w * 0.55, self.canvas_h * 0.03]
+                return [self.canvas_w * 0.55, self.canvas_h * 0.035]
             elif hierarchy_index == 4:  # Student / Recipient Name
-                return [self.canvas_w * 0.75, self.canvas_h * 0.065]
+                return [self.canvas_w * 0.75, self.canvas_h * 0.085]
             elif hierarchy_index == 5:  # Citation Body
-                return [self.canvas_w * 0.80, self.canvas_h * 0.07]
+                return [self.canvas_w * 0.80, self.canvas_h * 0.09]
             elif hierarchy_index == 6:  # Date Issued
-                return [self.canvas_w * 0.35, self.canvas_h * 0.028]
+                return [self.canvas_w * 0.35, self.canvas_h * 0.03]
             elif hierarchy_index == 7:  # Certificate ID
-                return [self.canvas_w * 0.35, self.canvas_h * 0.028]
+                return [self.canvas_w * 0.35, self.canvas_h * 0.03]
             else:
                 return [self.canvas_w * 0.40, self.canvas_h * 0.035]
 

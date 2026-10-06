@@ -7,8 +7,10 @@ Validates the full end-to-end pipeline for the academic certificate domain
 Assertions:
   - All resolved nodes are within canvas boundaries
   - No overlapping bboxes between singular (non-repeating) nodes
-  - Top-ranked candidate has lower C_total than a random (untrained) baseline
+  - GNN-guided vs. no-GNN baseline C_total (reported, not asserted)
   - Hard constraints are preserved exactly (within 1 px tolerance)
+  - Canvas text edits are schema-validated, and undo/redo bring back the
+    words as well as the layout, as new states (append-only chain)
 
 Run with:
   python tests/test_certificate_pipeline.py
@@ -18,15 +20,19 @@ import sys
 import os
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-for _sub in ("models", "solvers", "renderers"):
+for _sub in ("models", "solvers", "renderers", "data_preprocessing"):
     _p = os.path.join(_ROOT, "src", _sub)
     if _p not in sys.path:
         sys.path.insert(0, _p)
+sys.path.insert(0, os.path.join(_ROOT, "src"))
+
+import contextlib
+import copy
+import io
 
 import torch
 from dynamic_instantiation import NodeInstantiator
-from gnn_model import ThemeSyncGNN
-from graph_builder import LayoutGraphBuilder
+from pipeline import DEFAULT_WEIGHTS, _FALLBACK_CENTROIDS, _FALLBACK_SALIENCY, stage_gnn_inference
 from cassowary_engine import ConstraintSolverEngine
 from candidate_generator import MetaheuristicStateExplorer
 from optimization_engine import HeuristicEvaluator
@@ -58,33 +64,17 @@ def _run_pipeline(use_gnn: bool):
     nodes = instantiator.instantiate_payload(PAYLOAD)
 
     if use_gnn:
-        model = ThemeSyncGNN(num_layers=3, node_dim=8, edge_dim=4, hidden_dim=64).to(device)
-        weights = os.path.join(_ROOT, "themesync_gnn_v1.pth")
-        if os.path.exists(weights):
-            model.load_state_dict(torch.load(weights, map_location=device, weights_only=True))
-        model.eval()
-        builder = LayoutGraphBuilder()
-        gnn_payload = {
-            "extracted_nodes": nodes,
-            "extracted_color_centroids": [
-                [0.0, 51.0, 102.0], [255.0, 204.0, 0.0], [255.0, 255.0, 255.0]
-            ],
-            "extracted_saliency_weight": 0.75,
-            "canvas_w": CANVAS_W,
-            "canvas_h": CANVAS_H,
-        }
-        graph_data = builder.build_graph(gnn_payload)
-        if graph_data is not None:
-            graph_data = graph_data.to(device)
-            with torch.no_grad():
-                predicted = model(graph_data)
-            builder.apply_predictions(nodes, predicted, CANVAS_W, CANVAS_H)
+        # the deployed Stage 2: naive-stack start, v2 weights (notes §3.22)
+        with contextlib.redirect_stdout(io.StringIO()):
+            nodes, _ = stage_gnn_inference(nodes, CANVAS_W, CANVAS_H, DEFAULT_WEIGHTS, device,
+                                           _FALLBACK_CENTROIDS, _FALLBACK_SALIENCY)
+    guided = copy.deepcopy(nodes)
 
     engine = ConstraintSolverEngine(canvas_width=CANVAS_W, canvas_height=CANVAS_H)
     resolved = engine.execute_relational_logic(nodes)
 
     explorer = MetaheuristicStateExplorer(canvas_width=CANVAS_W, canvas_height=CANVAS_H)
-    ranked = explorer.generate_and_rank_candidates(resolved, population_size=3)
+    ranked = explorer.generate_and_rank_candidates(guided, population_size=3)
 
     return resolved, ranked
 
@@ -131,6 +121,80 @@ def test_gnn_improves_over_baseline():
 
 
 
+def test_hard_constraints_preserved():
+    """Formula 3.10 / p.54: a node the designer moves, resizes or locks is a
+    Hard constraint — after the solver re-flows everything else, it must
+    still sit exactly where the designer left it (1 px tolerance), with no
+    overlap introduced."""
+    import tempfile
+    from pipeline import OrchestrationSession
+
+    with tempfile.TemporaryDirectory() as out:
+        session = OrchestrationSession(PAYLOAD, output_dir=out)
+        with contextlib.redirect_stdout(io.StringIO()):
+            session.run()
+            nodes = {n["node_id"]: n for n in session.chain.current["nodes"]}
+            x, y, w, h = nodes["{{Issuing_Organization}}"]["bbox"]
+            moved = [x + 30.0, y + 12.0, w, h]
+            session.apply_event("on-drop", "{{Issuing_Organization}}", moved)
+            x, y, w, h = nodes["{{Citation_Body}}"]["bbox"]
+            resized = [x, y, w * 0.85, h * 1.2]
+            session.apply_event("on-resize-complete", "{{Citation_Body}}", resized)
+        final = {n["node_id"]: n for n in session.chain.current["nodes"]}
+        for node_id, expected in (("{{Issuing_Organization}}", moved), ("{{Citation_Body}}", resized)):
+            got = final[node_id]["bbox"]
+            assert final[node_id]["constraint_type"] == "Hard", f"{node_id} not Hard"
+            assert all(abs(a - b) <= 1.0 for a, b in zip(got, expected)), f"{node_id}: {got} != {expected}"
+        assert session.chain.current["fitness"]["P_collision"] == 0.0, "edits introduced an overlap"
+        assert len(session.chain.states) == 4, "each event must append exactly one state"
+    print("  ✔  test_hard_constraints_preserved passed (move + resize kept exactly, no overlap)")
+
+
+def test_text_edit_undo_redo():
+    """Figure 3's canvas: a text edit is validated against the content
+    schema (max_characters, p.44) and re-rendered; undo and redo restore
+    the words with the layout, each as a new state — the chain is never
+    rewritten (Formula 3.9)."""
+    import tempfile
+    from pipeline import OrchestrationSession
+
+    with tempfile.TemporaryDirectory() as out:
+        session = OrchestrationSession(PAYLOAD, output_dir=out)
+        with contextlib.redirect_stdout(io.StringIO()):
+            session.run()
+            original = session.content()["{{Student_Name}}"]
+            session.edit_text("{{Student_Name}}", "Maria Clara Ibarra")
+            with open(session.rendered_path) as f:
+                assert "Maria Clara Ibarra" in f.read(), "edit not rendered"
+            try:
+                session.edit_text("{{Student_Name}}", "X" * 200)
+                raise AssertionError("an over-long name was accepted")
+            except ValueError:
+                pass
+            try:
+                session.edit_text("{{Institution_Logo}}", "not text")
+                raise AssertionError("a logo accepted a text edit")
+            except KeyError:
+                pass
+            nodes = {n["node_id"]: n for n in session.chain.current["nodes"]}
+            x, y, w, h = nodes["{{Date_Issued}}"]["bbox"]
+            session.apply_event("on-drop", "{{Date_Issued}}", [x + 20.0, y, w, h])
+            session.undo()                          # the move
+            session.undo()                          # the text edit
+            assert session.content()["{{Student_Name}}"] == original, "undo did not restore the words"
+            with open(session.rendered_path) as f:
+                assert "Maria Clara Ibarra" not in f.read(), "undo not rendered"
+            session.redo()
+            assert session.content()["{{Student_Name}}"] == "Maria Clara Ibarra", "redo lost the words"
+            assert session.can_redo, "redo trail dropped too early"
+            session.apply_event("lock-toggle", "{{Date_Issued}}", hard=True)
+            assert not session.can_redo, "a new edit must end the redo trail"
+        labels = [s["label"] for s in session.chain.states]
+        assert len(labels) == 8, labels             # init, winner, text, move, undo, undo, redo, lock
+        assert labels[4].startswith("Undo") and labels[6].startswith("Redo"), labels
+    print("  ✔  test_text_edit_undo_redo passed (schema-checked edit; undo/redo restore words, append-only)")
+
+
 def test_ranking_is_sorted():
     _, ranked = _run_pipeline(use_gnn=True)
     costs = [c["c_total"] for c in ranked]
@@ -152,6 +216,8 @@ if __name__ == "__main__":
         test_all_nodes_within_canvas,
         test_no_singular_node_overlap,
         test_gnn_improves_over_baseline,
+        test_hard_constraints_preserved,
+        test_text_edit_undo_redo,
         test_ranking_is_sorted,
     ]
     for test_fn in tests:

@@ -1,118 +1,124 @@
-# Annotation Guidelines — Master-Layout Images
+# Annotation Guidelines — Master-Layout Images (v2, 2026-09-29)
 
-For the feasibility batch fine-tuning `themesync_yolo_v1.pt` on real
-master-layout images (see `notes/gnn_fixes_and_methodology_notes.md`
-section 3.6 and `notes/adviser_consultation_checklist.md` item A). Read this
-before annotating so everyone in the group draws boxes the same way —
-inconsistent labeling between annotators is a common, easy-to-miss source of
-bad fine-tuning results.
+For the group's re-annotation pass on the 124 pubmats in the Roboflow
+project `themesync-pubmat-annotation`, which will train
+`themesync_yolo_v5.pt`. Read all of it before you start. Two annotators who
+box the same poster differently teach the model two contradictory rules,
+and that is the most common cause of a weak detector.
 
-## What counts as a "master layout" (clarified 2026-09-10)
+## Why a v2
 
-A master layout is **any generic branded design** a user uploads to
-ThemeSync — an event poster, banner, letterhead, social-media announcement
-graphic. YOLO (`layout_extractor.py`) parses it purely to extract a visual
-**theme** (colors, logo placement/style, decorative motifs), which then gets
-synced onto a certificate or ID layout generated separately from the
-existing JSON schema payload. **It is not a certificate or ID design
-itself** — those are a different, already-working path
-(`dynamic_instantiation.py`) that YOLO never touches.
+The v4 detector (YOLOv8s, 1024 px) finds logos and text well (logo mAP50
+0.818, text 0.682). Its weak spots trace back to the labels
+(`methodology notes §3.25`):
 
-This means `YOUR_TEMPLATE.png`, `YOUR_TEMPLATE2.jpg`, `YOUR_TEMPLATE3.jpg`,
-and `YOUR_TEMPLATE4.jpg` (the CSPC Supreme Student Council event posters
-already in `data/raw/`) **are exactly the right kind of image** — the
-annotation batch should be more images like those, not certificate/ID
-designs. (An earlier draft of these notes said the opposite — that was
-based on a wrong assumption about what "master layout" means in this
-system, corrected directly by the group lead. `sample_template.png` is
-still not useful either way — it's a synthetic placeholder mockup with no
-real content.)
+1. **`embellishment` meant two different things.** Some annotators boxed a
+   2% sparkle as embellishment, others a mascot filling 40% of the poster.
+   The model can't learn one rule from both, so it recovers only 18% of
+   the validation set's embellishments (v4 recall 0.18, mAP50 0.20). ThemeSync uses these boxes as the **motifs** it
+   carries onto certificates and IDs, so this matters most.
+2. **Full-poster boxes.** 60 boxes cover more than half their poster
+   (e.g., `underlay` 100% on ARKI SEARCH and CELAKBO, `embellishment` 75%
+   on BU). They tell the model that "the whole poster" is an object. v4 was
+   trained on a copy with these deleted by script; v2 removes them at the
+   source.
 
-## Sourcing images
+v2 fixes both. It adds a fifth class for the big art, keeps `embellishment`
+for small accents only, and bans full-poster boxes.
 
-Gather 20–30 more images in the same genre as the 4 existing poster files:
-event posters, org announcement graphics, banners, letterheads — anything a
-student org, department, or school might realistically upload as a branding
-reference. Good sources:
-1. **CSPC SSC's own past event posters/graphics** (Facebook page, Canva
-   drafts, past announcements) — same org, same designer style as the 4
-   already in hand, quick to gather in bulk.
-2. **Other CSPC departments'/orgs' posters and banners** — widens visual
-   diversity (different colors/logos/layouts) beyond one org's house style.
-3. **Stock poster/flyer templates** (Canva, Freepik, Vecteezy free tiers) to
-   pad out diversity if 1–2 don't reach the target alone — disclose in
-   Chapter 4/Annex which images are real CSPC materials vs. generic stock,
-   same as for any other data-composition detail.
+## What counts as a master layout (unchanged)
 
-Put gathered images into `data/raw/master_layout_batch/images/`.
+Any branded design a user uploads: an event poster, banner, letterhead or
+social-media announcement. YOLO parses it only to extract its **theme**
+(palette, logos, motifs, title artwork). Those are projected onto a
+certificate or event ID built from the JSON payload. YOLO never looks at a
+certificate or ID.
 
-## Tooling
+## The five classes
 
-Two options — pick based on whether multiple people annotate at once:
-
-- **Roboflow** (roboflow.com, free tier) — browser-based, no install,
-  supports several people annotating the same project concurrently, exports
-  directly to YOLOv8 `.txt` format. Recommended if more than one group
-  member is annotating in parallel.
-- **LabelImg** (already installed into `themesync_env` this session via
-  `pip install labelImg`) — fully offline, no third-party upload. Run
-  locally (needs a display, so on your own machine, not a headless server):
-  ```
-  conda activate themesync_env
-  labelImg data/raw/master_layout_batch/images data/raw/master_layout_batch/classes.txt data/raw/master_layout_batch/labels
-  ```
-  Set the save format to **YOLO** in LabelImg's UI (View → Auto Save Mode,
-  and confirm the format toggle button reads "YOLO" not "PascalVOC") before
-  you start, so output lands as `.txt` files directly compatible with the
-  rest of the pipeline.
-
-Either way, output must end up as one `.txt` per image in
-`data/raw/master_layout_batch/labels/`, same basename as the image, in
-`class_id cx cy w h` normalized format — matching what
-`prepare_yolo_dataset.py` already produces for the CGL export.
-
-## Class definitions (reuse CGL's 4-class taxonomy, in this fixed order)
-
-**Verified against real CGL-Dataset ground truth (2026-09-11), not just
-recollection** — pulled actual bounding boxes from the training split to
-check what "underlay" and "embellishment" really look like in practice,
-because an earlier draft of this file gave wrong guidance (see the note
-under `underlay` below). Key finding: **the full background image/
-illustration is never boxed as anything, in any real CGL example checked.**
-Only small-to-medium overlay elements get boxes — logo, text, underlay
-panels, embellishment accents — never the base artwork itself, no matter
-how large or visually prominent a background illustration/character is.
-
-| id | class | what to box |
+| class | box this | don't box this |
 |---|---|---|
-| 0 | `logo` | The institutional/org seal, crest, or logo graphic itself — tight box around the visible graphic, not the whitespace padding around it. Box each logo separately if a poster has more than one (e.g. a school seal plus an SSC logo, as in the existing 4 posters). |
-| 1 | `text` | One box per **semantically distinct text unit** — not per character, not per line, not the whole page. E.g. on an event poster: the org header line ("Camarines Sur Polytechnic Colleges"), the sub-header ("Supreme Student Council"), the event title (often large stylized text, e.g. "TAN-AW"), the subtitle/tagline, any date/venue callout box, the footer social-handle/email line — each is its own box. |
-| 2 | `underlay` | A small-to-medium colored/shaded **panel or bar placed directly behind a specific text or logo element**, to improve contrast/legibility — e.g. the dark rounded-rectangle panel behind a tagline. In real CGL ground truth these cover roughly 1–18% of canvas area and are consistently panel/bar-shaped (wide, short). **Not** the full background photo or illustration, no matter how large, busy, or thematically central it is (a big illustrated robot/character/scene is still just the base artwork — leave it unboxed, same as a plain flat background). |
-| 3 | `embellishment` | Small decorative accents — real CGL examples are consistently under 1% of canvas area: thin decorative lines, tiny dots/icons, small corner flourishes, social-media platform icons next to a handle. **Per the group's decision, don't go out of your way to find these** — box one if it's obvious and quick, but don't spend extra time hunting; this class is expected to stay small this round and that's already accounted for in the plan. |
+| `logo` | Each institutional or org seal, crest or logo mark, **one box per logo**, tight around the visible graphic. A row of 3 logos is 3 boxes. | Social-media icons (Facebook "f", Instagram) are `embellishment`. A sponsor strip's logos are still `logo`, one box each. |
+| `text` | One box per **semantically distinct text unit**: the org header line, the sub-header, the event title (however stylised: chrome, 3D, hand-lettered), the tagline, the date/venue line, the footer handle. A title set over two lines ("SIKLAB" / "CSPC INTRAMURALS") is one unit: **one box**. | Don't box each line of a paragraph separately, and don't box the whole page's text as one block. |
+| `underlay` | A panel or bar placed **directly behind a specific text or logo** to make it readable: a dark rounded rectangle behind a tagline, a ribbon behind the date. Usually wide and short, 1–18% of the poster. | The poster's background, a photo backdrop, a gradient, a big shape the whole layout sits on: **never** an underlay. |
+| `embellishment` | **Small** decorative accents, roughly under 3% of the poster: sparkles, stars, dots, thin lines and dividers, corner flourishes, small icons, social-media icons. | Anything you would call a character, a mascot, an emblem or an object: that's `illustration`. |
+| `illustration` *(new)* | Standalone artwork that can be lifted off the poster and still makes sense on its own: characters and mascots, emblems and badges that aren't logos, objects (a trophy, a torch, a gear, a book, a laptop), a stylised plant or animal. Box the whole figure tightly. Typically 3–35% of the poster. | The background artwork the layout sits on (a landscape, a sky, a texture, a full-bleed photo); **photographs of real people** (leave them unboxed; ThemeSync must not copy students' faces onto other documents); text, however decorative. |
 
-**If you already added a full-canvas or near-full-canvas underlay box on
-any image** (this happened on `YUGTO_2026.jpg`'s aurora/forest background
-before this was caught), delete it. Keep only genuine panel-behind-text
-underlay boxes.
+**Quick test for the last two:** if it would make sense as a sticker, it's
+`illustration`. If it's a sparkle, a line or a small icon, it's
+`embellishment`. If it's the page itself, box nothing.
 
-## Consistency rules
+## Rules (all classes)
 
-- **Tight boxes.** Box edges should touch the actual visible content, not
-  include extra margin "for safety."
-- **Don't skip an element because it's small.** A missed box is worse than
-  an approximate one — the model learns "this isn't an object" from every
-  unlabeled pixel region.
-- **When two people annotate different images, spot-check each other's
-  first 2–3 images against this table before doing the rest** — cheaper to
-  catch a systematic disagreement (e.g. one person boxing an org header +
-  sub-header as one text box, another boxing them as two) early than to
-  redo a whole batch.
+- **No box over half the poster.** If a box covers more than 50% of the
+  image, it's the background: delete it. The pre-flight check (below) lists
+  every such box.
+- **Tight boxes.** Edges touch the visible content; no safety margin.
+- **Don't skip small things.** An unlabeled logo teaches the model "this is
+  not a logo". Box every logo, however small.
+- **People stay unboxed.** Real photographs of people are never
+  `illustration` or `embellishment`. Drawn characters and mascots are
+  `illustration`.
+- **Overlaps are fine.** A logo on an underlay gets both boxes.
+- **Spot-check each other first.** Before splitting the 124 images, two of
+  you annotate the same 3 posters and compare against this table. Settle
+  every disagreement in the group chat, then split the rest.
 
-## After annotating
+## Doing it in Roboflow
 
-Once you have a batch in `data/raw/master_layout_batch/images/` +
-`data/raw/master_layout_batch/labels/`, let me know and I'll write the
-train/val-split + fine-tuning script (loading `themesync_yolo_v1.pt` as the
-base checkpoint rather than starting over from COCO weights, per the
-"transfer learning from a reasonable starting point" plan already noted in
-the audit file).
+1. Open `themesync-pubmat-annotation` (workspace `guiller-angelo-hermoso`).
+2. Add the class **`illustration`**, spelled exactly like that, lower case.
+   The pipeline reads class names from the trained model, so the order of
+   classes doesn't matter, but the spelling does: `logo`, `text`,
+   `underlay`, `embellishment`, `illustration`.
+3. Go through **all 124 images**, not only the new ones. For each image:
+   - delete any box over half the poster;
+   - re-class each big-art `embellishment` as `illustration`;
+   - box any character, mascot, emblem or object that has no box yet as
+     `illustration`;
+   - check the title is one box per title unit, and each logo has its own
+     box.
+4. **Generate a new version:**
+   - Keep the same train/valid split (don't re-split). That way v4 and v5
+     are compared on the same images.
+   - Preprocessing: *Auto-Orient* only. **Do not add Resize.** The current
+     export keeps native sizes (646–2048 px), and v4/v5 train at 1024 px. A
+     640 stretch squashes the small logos.
+   - Augmentation: none. YOLO augments during training.
+5. **Export** in *YOLOv8* format. Replace the `train/`, `valid/` and
+   `data.yaml` in `data/raw/master_layout_batch/`. First move the current
+   ones to `data/raw/master_layout_batch/_raw_v4_backup/`, as was done for
+   v1–v3.
+
+## After the export (Guiller or Claude)
+
+```
+conda activate themesync_env
+# 1. check the labels: counts per class, unknown class ids, boxes over half the poster
+python src/models/finetune_yolo_master_layout.py --check_only
+
+# 2. train v5 with the v4 recipe (COCO YOLOv8s, 1024 px, whole network)
+python src/models/finetune_yolo_master_layout.py --base_checkpoint yolov8s.pt \
+    --imgsz 1024 --epochs 120 --patience 25 --freeze 0 --seed 0 \
+    --output_checkpoint themesync_yolo_v5.pt --run_name themesync_master_layout_v5
+```
+
+The check must show zero "boxes cover more than half their image" and zero
+unknown class ids before training. The same recipe as v4 means a v4 → v5
+difference comes from the new labels, not the training.
+
+Once `themesync_yolo_v5.pt` exists, the pipeline and dashboard use it
+automatically (`pipeline.DEFAULT_YOLO_WEIGHTS`). Stage 0c then takes motifs
+from `illustration` detections first, falling back to `embellishment`
+(`stylistic_markers.MOTIF_CLASSES`).
+
+**Evaluating v5 against v4:**
+
+- mAP on each model's own validation labels. Only logo, text and underlay
+  are directly comparable, since embellishment changed meaning.
+- The downstream checks on the 15 unseen Phase 4 posters:
+  - the automatic logo row (15/15 with v4);
+  - the title artwork (with v4, found on 13 posters and cut whole on 12);
+  - which motifs Stage 0c extracts, compared side by side.
+
+The second set is what an expert rater will actually see.

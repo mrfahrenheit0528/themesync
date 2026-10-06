@@ -1,0 +1,15 @@
+Device: cuda
+epoch   5  loss 0.1163  test MAE xy 0.1262 (naive 0.1750)  gap 0.0855 (naive 0.0766)  order 1.000  overlap 0.0000
+epoch  10  loss 0.1138  test MAE xy 0.1238 (naive 0.1750)  gap 0.0859 (naive 0.0766)  order 1.000  overlap 0.0000
+epoch  15  loss 0.1121  test MAE xy 0.1216 (naive 0.1750)  gap 0.0932 (naive 0.0766)  order 0.999  overlap 0.0000
+epoch  20  loss 0.1112  test MAE xy 0.1226 (naive 0.1750)  gap 0.0868 (naive 0.0766)  order 0.999  overlap 0.0000
+epoch  25  loss 0.1103  test MAE xy 0.1201 (naive 0.1750)  gap 0.1138 (naive 0.0766)  order 0.999  overlap 0.0000
+epoch  30  loss 0.1096  test MAE xy 0.1191 (naive 0.1750)  gap 0.0976 (naive 0.0766)  order 0.998  overlap 0.0000
+epoch  35  loss 0.1089  test MAE xy 0.1189 (naive 0.1750)  gap 0.0950 (naive 0.0766)  order 0.998  overlap 0.0000
+epoch  40  loss 0.1084  test MAE xy 0.1180 (naive 0.1750)  gap 0.0979 (naive 0.0766)  order 0.998  overlap 0.0000
+epoch  45  loss 0.1082  test MAE xy 0.1179 (naive 0.1750)  gap 0.1027 (naive 0.0766)  order 0.998  overlap 0.0000
+epoch  50  loss 0.1080  test MAE xy 0.1178 (naive 0.1750)  gap 0.0997 (naive 0.0766)  order 0.998  overlap 0.0000
+epoch  55  loss 0.1078  test MAE xy 0.1176 (naive 0.1750)  gap 0.1007 (naive 0.0766)  order 0.998  overlap 0.0000
+epoch  60  loss 0.1077  test MAE xy 0.1176 (naive 0.1750)  gap 0.1004 (naive 0.0766)  order 0.998  overlap 0.0000
+
+Best (epoch 55) saved to /home/guillerangelohermoso/themesync/themesync_gnn_v2.pth; metrics in /home/guillerangelohermoso/themesync/themesync_gnn_v2_training.json

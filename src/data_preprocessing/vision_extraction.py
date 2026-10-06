@@ -56,27 +56,32 @@ class VisionExtractor:
             centroids = self._select_optimal_k_centroids(pixels_tensor)
             return centroids
 
-    def _kmeans_cuda(self, pixels_tensor, k, max_iter=100):
+    def _kmeans_cuda(self, pixels_tensor, k, max_iter=100, seed=0):
         """
         Internal mathematical solver for minimizing WCSS (Formula 3.1) on CUDA
         hardware for a given k. Returns the fitted centroids and their WCSS.
+
+        The initial centroids are drawn with a seeded generator: unseeded, the
+        same poster could get a different palette (even a different elbow k)
+        on every run, which made the rendered colours, the Legibility
+        Penalty and the winning candidate change between identical runs.
         """
-        # Randomly initialize centroids
-        idx = torch.randperm(pixels_tensor.shape[0], device=self.device)[:k]
+        gen = torch.Generator(device=pixels_tensor.device)
+        gen.manual_seed(seed)
+        idx = torch.randperm(pixels_tensor.shape[0], device=pixels_tensor.device, generator=gen)[:k]
         centroids = pixels_tensor[idx]
 
         for _ in range(max_iter):
             # Calculate Euclidean distances using PyTorch cdist
-            distances = torch.cdist(pixels_tensor, centroids)
-            labels = torch.argmin(distances, dim=1)
+            labels = torch.argmin(torch.cdist(pixels_tensor, centroids), dim=1)
 
-            new_centroids = torch.zeros_like(centroids)
-            for c in range(k):
-                mask = labels == c
-                if mask.any():
-                    new_centroids[c] = pixels_tensor[mask].mean(dim=0)
-                else:
-                    new_centroids[c] = centroids[c]
+            # Cluster means as one matrix product (a one-hot assignment
+            # matrix times the pixels): no per-cluster loop, and no atomic
+            # scatter-adds, whose summation order would vary between runs.
+            onehot = torch.nn.functional.one_hot(labels, k).to(pixels_tensor.dtype)
+            counts = onehot.sum(dim=0).unsqueeze(1)
+            new_centroids = torch.where(counts > 0, (onehot.T @ pixels_tensor) / counts.clamp(min=1.0),
+                                        centroids)
 
             # Check for mathematical convergence
             converged = torch.allclose(centroids, new_centroids, atol=1e-4)
@@ -84,24 +89,24 @@ class VisionExtractor:
             if converged:
                 break
 
-        distances = torch.cdist(pixels_tensor, centroids)
-        labels = torch.argmin(distances, dim=1)
-        wcss = sum(
-            ((pixels_tensor[labels == c] - centroids[c]) ** 2).sum().item()
-            for c in range(k) if (labels == c).any()
-        )
+        labels = torch.argmin(torch.cdist(pixels_tensor, centroids), dim=1)
+        wcss = float(((pixels_tensor - centroids[labels]) ** 2).sum().item())
 
         # Return coordinates to CPU for JSON serialization
         return centroids.cpu().tolist(), wcss
 
-    def _select_optimal_k_centroids(self, pixels_tensor, k_min=2, k_max=6):
+    def _select_optimal_k_centroids(self, pixels_tensor, k_min=2, k_max=6, n_init=5):
         """
         Fits K-Means across k in [k_min, k_max], then selects k via the Elbow
         Method: the k whose WCSS point has the greatest perpendicular distance
         from the chord connecting the first and last points of the WCSS-vs-k
-        decay curve (the standard "knee" heuristic).
+        decay curve (the standard "knee" heuristic). Each k keeps the best
+        (lowest-WCSS) of `n_init` seeded initialisations, like the grayscale
+        path's scikit-learn KMeans(n_init=10, random_state=42).
         """
-        runs = {k: self._kmeans_cuda(pixels_tensor, k) for k in range(k_min, k_max + 1)}
+        runs = {k: min((self._kmeans_cuda(pixels_tensor, k, seed=1000 * k + s) for s in range(n_init)),
+                       key=lambda run: run[1])
+                for k in range(k_min, k_max + 1)}
         ks = list(runs.keys())
         wcss_vals = [runs[k][1] for k in ks]
 

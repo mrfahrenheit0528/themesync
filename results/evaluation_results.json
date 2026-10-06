@@ -1,164 +1,97 @@
 {
   "payload": "data/raw/academic_payload.json",
-  "canvas": {
-    "w": 1200,
-    "h": 900
-  },
-  "trials": 2,
+  "template_image": null,
+  "gnn_weights": "themesync_gnn_v3.pth",
+  "trials": 1,
   "gnn_guided": [
     {
       "timings_ms": {
-        "instantiation_ms": 0.14,
-        "gnn_inference_ms": 551.86,
-        "csp_resolution_ms": 1.99,
-        "ranking_ms": 11.46,
-        "total_ms": 565.45
+        "template_ingestion_ms": 0.0,
+        "layout_parsing_ms": 0.0,
+        "stylistic_markers_ms": 0.0,
+        "instantiation_ms": 0.16,
+        "gnn_inference_ms": 786.5,
+        "csp_resolution_ms": 1.17,
+        "ranking_ms": 226.26,
+        "rendering_ms": 0.97,
+        "serialization_ms": 0.31,
+        "total_ms": 1015.37
       },
-      "mean_iou": 0.1682,
+      "mean_iou": 0.2559,
       "per_node_iou": [
-        0.8505,
+        0.073,
         0.0,
+        0.1015,
         0.0,
-        0.0,
-        1.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
+        0.7973,
+        0.7498,
+        0.3256,
         0.0
       ],
       "constraint_f1": {
         "precision": 1.0,
         "recall": 1.0,
         "f1": 1.0,
-        "hard_preserved": 0,
-        "total_hard": 0
+        "hard_preserved": 3,
+        "total_hard": 3,
+        "events": [
+          "Moved {{Issuing_Organization}}",
+          "Resized {{Presentation_Line}}",
+          "Locked {{Certificate_ID}}"
+        ],
+        "collision_after_edits": 0.0
       },
       "heuristic_fitness": {
-        "P_align": 0.0077,
-        "P_space": 0.0626,
+        "P_collision": 0.0,
+        "P_align": 0.0,
+        "P_space": 0.0006,
         "P_legibility": 0.75,
-        "C_total": 1.2029
+        "C_total": 1.1256
       },
-      "winner_candidate": "Candidate_0_GNN_Baseline",
-      "num_nodes": 11
-    },
-    {
-      "timings_ms": {
-        "instantiation_ms": 0.11,
-        "gnn_inference_ms": 11.82,
-        "csp_resolution_ms": 1.88,
-        "ranking_ms": 11.92,
-        "total_ms": 25.73
-      },
-      "mean_iou": 0.1682,
-      "per_node_iou": [
-        0.8505,
-        0.0,
-        0.0,
-        0.0,
-        1.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ],
-      "constraint_f1": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1": 1.0,
-        "hard_preserved": 0,
-        "total_hard": 0
-      },
-      "heuristic_fitness": {
-        "P_align": 0.0077,
-        "P_space": 0.0626,
-        "P_legibility": 0.75,
-        "C_total": 1.2029
-      },
-      "winner_candidate": "Candidate_0_GNN_Baseline",
-      "num_nodes": 11
+      "winner_candidate": "Candidate_A",
+      "num_nodes": 11,
+      "state_chain": "data/rendered/evaluation/gnn/ThemeSync_academic-certificate_state_chain.json"
     }
   ],
   "baseline": [
     {
       "timings_ms": {
-        "instantiation_ms": 0.13,
+        "template_ingestion_ms": 0.0,
+        "layout_parsing_ms": 0.0,
+        "stylistic_markers_ms": 0.0,
+        "instantiation_ms": 0.25,
         "gnn_inference_ms": 0.0,
-        "csp_resolution_ms": 0.97,
-        "ranking_ms": 8.07,
-        "total_ms": 9.17
+        "csp_resolution_ms": 2.95,
+        "ranking_ms": 396.16,
+        "rendering_ms": 73.56,
+        "serialization_ms": 0.96,
+        "total_ms": 473.88
       },
-      "mean_iou": 0.0,
-      "per_node_iou": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ],
+      "mean_iou": null,
+      "per_node_iou": [],
       "constraint_f1": {
         "precision": 1.0,
         "recall": 1.0,
         "f1": 1.0,
-        "hard_preserved": 0,
-        "total_hard": 0
+        "hard_preserved": 3,
+        "total_hard": 3,
+        "events": [
+          "Moved {{Issuing_Organization}}",
+          "Resized {{Presentation_Line}}",
+          "Locked {{Certificate_ID}}"
+        ],
+        "collision_after_edits": 0.0
       },
       "heuristic_fitness": {
+        "P_collision": 0.0,
         "P_align": 0.0,
-        "P_space": 0.0626,
+        "P_space": 0.0006,
         "P_legibility": 0.75,
-        "C_total": 1.1876
+        "C_total": 1.1256
       },
-      "winner_candidate": "Candidate_0_GNN_Baseline",
-      "num_nodes": 11
-    },
-    {
-      "timings_ms": {
-        "instantiation_ms": 0.12,
-        "gnn_inference_ms": 0.0,
-        "csp_resolution_ms": 0.96,
-        "ranking_ms": 8.22,
-        "total_ms": 9.3
-      },
-      "mean_iou": 0.0,
-      "per_node_iou": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ],
-      "constraint_f1": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1": 1.0,
-        "hard_preserved": 0,
-        "total_hard": 0
-      },
-      "heuristic_fitness": {
-        "P_align": 0.0,
-        "P_space": 0.0626,
-        "P_legibility": 0.75,
-        "C_total": 1.1876
-      },
-      "winner_candidate": "Candidate_0_GNN_Baseline",
-      "num_nodes": 11
+      "winner_candidate": "Candidate_A",
+      "num_nodes": 11,
+      "state_chain": "data/rendered/evaluation/baseline/ThemeSync_academic-certificate_state_chain.json"
     }
   ]
 }

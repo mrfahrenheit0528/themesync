@@ -1,0 +1,124 @@
+{
+  "data": "data/processed/yolo_master_v5/data.yaml",
+  "val_images": 32,
+  "left_out": [
+    [
+      "BANYUHAY_jpg.rf.cff7a91935353d962992cacab3a1e633.jpg",
+      [
+        "v4"
+      ]
+    ],
+    [
+      "BERMONTHS_NA_CUPIANS_png.rf.6fcd72f8b6643287a52cb84e84142c33.jpg",
+      [
+        "v4"
+      ]
+    ],
+    [
+      "FRESHMEN_CONNECT_2024_jpg.rf.294a57bdadc75f10e33dfe15aef04bf0.jpg",
+      [
+        "v4"
+      ]
+    ],
+    [
+      "GAWAD_GILAS_png.rf.f4fb137eaaa1ecea8e5082283ea355da.jpg",
+      [
+        "v4"
+      ]
+    ],
+    [
+      "HIRAYA_png.rf.d87612b7b8f82b707eb55cd4f56d0180.jpg",
+      [
+        "v5"
+      ]
+    ],
+    [
+      "PISTA_SA_NAYON_webp.rf.d9f4e2c1137f77628189a068596b26b4.jpg",
+      [
+        "v4"
+      ]
+    ],
+    [
+      "PUP_IDOL_jpg.rf.cac499604640edbe3aba15d42d8879ee.jpg",
+      [
+        "v4"
+      ]
+    ],
+    [
+      "READY_SET_RESPOND_jpg.rf.ec84c1e3bdf322b9679ab2bc8e81f530.jpg",
+      [
+        "v4"
+      ]
+    ]
+  ],
+  "models": {
+    "v4": {
+      "checkpoint": "themesync_yolo_v4.pt",
+      "imgsz": 1024,
+      "mAP50": 0.486,
+      "mAP50-95": 0.311,
+      "precision": 0.58,
+      "recall": 0.458,
+      "per_class": {
+        "logo": {
+          "precision": 0.634,
+          "recall": 0.868,
+          "mAP50": 0.864,
+          "mAP50-95": 0.622
+        },
+        "text": {
+          "precision": 0.732,
+          "recall": 0.657,
+          "mAP50": 0.68,
+          "mAP50-95": 0.393
+        },
+        "underlay": {
+          "precision": 0.476,
+          "recall": 0.097,
+          "mAP50": 0.138,
+          "mAP50-95": 0.075
+        },
+        "embellishment": {
+          "precision": 0.479,
+          "recall": 0.21,
+          "mAP50": 0.263,
+          "mAP50-95": 0.154
+        }
+      }
+    },
+    "v5": {
+      "checkpoint": "themesync_yolo_v5_candidate.pt",
+      "imgsz": 1024,
+      "mAP50": 0.728,
+      "mAP50-95": 0.496,
+      "precision": 0.841,
+      "recall": 0.671,
+      "per_class": {
+        "embellishment": {
+          "precision": 0.784,
+          "recall": 0.507,
+          "mAP50": 0.609,
+          "mAP50-95": 0.358
+        },
+        "logo": {
+          "precision": 0.961,
+          "recall": 0.938,
+          "mAP50": 0.977,
+          "mAP50-95": 0.744
+        },
+        "text": {
+          "precision": 0.787,
+          "recall": 0.722,
+          "mAP50": 0.684,
+          "mAP50-95": 0.417
+        },
+        "underlay": {
+          "precision": 0.83,
+          "recall": 0.516,
+          "mAP50": 0.643,
+          "mAP50-95": 0.463
+        }
+      }
+    }
+  }
+}

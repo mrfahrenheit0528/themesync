@@ -3,7 +3,7 @@ import os
 
 class HeuristicEvaluator:
     def __init__(self, canvas_width=1200, canvas_height=900, saliency_map=None,
-                 fallback_saliency=0.75, grid_margin=50.0):
+                 fallback_saliency=0.75, grid_margin=50.0, grid_bounds=None, content_region=None):
         self.canvas_w = float(canvas_width)
         self.canvas_h = float(canvas_height)
 
@@ -15,8 +15,15 @@ class HeuristicEvaluator:
         self.delta = 1.5    # P_legibility weight
         self.r_target = 0.65 # Optimal whitespace ratio
 
-        # Formula 3.13: margin used to derive the dynamic structural grid G.
+        # Formula 3.13: the dynamic structural grid G spans the candidate's
+        # own content area — `grid_bounds` (left, right) from its solver, so
+        # a split or left-aligned archetype is judged on its own grid — or,
+        # without bounds, the canvas inset by `grid_margin`.
         self.grid_margin = float(grid_margin)
+        self.grid_bounds = grid_bounds
+        # Formula 3.14's area: the candidate's content region (x0, x1) in px —
+        # the full canvas, or a split archetype's panel strip.
+        self.content_region = content_region
 
         # Formula 3.15: per-region background visual-noise density, from
         # VisionExtractor.calculate_saliency_map. When no real template image
@@ -31,6 +38,14 @@ class HeuristicEvaluator:
         clamped_y = max(0.0, min(float(y), self.canvas_h - h))
         return [clamped_x, clamped_y, float(w), float(h)]
 
+    def _box(self, node):
+        """A node's box for overlap tests: content clamped onto the canvas;
+        motifs as placed, since they bleed off the edge on purpose and
+        clamping would slide them inward onto the content."""
+        if node.get('structural_class') == 'decor':
+            return [float(v) for v in node['bbox']]
+        return self._clamp_coordinates(node['bbox'])
+
     def calculate_collision_penalty(self, nodes):
         """
         Formula 3.12: P_collision = sum_{i=1}^N sum_{j=i+1}^N Area(B_i \cap B_j)
@@ -38,14 +53,18 @@ class HeuristicEvaluator:
         """
         total_overlap_area = 0.0
         n = len(nodes)
-        
+
         for i in range(n):
-            b1 = self._clamp_coordinates(nodes[i]['bbox'])
+            b1 = self._box(nodes[i])
             x1_min, y1_min, w1, h1 = b1
             x1_max, y1_max = x1_min + w1, y1_min + h1
-            
+
             for j in range(i + 1, n):
-                b2 = self._clamp_coordinates(nodes[j]['bbox'])
+                # Motifs overlapping each other is decoration, not occlusion;
+                # a motif over content still counts.
+                if nodes[i].get('structural_class') == 'decor' and nodes[j].get('structural_class') == 'decor':
+                    continue
+                b2 = self._box(nodes[j])
                 x2_min, y2_min, w2, h2 = b2
                 x2_max, y2_max = x2_min + w2, y2_min + h2
                 
@@ -62,32 +81,28 @@ class HeuristicEvaluator:
     def calculate_alignment_penalty(self, nodes):
         """
         Formula 3.13: distance from each node's baseline x-coordinate to the
-        nearest gridline in a dynamically generated structural grid G. G is
-        derived from the canvas width and grid_margin (left margin, quarter,
-        center, three-quarter, right margin) rather than a single fixed
-        centerline, so nodes aligned to any structural column are rewarded,
-        not only ones aligned to dead-center.
+        nearest gridline of a dynamically generated structural grid G: the
+        content area's two margins, its quarters and its centre. A node
+        counts as aligned when its left edge, centre or right edge sits on a
+        gridline (x_i in Formula 3.6 is the left edge; centred designs align
+        centres), so centred, left-aligned and split archetypes are each
+        judged on their own terms (notes §3.27).
         """
-        span = max(0.0, self.canvas_w - (2.0 * self.grid_margin))
-        grid = [
-            self.grid_margin,
-            self.grid_margin + span / 4.0,
-            self.grid_margin + span / 2.0,
-            self.grid_margin + (3.0 * span) / 4.0,
-            self.canvas_w - self.grid_margin,
-        ]
+        left, right = self.grid_bounds or (self.grid_margin, self.canvas_w - self.grid_margin)
+        span = max(0.0, right - left)
+        grid = [left, left + span / 4.0, left + span / 2.0, left + 3.0 * span / 4.0, right]
 
         penalty_sum = 0.0
         valid_nodes = 0
 
         for node in nodes:
-            if node.get('structural_class') == 'repeating_group':
+            # Signature rows are distributed by design; motifs are placed
+            # off-grid on purpose (corners, bleeding off the edge).
+            if node.get('structural_class') in ('repeating_group', 'decor'):
                 continue
 
-            clamped_bbox = self._clamp_coordinates(node['bbox'])
-            node_cx = clamped_bbox[0] + (clamped_bbox[2] / 2.0)
-
-            nearest_dist = min(abs(node_cx - g) for g in grid)
+            x, _, w, _ = self._clamp_coordinates(node['bbox'])
+            nearest_dist = min(abs(edge - g) for edge in (x, x + w / 2.0, x + w) for g in grid)
             penalty_sum += nearest_dist / self.canvas_w
             valid_nodes += 1
 
@@ -95,14 +110,22 @@ class HeuristicEvaluator:
 
     def calculate_whitespace_penalty(self, nodes):
         """
-        Formula 3.14: Evaluates whitespace ratio against target R_target.
+        Formula 3.14: whitespace ratio against target R_target, over the
+        candidate's content region — the full canvas, or a split archetype's
+        full-height panel strip beside its art column — so an art column
+        filled with the event's title artwork doesn't count as empty page
+        (notes §3.27).
         """
-        canvas_area = self.canvas_w * self.canvas_h
-        if canvas_area <= 0:
+        left, right = self.content_region or (0.0, self.canvas_w)
+        area = max(0.0, right - left) * self.canvas_h
+        if area <= 0:
             return 0.0
-            
-        total_element_area = sum(float(n['bbox'][2]) * float(n['bbox'][3]) for n in nodes)
-        whitespace_ratio = (canvas_area - total_element_area) / canvas_area
+
+        # Content only: motifs are part of the background layer the
+        # negative space is read against, and partly bleed off the canvas.
+        total_element_area = sum(float(n['bbox'][2]) * float(n['bbox'][3]) for n in nodes
+                                 if n.get('structural_class') != 'decor')
+        whitespace_ratio = (area - total_element_area) / area
         return abs(whitespace_ratio - self.r_target)
 
     def calculate_legibility_penalty(self, nodes):

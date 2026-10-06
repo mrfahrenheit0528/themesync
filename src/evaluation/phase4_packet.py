@@ -16,11 +16,16 @@ Design (agreed with the group, notes §3.20):
     with the three MOS parameters and Table 2's 1-5 scale to circle.
   - One packet per expert: same sample codes, own randomized page order.
 
+Steps 1-3 can also be done from the dashboard's "Phase 4 Evaluation Set"
+page (src/dashboard/views/phase4.py), which edits the same manifest.csv and logos/
+folder and runs these same commands.
+
 Steps:
   # 1. List the collected posters; writes manifest.csv for the group to fill in
   python src/evaluation/phase4_packet.py template
 
-  # 2. Generate every layout (runs the full pipeline 4x per poster)
+  # 2. Generate every layout (runs the full pipeline 4x per poster);
+  #    --overwrite replaces an existing answer key (older packets are set aside)
   python src/evaluation/phase4_packet.py generate --n_posters 15
 
   # 3. One printable PDF + score-entry CSV per expert
@@ -42,6 +47,7 @@ import re
 import subprocess
 import sys
 import textwrap
+import time
 from xml.sax.saxutils import escape
 
 _EVAL_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -61,12 +67,13 @@ import poster_overlap  # noqa: E402
 from mos_collector import DIMENSIONS, RATING_SCALE  # noqa: E402
 
 POSTERS_DIR = os.path.join(_ROOT, "data", "raw", "phase4_posters")
+LOGOS_DIRNAME = "logos"  # per-poster logo picks, inside POSTERS_DIR
 OUT_DIR = os.path.join(_ROOT, "data", "phase4")
 KEY_PATH = os.path.join(OUT_DIR, "phase4_key.csv")
 IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".webp")
 
 MANIFEST_FIELDS = ["poster_file", "event_title", "event_date", "event_venue",
-                   "organization_header", "logo_files"]
+                   "organization_header", "logo_files", "title_artwork"]
 
 FORMATS = {
     "certificate": os.path.join(_ROOT, "data", "raw", "academic_payload.json"),
@@ -92,7 +99,7 @@ INK, MUTED, RULE = "#1d1d1f", "#5f5f66", "#c9c9cf"
 # Unseen-poster check
 # ---------------------------------------------------------------------------
 
-def _seen_matches(poster_paths: list) -> dict:
+def seen_matches(poster_paths: list) -> dict:
     """Maps each poster to the annotated image it (near-)duplicates, if any."""
     annotated = poster_overlap.annotated_images()
     matches = {}
@@ -107,11 +114,11 @@ def _seen_matches(poster_paths: list) -> dict:
 # Step 1: manifest template
 # ---------------------------------------------------------------------------
 
-def _poster_files(posters_dir: str) -> list:
+def poster_files(posters_dir: str) -> list:
     return sorted(f for f in os.listdir(posters_dir) if f.lower().endswith(IMAGE_EXTS))
 
 
-def _read_manifest(posters_dir: str) -> list:
+def read_manifest(posters_dir: str) -> list:
     path = os.path.join(posters_dir, "manifest.csv")
     if not os.path.exists(path):
         return []
@@ -119,25 +126,47 @@ def _read_manifest(posters_dir: str) -> list:
         return list(csv.DictReader(f))
 
 
+def write_manifest(posters_dir: str, rows: list) -> str:
+    """Writes manifest.csv, one row per poster, sorted by file name."""
+    path = os.path.join(posters_dir, "manifest.csv")
+    with open(path, "w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=MANIFEST_FIELDS, lineterminator="\n")
+        writer.writeheader()
+        for row in sorted(rows, key=lambda r: r["poster_file"]):
+            writer.writerow({k: row.get(k, "") for k in MANIFEST_FIELDS})
+    return path
+
+
+def use_title_artwork(row: dict) -> bool:
+    """The `title_artwork` column: blank (default) lets the event ID use the
+    title artwork cut from the poster; "no" types the title instead, for a
+    poster whose artwork doesn't cut out cleanly."""
+    return row.get("title_artwork", "").strip().lower() not in ("no", "off", "false", "0")
+
+
+def logo_paths(row: dict, posters_dir: str) -> list:
+    """A row's `logo_files`, resolved against the posters folder. None means
+    no override: the pipeline crops the logo row Stage 0b detects."""
+    paths = [p.strip() for p in row.get("logo_files", "").split(";") if p.strip()]
+    return [p if os.path.isabs(p) else os.path.join(posters_dir, p) for p in paths] or None
+
+
 def cmd_template(args) -> None:
     os.makedirs(args.posters_dir, exist_ok=True)
-    files = _poster_files(args.posters_dir)
-    rows = {r["poster_file"]: r for r in _read_manifest(args.posters_dir)}
+    files = poster_files(args.posters_dir)
+    rows = {r["poster_file"]: r for r in read_manifest(args.posters_dir)}
     for f in files:
         rows.setdefault(f, {k: "" for k in MANIFEST_FIELDS} | {"poster_file": f})
-    path = os.path.join(args.posters_dir, "manifest.csv")
-    with open(path, "w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=MANIFEST_FIELDS)
-        writer.writeheader()
-        for f in sorted(rows):
-            writer.writerow({k: rows[f].get(k, "") for k in MANIFEST_FIELDS})
+    path = write_manifest(args.posters_dir, list(rows.values()))
 
     print(f"  {len(files)} poster(s) in {args.posters_dir}")
     print(f"  Manifest → {path}")
     print("  Fill in per poster: event_title (required), event_date, event_venue,")
-    print("  organization_header (use ' | ' between lines), logo_files (optional,")
-    print("  ';'-separated paths, only to override the logos detected on the poster).")
-    seen = _seen_matches([os.path.join(args.posters_dir, f) for f in files])
+    print("  organization_header (use ' | ' between lines), title_artwork (blank, or \"no\" to")
+    print("  type the event title instead of the poster's title artwork), logo_files (optional,")
+    print(f"  ';'-separated paths relative to this folder, e.g. {LOGOS_DIRNAME}/x.png, only to")
+    print("  override the logos detected on the poster).")
+    seen = seen_matches([os.path.join(args.posters_dir, f) for f in files])
     for poster, match in seen.items():
         print(f"  ⚠  {os.path.basename(poster)} looks like annotated image {match} — "
               "not unseen; replace it.")
@@ -147,7 +176,7 @@ def cmd_template(args) -> None:
 # Step 2: generate layouts
 # ---------------------------------------------------------------------------
 
-def _content_for(row: dict, i: int) -> dict:
+def content_for(row: dict, i: int) -> dict:
     """Per-poster sample content, identical for both conditions."""
     title = row["event_title"].strip()
     date, venue = row.get("event_date", "").strip(), row.get("event_venue", "").strip()
@@ -182,10 +211,27 @@ def _content_for(row: dict, i: int) -> dict:
     return {"certificate": certificate, "event_id": event_id}
 
 
-def cmd_generate(args) -> None:
+def generate_sample(poster_path: str, content: dict, fmt: str, cond: str,
+                    out_dir: str, logos: list = None, use_wordmark: bool = True) -> tuple:
+    """One full pipeline run for one poster/format/condition, rasterized at
+    2x the way the packet prints it. Returns (pipeline result, PNG path)."""
     import pipeline  # heavy (torch, YOLO); only needed here
 
-    rows = [r for r in _read_manifest(args.posters_dir) if r.get("poster_file")]
+    os.makedirs(out_dir, exist_ok=True)
+    content_path = os.path.join(out_dir, "content.json")
+    with open(content_path, "w") as f:
+        json.dump(content[fmt], f, indent=2, ensure_ascii=False)
+    with open(os.path.join(out_dir, "pipeline.log"), "w") as log, contextlib.redirect_stdout(log):
+        result = pipeline.run_pipeline(
+            payload_path=FORMATS[fmt], template_image=poster_path,
+            content_data_path=content_path, use_gnn=(cond == "gnn"),
+            output_dir=out_dir, logo_images=logos, use_wordmark=use_wordmark,
+        )
+    return result, rasterize.svg_to_png(result["rendered_path"], scale=2.0)
+
+
+def cmd_generate(args) -> None:
+    rows = [r for r in read_manifest(args.posters_dir) if r.get("poster_file")]
     if not rows:
         sys.exit(f"No manifest rows in {args.posters_dir}/manifest.csv — run `template` first.")
     missing = [r["poster_file"] for r in rows if not r.get("event_title", "").strip()]
@@ -193,10 +239,16 @@ def cmd_generate(args) -> None:
         sys.exit(f"event_title is empty for: {', '.join(missing)}")
     posters = {r["poster_file"]: os.path.join(args.posters_dir, r["poster_file"]) for r in rows}
     absent = [f for f, p in posters.items() if not os.path.exists(p)]
+    absent += [p for r in rows for p in (logo_paths(r, args.posters_dir) or []) if not os.path.exists(p)]
     if absent:
-        sys.exit(f"Poster file(s) not found: {', '.join(absent)}")
+        sys.exit(f"File(s) not found: {', '.join(absent)}")
 
-    seen = _seen_matches(list(posters.values()))
+    key_path = os.path.join(args.out_dir, "phase4_key.csv")
+    if os.path.exists(key_path) and not args.overwrite:
+        sys.exit(f"{key_path} already exists; packets printed from it would stop matching a new "
+                 "key. Pass --overwrite to replace it.")
+
+    seen = seen_matches(list(posters.values()))
     if seen and not args.allow_seen:
         for poster, match in seen.items():
             print(f"  ✘  {os.path.basename(poster)} matches annotated image {match}")
@@ -213,24 +265,14 @@ def cmd_generate(args) -> None:
     for i, row in enumerate(rows):
         poster_path = posters[row["poster_file"]]
         stem = os.path.splitext(row["poster_file"])[0]
-        content = _content_for(row, i)
-        logos = [p.strip() for p in row.get("logo_files", "").split(";") if p.strip()] or None
+        content = content_for(row, i)
+        logos = logo_paths(row, args.posters_dir)
         outputs = {}
-        for fmt, payload in FORMATS.items():
+        for fmt in FORMATS:
             for cond in CONDITIONS:
                 out_dir = os.path.join(args.out_dir, "samples", stem, f"{fmt}_{cond}")
-                os.makedirs(out_dir, exist_ok=True)
-                content_path = os.path.join(out_dir, "content.json")
-                with open(content_path, "w") as f:
-                    json.dump(content[fmt], f, indent=2, ensure_ascii=False)
-                with open(os.path.join(out_dir, "pipeline.log"), "w") as log, \
-                        contextlib.redirect_stdout(log):
-                    result = pipeline.run_pipeline(
-                        payload_path=payload, template_image=poster_path,
-                        content_data_path=content_path, use_gnn=(cond == "gnn"),
-                        output_dir=out_dir, logo_images=logos,
-                    )
-                png = rasterize.svg_to_png(result["rendered_path"], scale=2.0)
+                result, png = generate_sample(poster_path, content, fmt, cond, out_dir, logos,
+                                              use_wordmark=use_title_artwork(row))
                 outputs[(fmt, cond)] = result["rendered_path"]
                 samples.append({
                     "poster_file": row["poster_file"], "event_title": row["event_title"],
@@ -239,6 +281,7 @@ def cmd_generate(args) -> None:
                     "png": os.path.relpath(png, _ROOT),
                     "winner_candidate": result["winner"]["candidate_id"],
                     "c_total": result["winner"]["c_total"],
+                    "logo_choice": "manual" if logos else "automatic",
                     "logo_source": result.get("logo_source") or "none",
                 })
                 print(f"  [{len(samples):>2}] {stem[:28]:<28} {fmt:<11} {cond:<8} "
@@ -256,7 +299,13 @@ def cmd_generate(args) -> None:
         s["code"] = f"S{n:02d}"
     samples.sort(key=lambda s: s["code"])
     os.makedirs(args.out_dir, exist_ok=True)
-    key_path = os.path.join(args.out_dir, "phase4_key.csv")
+    packets_dir = os.path.join(args.out_dir, "packets")
+    if os.path.isdir(packets_dir) and os.listdir(packets_dir):
+        # Packets built from the old key would mislabel every score; keep them
+        # out of the way rather than deleting them.
+        superseded = os.path.join(args.out_dir, f"packets_superseded_{time.strftime('%Y%m%d_%H%M%S')}")
+        os.rename(packets_dir, superseded)
+        print(f"  Earlier packets moved to {superseded} (they match the old key only)")
     with open(key_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=["code"] + [k for k in samples[0] if k != "code"])
         writer.writeheader()
@@ -517,6 +566,8 @@ def main():
     g.add_argument("--key_seed", type=int, default=2026, help="assigns the blind sample codes")
     g.add_argument("--allow_seen", action="store_true",
                    help="allow posters that match annotated images (dry runs only)")
+    g.add_argument("--overwrite", action="store_true",
+                   help="replace an existing answer key (earlier packets are moved aside)")
 
     p = sub.add_parser("packet", help="build one expert's printable PDF and score sheet")
     p.add_argument("--expert", required=True)

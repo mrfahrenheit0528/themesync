@@ -1,0 +1,5591 @@
+{
+  "run_id": "20260929_103736",
+  "timestamp": "2026-09-29T10:37:36.191372",
+  "config": {
+    "masters": 15,
+    "posters_dir": "data/raw/phase4_posters",
+    "domains": [
+      "certificate",
+      "id"
+    ],
+    "population": 6,
+    "gnn_weights": "themesync_gnn_v3.pth",
+    "yolo_weights": "themesync_yolo_v4.pt",
+    "conditions": [
+      "gnn",
+      "mapping",
+      "baseline"
+    ],
+    "trial_unit": "one master layout (the pipeline is deterministic per input)"
+  },
+  "results": {
+    "certificate": {
+      "domain_label": "Academic Certificate (4:3)",
+      "gnn_trials": [
+        {
+          "poster": "ALAPS.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.1337,
+          "structure_error_all": 0.1163,
+          "mapped_roles": [
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3282.47,
+            "layout_parsing": 1403.42,
+            "stylistic_markers": 2264.81,
+            "instantiation": 0.32,
+            "gnn_inference": 274.36,
+            "csp_resolution": 1.18,
+            "ranking": 1684.03,
+            "rendering": 167.22,
+            "serialization": 0.36,
+            "total": 9078.17
+          },
+          "latency_total": 9078.17,
+          "winner": "Candidate_E",
+          "winner_label": "classic centred \u00b7 margin 84px \u00b7 gap 24px \u00b7 four corners",
+          "C_total": 0.0007,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0007,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0078,
+          "num_nodes": 11,
+          "motifs_placed": 4,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_E",
+              0.0007
+            ],
+            [
+              "Candidate_A",
+              0.0009
+            ],
+            [
+              "Candidate_C",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0094
+            ],
+            [
+              "Candidate_F",
+              0.0765
+            ],
+            [
+              "Candidate_B",
+              0.0766
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ALAPS/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "AQUA-ASK_2026.png",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.1051,
+          "structure_error_all": 0.1041,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4052.83,
+            "layout_parsing": 921.43,
+            "stylistic_markers": 15440.41,
+            "instantiation": 0.19,
+            "gnn_inference": 224.57,
+            "csp_resolution": 1.17,
+            "ranking": 1740.59,
+            "rendering": 278.63,
+            "serialization": 0.33,
+            "total": 22660.15
+          },
+          "latency_total": 22660.15,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": 0.016,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0073
+            ],
+            [
+              "Candidate_F",
+              0.0762
+            ],
+            [
+              "Candidate_B",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/AQUA-ASK_2026/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "EDUKWELA.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0,
+          "structure_error_all": 0.0112,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 5380.81,
+            "layout_parsing": 613.95,
+            "stylistic_markers": 1603.27,
+            "instantiation": 0.13,
+            "gnn_inference": 225.8,
+            "csp_resolution": 1.26,
+            "ranking": 1467.1,
+            "rendering": 203.93,
+            "serialization": 0.36,
+            "total": 9496.62
+          },
+          "latency_total": 9496.62,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0023,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0023,
+          "P_legibility": 0.0,
+          "mean_iou": 0.2794,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0023
+            ],
+            [
+              "Candidate_D",
+              0.0023
+            ],
+            [
+              "Candidate_E",
+              0.0023
+            ],
+            [
+              "Candidate_C",
+              0.011
+            ],
+            [
+              "Candidate_F",
+              0.074
+            ],
+            [
+              "Candidate_B",
+              0.0742
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/EDUKWELA/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "HALUBILO_2025.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.1137,
+          "structure_error_all": 0.1203,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3844.32,
+            "layout_parsing": 698.39,
+            "stylistic_markers": 2107.48,
+            "instantiation": 0.14,
+            "gnn_inference": 222.82,
+            "csp_resolution": 1.16,
+            "ranking": 1649.15,
+            "rendering": 252.07,
+            "serialization": 0.41,
+            "total": 8775.95
+          },
+          "latency_total": 8775.95,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0012
+            ],
+            [
+              "Candidate_D",
+              0.0062
+            ],
+            [
+              "Candidate_B",
+              0.0762
+            ],
+            [
+              "Candidate_F",
+              0.0762
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/HALUBILO_2025/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "HALUBILO_2026.png",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.1191,
+          "structure_error_all": 0.0904,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4220.41,
+            "layout_parsing": 696.98,
+            "stylistic_markers": 10956.45,
+            "instantiation": 0.25,
+            "gnn_inference": 185.54,
+            "csp_resolution": 1.47,
+            "ranking": 1729.0,
+            "rendering": 247.29,
+            "serialization": 0.33,
+            "total": 18037.73
+          },
+          "latency_total": 18037.73,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_A",
+              0.0009
+            ],
+            [
+              "Candidate_C",
+              0.0009
+            ],
+            [
+              "Candidate_B",
+              0.0763
+            ],
+            [
+              "Candidate_F",
+              0.0766
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/HALUBILO_2026/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "KINAADMAN.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0896,
+          "structure_error_all": 0.0887,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4530.15,
+            "layout_parsing": 866.07,
+            "stylistic_markers": 799.76,
+            "instantiation": 0.13,
+            "gnn_inference": 222.05,
+            "csp_resolution": 1.21,
+            "ranking": 1535.79,
+            "rendering": 168.94,
+            "serialization": 0.32,
+            "total": 8124.4
+          },
+          "latency_total": 8124.4,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0057,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0013,
+          "P_legibility": 0.003,
+          "mean_iou": 0.0161,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0057
+            ],
+            [
+              "Candidate_C",
+              0.0066
+            ],
+            [
+              "Candidate_D",
+              0.0078
+            ],
+            [
+              "Candidate_E",
+              0.0078
+            ],
+            [
+              "Candidate_B",
+              0.0757
+            ],
+            [
+              "Candidate_F",
+              0.0757
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/KINAADMAN/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "MMCSPC_2025.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [
+            "details",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 6467.41,
+            "layout_parsing": 769.57,
+            "stylistic_markers": 1760.99,
+            "instantiation": 0.22,
+            "gnn_inference": 228.41,
+            "csp_resolution": 1.91,
+            "ranking": 1838.88,
+            "rendering": 214.34,
+            "serialization": 0.43,
+            "total": 11282.17
+          },
+          "latency_total": 11282.17,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": 0.2975,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0011
+            ],
+            [
+              "Candidate_F",
+              0.0762
+            ],
+            [
+              "Candidate_B",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/MMCSPC_2025/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "ORGBIT_2026.png",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0994,
+          "structure_error_all": 0.0984,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 7235.16,
+            "layout_parsing": 773.64,
+            "stylistic_markers": 2517.96,
+            "instantiation": 0.13,
+            "gnn_inference": 222.22,
+            "csp_resolution": 1.19,
+            "ranking": 1911.49,
+            "rendering": 316.06,
+            "serialization": 0.38,
+            "total": 12978.24
+          },
+          "latency_total": 12978.24,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0029,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0029,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0174,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0029
+            ],
+            [
+              "Candidate_E",
+              0.0029
+            ],
+            [
+              "Candidate_D",
+              0.0031
+            ],
+            [
+              "Candidate_C",
+              0.0034
+            ],
+            [
+              "Candidate_B",
+              0.0729
+            ],
+            [
+              "Candidate_F",
+              0.0731
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ORGBIT_2026/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "ORSEM_2025.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [
+            "details",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3889.18,
+            "layout_parsing": 524.78,
+            "stylistic_markers": 1048.14,
+            "instantiation": 0.13,
+            "gnn_inference": 217.34,
+            "csp_resolution": 1.26,
+            "ranking": 1464.19,
+            "rendering": 263.43,
+            "serialization": 0.32,
+            "total": 7408.77
+          },
+          "latency_total": 7408.77,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": 0.2835,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.004
+            ],
+            [
+              "Candidate_F",
+              0.0762
+            ],
+            [
+              "Candidate_B",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ORSEM_2025/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "PASALABAT.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0975,
+          "structure_error_all": 0.0965,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3839.54,
+            "layout_parsing": 933.42,
+            "stylistic_markers": 1772.59,
+            "instantiation": 0.16,
+            "gnn_inference": 215.43,
+            "csp_resolution": 1.24,
+            "ranking": 1614.82,
+            "rendering": 269.83,
+            "serialization": 0.33,
+            "total": 8647.35
+          },
+          "latency_total": 8647.35,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0137,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0053
+            ],
+            [
+              "Candidate_F",
+              0.0757
+            ],
+            [
+              "Candidate_B",
+              0.0758
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/PASALABAT/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SEARCH_SSC_2025.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.1567,
+          "structure_error_all": 0.1562,
+          "mapped_roles": [
+            "header",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2276.28,
+            "layout_parsing": 593.26,
+            "stylistic_markers": 1571.2,
+            "instantiation": 0.12,
+            "gnn_inference": 233.31,
+            "csp_resolution": 1.17,
+            "ranking": 1418.12,
+            "rendering": 175.02,
+            "serialization": 0.33,
+            "total": 6268.82
+          },
+          "latency_total": 6268.82,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0027,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0027,
+          "P_legibility": 0.0,
+          "mean_iou": 0.014,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0027
+            ],
+            [
+              "Candidate_D",
+              0.0027
+            ],
+            [
+              "Candidate_E",
+              0.0027
+            ],
+            [
+              "Candidate_C",
+              0.0086
+            ],
+            [
+              "Candidate_F",
+              0.0736
+            ],
+            [
+              "Candidate_B",
+              0.0737
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SEARCH_SSC_2025/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SEARCH_SSC_2026.png",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0536,
+          "structure_error_all": 0.0532,
+          "mapped_roles": [
+            "header",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4598.54,
+            "layout_parsing": 1217.83,
+            "stylistic_markers": 3817.31,
+            "instantiation": 0.14,
+            "gnn_inference": 211.42,
+            "csp_resolution": 1.19,
+            "ranking": 1761.6,
+            "rendering": 334.35,
+            "serialization": 0.39,
+            "total": 11942.8
+          },
+          "latency_total": 11942.8,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": 0.1518,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0033
+            ],
+            [
+              "Candidate_B",
+              0.0757
+            ],
+            [
+              "Candidate_F",
+              0.0757
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SEARCH_SSC_2026/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SIKLAB.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0802,
+          "structure_error_all": 0.0432,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 5215.97,
+            "layout_parsing": 710.68,
+            "stylistic_markers": 1349.52,
+            "instantiation": 0.14,
+            "gnn_inference": 203.55,
+            "csp_resolution": 1.21,
+            "ranking": 1580.53,
+            "rendering": 255.98,
+            "serialization": 0.34,
+            "total": 9317.94
+          },
+          "latency_total": 9317.94,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_A",
+              0.0012
+            ],
+            [
+              "Candidate_C",
+              0.0013
+            ],
+            [
+              "Candidate_F",
+              0.076
+            ],
+            [
+              "Candidate_B",
+              0.0761
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SIKLAB/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "ULAYAW.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.4199,
+          "structure_error_all": 0.3917,
+          "mapped_roles": [
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 6046.45,
+            "layout_parsing": 774.04,
+            "stylistic_markers": 5878.0,
+            "instantiation": 0.14,
+            "gnn_inference": 202.42,
+            "csp_resolution": 1.24,
+            "ranking": 1795.56,
+            "rendering": 323.98,
+            "serialization": 0.35,
+            "total": 15022.18
+          },
+          "latency_total": 15022.18,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0016
+            ],
+            [
+              "Candidate_E",
+              0.0017
+            ],
+            [
+              "Candidate_A",
+              0.0019
+            ],
+            [
+              "Candidate_B",
+              0.0756
+            ],
+            [
+              "Candidate_F",
+              0.0758
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ULAYAW/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "YUGTO_2025.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.1344,
+          "structure_error_all": 0.0978,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 5302.0,
+            "layout_parsing": 751.57,
+            "stylistic_markers": 3000.0,
+            "instantiation": 0.12,
+            "gnn_inference": 226.99,
+            "csp_resolution": 1.22,
+            "ranking": 1931.82,
+            "rendering": 255.3,
+            "serialization": 0.38,
+            "total": 11469.4
+          },
+          "latency_total": 11469.4,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0007,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0007,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0007
+            ],
+            [
+              "Candidate_A",
+              0.0009
+            ],
+            [
+              "Candidate_E",
+              0.0009
+            ],
+            [
+              "Candidate_C",
+              0.0012
+            ],
+            [
+              "Candidate_F",
+              0.0766
+            ],
+            [
+              "Candidate_B",
+              0.0767
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/YUGTO_2025/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        }
+      ],
+      "mapping_trials": [
+        {
+          "poster": "ALAPS.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.1337,
+          "structure_error_all": 0.1163,
+          "mapped_roles": [
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2466.88,
+            "layout_parsing": 663.21,
+            "stylistic_markers": 2225.33,
+            "instantiation": 0.14,
+            "gnn_inference": 0.08,
+            "csp_resolution": 1.19,
+            "ranking": 1465.2,
+            "rendering": 161.39,
+            "serialization": 0.43,
+            "total": 6983.85
+          },
+          "latency_total": 6983.85,
+          "winner": "Candidate_E",
+          "winner_label": "classic centred \u00b7 margin 84px \u00b7 gap 24px \u00b7 four corners",
+          "C_total": 0.0007,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0007,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 4,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_E",
+              0.0007
+            ],
+            [
+              "Candidate_A",
+              0.0009
+            ],
+            [
+              "Candidate_C",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0094
+            ],
+            [
+              "Candidate_F",
+              0.0765
+            ],
+            [
+              "Candidate_B",
+              0.0766
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ALAPS/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "AQUA-ASK_2026.png",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.1051,
+          "structure_error_all": 0.1041,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3987.87,
+            "layout_parsing": 902.76,
+            "stylistic_markers": 17103.96,
+            "instantiation": 0.2,
+            "gnn_inference": 0.1,
+            "csp_resolution": 1.23,
+            "ranking": 1775.55,
+            "rendering": 285.82,
+            "serialization": 0.33,
+            "total": 24057.81
+          },
+          "latency_total": 24057.81,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0073
+            ],
+            [
+              "Candidate_F",
+              0.0762
+            ],
+            [
+              "Candidate_B",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/AQUA-ASK_2026/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "EDUKWELA.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0,
+          "structure_error_all": 0.0112,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 5387.59,
+            "layout_parsing": 594.57,
+            "stylistic_markers": 1604.58,
+            "instantiation": 0.18,
+            "gnn_inference": 0.12,
+            "csp_resolution": 1.27,
+            "ranking": 1427.4,
+            "rendering": 202.03,
+            "serialization": 0.37,
+            "total": 9218.1
+          },
+          "latency_total": 9218.1,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0023,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0023,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0023
+            ],
+            [
+              "Candidate_D",
+              0.0023
+            ],
+            [
+              "Candidate_E",
+              0.0023
+            ],
+            [
+              "Candidate_C",
+              0.0132
+            ],
+            [
+              "Candidate_F",
+              0.074
+            ],
+            [
+              "Candidate_B",
+              0.0743
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/EDUKWELA/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "HALUBILO_2025.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.1137,
+          "structure_error_all": 0.1203,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3369.85,
+            "layout_parsing": 653.2,
+            "stylistic_markers": 2627.54,
+            "instantiation": 0.37,
+            "gnn_inference": 0.19,
+            "csp_resolution": 2.29,
+            "ranking": 1882.23,
+            "rendering": 307.17,
+            "serialization": 0.45,
+            "total": 8843.29
+          },
+          "latency_total": 8843.29,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0012
+            ],
+            [
+              "Candidate_D",
+              0.0062
+            ],
+            [
+              "Candidate_B",
+              0.0762
+            ],
+            [
+              "Candidate_F",
+              0.0762
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/HALUBILO_2025/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "HALUBILO_2026.png",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.1191,
+          "structure_error_all": 0.0904,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4207.64,
+            "layout_parsing": 765.12,
+            "stylistic_markers": 8992.21,
+            "instantiation": 0.15,
+            "gnn_inference": 0.07,
+            "csp_resolution": 1.35,
+            "ranking": 1882.1,
+            "rendering": 361.02,
+            "serialization": 125.35,
+            "total": 16335.01
+          },
+          "latency_total": 16335.01,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_A",
+              0.0009
+            ],
+            [
+              "Candidate_C",
+              0.0009
+            ],
+            [
+              "Candidate_B",
+              0.0763
+            ],
+            [
+              "Candidate_F",
+              0.0766
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/HALUBILO_2026/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "KINAADMAN.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0896,
+          "structure_error_all": 0.0887,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4398.16,
+            "layout_parsing": 886.66,
+            "stylistic_markers": 999.46,
+            "instantiation": 0.24,
+            "gnn_inference": 0.14,
+            "csp_resolution": 2.2,
+            "ranking": 1617.08,
+            "rendering": 207.09,
+            "serialization": 0.35,
+            "total": 8111.39
+          },
+          "latency_total": 8111.39,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0057,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0013,
+          "P_legibility": 0.003,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0057
+            ],
+            [
+              "Candidate_C",
+              0.0066
+            ],
+            [
+              "Candidate_D",
+              0.0078
+            ],
+            [
+              "Candidate_E",
+              0.0078
+            ],
+            [
+              "Candidate_B",
+              0.0757
+            ],
+            [
+              "Candidate_F",
+              0.0757
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/KINAADMAN/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "MMCSPC_2025.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [
+            "details",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 6302.46,
+            "layout_parsing": 689.79,
+            "stylistic_markers": 2134.89,
+            "instantiation": 0.2,
+            "gnn_inference": 0.05,
+            "csp_resolution": 1.43,
+            "ranking": 1695.3,
+            "rendering": 261.92,
+            "serialization": 0.44,
+            "total": 11086.47
+          },
+          "latency_total": 11086.47,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0011
+            ],
+            [
+              "Candidate_B",
+              0.0765
+            ],
+            [
+              "Candidate_F",
+              0.0765
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/MMCSPC_2025/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "ORGBIT_2026.png",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0994,
+          "structure_error_all": 0.0984,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 7227.11,
+            "layout_parsing": 719.86,
+            "stylistic_markers": 2513.73,
+            "instantiation": 0.14,
+            "gnn_inference": 0.07,
+            "csp_resolution": 1.2,
+            "ranking": 1922.98,
+            "rendering": 329.05,
+            "serialization": 0.36,
+            "total": 12714.51
+          },
+          "latency_total": 12714.51,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0029,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0029,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0029
+            ],
+            [
+              "Candidate_E",
+              0.0029
+            ],
+            [
+              "Candidate_D",
+              0.0031
+            ],
+            [
+              "Candidate_C",
+              0.0034
+            ],
+            [
+              "Candidate_B",
+              0.0729
+            ],
+            [
+              "Candidate_F",
+              0.0731
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ORGBIT_2026/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "ORSEM_2025.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [
+            "details",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3862.54,
+            "layout_parsing": 499.2,
+            "stylistic_markers": 862.13,
+            "instantiation": 0.15,
+            "gnn_inference": 0.04,
+            "csp_resolution": 1.2,
+            "ranking": 1391.32,
+            "rendering": 264.43,
+            "serialization": 0.3,
+            "total": 6881.33
+          },
+          "latency_total": 6881.33,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0029
+            ],
+            [
+              "Candidate_B",
+              0.0764
+            ],
+            [
+              "Candidate_F",
+              0.0764
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ORSEM_2025/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "PASALABAT.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0975,
+          "structure_error_all": 0.0965,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3503.61,
+            "layout_parsing": 818.29,
+            "stylistic_markers": 1785.7,
+            "instantiation": 0.14,
+            "gnn_inference": 0.08,
+            "csp_resolution": 1.3,
+            "ranking": 1623.42,
+            "rendering": 269.44,
+            "serialization": 0.32,
+            "total": 8002.29
+          },
+          "latency_total": 8002.29,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0053
+            ],
+            [
+              "Candidate_F",
+              0.0757
+            ],
+            [
+              "Candidate_B",
+              0.0758
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/PASALABAT/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SEARCH_SSC_2025.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.1567,
+          "structure_error_all": 0.1562,
+          "mapped_roles": [
+            "header",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2284.19,
+            "layout_parsing": 613.55,
+            "stylistic_markers": 1583.26,
+            "instantiation": 0.13,
+            "gnn_inference": 0.08,
+            "csp_resolution": 1.23,
+            "ranking": 1432.0,
+            "rendering": 177.47,
+            "serialization": 0.32,
+            "total": 6092.23
+          },
+          "latency_total": 6092.23,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0027,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0027,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0027
+            ],
+            [
+              "Candidate_D",
+              0.0027
+            ],
+            [
+              "Candidate_E",
+              0.0027
+            ],
+            [
+              "Candidate_C",
+              0.0086
+            ],
+            [
+              "Candidate_F",
+              0.0736
+            ],
+            [
+              "Candidate_B",
+              0.0737
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SEARCH_SSC_2025/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SEARCH_SSC_2026.png",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0536,
+          "structure_error_all": 0.0532,
+          "mapped_roles": [
+            "header",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4955.71,
+            "layout_parsing": 1402.47,
+            "stylistic_markers": 4355.4,
+            "instantiation": 0.16,
+            "gnn_inference": 0.07,
+            "csp_resolution": 1.19,
+            "ranking": 1898.44,
+            "rendering": 317.42,
+            "serialization": 0.43,
+            "total": 12931.29
+          },
+          "latency_total": 12931.29,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0033
+            ],
+            [
+              "Candidate_B",
+              0.0757
+            ],
+            [
+              "Candidate_F",
+              0.0757
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SEARCH_SSC_2026/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SIKLAB.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0802,
+          "structure_error_all": 0.0432,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 5241.45,
+            "layout_parsing": 805.02,
+            "stylistic_markers": 1340.87,
+            "instantiation": 0.19,
+            "gnn_inference": 0.09,
+            "csp_resolution": 1.21,
+            "ranking": 1578.09,
+            "rendering": 258.73,
+            "serialization": 0.37,
+            "total": 9226.02
+          },
+          "latency_total": 9226.02,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_A",
+              0.0012
+            ],
+            [
+              "Candidate_C",
+              0.0013
+            ],
+            [
+              "Candidate_F",
+              0.076
+            ],
+            [
+              "Candidate_B",
+              0.0761
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SIKLAB/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "ULAYAW.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.4199,
+          "structure_error_all": 0.3917,
+          "mapped_roles": [
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 6019.07,
+            "layout_parsing": 764.96,
+            "stylistic_markers": 6284.29,
+            "instantiation": 0.12,
+            "gnn_inference": 0.07,
+            "csp_resolution": 1.25,
+            "ranking": 1755.5,
+            "rendering": 322.44,
+            "serialization": 0.37,
+            "total": 15148.07
+          },
+          "latency_total": 15148.07,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0016
+            ],
+            [
+              "Candidate_E",
+              0.0017
+            ],
+            [
+              "Candidate_A",
+              0.0019
+            ],
+            [
+              "Candidate_B",
+              0.0756
+            ],
+            [
+              "Candidate_F",
+              0.0758
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ULAYAW/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "YUGTO_2025.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.1344,
+          "structure_error_all": 0.0978,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 5253.4,
+            "layout_parsing": 741.41,
+            "stylistic_markers": 2993.5,
+            "instantiation": 0.12,
+            "gnn_inference": 0.07,
+            "csp_resolution": 1.21,
+            "ranking": 1906.28,
+            "rendering": 264.84,
+            "serialization": 0.54,
+            "total": 11161.37
+          },
+          "latency_total": 11161.37,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0007,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0007,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0007
+            ],
+            [
+              "Candidate_A",
+              0.0009
+            ],
+            [
+              "Candidate_E",
+              0.0009
+            ],
+            [
+              "Candidate_C",
+              0.0012
+            ],
+            [
+              "Candidate_F",
+              0.0766
+            ],
+            [
+              "Candidate_B",
+              0.0767
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/YUGTO_2025/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        }
+      ],
+      "base_trials": [
+        {
+          "poster": "ALAPS.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1337,
+          "structure_error_all": 0.1518,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2518.91,
+            "layout_parsing": 681.6,
+            "stylistic_markers": 2334.51,
+            "instantiation": 0.16,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.19,
+            "ranking": 1509.48,
+            "rendering": 166.96,
+            "serialization": 0.36,
+            "total": 7213.17
+          },
+          "latency_total": 7213.17,
+          "winner": "Candidate_E",
+          "winner_label": "classic centred \u00b7 margin 84px \u00b7 gap 24px \u00b7 four corners",
+          "C_total": 0.0007,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0007,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 4,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_E",
+              0.0007
+            ],
+            [
+              "Candidate_A",
+              0.0012
+            ],
+            [
+              "Candidate_C",
+              0.0013
+            ],
+            [
+              "Candidate_D",
+              0.0094
+            ],
+            [
+              "Candidate_B",
+              0.0766
+            ],
+            [
+              "Candidate_F",
+              0.0773
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ALAPS/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "AQUA-ASK_2026.png",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1426,
+          "structure_error_all": 0.1391,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 4350.12,
+            "layout_parsing": 933.81,
+            "stylistic_markers": 17581.29,
+            "instantiation": 0.25,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.31,
+            "ranking": 1690.5,
+            "rendering": 282.26,
+            "serialization": 0.32,
+            "total": 24839.87
+          },
+          "latency_total": 24839.87,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0062
+            ],
+            [
+              "Candidate_B",
+              0.0763
+            ],
+            [
+              "Candidate_F",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/AQUA-ASK_2026/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "EDUKWELA.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0299,
+          "structure_error_all": 0.0343,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 5380.53,
+            "layout_parsing": 602.44,
+            "stylistic_markers": 1603.08,
+            "instantiation": 0.26,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.32,
+            "ranking": 1481.41,
+            "rendering": 240.42,
+            "serialization": 0.36,
+            "total": 9309.82
+          },
+          "latency_total": 9309.82,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0023,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0023,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0023
+            ],
+            [
+              "Candidate_D",
+              0.0023
+            ],
+            [
+              "Candidate_E",
+              0.0023
+            ],
+            [
+              "Candidate_C",
+              0.0087
+            ],
+            [
+              "Candidate_B",
+              0.0742
+            ],
+            [
+              "Candidate_F",
+              0.0742
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/EDUKWELA/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "HALUBILO_2025.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1512,
+          "structure_error_all": 0.1552,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 3402.99,
+            "layout_parsing": 636.36,
+            "stylistic_markers": 2102.02,
+            "instantiation": 0.14,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.18,
+            "ranking": 1564.24,
+            "rendering": 250.67,
+            "serialization": 0.35,
+            "total": 7957.96
+          },
+          "latency_total": 7957.96,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0013
+            ],
+            [
+              "Candidate_D",
+              0.0062
+            ],
+            [
+              "Candidate_B",
+              0.0763
+            ],
+            [
+              "Candidate_F",
+              0.0765
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/HALUBILO_2025/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "HALUBILO_2026.png",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1221,
+          "structure_error_all": 0.1263,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 3368.3,
+            "layout_parsing": 699.07,
+            "stylistic_markers": 10021.44,
+            "instantiation": 0.26,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.45,
+            "ranking": 1782.3,
+            "rendering": 251.13,
+            "serialization": 0.34,
+            "total": 16124.28
+          },
+          "latency_total": 16124.28,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_A",
+              0.0009
+            ],
+            [
+              "Candidate_C",
+              0.0018
+            ],
+            [
+              "Candidate_B",
+              0.0768
+            ],
+            [
+              "Candidate_F",
+              0.0769
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/HALUBILO_2026/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "KINAADMAN.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1271,
+          "structure_error_all": 0.1236,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 4415.85,
+            "layout_parsing": 870.39,
+            "stylistic_markers": 773.15,
+            "instantiation": 0.16,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.19,
+            "ranking": 1383.89,
+            "rendering": 211.03,
+            "serialization": 0.37,
+            "total": 7656.02
+          },
+          "latency_total": 7656.02,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0078,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0013,
+          "P_legibility": 0.0044,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0078
+            ],
+            [
+              "Candidate_D",
+              0.0078
+            ],
+            [
+              "Candidate_E",
+              0.0078
+            ],
+            [
+              "Candidate_C",
+              0.0129
+            ],
+            [
+              "Candidate_B",
+              0.0757
+            ],
+            [
+              "Candidate_F",
+              0.0757
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/KINAADMAN/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "MMCSPC_2025.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 6335.81,
+            "layout_parsing": 981.78,
+            "stylistic_markers": 1707.58,
+            "instantiation": 0.16,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.21,
+            "ranking": 1593.64,
+            "rendering": 212.98,
+            "serialization": 0.44,
+            "total": 10833.61
+          },
+          "latency_total": 10833.61,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0011
+            ],
+            [
+              "Candidate_B",
+              0.0765
+            ],
+            [
+              "Candidate_F",
+              0.0771
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/MMCSPC_2025/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "ORGBIT_2026.png",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1369,
+          "structure_error_all": 0.1334,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 7274.62,
+            "layout_parsing": 827.19,
+            "stylistic_markers": 3085.13,
+            "instantiation": 0.29,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.49,
+            "ranking": 2304.9,
+            "rendering": 298.18,
+            "serialization": 0.39,
+            "total": 13792.18
+          },
+          "latency_total": 13792.18,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0029,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0029,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0029
+            ],
+            [
+              "Candidate_E",
+              0.0029
+            ],
+            [
+              "Candidate_D",
+              0.0031
+            ],
+            [
+              "Candidate_C",
+              0.0032
+            ],
+            [
+              "Candidate_B",
+              0.0729
+            ],
+            [
+              "Candidate_F",
+              0.0729
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ORGBIT_2026/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "ORSEM_2025.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 3834.52,
+            "layout_parsing": 519.93,
+            "stylistic_markers": 933.24,
+            "instantiation": 0.19,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.41,
+            "ranking": 1658.44,
+            "rendering": 320.96,
+            "serialization": 0.38,
+            "total": 7269.07
+          },
+          "latency_total": 7269.07,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0029
+            ],
+            [
+              "Candidate_B",
+              0.0764
+            ],
+            [
+              "Candidate_F",
+              0.0764
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ORSEM_2025/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "PASALABAT.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.135,
+          "structure_error_all": 0.1315,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 3691.17,
+            "layout_parsing": 902.48,
+            "stylistic_markers": 1776.74,
+            "instantiation": 0.15,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.23,
+            "ranking": 1608.0,
+            "rendering": 268.87,
+            "serialization": 0.33,
+            "total": 8248.96
+          },
+          "latency_total": 8248.96,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0043
+            ],
+            [
+              "Candidate_B",
+              0.0759
+            ],
+            [
+              "Candidate_F",
+              0.0759
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/PASALABAT/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SEARCH_SSC_2025.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1942,
+          "structure_error_all": 0.1912,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2238.76,
+            "layout_parsing": 596.51,
+            "stylistic_markers": 1849.39,
+            "instantiation": 0.25,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.49,
+            "ranking": 1431.35,
+            "rendering": 178.45,
+            "serialization": 0.3,
+            "total": 6296.5
+          },
+          "latency_total": 6296.5,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0027,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0027,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0027
+            ],
+            [
+              "Candidate_D",
+              0.0027
+            ],
+            [
+              "Candidate_E",
+              0.0027
+            ],
+            [
+              "Candidate_C",
+              0.0061
+            ],
+            [
+              "Candidate_B",
+              0.0736
+            ],
+            [
+              "Candidate_F",
+              0.0736
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SEARCH_SSC_2025/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SEARCH_SSC_2026.png",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0911,
+          "structure_error_all": 0.0881,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 4672.81,
+            "layout_parsing": 1214.93,
+            "stylistic_markers": 4445.85,
+            "instantiation": 0.17,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.65,
+            "ranking": 2177.1,
+            "rendering": 329.09,
+            "serialization": 0.41,
+            "total": 12842.01
+          },
+          "latency_total": 12842.01,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0028
+            ],
+            [
+              "Candidate_B",
+              0.0757
+            ],
+            [
+              "Candidate_F",
+              0.0757
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SEARCH_SSC_2026/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SIKLAB.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0832,
+          "structure_error_all": 0.079,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 5180.83,
+            "layout_parsing": 720.47,
+            "stylistic_markers": 1346.8,
+            "instantiation": 0.15,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.21,
+            "ranking": 1602.18,
+            "rendering": 302.39,
+            "serialization": 0.4,
+            "total": 9154.45
+          },
+          "latency_total": 9154.45,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0009
+            ],
+            [
+              "Candidate_A",
+              0.0012
+            ],
+            [
+              "Candidate_B",
+              0.0762
+            ],
+            [
+              "Candidate_F",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SIKLAB/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "ULAYAW.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.4246,
+          "structure_error_all": 0.429,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 5990.47,
+            "layout_parsing": 770.69,
+            "stylistic_markers": 5915.22,
+            "instantiation": 0.16,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.25,
+            "ranking": 1742.35,
+            "rendering": 320.83,
+            "serialization": 0.34,
+            "total": 14741.31
+          },
+          "latency_total": 14741.31,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_A",
+              0.0016
+            ],
+            [
+              "Candidate_E",
+              0.0017
+            ],
+            [
+              "Candidate_C",
+              0.0018
+            ],
+            [
+              "Candidate_B",
+              0.0757
+            ],
+            [
+              "Candidate_F",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ULAYAW/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "YUGTO_2025.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1363,
+          "structure_error_all": 0.1328,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 5331.13,
+            "layout_parsing": 750.4,
+            "stylistic_markers": 3305.55,
+            "instantiation": 0.16,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.26,
+            "ranking": 1946.64,
+            "rendering": 256.14,
+            "serialization": 0.32,
+            "total": 11591.61
+          },
+          "latency_total": 11591.61,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0007,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0007,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0007
+            ],
+            [
+              "Candidate_E",
+              0.0009
+            ],
+            [
+              "Candidate_A",
+              0.001
+            ],
+            [
+              "Candidate_C",
+              0.0013
+            ],
+            [
+              "Candidate_B",
+              0.0765
+            ],
+            [
+              "Candidate_F",
+              0.0821
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/YUGTO_2025/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        }
+      ]
+    },
+    "id": {
+      "domain_label": "Event ID (A6, 1:1.414)",
+      "gnn_trials": [
+        {
+          "poster": "ALAPS.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.1308,
+          "structure_error_all": 0.1184,
+          "mapped_roles": [
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2404.47,
+            "layout_parsing": 637.97,
+            "stylistic_markers": 2452.13,
+            "instantiation": 0.13,
+            "gnn_inference": 194.92,
+            "csp_resolution": 0.56,
+            "ranking": 1081.45,
+            "rendering": 128.09,
+            "serialization": 0.32,
+            "total": 6900.04
+          },
+          "latency_total": 6900.04,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1402,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0013,
+          "mean_iou": 0.0399,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1402
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.1509
+            ],
+            [
+              "Candidate_A",
+              0.1536
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1876
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ALAPS/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "AQUA-ASK_2026.png",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0329,
+          "structure_error_all": 0.026,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4032.67,
+            "layout_parsing": 892.47,
+            "stylistic_markers": 16411.31,
+            "instantiation": 0.14,
+            "gnn_inference": 235.77,
+            "csp_resolution": 0.47,
+            "ranking": 911.57,
+            "rendering": 203.42,
+            "serialization": 0.26,
+            "total": 22688.08
+          },
+          "latency_total": 22688.08,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": 0.6396,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_B",
+              0.1884
+            ],
+            [
+              "Candidate_F",
+              0.1884
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/AQUA-ASK_2026/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "EDUKWELA.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0104,
+          "structure_error_all": 0.0114,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 5398.09,
+            "layout_parsing": 612.77,
+            "stylistic_markers": 1599.38,
+            "instantiation": 0.15,
+            "gnn_inference": 228.08,
+            "csp_resolution": 0.46,
+            "ranking": 883.72,
+            "rendering": 167.92,
+            "serialization": 0.35,
+            "total": 8890.91
+          },
+          "latency_total": 8890.91,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": 0.6426,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/EDUKWELA/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "HALUBILO_2025.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.099,
+          "structure_error_all": 0.09,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3866.51,
+            "layout_parsing": 849.92,
+            "stylistic_markers": 2563.91,
+            "instantiation": 0.13,
+            "gnn_inference": 209.35,
+            "csp_resolution": 0.56,
+            "ranking": 1141.03,
+            "rendering": 247.25,
+            "serialization": 0.33,
+            "total": 8878.99
+          },
+          "latency_total": 8878.99,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1385,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0001,
+          "mean_iou": 0.1528,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1385
+            ],
+            [
+              "Candidate_C",
+              0.1482
+            ],
+            [
+              "Candidate_E",
+              0.1484
+            ],
+            [
+              "Candidate_A",
+              0.1531
+            ],
+            [
+              "Candidate_F",
+              0.1856
+            ],
+            [
+              "Candidate_B",
+              0.1859
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/HALUBILO_2025/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "HALUBILO_2026.png",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0309,
+          "structure_error_all": 0.0285,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4724.26,
+            "layout_parsing": 914.59,
+            "stylistic_markers": 9796.42,
+            "instantiation": 0.11,
+            "gnn_inference": 228.23,
+            "csp_resolution": 0.49,
+            "ranking": 1133.74,
+            "rendering": 222.47,
+            "serialization": 0.36,
+            "total": 17020.68
+          },
+          "latency_total": 17020.68,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": 0.298,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_B",
+              0.1857
+            ],
+            [
+              "Candidate_F",
+              0.1857
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/HALUBILO_2026/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "KINAADMAN.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.07,
+          "structure_error_all": 0.0578,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4611.99,
+            "layout_parsing": 967.51,
+            "stylistic_markers": 947.95,
+            "instantiation": 0.13,
+            "gnn_inference": 224.56,
+            "csp_resolution": 0.53,
+            "ranking": 1059.48,
+            "rendering": 133.14,
+            "serialization": 0.24,
+            "total": 7945.54
+          },
+          "latency_total": 7945.54,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.155,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0111,
+          "mean_iou": 0.2552,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.155
+            ],
+            [
+              "Candidate_C",
+              0.1646
+            ],
+            [
+              "Candidate_E",
+              0.1646
+            ],
+            [
+              "Candidate_A",
+              0.1778
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/KINAADMAN/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "MMCSPC_2025.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0086,
+          "structure_error_all": 0.0052,
+          "mapped_roles": [
+            "details",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 6384.9,
+            "layout_parsing": 929.56,
+            "stylistic_markers": 2125.31,
+            "instantiation": 0.15,
+            "gnn_inference": 191.43,
+            "csp_resolution": 0.58,
+            "ranking": 1060.01,
+            "rendering": 177.55,
+            "serialization": 0.59,
+            "total": 10870.07
+          },
+          "latency_total": 10870.07,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1403,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0013,
+          "mean_iou": 0.5965,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1403
+            ],
+            [
+              "Candidate_E",
+              0.1503
+            ],
+            [
+              "Candidate_C",
+              0.1504
+            ],
+            [
+              "Candidate_A",
+              0.1566
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/MMCSPC_2025/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "ORGBIT_2026.png",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0413,
+          "structure_error_all": 0.0316,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 7286.11,
+            "layout_parsing": 739.32,
+            "stylistic_markers": 2543.47,
+            "instantiation": 0.14,
+            "gnn_inference": 215.67,
+            "csp_resolution": 0.48,
+            "ranking": 1372.29,
+            "rendering": 269.84,
+            "serialization": 0.39,
+            "total": 12427.69
+          },
+          "latency_total": 12427.69,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1393,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0006,
+          "mean_iou": 0.5066,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1393
+            ],
+            [
+              "Candidate_E",
+              0.1488
+            ],
+            [
+              "Candidate_C",
+              0.1493
+            ],
+            [
+              "Candidate_A",
+              0.1608
+            ],
+            [
+              "Candidate_B",
+              0.1863
+            ],
+            [
+              "Candidate_F",
+              0.1921
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ORGBIT_2026/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "ORSEM_2025.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0,
+          "structure_error_all": 0.0,
+          "mapped_roles": [
+            "details",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3880.45,
+            "layout_parsing": 544.92,
+            "stylistic_markers": 872.32,
+            "instantiation": 0.13,
+            "gnn_inference": 235.05,
+            "csp_resolution": 0.46,
+            "ranking": 1010.08,
+            "rendering": 241.9,
+            "serialization": 0.33,
+            "total": 6785.64
+          },
+          "latency_total": 6785.64,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1638,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.017,
+          "mean_iou": 0.8045,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1638
+            ],
+            [
+              "Candidate_C",
+              0.1735
+            ],
+            [
+              "Candidate_E",
+              0.1735
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ],
+            [
+              "Candidate_A",
+              0.1866
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ORSEM_2025/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "PASALABAT.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0675,
+          "structure_error_all": 0.0578,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3619.27,
+            "layout_parsing": 924.77,
+            "stylistic_markers": 1882.66,
+            "instantiation": 0.14,
+            "gnn_inference": 211.89,
+            "csp_resolution": 0.53,
+            "ranking": 920.38,
+            "rendering": 228.84,
+            "serialization": 0.42,
+            "total": 7788.9
+          },
+          "latency_total": 7788.9,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": 0.1975,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_B",
+              0.1884
+            ],
+            [
+              "Candidate_F",
+              0.1884
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/PASALABAT/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SEARCH_SSC_2025.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0536,
+          "structure_error_all": 0.0471,
+          "mapped_roles": [
+            "header",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2309.42,
+            "layout_parsing": 707.36,
+            "stylistic_markers": 1576.48,
+            "instantiation": 0.11,
+            "gnn_inference": 215.73,
+            "csp_resolution": 0.48,
+            "ranking": 923.26,
+            "rendering": 147.69,
+            "serialization": 0.26,
+            "total": 5880.79
+          },
+          "latency_total": 5880.79,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1471,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0059,
+          "mean_iou": 0.6088,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1471
+            ],
+            [
+              "Candidate_E",
+              0.1568
+            ],
+            [
+              "Candidate_C",
+              0.1656
+            ],
+            [
+              "Candidate_A",
+              0.1705
+            ],
+            [
+              "Candidate_B",
+              0.1884
+            ],
+            [
+              "Candidate_F",
+              0.1884
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SEARCH_SSC_2025/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SEARCH_SSC_2026.png",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0021,
+          "structure_error_all": 0.0011,
+          "mapped_roles": [
+            "header",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4594.78,
+            "layout_parsing": 1265.72,
+            "stylistic_markers": 3785.95,
+            "instantiation": 0.19,
+            "gnn_inference": 202.35,
+            "csp_resolution": 0.55,
+            "ranking": 925.28,
+            "rendering": 223.47,
+            "serialization": 0.28,
+            "total": 10998.58
+          },
+          "latency_total": 10998.58,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1389,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0004,
+          "mean_iou": 0.4395,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1389
+            ],
+            [
+              "Candidate_C",
+              0.1484
+            ],
+            [
+              "Candidate_E",
+              0.1485
+            ],
+            [
+              "Candidate_A",
+              0.1722
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.2032
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SEARCH_SSC_2026/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SIKLAB.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.13,
+          "structure_error_all": 0.1196,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 5241.9,
+            "layout_parsing": 906.41,
+            "stylistic_markers": 1718.67,
+            "instantiation": 0.18,
+            "gnn_inference": 215.18,
+            "csp_resolution": 0.54,
+            "ranking": 1152.49,
+            "rendering": 258.95,
+            "serialization": 0.35,
+            "total": 9494.66
+          },
+          "latency_total": 9494.66,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1414,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0021,
+          "mean_iou": 0.1251,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1414
+            ],
+            [
+              "Candidate_E",
+              0.151
+            ],
+            [
+              "Candidate_C",
+              0.1512
+            ],
+            [
+              "Candidate_A",
+              0.1555
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1855
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SIKLAB/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "ULAYAW.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.3182,
+          "structure_error_all": 0.3099,
+          "mapped_roles": [
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 6182.87,
+            "layout_parsing": 982.3,
+            "stylistic_markers": 5923.41,
+            "instantiation": 0.15,
+            "gnn_inference": 217.76,
+            "csp_resolution": 0.59,
+            "ranking": 967.14,
+            "rendering": 234.49,
+            "serialization": 0.3,
+            "total": 14509.01
+          },
+          "latency_total": 14509.01,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1431,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0032,
+          "mean_iou": 0.0222,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1431
+            ],
+            [
+              "Candidate_E",
+              0.1511
+            ],
+            [
+              "Candidate_C",
+              0.1525
+            ],
+            [
+              "Candidate_A",
+              0.1571
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ULAYAW/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "YUGTO_2025.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.1076,
+          "structure_error_all": 0.0954,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 5353.88,
+            "layout_parsing": 743.67,
+            "stylistic_markers": 3352.12,
+            "instantiation": 0.14,
+            "gnn_inference": 227.58,
+            "csp_resolution": 0.63,
+            "ranking": 1397.77,
+            "rendering": 264.96,
+            "serialization": 0.32,
+            "total": 11341.06
+          },
+          "latency_total": 11341.06,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0957,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1541
+            ],
+            [
+              "Candidate_B",
+              0.1857
+            ],
+            [
+              "Candidate_F",
+              0.1935
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/YUGTO_2025/id_gnn/ThemeSync_identification-card_populated.svg"
+        }
+      ],
+      "mapping_trials": [
+        {
+          "poster": "ALAPS.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.1308,
+          "structure_error_all": 0.1184,
+          "mapped_roles": [
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2432.38,
+            "layout_parsing": 773.79,
+            "stylistic_markers": 2346.36,
+            "instantiation": 0.14,
+            "gnn_inference": 0.07,
+            "csp_resolution": 0.45,
+            "ranking": 955.55,
+            "rendering": 136.5,
+            "serialization": 0.34,
+            "total": 6645.57
+          },
+          "latency_total": 6645.57,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1402,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0013,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1402
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.1509
+            ],
+            [
+              "Candidate_A",
+              0.1536
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1876
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ALAPS/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "AQUA-ASK_2026.png",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0329,
+          "structure_error_all": 0.026,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4070.41,
+            "layout_parsing": 909.92,
+            "stylistic_markers": 15968.54,
+            "instantiation": 0.11,
+            "gnn_inference": 0.08,
+            "csp_resolution": 0.72,
+            "ranking": 892.67,
+            "rendering": 205.14,
+            "serialization": 0.33,
+            "total": 22047.93
+          },
+          "latency_total": 22047.93,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/AQUA-ASK_2026/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "EDUKWELA.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0104,
+          "structure_error_all": 0.0114,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 5388.16,
+            "layout_parsing": 599.33,
+            "stylistic_markers": 1592.01,
+            "instantiation": 0.11,
+            "gnn_inference": 0.07,
+            "csp_resolution": 0.44,
+            "ranking": 909.79,
+            "rendering": 167.36,
+            "serialization": 0.31,
+            "total": 8657.59
+          },
+          "latency_total": 8657.59,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/EDUKWELA/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "HALUBILO_2025.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.099,
+          "structure_error_all": 0.09,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3827.94,
+            "layout_parsing": 700.81,
+            "stylistic_markers": 2108.19,
+            "instantiation": 0.11,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.45,
+            "ranking": 996.68,
+            "rendering": 204.43,
+            "serialization": 0.33,
+            "total": 7839.01
+          },
+          "latency_total": 7839.01,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1385,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0001,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1385
+            ],
+            [
+              "Candidate_C",
+              0.1482
+            ],
+            [
+              "Candidate_E",
+              0.1484
+            ],
+            [
+              "Candidate_A",
+              0.1531
+            ],
+            [
+              "Candidate_F",
+              0.1856
+            ],
+            [
+              "Candidate_B",
+              0.1859
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/HALUBILO_2025/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "HALUBILO_2026.png",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0309,
+          "structure_error_all": 0.0285,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4904.31,
+            "layout_parsing": 802.46,
+            "stylistic_markers": 10267.52,
+            "instantiation": 0.12,
+            "gnn_inference": 0.08,
+            "csp_resolution": 0.52,
+            "ranking": 1171.43,
+            "rendering": 203.75,
+            "serialization": 0.35,
+            "total": 17350.54
+          },
+          "latency_total": 17350.54,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_B",
+              0.1857
+            ],
+            [
+              "Candidate_F",
+              0.1857
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/HALUBILO_2026/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "KINAADMAN.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.07,
+          "structure_error_all": 0.0578,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4454.67,
+            "layout_parsing": 887.81,
+            "stylistic_markers": 787.61,
+            "instantiation": 0.22,
+            "gnn_inference": 0.1,
+            "csp_resolution": 0.53,
+            "ranking": 940.35,
+            "rendering": 134.85,
+            "serialization": 0.29,
+            "total": 7206.41
+          },
+          "latency_total": 7206.41,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.155,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0111,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.155
+            ],
+            [
+              "Candidate_C",
+              0.1646
+            ],
+            [
+              "Candidate_E",
+              0.1646
+            ],
+            [
+              "Candidate_A",
+              0.1778
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/KINAADMAN/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "MMCSPC_2025.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0086,
+          "structure_error_all": 0.0052,
+          "mapped_roles": [
+            "details",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 6405.28,
+            "layout_parsing": 788.58,
+            "stylistic_markers": 1725.71,
+            "instantiation": 0.11,
+            "gnn_inference": 0.07,
+            "csp_resolution": 0.46,
+            "ranking": 1074.87,
+            "rendering": 198.31,
+            "serialization": 0.36,
+            "total": 10193.75
+          },
+          "latency_total": 10193.75,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1403,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0013,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1403
+            ],
+            [
+              "Candidate_C",
+              0.15
+            ],
+            [
+              "Candidate_E",
+              0.1503
+            ],
+            [
+              "Candidate_A",
+              0.1564
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/MMCSPC_2025/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "ORGBIT_2026.png",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0413,
+          "structure_error_all": 0.0316,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 7319.06,
+            "layout_parsing": 763.68,
+            "stylistic_markers": 2540.59,
+            "instantiation": 0.12,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.49,
+            "ranking": 1354.38,
+            "rendering": 252.83,
+            "serialization": 0.34,
+            "total": 12231.55
+          },
+          "latency_total": 12231.55,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1393,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0006,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1393
+            ],
+            [
+              "Candidate_E",
+              0.1488
+            ],
+            [
+              "Candidate_C",
+              0.1493
+            ],
+            [
+              "Candidate_A",
+              0.1607
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1921
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ORGBIT_2026/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "ORSEM_2025.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0,
+          "structure_error_all": 0.0,
+          "mapped_roles": [
+            "details",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3922.92,
+            "layout_parsing": 532.78,
+            "stylistic_markers": 867.85,
+            "instantiation": 0.12,
+            "gnn_inference": 0.07,
+            "csp_resolution": 0.53,
+            "ranking": 956.74,
+            "rendering": 234.54,
+            "serialization": 0.3,
+            "total": 6515.84
+          },
+          "latency_total": 6515.84,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.155,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0111,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.155
+            ],
+            [
+              "Candidate_C",
+              0.1646
+            ],
+            [
+              "Candidate_E",
+              0.1646
+            ],
+            [
+              "Candidate_A",
+              0.1695
+            ],
+            [
+              "Candidate_B",
+              0.1884
+            ],
+            [
+              "Candidate_F",
+              0.1884
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ORSEM_2025/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "PASALABAT.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0675,
+          "structure_error_all": 0.0578,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 3805.48,
+            "layout_parsing": 1019.42,
+            "stylistic_markers": 2331.88,
+            "instantiation": 0.18,
+            "gnn_inference": 0.09,
+            "csp_resolution": 0.67,
+            "ranking": 1244.64,
+            "rendering": 278.76,
+            "serialization": 0.51,
+            "total": 8681.63
+          },
+          "latency_total": 8681.63,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_B",
+              0.1884
+            ],
+            [
+              "Candidate_F",
+              0.1884
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/PASALABAT/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SEARCH_SSC_2025.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0536,
+          "structure_error_all": 0.0471,
+          "mapped_roles": [
+            "header",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2307.8,
+            "layout_parsing": 627.68,
+            "stylistic_markers": 1571.23,
+            "instantiation": 0.15,
+            "gnn_inference": 0.07,
+            "csp_resolution": 0.44,
+            "ranking": 919.4,
+            "rendering": 145.42,
+            "serialization": 0.27,
+            "total": 5572.46
+          },
+          "latency_total": 5572.46,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1471,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0059,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1471
+            ],
+            [
+              "Candidate_E",
+              0.1568
+            ],
+            [
+              "Candidate_C",
+              0.1656
+            ],
+            [
+              "Candidate_A",
+              0.1705
+            ],
+            [
+              "Candidate_B",
+              0.1884
+            ],
+            [
+              "Candidate_F",
+              0.1884
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SEARCH_SSC_2025/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SEARCH_SSC_2026.png",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0021,
+          "structure_error_all": 0.0011,
+          "mapped_roles": [
+            "header",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 4605.1,
+            "layout_parsing": 1251.93,
+            "stylistic_markers": 3799.04,
+            "instantiation": 0.19,
+            "gnn_inference": 0.08,
+            "csp_resolution": 0.57,
+            "ranking": 933.65,
+            "rendering": 224.19,
+            "serialization": 0.34,
+            "total": 10815.08
+          },
+          "latency_total": 10815.08,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1389,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0004,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1389
+            ],
+            [
+              "Candidate_C",
+              0.1484
+            ],
+            [
+              "Candidate_E",
+              0.1485
+            ],
+            [
+              "Candidate_A",
+              0.1719
+            ],
+            [
+              "Candidate_B",
+              0.1861
+            ],
+            [
+              "Candidate_F",
+              0.2041
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SEARCH_SSC_2026/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SIKLAB.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.13,
+          "structure_error_all": 0.1196,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 5257.45,
+            "layout_parsing": 732.64,
+            "stylistic_markers": 1379.25,
+            "instantiation": 0.15,
+            "gnn_inference": 0.09,
+            "csp_resolution": 0.49,
+            "ranking": 1062.59,
+            "rendering": 219.24,
+            "serialization": 0.31,
+            "total": 8652.21
+          },
+          "latency_total": 8652.21,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1414,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0021,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1414
+            ],
+            [
+              "Candidate_E",
+              0.151
+            ],
+            [
+              "Candidate_C",
+              0.1512
+            ],
+            [
+              "Candidate_A",
+              0.1555
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1855
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SIKLAB/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "ULAYAW.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.3182,
+          "structure_error_all": 0.3099,
+          "mapped_roles": [
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 6383.16,
+            "layout_parsing": 800.92,
+            "stylistic_markers": 5926.96,
+            "instantiation": 0.14,
+            "gnn_inference": 0.07,
+            "csp_resolution": 0.48,
+            "ranking": 946.91,
+            "rendering": 237.2,
+            "serialization": 0.82,
+            "total": 14296.65
+          },
+          "latency_total": 14296.65,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1431,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0032,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1431
+            ],
+            [
+              "Candidate_E",
+              0.1511
+            ],
+            [
+              "Candidate_C",
+              0.1525
+            ],
+            [
+              "Candidate_A",
+              0.1571
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ULAYAW/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "YUGTO_2025.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.1076,
+          "structure_error_all": 0.0954,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 5507.59,
+            "layout_parsing": 825.18,
+            "stylistic_markers": 3082.06,
+            "instantiation": 0.12,
+            "gnn_inference": 0.08,
+            "csp_resolution": 0.5,
+            "ranking": 1203.13,
+            "rendering": 218.84,
+            "serialization": 0.34,
+            "total": 10837.83
+          },
+          "latency_total": 10837.83,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1541
+            ],
+            [
+              "Candidate_B",
+              0.1857
+            ],
+            [
+              "Candidate_F",
+              0.1935
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/YUGTO_2025/id_mapping/ThemeSync_identification-card_populated.svg"
+        }
+      ],
+      "base_trials": [
+        {
+          "poster": "ALAPS.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.2071,
+          "structure_error_all": 0.2053,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2411.9,
+            "layout_parsing": 637.71,
+            "stylistic_markers": 2235.45,
+            "instantiation": 0.14,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.44,
+            "ranking": 949.27,
+            "rendering": 128.38,
+            "serialization": 0.28,
+            "total": 6363.56
+          },
+          "latency_total": 6363.56,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1394,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0007,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1394
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1546
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ],
+            [
+              "Candidate_B",
+              0.1856
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ALAPS/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "AQUA-ASK_2026.png",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0832,
+          "structure_error_all": 0.0812,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 4277.8,
+            "layout_parsing": 1014.22,
+            "stylistic_markers": 17215.29,
+            "instantiation": 0.26,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.77,
+            "ranking": 850.52,
+            "rendering": 206.32,
+            "serialization": 0.25,
+            "total": 23565.43
+          },
+          "latency_total": 23565.43,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/AQUA-ASK_2026/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "EDUKWELA.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0341,
+          "structure_error_all": 0.0349,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 5422.56,
+            "layout_parsing": 636.64,
+            "stylistic_markers": 1651.2,
+            "instantiation": 0.19,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.73,
+            "ranking": 1017.59,
+            "rendering": 177.39,
+            "serialization": 0.33,
+            "total": 8906.62
+          },
+          "latency_total": 8906.62,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ],
+            [
+              "Candidate_B",
+              0.1978
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/EDUKWELA/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "HALUBILO_2025.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1752,
+          "structure_error_all": 0.1765,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 3832.59,
+            "layout_parsing": 630.94,
+            "stylistic_markers": 2091.75,
+            "instantiation": 0.15,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.46,
+            "ranking": 1025.24,
+            "rendering": 221.67,
+            "serialization": 0.36,
+            "total": 7803.15
+          },
+          "latency_total": 7803.15,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1387,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0003,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1387
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1534
+            ],
+            [
+              "Candidate_B",
+              0.1855
+            ],
+            [
+              "Candidate_F",
+              0.1855
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/HALUBILO_2025/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "HALUBILO_2026.png",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0879,
+          "structure_error_all": 0.0892,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 4752.61,
+            "layout_parsing": 844.7,
+            "stylistic_markers": 8882.78,
+            "instantiation": 0.15,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.45,
+            "ranking": 1193.14,
+            "rendering": 235.97,
+            "serialization": 0.31,
+            "total": 15910.12
+          },
+          "latency_total": 15910.12,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1385,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0002,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1385
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.1481
+            ],
+            [
+              "Candidate_A",
+              0.1574
+            ],
+            [
+              "Candidate_B",
+              0.1889
+            ],
+            [
+              "Candidate_F",
+              0.1898
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/HALUBILO_2026/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "KINAADMAN.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1463,
+          "structure_error_all": 0.1447,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 4445.0,
+            "layout_parsing": 895.45,
+            "stylistic_markers": 800.4,
+            "instantiation": 0.19,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.55,
+            "ranking": 932.21,
+            "rendering": 133.07,
+            "serialization": 0.22,
+            "total": 7207.09
+          },
+          "latency_total": 7207.09,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.155,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0111,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.155
+            ],
+            [
+              "Candidate_C",
+              0.1646
+            ],
+            [
+              "Candidate_E",
+              0.1646
+            ],
+            [
+              "Candidate_A",
+              0.1695
+            ],
+            [
+              "Candidate_B",
+              0.1869
+            ],
+            [
+              "Candidate_F",
+              0.1884
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/KINAADMAN/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "MMCSPC_2025.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0827,
+          "structure_error_all": 0.0827,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 6426.7,
+            "layout_parsing": 774.58,
+            "stylistic_markers": 1720.53,
+            "instantiation": 0.21,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.51,
+            "ranking": 1023.93,
+            "rendering": 175.03,
+            "serialization": 0.36,
+            "total": 10121.86
+          },
+          "latency_total": 10121.86,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.141,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0018,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.141
+            ],
+            [
+              "Candidate_E",
+              0.1498
+            ],
+            [
+              "Candidate_C",
+              0.1499
+            ],
+            [
+              "Candidate_A",
+              0.1562
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ],
+            [
+              "Candidate_B",
+              0.1855
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/MMCSPC_2025/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "ORGBIT_2026.png",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1172,
+          "structure_error_all": 0.1152,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 7553.98,
+            "layout_parsing": 812.03,
+            "stylistic_markers": 2852.41,
+            "instantiation": 0.17,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.48,
+            "ranking": 1449.08,
+            "rendering": 256.83,
+            "serialization": 0.36,
+            "total": 12925.36
+          },
+          "latency_total": 12925.36,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1386,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0002,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1386
+            ],
+            [
+              "Candidate_C",
+              0.1482
+            ],
+            [
+              "Candidate_E",
+              0.1483
+            ],
+            [
+              "Candidate_A",
+              0.1531
+            ],
+            [
+              "Candidate_F",
+              0.1856
+            ],
+            [
+              "Candidate_B",
+              0.1861
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ORGBIT_2026/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "ORSEM_2025.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0429,
+          "structure_error_all": 0.0421,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 3897.4,
+            "layout_parsing": 549.1,
+            "stylistic_markers": 1177.0,
+            "instantiation": 0.2,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.6,
+            "ranking": 939.65,
+            "rendering": 251.99,
+            "serialization": 0.42,
+            "total": 6816.34
+          },
+          "latency_total": 6816.34,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_F",
+              0.1874
+            ],
+            [
+              "Candidate_B",
+              0.1876
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ORSEM_2025/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "PASALABAT.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.136,
+          "structure_error_all": 0.1344,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 3850.41,
+            "layout_parsing": 963.75,
+            "stylistic_markers": 1833.67,
+            "instantiation": 0.13,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.46,
+            "ranking": 967.15,
+            "rendering": 210.24,
+            "serialization": 0.34,
+            "total": 7826.14
+          },
+          "latency_total": 7826.14,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_B",
+              0.19
+            ],
+            [
+              "Candidate_F",
+              0.2009
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/PASALABAT/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SEARCH_SSC_2025.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0935,
+          "structure_error_all": 0.0927,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2292.11,
+            "layout_parsing": 588.93,
+            "stylistic_markers": 1585.6,
+            "instantiation": 0.15,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.51,
+            "ranking": 919.76,
+            "rendering": 170.63,
+            "serialization": 0.32,
+            "total": 5558.01
+          },
+          "latency_total": 5558.01,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ],
+            [
+              "Candidate_B",
+              0.1866
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SEARCH_SSC_2025/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SEARCH_SSC_2026.png",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0772,
+          "structure_error_all": 0.0764,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 4577.42,
+            "layout_parsing": 1248.99,
+            "stylistic_markers": 3790.46,
+            "instantiation": 0.2,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.58,
+            "ranking": 969.98,
+            "rendering": 228.67,
+            "serialization": 0.3,
+            "total": 10816.6
+          },
+          "latency_total": 10816.6,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1393,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0007,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1393
+            ],
+            [
+              "Candidate_C",
+              0.1484
+            ],
+            [
+              "Candidate_E",
+              0.1487
+            ],
+            [
+              "Candidate_A",
+              0.1542
+            ],
+            [
+              "Candidate_B",
+              0.1858
+            ],
+            [
+              "Candidate_F",
+              0.1866
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SEARCH_SSC_2026/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SIKLAB.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.2063,
+          "structure_error_all": 0.205,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 5349.79,
+            "layout_parsing": 726.79,
+            "stylistic_markers": 1408.37,
+            "instantiation": 0.19,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.53,
+            "ranking": 1174.31,
+            "rendering": 267.35,
+            "serialization": 0.35,
+            "total": 8927.67
+          },
+          "latency_total": 8927.67,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1395,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0008,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1395
+            ],
+            [
+              "Candidate_E",
+              0.1489
+            ],
+            [
+              "Candidate_C",
+              0.1495
+            ],
+            [
+              "Candidate_A",
+              0.1543
+            ],
+            [
+              "Candidate_B",
+              0.1865
+            ],
+            [
+              "Candidate_F",
+              0.1865
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SIKLAB/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "ULAYAW.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.3944,
+          "structure_error_all": 0.3968,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 6056.83,
+            "layout_parsing": 797.61,
+            "stylistic_markers": 5900.52,
+            "instantiation": 0.15,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.45,
+            "ranking": 968.86,
+            "rendering": 238.02,
+            "serialization": 0.31,
+            "total": 13962.75
+          },
+          "latency_total": 13962.75,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.142,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0025,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.142
+            ],
+            [
+              "Candidate_E",
+              0.1502
+            ],
+            [
+              "Candidate_C",
+              0.1511
+            ],
+            [
+              "Candidate_A",
+              0.1556
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ],
+            [
+              "Candidate_B",
+              0.1865
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ULAYAW/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "YUGTO_2025.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1839,
+          "structure_error_all": 0.1823,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 5298.6,
+            "layout_parsing": 755.11,
+            "stylistic_markers": 3090.08,
+            "instantiation": 0.16,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.51,
+            "ranking": 1370.93,
+            "rendering": 252.0,
+            "serialization": 0.28,
+            "total": 10767.67
+          },
+          "latency_total": 10767.67,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1398,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.001,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1398
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.1484
+            ],
+            [
+              "Candidate_A",
+              0.1545
+            ],
+            [
+              "Candidate_B",
+              0.1855
+            ],
+            [
+              "Candidate_F",
+              0.1855
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/YUGTO_2025/id_baseline/ThemeSync_identification-card_populated.svg"
+        }
+      ]
+    }
+  }
+}

@@ -181,7 +181,10 @@ def _palette_from_centroids(centroids: list) -> dict:
             "accent":     "#D4AF37",   # Metallic Gold
             "background": "#FDFFFF",   # Crisp Ivory White
             "card_bg":    "#FFFFFF",
-            "muted":      "#5A6A80"
+            "muted":      "#5A6A80",
+            "panel":      "#FFFFFF",
+            "band":       "#8A6D12",
+            "card_dark":  "#101624",
         }
 
     entries = sorted(
@@ -215,12 +218,26 @@ def _palette_from_centroids(centroids: list) -> dict:
     muted_hex = _ensure_contrast(
         _muted_variant(primary_hex, background_is_light=lightest_l >= 128), background_hex, 4.5)
 
+    # The most saturated centroid overall, when it is genuinely colourful,
+    # makes a stronger accent (bands, rules, pill outlines) than a
+    # mid-lightness one: vivid posters otherwise came out grey or beige.
+    most_chromatic = max(entries, key=lambda e: e[1])
+    if most_chromatic[1] >= 25.0:
+        accent_hex = most_chromatic[2]
+
     return {
         "primary":    primary_hex,
         "accent":     accent_hex,
         "background": background_hex,
         "card_bg":    "#FFFFFF",
         "muted":      muted_hex,
+        # Certificate panel: near-white carrying a hint of the poster's hue.
+        "panel":      _lighten(background_hex, 0.82),
+        # Solid bands (banner, role band): the accent, deepened until white
+        # text on it reaches 4.5:1.
+        "band":       _ensure_contrast(accent_hex, "#FFFFFF", 4.5),
+        # An event-ID card on a dark master: the darkest centroid, deepened.
+        "card_dark":  _rgb01_to_hex(tuple(c * 0.55 for c in _hex_to_rgb01(entries[0][2]))),
     }
 
 
@@ -252,9 +269,35 @@ _DEFAULT_ID_MOCK = {
 }
 
 
+def default_content(domain: str) -> dict:
+    """The sample content a format renders with when no payload is given."""
+    return dict(_DEFAULT_ID_MOCK if domain == "identification_card" else _DEFAULT_CERT_MOCK)
+
+
 # ---------------------------------------------------------------------------
 # Main Aesthetic SVG Renderer
 # ---------------------------------------------------------------------------
+
+# Figure 2's "User Injected" administrative typography (Table 1: brand
+# typographic compliance), validated before orchestration by
+# typography_schema.validate_typography.
+DEFAULT_TYPOGRAPHY = {
+    "family": "Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    "weight": 700,
+    "base_size": 48,
+}
+
+
+def _hex_mean(image, bbox) -> str:
+    """Mean colour of the composed background under a box, as hex."""
+    x, y, w, h = bbox
+    x0, y0 = max(0, int(x)), max(0, int(y))
+    x1, y1 = min(image.width, int(x + w)), min(image.height, int(y + h))
+    if x1 <= x0 or y1 <= y0:
+        return "#FFFFFF"
+    r, g, b = image.crop((x0, y0, x1, y1)).resize((1, 1), Image.BOX).getpixel((0, 0))[:3]
+    return f"#{r:02X}{g:02X}{b:02X}"
+
 
 class AestheticSVGRenderer:
     def __init__(
@@ -268,6 +311,8 @@ class AestheticSVGRenderer:
         font_family: str = None,
         logo_image_path: str = None,
         logo_row_paths: list = None,
+        style_kit: dict = None,
+        typography: dict = None,
     ):
         self.canvas_w = float(canvas_width)
         self.canvas_h = float(canvas_height)
@@ -281,21 +326,33 @@ class AestheticSVGRenderer:
         self.logo_row = [img for img in (_load_image(p) for p in (logo_row_paths or []))
                          if img[0]]
 
-        # Palette and fonts
+        # Stage 0c's style kit: text-free master background, motifs, and the
+        # event's title artwork (stylistic_markers.build_style_kit). Without
+        # one (no master image), outputs fall back to the flat bordered card.
+        self.style_kit = style_kit or {}
+        wordmark = self.style_kit.get("wordmark")
+        self.wordmark_uri = _load_image(wordmark["path"], max_side=1024)[0] if wordmark else None
+        self._motif_uris = {}
+        self._raster = None       # composed background, set per render
+        self._panel = None
+        self._layers = None       # the archetype's frame (decor.frame_layers), per render
+        self._align = "center"    # the archetype's alignment, per render
+
+        # Palette and typography
         self.palette = _palette_from_centroids(color_centroids)
-        # Table 1 (p. 49): administrative_typography (font_family) is a
-        # user-injected constraint, not machine-extracted — caller (e.g. the
-        # dashboard's "User Injected" panel) may override the default stack.
-        self.font_family = font_family or \
-            "Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        # Table 1 (p. 49): administrative typography is a user-injected
+        # constraint, not machine-extracted — font family, weight and the
+        # baseline size the type scale is built on.
+        self.typography = dict(DEFAULT_TYPOGRAPHY)
+        self.typography.update({k: v for k, v in (typography or {}).items() if v})
+        if font_family:
+            self.typography["family"] = font_family
+        self.font_family = self.typography["family"]
+        self.heading_weight = str(int(self.typography["weight"]))
+        self.base_size = float(self.typography["base_size"])
 
         # Content mapping
-        if mock_data:
-            self.mock_data = mock_data
-        elif domain_context == "identification_card":
-            self.mock_data = dict(_DEFAULT_ID_MOCK)
-        else:
-            self.mock_data = dict(_DEFAULT_CERT_MOCK)
+        self.mock_data = mock_data or default_content(domain_context)
 
     def _clean_node_id(self, node_id: str) -> str:
         return self.mock_data.get(
@@ -304,50 +361,191 @@ class AestheticSVGRenderer:
         )
 
     def _wrap_text_lines(self, text: str, max_chars: int) -> list:
+        max_chars = max(8, int(max_chars))
         if "\n" in text:
-            raw_lines = text.split("\n")
             lines = []
-            for rl in raw_lines:
+            for rl in text.split("\n"):
                 wrapped = textwrap.wrap(rl, width=max_chars)
                 lines.extend(wrapped if wrapped else [""])
             return lines
         return textwrap.wrap(text, width=max_chars) if len(text) > max_chars else [text]
 
+    def _fit_wrapped(self, text: str, w: float, h: float, size: float,
+                     min_size: float = 10.0, em: float = 0.58, line: float = 1.35) -> tuple:
+        """Largest size <= `size` at which `text`, wrapped to width `w`,
+        fits `h` — so long citations shrink instead of spilling out of
+        their box."""
+        while True:
+            lines = self._wrap_text_lines(text, w / (size * em))
+            if len(lines) * size * line <= h or size <= min_size:
+                return lines, size
+            size = max(min_size, size * 0.92)
+
+    # ------------------------------------------------------------------
+    # Background layer
+    # ------------------------------------------------------------------
+
     def _build_border_elements(self) -> list:
-        """Renders a double border with corner rosettes and subtle inner margin."""
+        """The flat bordered card used when no master image is available:
+        palette background, double border, corner accents."""
         p = self.palette["primary"]
         a = self.palette["accent"]
         m1, m2 = 18.0, 26.0
-        
         elements = [
             f'<rect width="{self.canvas_w}" height="{self.canvas_h}" fill="{self.palette["background"]}" />',
-            # Outer primary border
             f'<rect x="{m1}" y="{m1}" width="{self.canvas_w - 2*m1}" height="{self.canvas_h - 2*m1}" fill="none" stroke="{p}" stroke-width="2.5" rx="3" />',
-            # Inner accent pinstripe
             f'<rect x="{m2}" y="{m2}" width="{self.canvas_w - 2*m2}" height="{self.canvas_h - 2*m2}" fill="none" stroke="{a}" stroke-width="1.2" rx="2" />',
         ]
-        
-        # Corner accent flourishes
         corner_sz = 10.0
-        corners = [
-            (m1, m1),
-            (self.canvas_w - m1 - corner_sz, m1),
-            (m1, self.canvas_h - m1 - corner_sz),
-            (self.canvas_w - m1 - corner_sz, self.canvas_h - m1 - corner_sz),
-        ]
-        for cx, cy in corners:
+        for cx, cy in [(m1, m1), (self.canvas_w - m1 - corner_sz, m1),
+                       (m1, self.canvas_h - m1 - corner_sz),
+                       (self.canvas_w - m1 - corner_sz, self.canvas_h - m1 - corner_sz)]:
             elements.append(f'<rect x="{cx}" y="{cy}" width="{corner_sz}" height="{corner_sz}" fill="{a}" />')
-            
         return elements
+
+    def _background_elements(self, decor_nodes: list, content_nodes: list = (),
+                             archetype: dict = None) -> list:
+        """
+        The master's text-free background scaled to cover the canvas and the
+        archetype's frame (decor.frame_layers): the certificate panel with
+        its double border, a split layout's art column, a header banner, an
+        event-ID card. Also composes the same stack as a raster (plus motifs)
+        for choosing legible text colours.
+        """
+        archetype = archetype or {}
+        self._align = archetype.get("align", "center")
+        background = self.style_kit.get("background")
+        if not background:
+            self._raster, self._panel, self._layers = None, None, None
+            return self._build_border_elements()
+
+        from decor import (PANEL_OPACITY, WATERMARK_OPACITY, art_image_box, background_is_dark,
+                           compose_background, frame_layers, watermark_box)
+        from stylistic_markers import cover
+
+        W, H = self.canvas_w, self.canvas_h
+        layers = frame_layers(self.domain, archetype.get("frame", "panel"), W, H, list(content_nodes),
+                              self.palette, dark=background_is_dark(background))
+        self._layers, self._panel = layers, layers["panel"]
+        panel_hex = self.palette["panel"]
+        wordmark = self.style_kit.get("wordmark")
+        art = wordmark or (self.style_kit.get("motifs") or [None])[0]
+        self._raster = compose_background(background, int(W), int(H), decor_nodes,
+                                          panel_rgb=tuple(int(panel_hex[i:i + 2], 16) for i in (1, 3, 5)),
+                                          layers=layers, watermark=wordmark, art=art)
+        with Image.open(background) as bg:
+            layer = cover(bg.convert("RGB"), max(1, int(W // 2)), max(1, int(H // 2)))
+        buf = io.BytesIO()
+        layer.save(buf, format="JPEG", quality=90)
+        uri = "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
+        elements = [f'<image x="0" y="0" width="{W}" height="{H}" preserveAspectRatio="none" '
+                    f'xlink:href="{uri}" />']
+        p, a = self.palette["primary"], self.palette["accent"]
+        if self._panel and layers["panel_style"] == "panel":
+            x, y, w, h = self._panel
+            elements += [
+                f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="14" '
+                f'fill="{panel_hex}" fill-opacity="{PANEL_OPACITY}" />',
+                f'<rect x="{x + 10:.1f}" y="{y + 10:.1f}" width="{w - 20:.1f}" height="{h - 20:.1f}" '
+                f'rx="8" fill="none" stroke="{p}" stroke-width="2" />',
+                f'<rect x="{x + 17:.1f}" y="{y + 17:.1f}" width="{w - 34:.1f}" height="{h - 34:.1f}" '
+                f'rx="5" fill="none" stroke="{a}" stroke-width="1.2" />',
+            ]
+        elif self._panel:  # event-ID card
+            x, y, w, h = self._panel
+            elements.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="22" '
+                            f'fill="{layers["panel_fill"]}" fill-opacity="{layers["panel_opacity"]}" '
+                            f'stroke="{a}" stroke-width="2" />')
+        for o in layers["overlays"]:
+            x, y, w, h = o["box"]
+            elements.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
+                            f'rx="{o.get("rx", 0)}" fill="{o["fill"]}" fill-opacity="{o["opacity"]}" />')
+        if layers["watermark"] and self._panel and wordmark and self.wordmark_uri:
+            # The event's title artwork, faint, behind the certificate text.
+            wx, wy, ww, wh = watermark_box(self._panel, wordmark["aspect"])
+            elements.append(f'<image x="{wx:.1f}" y="{wy:.1f}" width="{ww:.1f}" height="{wh:.1f}" '
+                            f'preserveAspectRatio="xMidYMid meet" opacity="{WATERMARK_OPACITY}" '
+                            f'xlink:href="{self.wordmark_uri}" />')
+        if layers["art_box"] and art:
+            # A split layout's art column shows the title artwork (or the top
+            # motif) at full strength on the master's own background.
+            uri = self.wordmark_uri if art is wordmark else _load_image(art["path"], max_side=1024)[0]
+            if uri:
+                ax, ay, aw, ah = art_image_box(layers["art_box"], art["aspect"])
+                elements.append(f'<image x="{ax:.1f}" y="{ay:.1f}" width="{aw:.1f}" height="{ah:.1f}" '
+                                f'preserveAspectRatio="xMidYMid meet" xlink:href="{uri}" />')
+        return elements
+
+    def _render_decor(self, node: dict) -> list:
+        """A motif from the master layout, mirrored when placed on the right
+        so pairs face inward."""
+        path = node.get("motif_path")
+        if path not in self._motif_uris:
+            self._motif_uris[path] = _load_image(path, max_side=512)[0] if path else None
+        uri = self._motif_uris[path]
+        if not uri:
+            return []
+        x, y, w, h = node["bbox"]
+        image = (f'<image x="0" y="0" width="{w:.1f}" height="{h:.1f}" '
+                 f'preserveAspectRatio="xMidYMid meet" xlink:href="{uri}" />')
+        if node.get("flip"):
+            return [f'<g transform="translate({x + w:.1f},{y:.1f}) scale(-1,1)">{image}</g>']
+        return [f'<g transform="translate({x:.1f},{y:.1f})">{image}</g>']
+
+    def _text_fill(self, bbox: list, preferred: str) -> tuple:
+        """
+        (fill colour, needs shadow) for text over the composed background:
+        the palette colour when it reaches 4.5:1 against what's actually
+        under the text (WCAG 2.1 SC 1.4.3), else white with a soft shadow on
+        darker art, else the palette colour pushed to 4.5:1.
+        """
+        if self._raster is None:
+            return preferred, False
+        under = _hex_mean(self._raster, bbox)
+        if _contrast_ratio(preferred, under) >= 4.5:
+            return preferred, False
+        if _contrast_ratio("#FFFFFF", under) >= 2.2:
+            return "#FFFFFF", True
+        return _ensure_contrast(preferred, under, 4.5), False
+
+    def _text_elements(self, box: list, lines: list, size: float,
+                       weight: str, fill: str, shadow: bool, spacing: str = "0",
+                       style: str = "normal", line: float = 1.35) -> list:
+        """Lines of text vertically centred in the node's box — centred on
+        it, or flush with its left edge in a left-aligned archetype — with an
+        offset dark copy underneath when `shadow` (a text shadow every SVG
+        renderer, Cairo included, draws the same way)."""
+        x, top, w, h = box
+        if self._align == "left":
+            tx, anchor = x, "start"
+        else:
+            tx, anchor = x + w / 2.0, "middle"
+        line_h = size * line
+        start = top + (h - len(lines) * line_h) / 2.0 + size * 0.85
+        out = []
+        for i, text in enumerate(lines):
+            y = start + i * line_h
+            attrs = (f'font-family="{self.font_family}" font-size="{size:.1f}" font-weight="{weight}" '
+                     f'font-style="{style}" letter-spacing="{spacing}" text-anchor="{anchor}"')
+            if shadow:
+                out.append(f'<text x="{tx + size * 0.05:.1f}" y="{y + size * 0.07:.1f}" {attrs} '
+                           f'fill="#000000" fill-opacity="0.45">{escape(text)}</text>')
+            out.append(f'<text x="{tx:.1f}" y="{y:.1f}" {attrs} fill="{fill}">{escape(text)}</text>')
+        return out
+
+    # ------------------------------------------------------------------
+    # Nodes
+    # ------------------------------------------------------------------
 
     def _render_logo(self, x, y, w, h, content) -> list:
         """Places the real logo artwork, fitted inside the node's bbox without
         distortion; falls back to the drawn seal badge when none is available."""
         if not self.logo_data_uri:
             return self._render_logo_badge(x, y, w, h, content)
+        align = "xMinYMid" if self._align == "left" else "xMidYMid"
         return [
             f'<image x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
-            f'preserveAspectRatio="xMidYMid meet" xlink:href="{self.logo_data_uri}" />'
+            f'preserveAspectRatio="{align} meet" xlink:href="{self.logo_data_uri}" />'
         ]
 
     def _render_logo_row(self, x, y, w, h, content) -> list:
@@ -361,7 +559,7 @@ class AestheticSVGRenderer:
         natural_w = sum(h * aspect for _, aspect in row) + gap * (len(row) - 1)
         scale = min(1.0, w / natural_w) if natural_w > 0 else 1.0
         logo_h = h * scale
-        cursor = x + (w - natural_w * scale) / 2.0
+        cursor = x if self._align == "left" else x + (w - natural_w * scale) / 2.0
         top = y + (h - logo_h) / 2.0
         elements = []
         for uri, aspect in row:
@@ -391,16 +589,20 @@ class AestheticSVGRenderer:
 
     def _render_role_band(self, x, y, w, h, content) -> list:
         """Event-ID role (ORGANIZER, PARTICIPANT...): light caps on a solid
-        band in the primary colour, like the sample IDs' footer bands."""
+        band in the poster's accent colour, deepened until white text on it
+        reaches 4.5:1 — like the sample IDs' footer bands."""
         text = content.upper()
+        band = self.palette["band"]
+        rx = 6
+        if self._layers and self._layers.get("role_band") == "full":
+            x, w, rx = 0.0, self.canvas_w, 0  # edge to edge, like the samples' footer bands
         font_size = _fit_font_size(text, max_width=w * 0.86, max_size=h * 0.5, letter_spacing=4.0,
                                    em_per_glyph=0.72)
         return [
-            f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="6" '
-            f'fill="{self.palette["primary"]}" />',
+            f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="{rx}" fill="{band}" />',
             f'<text x="{x + w / 2.0:.1f}" y="{y + h / 2.0:.1f}" font-family="{self.font_family}" '
             f'font-size="{font_size:.1f}" font-weight="bold" letter-spacing="4.0" '
-            f'fill="{self.palette["card_bg"]}" text-anchor="middle" dominant-baseline="central">{escape(text)}</text>',
+            f'fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">{escape(text)}</text>',
         ]
 
     def _render_logo_badge(self, x, y, w, h, content) -> list:
@@ -410,17 +612,12 @@ class AestheticSVGRenderer:
         cx = x + (w / 2.0)
         cy = y + (h / 2.0)
         r = min(w, h) * 0.42
-        # Keep the label inside the inner ring: shrink the font until the
-        # estimated text width fits ~1.5r (was a fixed r*0.4, which let
-        # longer labels like "CSPC LOGO" spill past the circle).
         font_size = _fit_font_size(content, max_width=r * 1.5, max_size=r * 0.4, letter_spacing=1.5)
-
-        elements = [
+        return [
             f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{self.palette["card_bg"]}" stroke="{a}" stroke-width="2.5" />',
             f'<circle cx="{cx}" cy="{cy}" r="{r - 4}" fill="none" stroke="{p}" stroke-width="1" stroke-dasharray="3,3" />',
             f'<text x="{cx}" y="{cy}" font-family="{self.font_family}" font-weight="bold" font-size="{font_size:.1f}" fill="{p}" text-anchor="middle" dominant-baseline="central" letter-spacing="1.5">{escape(content)}</text>'
         ]
-        return elements
 
     def _render_image_node(self, x, y, w, h, node_id, content) -> list:
         """Dispatches an image node to the renderer for its role, by schema name."""
@@ -432,10 +629,17 @@ class AestheticSVGRenderer:
         return self._render_logo_badge(x, y, w, h, content)
 
     def _render_text_node(self, x, y, w, h, node_id, content) -> list:
-        """Renders a text node with proportional typography and multi-line wrapping."""
+        """
+        Renders a text node. Sizes follow a type scale on the user-injected
+        base size B (Figure 2), each capped by what fits the node's box:
+        certificate title 1.1 B, recipient name 1.0 B, organisation,
+        presentation line and citation 0.36 B, date/ID 0.3 B; event-ID
+        header 0.34 B, details 0.38 B, title up to 1.8 B.
+        """
+        B = self.base_size
         p = self.palette["primary"]
-        cx = x + (w / 2.0)
-        elements = []
+        muted = self.palette["muted"]
+        bbox = [x, y, w, h]
 
         # Event-ID nodes with their own shape treatment
         if "Participant_Name" in node_id:
@@ -443,124 +647,147 @@ class AestheticSVGRenderer:
         if "Participant_Role" in node_id:
             return self._render_role_band(x, y, w, h, content)
 
-        # Determine typography style based on hierarchy
         if "Event_Title" in node_id:
-            # Dominant event wordmark: heavy caps, up to 2 lines, sized to fill
-            # the block (the samples' largest element).
+            if self.wordmark_uri:
+                # The event's own title artwork, cut from the master layout.
+                return [f'<image x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
+                        f'preserveAspectRatio="xMidYMid meet" xlink:href="{self.wordmark_uri}" />']
             text = content.upper()
             lines = [text] if len(text) <= 12 else _balanced_two_lines(text)
-            longest = max(lines, key=len)
-            font_size = _fit_font_size(longest, max_width=w * 0.95,
-                                       max_size=h / (len(lines) * 1.35), letter_spacing=1.0,
-                                       em_per_glyph=0.75)
-            font_weight = "900"
-            letter_spacing = "1.0"
-            fill = p
-            font_style = "normal"
-        elif "Organization_Header" in node_id:
+            size = _fit_font_size(max(lines, key=len), max_width=w * 0.95,
+                                  max_size=min(h / (len(lines) * 1.35), 1.8 * B),
+                                  letter_spacing=1.0, em_per_glyph=0.75)
+            fill, shadow = self._text_fill(bbox, p)
+            return self._text_elements(bbox, lines, size, "900", fill, shadow, spacing="1.0")
+
+        if "Organization_Header" in node_id:
             lines = self._wrap_text_lines(content.upper(), max_chars=60)
-            font_size = min(15.0, h / (len(lines) * 1.35))
-            font_weight = "600"
-            letter_spacing = "1.5"
-            fill = self.palette["muted"]
-            font_style = "normal"
-        elif "Event_Details" in node_id:
-            font_size = max(12.0, min(17.0, h * 0.34))
-            font_weight = "600"
-            letter_spacing = "0.8"
-            lines = self._wrap_text_lines(content, max_chars=int(w / (font_size * 0.6)))
-            fill = self.palette["muted"]
-            font_style = "normal"
-        elif "Organization" in node_id or "Issuing" in node_id:
-            font_size = max(13.0, min(18.0, h * 0.4))
-            font_weight = "600"
-            letter_spacing = "2.0"
-            lines = self._wrap_text_lines(content.upper(), max_chars=int(w / (font_size * 0.65)))
-            fill = self.palette["muted"]
-            font_style = "normal"
-        elif "Title" in node_id and "Certificate" in node_id:
-            font_size = max(24.0, min(42.0, h * 0.55))
-            font_weight = "bold"
-            letter_spacing = "1.0"
-            lines = self._wrap_text_lines(content, max_chars=int(w / (font_size * 0.6)))
-            fill = p
-            font_style = "normal"
-        elif "Presentation" in node_id:
-            font_size = max(13.0, min(16.0, h * 0.35))
-            font_weight = "normal"
-            letter_spacing = "0.5"
-            lines = self._wrap_text_lines(content, max_chars=int(w / (font_size * 0.6)))
-            fill = self.palette["muted"]
-            font_style = "italic"
-        elif "Student_Name" in node_id or "Name" in node_id:
-            font_size = max(22.0, min(36.0, h * 0.5))
-            font_weight = "bold"
-            letter_spacing = "0.8"
-            lines = self._wrap_text_lines(content, max_chars=int(w / (font_size * 0.65)))
-            fill = p
-            font_style = "normal"
-        elif "Citation" in node_id:
-            font_size = max(12.0, min(15.0, h * 0.3))
-            font_weight = "normal"
-            letter_spacing = "0.2"
-            max_c = max(35, int(w / (font_size * 0.55)))
-            lines = self._wrap_text_lines(content, max_chars=max_c)
-            fill = "#334155"
-            font_style = "normal"
-        else: # Date, ID, etc.
-            font_size = max(11.0, min(14.0, h * 0.35))
-            font_weight = "normal"
-            letter_spacing = "0.5"
-            lines = self._wrap_text_lines(content, max_chars=int(w / (font_size * 0.6)))
-            fill = self.palette["muted"]
-            font_style = "normal"
+            size = max(9.0, min(0.34 * B, h / (len(lines) * 1.35)))
+            fill, shadow = self._text_fill(bbox, muted)
+            return self._text_elements(bbox, lines, size, "600", fill, shadow, spacing="1.5")
 
-        line_height = font_size * 1.35
-        total_block_h = len(lines) * line_height
-        start_y = y + (h - total_block_h) / 2.0 + (font_size * 0.85)
+        if "Event_Details" in node_id:
+            lines, size = self._fit_wrapped(content, w, h, max(11.0, min(0.38 * B, h * 0.42)))
+            fill, shadow = self._text_fill(bbox, muted)
+            return self._text_elements(bbox, lines, size, "600", fill, shadow, spacing="0.8")
 
-        for idx, line in enumerate(lines):
-            line_y = start_y + (idx * line_height)
-            elements.append(
-                f'<text x="{cx}" y="{line_y:.1f}" font-family="{self.font_family}" '
-                f'font-size="{font_size:.1f}" font-weight="{font_weight}" '
-                f'font-style="{font_style}" letter-spacing="{letter_spacing}" '
-                f'fill="{fill}" text-anchor="middle">{escape(line)}</text>'
-            )
+        if "Organization" in node_id or "Issuing" in node_id:
+            lines, size = self._fit_wrapped(content.upper(), w, h,
+                                            max(12.0, min(0.36 * B, h * 0.5)), em=0.66)
+            fill, shadow = self._text_fill(bbox, muted)
+            return self._text_elements(bbox, lines, size, "600", fill, shadow, spacing="2.0")
 
-        return elements
+        if "Title" in node_id and "Certificate" in node_id:
+            size = _fit_font_size(content, max_width=w * 0.95,
+                                  max_size=max(20.0, min(1.1 * B, h * 0.62)), letter_spacing=1.0)
+            fill, shadow = self._text_fill(bbox, p)
+            return self._text_elements(bbox, [content], size, self.heading_weight, fill, shadow,
+                                       spacing="1.0")
+
+        if "Presentation" in node_id:
+            lines, size = self._fit_wrapped(content, w, h, max(12.0, min(0.36 * B, h * 0.5)))
+            fill, shadow = self._text_fill(bbox, muted)
+            return self._text_elements(bbox, lines, size, "normal", fill, shadow,
+                                       spacing="0.5", style="italic")
+
+        if "Student_Name" in node_id or "Name" in node_id:
+            size = _fit_font_size(content, max_width=w * 0.95,
+                                  max_size=max(20.0, min(1.0 * B, h * 0.62)), letter_spacing=0.8,
+                                  em_per_glyph=0.66)
+            fill, shadow = self._text_fill(bbox, p)
+            return self._text_elements(bbox, [content], size, self.heading_weight, fill, shadow,
+                                       spacing="0.8")
+
+        if "Citation" in node_id:
+            lines, size = self._fit_wrapped(content, w, h, max(12.0, 0.36 * B), min_size=10.0, em=0.55)
+            fill, shadow = self._text_fill(bbox, _ensure_contrast("#334155", self.palette["panel"], 4.5))
+            return self._text_elements(bbox, lines, size, "normal", fill, shadow, spacing="0.2")
+
+        # Date, certificate ID, etc.
+        lines, size = self._fit_wrapped(content, w, h, max(11.0, min(0.3 * B, h * 0.5)))
+        fill, shadow = self._text_fill(bbox, muted)
+        return self._text_elements(bbox, lines, size, "normal", fill, shadow, spacing="0.5")
 
     def _render_signature_block(self, x, y, w, h, content) -> list:
-        """Renders an elegant signature line with signatory name and title on separate lines."""
-        p = self.palette["primary"]
+        """Renders a signature line with signatory name and title on separate lines."""
+        B = self.base_size
+        fill, shadow = self._text_fill([x, y, w, h], self.palette["primary"])
         cx = x + (w / 2.0)
         line_y = y + (h * 0.45)
-        elements = []
-
-        # Horizontal signature rule
-        elements.append(
-            f'<line x1="{x + 10}" y1="{line_y:.1f}" x2="{x + w - 10}" y2="{line_y:.1f}" '
-            f'stroke="{p}" stroke-width="1.2" opacity="0.85" />'
-        )
-
         parts = content.split("\n")
-        name = parts[0].strip() if len(parts) > 0 else content
+        name = parts[0].strip() if parts else content
         title = parts[1].strip() if len(parts) > 1 else ""
-
-        # Signatory Name (Bold)
-        elements.append(
-            f'<text x="{cx}" y="{line_y + 18:.1f}" font-family="{self.font_family}" '
-            f'font-size="13" font-weight="bold" fill="{p}" text-anchor="middle">{name}</text>'
-        )
-
-        # Signatory Title (Regular)
+        name_size = max(11.0, min(0.28 * B, h * 0.3))
+        elements = [
+            f'<line x1="{x + 10}" y1="{line_y:.1f}" x2="{x + w - 10}" y2="{line_y:.1f}" '
+            f'stroke="{fill}" stroke-width="1.2" opacity="0.85" />',
+            f'<text x="{cx:.1f}" y="{line_y + name_size * 1.35:.1f}" font-family="{self.font_family}" '
+            f'font-size="{name_size:.1f}" font-weight="bold" fill="{fill}" text-anchor="middle">{escape(name)}</text>',
+        ]
         if title:
+            muted, _ = self._text_fill([x, y, w, h], self.palette["muted"])
             elements.append(
-                f'<text x="{cx}" y="{line_y + 32:.1f}" font-family="{self.font_family}" '
-                f'font-size="11.5" font-weight="normal" fill="{self.palette["muted"]}" text-anchor="middle">{title}</text>'
+                f'<text x="{cx:.1f}" y="{line_y + name_size * 2.5:.1f}" font-family="{self.font_family}" '
+                f'font-size="{name_size * 0.88:.1f}" font-weight="normal" fill="{muted}" '
+                f'text-anchor="middle">{escape(title)}</text>'
             )
-
         return elements
+
+    # ------------------------------------------------------------------
+    # Output
+    # ------------------------------------------------------------------
+
+    def render_nodes(self, nodes: list, output_path: str, with_border: bool = True,
+                     archetype: dict = None) -> str:
+        """
+        Renders a solved layout to an SVG file: background layer and the
+        archetype's frame, motifs (decor nodes), then every content node.
+        Each node's elements are wrapped in <g data-node-id="..."> so the
+        Figure 3 canvas can select and move them. Returns the output path.
+        """
+        decor = [n for n in nodes if n.get("structural_class") == "decor"]
+        content_nodes = [n for n in nodes if n.get("structural_class") != "decor"]
+
+        if self.style_kit.get("background") or with_border:
+            svg_elements = self._background_elements(decor, content_nodes, archetype)
+        else:
+            self._raster, self._layers = None, None
+            self._align = (archetype or {}).get("align", "center")
+            svg_elements = [f'<rect width="{self.canvas_w}" height="{self.canvas_h}" '
+                            f'fill="{self.palette["background"]}" />']
+
+        def group(node, elements):
+            kind = node.get("structural_class", "text_node")
+            return ([f'<g data-node-id="{escape(node["node_id"])}" data-kind="{kind}">'] + elements + ['</g>']
+                    if elements else [])
+
+        for node in decor:
+            svg_elements.extend(group(node, self._render_decor(node)))
+
+        for node in content_nodes:
+            x, y, w, h = node['bbox']
+            node_id = node['node_id']
+            struct_class = node.get('structural_class', 'text_node')
+            content = self._clean_node_id(node_id)
+            if struct_class == "image_node":
+                elements = self._render_image_node(x, y, w, h, node_id, content)
+            elif struct_class == "repeating_group":
+                elements = self._render_signature_block(x, y, w, h, content)
+            else:
+                elements = self._render_text_node(x, y, w, h, node_id, content)
+            svg_elements.extend(group(node, elements))
+
+        svg_content = (
+            f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
+            f'viewBox="0 0 {int(self.canvas_w)} {int(self.canvas_h)}" '
+            f'width="{int(self.canvas_w)}" height="{int(self.canvas_h)}">\n'
+            + "\n".join(svg_elements)
+            + "\n</svg>"
+        )
+        os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
+        with open(output_path, "w") as f:
+            f.write(svg_content)
+        return output_path
 
     def render_layout(
         self,
@@ -572,43 +799,10 @@ class AestheticSVGRenderer:
         if not os.path.exists(json_filepath):
             print(f"Error: Layout file not found: {json_filepath}")
             return ""
-
         with open(json_filepath, "r") as f:
             nodes = json.load(f)
-
-        svg_elements = []
-
-        if with_border:
-            svg_elements.extend(self._build_border_elements())
-        else:
-            svg_elements.append(f'<rect width="{self.canvas_w}" height="{self.canvas_h}" fill="{self.palette["background"]}" />')
-
-        # Render each semantic node
-        for node in nodes:
-            x, y, w, h = node['bbox']
-            node_id = node['node_id']
-            struct_class = node.get('structural_class', 'text_node')
-            content = self._clean_node_id(node_id)
-
-            if struct_class == "image_node":
-                svg_elements.extend(self._render_image_node(x, y, w, h, node_id, content))
-            elif struct_class == "repeating_group":
-                svg_elements.extend(self._render_signature_block(x, y, w, h, content))
-            else:
-                svg_elements.extend(self._render_text_node(x, y, w, h, node_id, content))
-
-        svg_content = (
-            f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
-            f'viewBox="0 0 {int(self.canvas_w)} {int(self.canvas_h)}" '
-            f'width="{int(self.canvas_w)}" height="{int(self.canvas_h)}">\n'
-            + "\n".join(svg_elements)
-            + "\n</svg>"
-        )
-
         output_path = os.path.join(output_dir, f"{self.original_filename}_populated.svg")
-        with open(output_path, "w") as f:
-            f.write(svg_content)
-
+        self.render_nodes(nodes, output_path, with_border=with_border)
         print(f" -> Fully Populated Rendering Complete: {output_path}")
         return output_path
 

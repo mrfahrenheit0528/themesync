@@ -1,359 +1,2990 @@
 {
-  "run_id": "20260928_175521",
-  "timestamp": "2026-09-28T17:55:21.678585",
+  "run_id": "20261006_144208",
+  "timestamp": "2026-10-06T14:42:08.456241",
   "config": {
-    "trials": 10,
+    "masters": 16,
+    "posters_dir": "data/raw/phase4_posters",
     "domains": [
       "certificate",
       "id"
     ],
-    "population": 5
+    "population": 6,
+    "gnn_weights": "themesync_gnn_v3.pth",
+    "yolo_weights": "themesync_yolo_v5.pt",
+    "conditions": [
+      "gnn",
+      "mapping",
+      "baseline"
+    ],
+    "trial_unit": "one master layout (the pipeline is deterministic per input)"
   },
   "results": {
     "certificate": {
       "domain_label": "Academic Certificate (4:3)",
       "gnn_trials": [
         {
+          "poster": "ANTI_HAZING_LAW.jpg",
+          "condition": "gnn",
           "use_gnn": true,
+          "structure_error": 0.079,
+          "structure_error_all": 0.0775,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
           "timings_ms": {
-            "instantiation": 0.28,
-            "gnn_inference": 660.46,
-            "csp_resolution": 2.06,
-            "ranking": 12.64,
-            "total": 675.45
-          },
-          "mean_iou": 0.1682,
-          "C_total": 1.2029,
-          "P_align": 0.0077,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 675.45
-        },
-        {
-          "use_gnn": true,
-          "timings_ms": {
-            "instantiation": 0.14,
-            "gnn_inference": 117.59,
-            "csp_resolution": 1.92,
-            "ranking": 12.03,
-            "total": 131.68
-          },
-          "mean_iou": 0.1682,
-          "C_total": 1.2029,
-          "P_align": 0.0077,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 131.68
-        },
-        {
-          "use_gnn": true,
-          "timings_ms": {
+            "template_ingestion": 2506.5,
+            "layout_parsing": 823.46,
+            "stylistic_markers": 2282.88,
             "instantiation": 0.13,
-            "gnn_inference": 14.95,
-            "csp_resolution": 1.94,
-            "ranking": 12.21,
-            "total": 29.23
+            "gnn_inference": 37.82,
+            "csp_resolution": 0.93,
+            "ranking": 1619.92,
+            "rendering": 282.26,
+            "serialization": 0.39,
+            "total": 7554.3
           },
-          "mean_iou": 0.1682,
-          "C_total": 1.2029,
-          "P_align": 0.0077,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
+          "latency_total": 7554.3,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0111,
           "num_nodes": 11,
-          "latency_total": 29.23
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0015
+            ],
+            [
+              "Candidate_B",
+              0.0758
+            ],
+            [
+              "Candidate_F",
+              0.0758
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ANTI_HAZING_LAW/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
         },
         {
+          "poster": "ARANTABAYAN.jpg",
+          "condition": "gnn",
           "use_gnn": true,
+          "structure_error": 0.013,
+          "structure_error_all": 0.0219,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
           "timings_ms": {
+            "template_ingestion": 529.87,
+            "layout_parsing": 214.72,
+            "stylistic_markers": 3490.32,
             "instantiation": 0.13,
-            "gnn_inference": 12.89,
-            "csp_resolution": 1.96,
-            "ranking": 13.79,
-            "total": 28.77
+            "gnn_inference": 10.52,
+            "csp_resolution": 1.06,
+            "ranking": 1177.7,
+            "rendering": 151.83,
+            "serialization": 0.33,
+            "total": 5576.48
           },
-          "mean_iou": 0.1682,
-          "C_total": 1.2029,
-          "P_align": 0.0077,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
+          "latency_total": 5576.48,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0007,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0007,
+          "P_legibility": 0.0,
+          "mean_iou": 0.5287,
           "num_nodes": 11,
-          "latency_total": 28.77
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0007
+            ],
+            [
+              "Candidate_D",
+              0.0007
+            ],
+            [
+              "Candidate_E",
+              0.0021
+            ],
+            [
+              "Candidate_C",
+              0.0116
+            ],
+            [
+              "Candidate_B",
+              0.0763
+            ],
+            [
+              "Candidate_F",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ARANTABAYAN/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
         },
         {
+          "poster": "CHS_BIRISTUHAN.jpg",
+          "condition": "gnn",
           "use_gnn": true,
+          "structure_error": 0.0384,
+          "structure_error_all": 0.0369,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
           "timings_ms": {
-            "instantiation": 0.14,
-            "gnn_inference": 125.17,
-            "csp_resolution": 2.05,
-            "ranking": 12.83,
-            "total": 140.2
-          },
-          "mean_iou": 0.1682,
-          "C_total": 1.2029,
-          "P_align": 0.0077,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 140.2
-        },
-        {
-          "use_gnn": true,
-          "timings_ms": {
-            "instantiation": 0.13,
-            "gnn_inference": 126.17,
-            "csp_resolution": 2.06,
-            "ranking": 13.43,
-            "total": 141.8
-          },
-          "mean_iou": 0.1682,
-          "C_total": 1.2029,
-          "P_align": 0.0077,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 141.8
-        },
-        {
-          "use_gnn": true,
-          "timings_ms": {
-            "instantiation": 0.13,
-            "gnn_inference": 127.35,
-            "csp_resolution": 2.1,
-            "ranking": 12.42,
-            "total": 142.01
-          },
-          "mean_iou": 0.1682,
-          "C_total": 1.2029,
-          "P_align": 0.0077,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 142.01
-        },
-        {
-          "use_gnn": true,
-          "timings_ms": {
-            "instantiation": 0.23,
-            "gnn_inference": 127.83,
-            "csp_resolution": 2.06,
-            "ranking": 12.94,
-            "total": 143.06
-          },
-          "mean_iou": 0.1682,
-          "C_total": 1.2029,
-          "P_align": 0.0077,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 143.06
-        },
-        {
-          "use_gnn": true,
-          "timings_ms": {
-            "instantiation": 0.15,
-            "gnn_inference": 74.69,
-            "csp_resolution": 2.05,
-            "ranking": 12.05,
-            "total": 88.95
-          },
-          "mean_iou": 0.1682,
-          "C_total": 1.2029,
-          "P_align": 0.0077,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 88.95
-        },
-        {
-          "use_gnn": true,
-          "timings_ms": {
+            "template_ingestion": 820.76,
+            "layout_parsing": 193.86,
+            "stylistic_markers": 1093.97,
             "instantiation": 0.12,
-            "gnn_inference": 14.38,
-            "csp_resolution": 2.04,
-            "ranking": 27.85,
-            "total": 44.39
+            "gnn_inference": 11.31,
+            "csp_resolution": 1.13,
+            "ranking": 1197.26,
+            "rendering": 131.17,
+            "serialization": 0.34,
+            "total": 3449.92
           },
-          "mean_iou": 0.1682,
-          "C_total": 1.2029,
-          "P_align": 0.0077,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
+          "latency_total": 3449.92,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0603,
           "num_nodes": 11,
-          "latency_total": 44.39
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0013
+            ],
+            [
+              "Candidate_D",
+              0.0015
+            ],
+            [
+              "Candidate_F",
+              0.0757
+            ],
+            [
+              "Candidate_B",
+              0.0758
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CHS_BIRISTUHAN/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "CMET.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.084,
+          "structure_error_all": 0.0831,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1953.71,
+            "layout_parsing": 289.2,
+            "stylistic_markers": 4953.45,
+            "instantiation": 0.18,
+            "gnn_inference": 11.63,
+            "csp_resolution": 1.22,
+            "ranking": 1338.72,
+            "rendering": 234.23,
+            "serialization": 0.34,
+            "total": 8782.69
+          },
+          "latency_total": 8782.69,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0176,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0096
+            ],
+            [
+              "Candidate_F",
+              0.0756
+            ],
+            [
+              "Candidate_B",
+              0.0757
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CMET/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "CTC.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0,
+          "structure_error_all": 0.0084,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 996.13,
+            "layout_parsing": 267.32,
+            "stylistic_markers": 821.87,
+            "instantiation": 0.14,
+            "gnn_inference": 10.99,
+            "csp_resolution": 1.15,
+            "ranking": 1256.28,
+            "rendering": 289.31,
+            "serialization": 0.34,
+            "total": 3643.54
+          },
+          "latency_total": 3643.54,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0032,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0032,
+          "P_legibility": 0.0,
+          "mean_iou": 0.3148,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0032
+            ],
+            [
+              "Candidate_D",
+              0.0032
+            ],
+            [
+              "Candidate_E",
+              0.0032
+            ],
+            [
+              "Candidate_C",
+              0.0075
+            ],
+            [
+              "Candidate_B",
+              0.0728
+            ],
+            [
+              "Candidate_F",
+              0.0729
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CTC/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "DEAR_SENDER.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0745,
+          "structure_error_all": 0.0735,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1397.18,
+            "layout_parsing": 334.63,
+            "stylistic_markers": 1033.81,
+            "instantiation": 0.12,
+            "gnn_inference": 10.19,
+            "csp_resolution": 1.07,
+            "ranking": 1266.11,
+            "rendering": 163.39,
+            "serialization": 0.33,
+            "total": 4206.83
+          },
+          "latency_total": 4206.83,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0006,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0006,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0288,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0006
+            ],
+            [
+              "Candidate_D",
+              0.0006
+            ],
+            [
+              "Candidate_E",
+              0.0006
+            ],
+            [
+              "Candidate_C",
+              0.0008
+            ],
+            [
+              "Candidate_B",
+              0.0763
+            ],
+            [
+              "Candidate_F",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/DEAR_SENDER/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "DONATION_PROGRAM.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [
+            "details",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1365.13,
+            "layout_parsing": 352.52,
+            "stylistic_markers": 3828.81,
+            "instantiation": 0.12,
+            "gnn_inference": 10.49,
+            "csp_resolution": 1.12,
+            "ranking": 1311.45,
+            "rendering": 220.6,
+            "serialization": 0.34,
+            "total": 7090.58
+          },
+          "latency_total": 7090.58,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0013,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0013,
+          "P_legibility": 0.0,
+          "mean_iou": 0.2819,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0013
+            ],
+            [
+              "Candidate_D",
+              0.0013
+            ],
+            [
+              "Candidate_E",
+              0.0013
+            ],
+            [
+              "Candidate_C",
+              0.0055
+            ],
+            [
+              "Candidate_B",
+              0.0752
+            ],
+            [
+              "Candidate_F",
+              0.0752
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/DONATION_PROGRAM/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "FLOWERS_OF_HOPE.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.1127,
+          "structure_error_all": 0.0762,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1888.05,
+            "layout_parsing": 529.19,
+            "stylistic_markers": 4259.84,
+            "instantiation": 0.12,
+            "gnn_inference": 10.3,
+            "csp_resolution": 1.06,
+            "ranking": 1440.69,
+            "rendering": 231.04,
+            "serialization": 0.33,
+            "total": 8360.6
+          },
+          "latency_total": 8360.6,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0029,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0026,
+          "P_legibility": 0.0002,
+          "mean_iou": 0.0,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0029
+            ],
+            [
+              "Candidate_A",
+              0.003
+            ],
+            [
+              "Candidate_C",
+              0.0031
+            ],
+            [
+              "Candidate_E",
+              0.0032
+            ],
+            [
+              "Candidate_F",
+              0.0734
+            ],
+            [
+              "Candidate_B",
+              0.0735
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/FLOWERS_OF_HOPE/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "GUESS_THE_TEACHER.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0437,
+          "structure_error_all": 0.045,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 882.32,
+            "layout_parsing": 186.92,
+            "stylistic_markers": 1619.2,
+            "instantiation": 0.12,
+            "gnn_inference": 10.47,
+            "csp_resolution": 1.1,
+            "ranking": 1657.23,
+            "rendering": 206.01,
+            "serialization": 0.4,
+            "total": 4563.76
+          },
+          "latency_total": 4563.76,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0009,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0009,
+          "P_legibility": 0.0,
+          "mean_iou": 0.6726,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0009
+            ],
+            [
+              "Candidate_D",
+              0.0009
+            ],
+            [
+              "Candidate_E",
+              0.0009
+            ],
+            [
+              "Candidate_C",
+              0.0073
+            ],
+            [
+              "Candidate_B",
+              0.0759
+            ],
+            [
+              "Candidate_F",
+              0.0759
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/GUESS_THE_TEACHER/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "JFINEX.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.005,
+          "structure_error_all": 0.0122,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1257.3,
+            "layout_parsing": 485.98,
+            "stylistic_markers": 843.51,
+            "instantiation": 0.12,
+            "gnn_inference": 10.12,
+            "csp_resolution": 1.07,
+            "ranking": 1230.04,
+            "rendering": 196.43,
+            "serialization": 0.32,
+            "total": 4024.89
+          },
+          "latency_total": 4024.89,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0098,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0009,
+          "P_legibility": 0.006,
+          "mean_iou": 0.3967,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0098
+            ],
+            [
+              "Candidate_D",
+              0.014
+            ],
+            [
+              "Candidate_E",
+              0.014
+            ],
+            [
+              "Candidate_C",
+              0.0178
+            ],
+            [
+              "Candidate_B",
+              0.076
+            ],
+            [
+              "Candidate_F",
+              0.076
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/JFINEX/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "KAINANG_PAMILYA.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0361,
+          "structure_error_all": 0.0346,
+          "mapped_roles": [
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2232.57,
+            "layout_parsing": 679.28,
+            "stylistic_markers": 7131.46,
+            "instantiation": 0.14,
+            "gnn_inference": 11.35,
+            "csp_resolution": 1.16,
+            "ranking": 1610.24,
+            "rendering": 376.01,
+            "serialization": 0.33,
+            "total": 12042.55
+          },
+          "latency_total": 12042.55,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": 0.1415,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0051
+            ],
+            [
+              "Candidate_F",
+              0.076
+            ],
+            [
+              "Candidate_B",
+              0.0761
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/KAINANG_PAMILYA/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "LUCKY_TERA.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0935,
+          "structure_error_all": 0.0787,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 825.72,
+            "layout_parsing": 300.18,
+            "stylistic_markers": 1943.22,
+            "instantiation": 0.11,
+            "gnn_inference": 10.57,
+            "csp_resolution": 1.12,
+            "ranking": 1389.19,
+            "rendering": 415.64,
+            "serialization": 0.44,
+            "total": 4886.19
+          },
+          "latency_total": 4886.19,
+          "winner": "Candidate_E",
+          "winner_label": "classic centred \u00b7 margin 84px \u00b7 gap 24px \u00b7 four corners",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": 0.006,
+          "num_nodes": 11,
+          "motifs_placed": 4,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0012
+            ],
+            [
+              "Candidate_A",
+              0.0013
+            ],
+            [
+              "Candidate_C",
+              0.0016
+            ],
+            [
+              "Candidate_B",
+              0.0757
+            ],
+            [
+              "Candidate_F",
+              0.0771
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/LUCKY_TERA/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "RXEADY.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0804,
+          "structure_error_all": 0.0795,
+          "mapped_roles": [
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2004.48,
+            "layout_parsing": 364.3,
+            "stylistic_markers": 846.01,
+            "instantiation": 0.13,
+            "gnn_inference": 10.95,
+            "csp_resolution": 1.21,
+            "ranking": 1260.37,
+            "rendering": 204.54,
+            "serialization": 0.34,
+            "total": 4692.32
+          },
+          "latency_total": 4692.32,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0026,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0026,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0145,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0026
+            ],
+            [
+              "Candidate_D",
+              0.0026
+            ],
+            [
+              "Candidate_E",
+              0.0026
+            ],
+            [
+              "Candidate_C",
+              0.0068
+            ],
+            [
+              "Candidate_B",
+              0.0731
+            ],
+            [
+              "Candidate_F",
+              0.0731
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/RXEADY/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "RZEADY_SET_BOOTH.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.1188,
+          "structure_error_all": 0.1178,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2295.36,
+            "layout_parsing": 1192.65,
+            "stylistic_markers": 3364.33,
+            "instantiation": 0.12,
+            "gnn_inference": 10.46,
+            "csp_resolution": 1.12,
+            "ranking": 1078.29,
+            "rendering": 36.61,
+            "serialization": 0.31,
+            "total": 7979.26
+          },
+          "latency_total": 7979.26,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0026,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0026,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0127,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": false,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0026
+            ],
+            [
+              "Candidate_E",
+              0.0026
+            ],
+            [
+              "Candidate_C",
+              0.0038
+            ],
+            [
+              "Candidate_D",
+              0.0045
+            ],
+            [
+              "Candidate_F",
+              0.0745
+            ],
+            [
+              "Candidate_B",
+              0.0752
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/RZEADY_SET_BOOTH/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SHARE_KO_LANG.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2210.86,
+            "layout_parsing": 668.54,
+            "stylistic_markers": 363.1,
+            "instantiation": 0.12,
+            "gnn_inference": 10.22,
+            "csp_resolution": 1.12,
+            "ranking": 1082.64,
+            "rendering": 77.47,
+            "serialization": 0.31,
+            "total": 4414.38
+          },
+          "latency_total": 4414.38,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0016,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0016,
+          "P_legibility": 0.0,
+          "mean_iou": 0.2865,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": false,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0016
+            ],
+            [
+              "Candidate_D",
+              0.0016
+            ],
+            [
+              "Candidate_E",
+              0.0016
+            ],
+            [
+              "Candidate_C",
+              0.0027
+            ],
+            [
+              "Candidate_B",
+              0.0747
+            ],
+            [
+              "Candidate_F",
+              0.0747
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SHARE_KO_LANG/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SIGN_LANGUAGE_DAY.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0397,
+          "structure_error_all": 0.0444,
+          "mapped_roles": [
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 797.31,
+            "layout_parsing": 172.67,
+            "stylistic_markers": 932.05,
+            "instantiation": 0.12,
+            "gnn_inference": 10.32,
+            "csp_resolution": 1.09,
+            "ranking": 1276.77,
+            "rendering": 325.9,
+            "serialization": 0.32,
+            "total": 3516.55
+          },
+          "latency_total": 3516.55,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0009,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0009,
+          "P_legibility": 0.0,
+          "mean_iou": 0.0,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0009
+            ],
+            [
+              "Candidate_D",
+              0.0009
+            ],
+            [
+              "Candidate_E",
+              0.0009
+            ],
+            [
+              "Candidate_C",
+              0.0051
+            ],
+            [
+              "Candidate_B",
+              0.076
+            ],
+            [
+              "Candidate_F",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SIGN_LANGUAGE_DAY/certificate_gnn/ThemeSync_academic-certificate_populated.svg"
+        }
+      ],
+      "mapping_trials": [
+        {
+          "poster": "ANTI_HAZING_LAW.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.079,
+          "structure_error_all": 0.0775,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1871.27,
+            "layout_parsing": 399.58,
+            "stylistic_markers": 1912.21,
+            "instantiation": 0.13,
+            "gnn_inference": 0.07,
+            "csp_resolution": 1.1,
+            "ranking": 1522.36,
+            "rendering": 279.6,
+            "serialization": 0.35,
+            "total": 5986.67
+          },
+          "latency_total": 5986.67,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0015
+            ],
+            [
+              "Candidate_B",
+              0.0758
+            ],
+            [
+              "Candidate_F",
+              0.0758
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ANTI_HAZING_LAW/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "ARANTABAYAN.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.013,
+          "structure_error_all": 0.0219,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 521.83,
+            "layout_parsing": 168.03,
+            "stylistic_markers": 3490.53,
+            "instantiation": 0.17,
+            "gnn_inference": 0.08,
+            "csp_resolution": 1.43,
+            "ranking": 1164.41,
+            "rendering": 152.07,
+            "serialization": 0.34,
+            "total": 5498.88
+          },
+          "latency_total": 5498.88,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0007,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0007,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0007
+            ],
+            [
+              "Candidate_D",
+              0.0007
+            ],
+            [
+              "Candidate_E",
+              0.0021
+            ],
+            [
+              "Candidate_C",
+              0.0116
+            ],
+            [
+              "Candidate_B",
+              0.0763
+            ],
+            [
+              "Candidate_F",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ARANTABAYAN/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "CHS_BIRISTUHAN.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0384,
+          "structure_error_all": 0.0369,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 813.43,
+            "layout_parsing": 193.11,
+            "stylistic_markers": 1054.67,
+            "instantiation": 0.17,
+            "gnn_inference": 0.08,
+            "csp_resolution": 1.09,
+            "ranking": 1185.66,
+            "rendering": 130.6,
+            "serialization": 0.35,
+            "total": 3379.15
+          },
+          "latency_total": 3379.15,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0013
+            ],
+            [
+              "Candidate_D",
+              0.0015
+            ],
+            [
+              "Candidate_F",
+              0.0757
+            ],
+            [
+              "Candidate_B",
+              0.0758
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CHS_BIRISTUHAN/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "CMET.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.084,
+          "structure_error_all": 0.0831,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1966.24,
+            "layout_parsing": 283.29,
+            "stylistic_markers": 4769.15,
+            "instantiation": 0.13,
+            "gnn_inference": 0.08,
+            "csp_resolution": 1.17,
+            "ranking": 1364.76,
+            "rendering": 231.3,
+            "serialization": 0.33,
+            "total": 8616.45
+          },
+          "latency_total": 8616.45,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0096
+            ],
+            [
+              "Candidate_F",
+              0.0756
+            ],
+            [
+              "Candidate_B",
+              0.0757
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CMET/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "CTC.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0,
+          "structure_error_all": 0.0084,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 985.11,
+            "layout_parsing": 265.28,
+            "stylistic_markers": 821.75,
+            "instantiation": 0.12,
+            "gnn_inference": 0.07,
+            "csp_resolution": 1.16,
+            "ranking": 1324.9,
+            "rendering": 291.33,
+            "serialization": 0.34,
+            "total": 3690.05
+          },
+          "latency_total": 3690.05,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0032,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0032,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0032
+            ],
+            [
+              "Candidate_D",
+              0.0032
+            ],
+            [
+              "Candidate_E",
+              0.0032
+            ],
+            [
+              "Candidate_C",
+              0.0089
+            ],
+            [
+              "Candidate_B",
+              0.0728
+            ],
+            [
+              "Candidate_F",
+              0.0729
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CTC/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "DEAR_SENDER.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0745,
+          "structure_error_all": 0.0735,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1389.03,
+            "layout_parsing": 284.67,
+            "stylistic_markers": 1036.7,
+            "instantiation": 0.15,
+            "gnn_inference": 0.08,
+            "csp_resolution": 1.18,
+            "ranking": 1281.73,
+            "rendering": 165.88,
+            "serialization": 0.34,
+            "total": 4159.76
+          },
+          "latency_total": 4159.76,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0006,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0006,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0006
+            ],
+            [
+              "Candidate_D",
+              0.0006
+            ],
+            [
+              "Candidate_E",
+              0.0006
+            ],
+            [
+              "Candidate_C",
+              0.0008
+            ],
+            [
+              "Candidate_B",
+              0.0763
+            ],
+            [
+              "Candidate_F",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/DEAR_SENDER/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "DONATION_PROGRAM.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [
+            "details",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1358.61,
+            "layout_parsing": 347.39,
+            "stylistic_markers": 3785.13,
+            "instantiation": 0.12,
+            "gnn_inference": 0.04,
+            "csp_resolution": 1.17,
+            "ranking": 1312.53,
+            "rendering": 219.8,
+            "serialization": 0.32,
+            "total": 7025.11
+          },
+          "latency_total": 7025.11,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0013,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0013,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0013
+            ],
+            [
+              "Candidate_C",
+              0.0013
+            ],
+            [
+              "Candidate_D",
+              0.0013
+            ],
+            [
+              "Candidate_E",
+              0.0013
+            ],
+            [
+              "Candidate_B",
+              0.0752
+            ],
+            [
+              "Candidate_F",
+              0.0752
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/DONATION_PROGRAM/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "FLOWERS_OF_HOPE.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.1127,
+          "structure_error_all": 0.0762,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1957.17,
+            "layout_parsing": 545.99,
+            "stylistic_markers": 4199.21,
+            "instantiation": 0.12,
+            "gnn_inference": 0.07,
+            "csp_resolution": 1.15,
+            "ranking": 1447.43,
+            "rendering": 237.8,
+            "serialization": 0.33,
+            "total": 8389.28
+          },
+          "latency_total": 8389.28,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0029,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0026,
+          "P_legibility": 0.0002,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0029
+            ],
+            [
+              "Candidate_A",
+              0.003
+            ],
+            [
+              "Candidate_C",
+              0.0031
+            ],
+            [
+              "Candidate_E",
+              0.0032
+            ],
+            [
+              "Candidate_F",
+              0.0734
+            ],
+            [
+              "Candidate_B",
+              0.0735
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/FLOWERS_OF_HOPE/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "GUESS_THE_TEACHER.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0437,
+          "structure_error_all": 0.045,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1197.58,
+            "layout_parsing": 237.42,
+            "stylistic_markers": 1914.97,
+            "instantiation": 0.15,
+            "gnn_inference": 0.14,
+            "csp_resolution": 1.83,
+            "ranking": 1741.22,
+            "rendering": 210.28,
+            "serialization": 0.51,
+            "total": 5304.11
+          },
+          "latency_total": 5304.11,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0009,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0009,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0009
+            ],
+            [
+              "Candidate_D",
+              0.0009
+            ],
+            [
+              "Candidate_E",
+              0.0009
+            ],
+            [
+              "Candidate_C",
+              0.0073
+            ],
+            [
+              "Candidate_B",
+              0.0759
+            ],
+            [
+              "Candidate_F",
+              0.0759
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/GUESS_THE_TEACHER/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "JFINEX.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.005,
+          "structure_error_all": 0.0122,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1266.73,
+            "layout_parsing": 451.32,
+            "stylistic_markers": 841.46,
+            "instantiation": 0.13,
+            "gnn_inference": 0.07,
+            "csp_resolution": 1.14,
+            "ranking": 1253.24,
+            "rendering": 197.46,
+            "serialization": 0.31,
+            "total": 4011.85
+          },
+          "latency_total": 4011.85,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0098,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0009,
+          "P_legibility": 0.006,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0098
+            ],
+            [
+              "Candidate_D",
+              0.014
+            ],
+            [
+              "Candidate_E",
+              0.014
+            ],
+            [
+              "Candidate_C",
+              0.0157
+            ],
+            [
+              "Candidate_B",
+              0.076
+            ],
+            [
+              "Candidate_F",
+              0.076
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/JFINEX/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "KAINANG_PAMILYA.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0361,
+          "structure_error_all": 0.0346,
+          "mapped_roles": [
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2206.74,
+            "layout_parsing": 687.9,
+            "stylistic_markers": 7538.69,
+            "instantiation": 0.22,
+            "gnn_inference": 0.09,
+            "csp_resolution": 1.54,
+            "ranking": 1634.24,
+            "rendering": 382.06,
+            "serialization": 0.37,
+            "total": 12451.86
+          },
+          "latency_total": 12451.86,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0051
+            ],
+            [
+              "Candidate_F",
+              0.076
+            ],
+            [
+              "Candidate_B",
+              0.0761
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/KAINANG_PAMILYA/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "LUCKY_TERA.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0935,
+          "structure_error_all": 0.0787,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 822.33,
+            "layout_parsing": 296.62,
+            "stylistic_markers": 1947.95,
+            "instantiation": 0.12,
+            "gnn_inference": 0.07,
+            "csp_resolution": 1.14,
+            "ranking": 1389.98,
+            "rendering": 411.82,
+            "serialization": 0.4,
+            "total": 4870.44
+          },
+          "latency_total": 4870.44,
+          "winner": "Candidate_E",
+          "winner_label": "classic centred \u00b7 margin 84px \u00b7 gap 24px \u00b7 four corners",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 4,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0012
+            ],
+            [
+              "Candidate_A",
+              0.0013
+            ],
+            [
+              "Candidate_C",
+              0.0016
+            ],
+            [
+              "Candidate_B",
+              0.0757
+            ],
+            [
+              "Candidate_F",
+              0.0771
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/LUCKY_TERA/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "RXEADY.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0804,
+          "structure_error_all": 0.0795,
+          "mapped_roles": [
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2016.2,
+            "layout_parsing": 366.98,
+            "stylistic_markers": 868.14,
+            "instantiation": 0.12,
+            "gnn_inference": 0.07,
+            "csp_resolution": 1.24,
+            "ranking": 1266.15,
+            "rendering": 205.91,
+            "serialization": 0.34,
+            "total": 4725.15
+          },
+          "latency_total": 4725.15,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0026,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0026,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0026
+            ],
+            [
+              "Candidate_D",
+              0.0026
+            ],
+            [
+              "Candidate_E",
+              0.0026
+            ],
+            [
+              "Candidate_C",
+              0.0068
+            ],
+            [
+              "Candidate_B",
+              0.0731
+            ],
+            [
+              "Candidate_F",
+              0.0731
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/RXEADY/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "RZEADY_SET_BOOTH.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.1188,
+          "structure_error_all": 0.1178,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2281.99,
+            "layout_parsing": 1182.59,
+            "stylistic_markers": 3364.42,
+            "instantiation": 0.12,
+            "gnn_inference": 0.08,
+            "csp_resolution": 1.15,
+            "ranking": 1094.68,
+            "rendering": 36.93,
+            "serialization": 0.3,
+            "total": 7962.26
+          },
+          "latency_total": 7962.26,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0026,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0026,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": false,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0026
+            ],
+            [
+              "Candidate_E",
+              0.0026
+            ],
+            [
+              "Candidate_C",
+              0.0038
+            ],
+            [
+              "Candidate_D",
+              0.0045
+            ],
+            [
+              "Candidate_F",
+              0.0745
+            ],
+            [
+              "Candidate_B",
+              0.0752
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/RZEADY_SET_BOOTH/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SHARE_KO_LANG.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2189.26,
+            "layout_parsing": 671.04,
+            "stylistic_markers": 363.93,
+            "instantiation": 0.12,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.3,
+            "ranking": 1088.61,
+            "rendering": 78.58,
+            "serialization": 0.29,
+            "total": 4393.13
+          },
+          "latency_total": 4393.13,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0016,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0016,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": false,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0016
+            ],
+            [
+              "Candidate_D",
+              0.0016
+            ],
+            [
+              "Candidate_E",
+              0.0016
+            ],
+            [
+              "Candidate_C",
+              0.0027
+            ],
+            [
+              "Candidate_B",
+              0.0747
+            ],
+            [
+              "Candidate_F",
+              0.0747
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SHARE_KO_LANG/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SIGN_LANGUAGE_DAY.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0397,
+          "structure_error_all": 0.0444,
+          "mapped_roles": [
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 796.11,
+            "layout_parsing": 175.6,
+            "stylistic_markers": 945.55,
+            "instantiation": 0.13,
+            "gnn_inference": 0.07,
+            "csp_resolution": 1.15,
+            "ranking": 1286.74,
+            "rendering": 328.51,
+            "serialization": 0.31,
+            "total": 3534.18
+          },
+          "latency_total": 3534.18,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0009,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0009,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0009
+            ],
+            [
+              "Candidate_D",
+              0.0009
+            ],
+            [
+              "Candidate_E",
+              0.0009
+            ],
+            [
+              "Candidate_C",
+              0.0051
+            ],
+            [
+              "Candidate_B",
+              0.076
+            ],
+            [
+              "Candidate_F",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SIGN_LANGUAGE_DAY/certificate_mapping/ThemeSync_academic-certificate_populated.svg"
         }
       ],
       "base_trials": [
         {
+          "poster": "ANTI_HAZING_LAW.jpg",
+          "condition": "baseline",
           "use_gnn": false,
+          "structure_error": 0.1191,
+          "structure_error_all": 0.1147,
+          "mapped_roles": [],
           "timings_ms": {
-            "instantiation": 0.2,
-            "gnn_inference": 0.01,
-            "csp_resolution": 0.99,
-            "ranking": 8.46,
-            "total": 9.65
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.1876,
-          "P_align": 0.0,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 9.65
-        },
-        {
-          "use_gnn": false,
-          "timings_ms": {
-            "instantiation": 0.14,
-            "gnn_inference": 0.01,
-            "csp_resolution": 1.02,
-            "ranking": 8.42,
-            "total": 9.59
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.1876,
-          "P_align": 0.0,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 9.59
-        },
-        {
-          "use_gnn": false,
-          "timings_ms": {
-            "instantiation": 0.14,
-            "gnn_inference": 0.01,
-            "csp_resolution": 0.97,
-            "ranking": 8.3,
-            "total": 9.42
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.1876,
-          "P_align": 0.0,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 9.42
-        },
-        {
-          "use_gnn": false,
-          "timings_ms": {
-            "instantiation": 0.16,
-            "gnn_inference": 0.01,
-            "csp_resolution": 0.99,
-            "ranking": 30.46,
-            "total": 31.62
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.1876,
-          "P_align": 0.0,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 31.62
-        },
-        {
-          "use_gnn": false,
-          "timings_ms": {
-            "instantiation": 0.14,
-            "gnn_inference": 0.01,
-            "csp_resolution": 1.04,
-            "ranking": 38.62,
-            "total": 39.8
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.1876,
-          "P_align": 0.0,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 39.8
-        },
-        {
-          "use_gnn": false,
-          "timings_ms": {
-            "instantiation": 0.15,
-            "gnn_inference": 0.01,
-            "csp_resolution": 1.01,
-            "ranking": 28.31,
-            "total": 29.48
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.1876,
-          "P_align": 0.0,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 29.48
-        },
-        {
-          "use_gnn": false,
-          "timings_ms": {
-            "instantiation": 0.17,
-            "gnn_inference": 0.01,
-            "csp_resolution": 0.99,
-            "ranking": 32.85,
-            "total": 34.02
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.1876,
-          "P_align": 0.0,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 34.02
-        },
-        {
-          "use_gnn": false,
-          "timings_ms": {
-            "instantiation": 0.14,
-            "gnn_inference": 0.01,
-            "csp_resolution": 1.0,
-            "ranking": 38.47,
-            "total": 39.62
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.1876,
-          "P_align": 0.0,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 39.62
-        },
-        {
-          "use_gnn": false,
-          "timings_ms": {
-            "instantiation": 0.15,
-            "gnn_inference": 0.01,
-            "csp_resolution": 0.99,
-            "ranking": 8.4,
-            "total": 9.55
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.1876,
-          "P_align": 0.0,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
-          "num_nodes": 11,
-          "latency_total": 9.55
-        },
-        {
-          "use_gnn": false,
-          "timings_ms": {
+            "template_ingestion": 1843.92,
+            "layout_parsing": 386.95,
+            "stylistic_markers": 1905.84,
             "instantiation": 0.13,
-            "gnn_inference": 0.01,
-            "csp_resolution": 0.98,
-            "ranking": 37.29,
-            "total": 38.41
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.1,
+            "ranking": 1543.98,
+            "rendering": 279.83,
+            "serialization": 0.34,
+            "total": 5962.08
           },
-          "mean_iou": 0.0,
-          "C_total": 1.1876,
+          "latency_total": 5962.08,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
           "P_align": 0.0,
-          "P_space": 0.0626,
-          "P_legibility": 0.75,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
           "num_nodes": 11,
-          "latency_total": 38.41
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0017
+            ],
+            [
+              "Candidate_B",
+              0.0757
+            ],
+            [
+              "Candidate_F",
+              0.0758
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ANTI_HAZING_LAW/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "ARANTABAYAN.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0508,
+          "structure_error_all": 0.0473,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 527.04,
+            "layout_parsing": 168.38,
+            "stylistic_markers": 3619.37,
+            "instantiation": 0.13,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.07,
+            "ranking": 1175.67,
+            "rendering": 151.06,
+            "serialization": 0.31,
+            "total": 5643.02
+          },
+          "latency_total": 5643.02,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0007,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0007,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0007
+            ],
+            [
+              "Candidate_A",
+              0.0021
+            ],
+            [
+              "Candidate_E",
+              0.0021
+            ],
+            [
+              "Candidate_C",
+              0.0091
+            ],
+            [
+              "Candidate_B",
+              0.0766
+            ],
+            [
+              "Candidate_F",
+              0.0766
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ARANTABAYAN/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "CHS_BIRISTUHAN.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0759,
+          "structure_error_all": 0.0719,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 811.88,
+            "layout_parsing": 194.72,
+            "stylistic_markers": 1053.95,
+            "instantiation": 0.14,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.08,
+            "ranking": 1188.71,
+            "rendering": 130.89,
+            "serialization": 0.35,
+            "total": 3381.72
+          },
+          "latency_total": 3381.72,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0015
+            ],
+            [
+              "Candidate_D",
+              0.0015
+            ],
+            [
+              "Candidate_B",
+              0.0756
+            ],
+            [
+              "Candidate_F",
+              0.0759
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CHS_BIRISTUHAN/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "CMET.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1243,
+          "structure_error_all": 0.1204,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 1959.94,
+            "layout_parsing": 288.94,
+            "stylistic_markers": 4805.59,
+            "instantiation": 0.2,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.2,
+            "ranking": 1333.0,
+            "rendering": 233.05,
+            "serialization": 0.33,
+            "total": 8622.24
+          },
+          "latency_total": 8622.24,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0011
+            ],
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_C",
+              0.0053
+            ],
+            [
+              "Candidate_B",
+              0.0759
+            ],
+            [
+              "Candidate_F",
+              0.0759
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CMET/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "CTC.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0273,
+          "structure_error_all": 0.0317,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 1349.6,
+            "layout_parsing": 316.71,
+            "stylistic_markers": 813.49,
+            "instantiation": 0.13,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.2,
+            "ranking": 1255.78,
+            "rendering": 288.84,
+            "serialization": 0.3,
+            "total": 4026.06
+          },
+          "latency_total": 4026.06,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0032,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0032,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0032
+            ],
+            [
+              "Candidate_D",
+              0.0032
+            ],
+            [
+              "Candidate_E",
+              0.0032
+            ],
+            [
+              "Candidate_C",
+              0.0046
+            ],
+            [
+              "Candidate_F",
+              0.0724
+            ],
+            [
+              "Candidate_B",
+              0.0728
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CTC/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "DEAR_SENDER.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.112,
+          "structure_error_all": 0.1085,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 1394.56,
+            "layout_parsing": 282.16,
+            "stylistic_markers": 1176.95,
+            "instantiation": 0.13,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.07,
+            "ranking": 1275.82,
+            "rendering": 165.63,
+            "serialization": 0.34,
+            "total": 4296.67
+          },
+          "latency_total": 4296.67,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 diagonal",
+          "C_total": 0.0006,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0006,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0006
+            ],
+            [
+              "Candidate_D",
+              0.0006
+            ],
+            [
+              "Candidate_E",
+              0.0006
+            ],
+            [
+              "Candidate_C",
+              0.0009
+            ],
+            [
+              "Candidate_B",
+              0.0762
+            ],
+            [
+              "Candidate_F",
+              0.0762
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/DEAR_SENDER/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "DONATION_PROGRAM.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 1349.06,
+            "layout_parsing": 345.9,
+            "stylistic_markers": 3775.19,
+            "instantiation": 0.2,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.15,
+            "ranking": 1309.13,
+            "rendering": 219.26,
+            "serialization": 0.31,
+            "total": 7000.2
+          },
+          "latency_total": 7000.2,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0013,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0013,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0013
+            ],
+            [
+              "Candidate_D",
+              0.0013
+            ],
+            [
+              "Candidate_E",
+              0.0013
+            ],
+            [
+              "Candidate_C",
+              0.0034
+            ],
+            [
+              "Candidate_B",
+              0.0752
+            ],
+            [
+              "Candidate_F",
+              0.0752
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/DONATION_PROGRAM/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "FLOWERS_OF_HOPE.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1146,
+          "structure_error_all": 0.1111,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 1933.53,
+            "layout_parsing": 543.63,
+            "stylistic_markers": 4481.47,
+            "instantiation": 0.16,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.17,
+            "ranking": 1467.46,
+            "rendering": 309.94,
+            "serialization": 0.53,
+            "total": 8737.88
+          },
+          "latency_total": 8737.88,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 104px \u00b7 gap 18px \u00b7 side columns",
+          "C_total": 0.0029,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0026,
+          "P_legibility": 0.0002,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.0029
+            ],
+            [
+              "Candidate_A",
+              0.0032
+            ],
+            [
+              "Candidate_E",
+              0.0032
+            ],
+            [
+              "Candidate_C",
+              0.0033
+            ],
+            [
+              "Candidate_B",
+              0.0735
+            ],
+            [
+              "Candidate_F",
+              0.0735
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/FLOWERS_OF_HOPE/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "GUESS_THE_TEACHER.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0812,
+          "structure_error_all": 0.0777,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 1065.24,
+            "layout_parsing": 181.46,
+            "stylistic_markers": 1315.97,
+            "instantiation": 0.14,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.14,
+            "ranking": 1958.96,
+            "rendering": 159.55,
+            "serialization": 166.97,
+            "total": 4849.43
+          },
+          "latency_total": 4849.43,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0009,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0009,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0009
+            ],
+            [
+              "Candidate_D",
+              0.0009
+            ],
+            [
+              "Candidate_E",
+              0.0009
+            ],
+            [
+              "Candidate_C",
+              0.0051
+            ],
+            [
+              "Candidate_F",
+              0.076
+            ],
+            [
+              "Candidate_B",
+              0.0762
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/GUESS_THE_TEACHER/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "JFINEX.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0514,
+          "structure_error_all": 0.0385,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 1264.04,
+            "layout_parsing": 446.06,
+            "stylistic_markers": 845.73,
+            "instantiation": 0.14,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.16,
+            "ranking": 1536.57,
+            "rendering": 199.72,
+            "serialization": 0.31,
+            "total": 4293.73
+          },
+          "latency_total": 4293.73,
+          "winner": "Candidate_C",
+          "winner_label": "header banner \u00b7 margin 76px \u00b7 gap 16px \u00b7 no motifs",
+          "C_total": 0.0107,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0009,
+          "P_legibility": 0.0065,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_C",
+              0.0107
+            ],
+            [
+              "Candidate_A",
+              0.014
+            ],
+            [
+              "Candidate_D",
+              0.014
+            ],
+            [
+              "Candidate_E",
+              0.014
+            ],
+            [
+              "Candidate_B",
+              0.0761
+            ],
+            [
+              "Candidate_F",
+              0.0761
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/JFINEX/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "KAINANG_PAMILYA.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0736,
+          "structure_error_all": 0.0696,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2222.65,
+            "layout_parsing": 685.05,
+            "stylistic_markers": 7171.99,
+            "instantiation": 0.24,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.39,
+            "ranking": 1622.33,
+            "rendering": 374.12,
+            "serialization": 0.35,
+            "total": 12078.11
+          },
+          "latency_total": 12078.11,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0008,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0008,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0008
+            ],
+            [
+              "Candidate_D",
+              0.0008
+            ],
+            [
+              "Candidate_E",
+              0.0008
+            ],
+            [
+              "Candidate_C",
+              0.0061
+            ],
+            [
+              "Candidate_B",
+              0.0762
+            ],
+            [
+              "Candidate_F",
+              0.0762
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/KAINANG_PAMILYA/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "LUCKY_TERA.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0935,
+          "structure_error_all": 0.1137,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 826.82,
+            "layout_parsing": 296.57,
+            "stylistic_markers": 1964.32,
+            "instantiation": 0.14,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.11,
+            "ranking": 1401.88,
+            "rendering": 417.69,
+            "serialization": 0.38,
+            "total": 4908.91
+          },
+          "latency_total": 4908.91,
+          "winner": "Candidate_E",
+          "winner_label": "classic centred \u00b7 margin 84px \u00b7 gap 24px \u00b7 four corners",
+          "C_total": 0.0011,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0011,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 4,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_E",
+              0.0011
+            ],
+            [
+              "Candidate_D",
+              0.0012
+            ],
+            [
+              "Candidate_A",
+              0.0013
+            ],
+            [
+              "Candidate_C",
+              0.0019
+            ],
+            [
+              "Candidate_B",
+              0.0757
+            ],
+            [
+              "Candidate_F",
+              0.0757
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/LUCKY_TERA/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "RXEADY.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1179,
+          "structure_error_all": 0.1144,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2012.64,
+            "layout_parsing": 361.76,
+            "stylistic_markers": 844.94,
+            "instantiation": 0.17,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.15,
+            "ranking": 1265.31,
+            "rendering": 204.12,
+            "serialization": 0.3,
+            "total": 4690.4
+          },
+          "latency_total": 4690.4,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0026,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0026,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0026
+            ],
+            [
+              "Candidate_D",
+              0.0026
+            ],
+            [
+              "Candidate_E",
+              0.0026
+            ],
+            [
+              "Candidate_C",
+              0.0047
+            ],
+            [
+              "Candidate_B",
+              0.0731
+            ],
+            [
+              "Candidate_F",
+              0.0731
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/RXEADY/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "RZEADY_SET_BOOTH.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1563,
+          "structure_error_all": 0.1527,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2341.98,
+            "layout_parsing": 1188.13,
+            "stylistic_markers": 3338.2,
+            "instantiation": 0.16,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.12,
+            "ranking": 1084.25,
+            "rendering": 37.25,
+            "serialization": 0.29,
+            "total": 7991.38
+          },
+          "latency_total": 7991.38,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0026,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0026,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": false,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0026
+            ],
+            [
+              "Candidate_E",
+              0.0026
+            ],
+            [
+              "Candidate_C",
+              0.0044
+            ],
+            [
+              "Candidate_D",
+              0.0045
+            ],
+            [
+              "Candidate_B",
+              0.0768
+            ],
+            [
+              "Candidate_F",
+              0.0768
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/RZEADY_SET_BOOTH/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SHARE_KO_LANG.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2211.88,
+            "layout_parsing": 658.69,
+            "stylistic_markers": 365.97,
+            "instantiation": 0.14,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.14,
+            "ranking": 1090.88,
+            "rendering": 77.6,
+            "serialization": 0.29,
+            "total": 4406.59
+          },
+          "latency_total": 4406.59,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0016,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0016,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": false,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0016
+            ],
+            [
+              "Candidate_D",
+              0.0016
+            ],
+            [
+              "Candidate_E",
+              0.0016
+            ],
+            [
+              "Candidate_C",
+              0.0027
+            ],
+            [
+              "Candidate_B",
+              0.0747
+            ],
+            [
+              "Candidate_F",
+              0.0747
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SHARE_KO_LANG/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
+        },
+        {
+          "poster": "SIGN_LANGUAGE_DAY.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0696,
+          "structure_error_all": 0.0694,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 798.57,
+            "layout_parsing": 172.33,
+            "stylistic_markers": 947.27,
+            "instantiation": 0.14,
+            "gnn_inference": 0.0,
+            "csp_resolution": 1.14,
+            "ranking": 1262.85,
+            "rendering": 322.48,
+            "serialization": 0.36,
+            "total": 3505.13
+          },
+          "latency_total": 3505.13,
+          "winner": "Candidate_A",
+          "winner_label": "classic centred \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.0009,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.0009,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 11,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_A",
+              0.0009
+            ],
+            [
+              "Candidate_D",
+              0.0009
+            ],
+            [
+              "Candidate_E",
+              0.0009
+            ],
+            [
+              "Candidate_C",
+              0.0051
+            ],
+            [
+              "Candidate_B",
+              0.0763
+            ],
+            [
+              "Candidate_F",
+              0.0763
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SIGN_LANGUAGE_DAY/certificate_baseline/ThemeSync_academic-certificate_populated.svg"
         }
       ]
     },
@@ -361,346 +2992,2968 @@
       "domain_label": "Event ID (A6, 1:1.414)",
       "gnn_trials": [
         {
+          "poster": "ANTI_HAZING_LAW.jpg",
+          "condition": "gnn",
           "use_gnn": true,
+          "structure_error": 0.0683,
+          "structure_error_all": 0.0571,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
           "timings_ms": {
-            "instantiation": 0.13,
-            "gnn_inference": 122.69,
-            "csp_resolution": 0.51,
-            "ranking": 4.71,
-            "total": 128.05
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.3012,
-          "P_align": 0.0089,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
-          "num_nodes": 6,
-          "latency_total": 128.05
-        },
-        {
-          "use_gnn": true,
-          "timings_ms": {
+            "template_ingestion": 1868.79,
+            "layout_parsing": 394.68,
+            "stylistic_markers": 1915.18,
             "instantiation": 0.11,
-            "gnn_inference": 122.79,
-            "csp_resolution": 0.53,
-            "ranking": 4.59,
-            "total": 128.01
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.3012,
-          "P_align": 0.0089,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
-          "num_nodes": 6,
-          "latency_total": 128.01
-        },
-        {
-          "use_gnn": true,
-          "timings_ms": {
-            "instantiation": 0.11,
-            "gnn_inference": 123.19,
-            "csp_resolution": 0.5,
-            "ranking": 4.47,
-            "total": 128.27
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.3012,
-          "P_align": 0.0089,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
-          "num_nodes": 6,
-          "latency_total": 128.27
-        },
-        {
-          "use_gnn": true,
-          "timings_ms": {
-            "instantiation": 0.23,
-            "gnn_inference": 125.63,
-            "csp_resolution": 0.52,
-            "ranking": 4.42,
-            "total": 130.8
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.3012,
-          "P_align": 0.0089,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
-          "num_nodes": 6,
-          "latency_total": 130.8
-        },
-        {
-          "use_gnn": true,
-          "timings_ms": {
-            "instantiation": 0.1,
-            "gnn_inference": 120.2,
-            "csp_resolution": 0.46,
-            "ranking": 4.36,
-            "total": 125.11
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.3012,
-          "P_align": 0.0089,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
-          "num_nodes": 6,
-          "latency_total": 125.11
-        },
-        {
-          "use_gnn": true,
-          "timings_ms": {
-            "instantiation": 0.1,
-            "gnn_inference": 71.48,
+            "gnn_inference": 10.87,
             "csp_resolution": 0.45,
-            "ranking": 4.27,
-            "total": 76.31
+            "ranking": 976.01,
+            "rendering": 229.36,
+            "serialization": 0.28,
+            "total": 5395.74
           },
-          "mean_iou": 0.0,
-          "C_total": 1.3012,
-          "P_align": 0.0089,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
+          "latency_total": 5395.74,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1395,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0008,
+          "mean_iou": 0.4434,
           "num_nodes": 6,
-          "latency_total": 76.31
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1395
+            ],
+            [
+              "Candidate_C",
+              0.149
+            ],
+            [
+              "Candidate_E",
+              0.1493
+            ],
+            [
+              "Candidate_A",
+              0.1538
+            ],
+            [
+              "Candidate_B",
+              0.1854
+            ],
+            [
+              "Candidate_F",
+              0.1854
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ANTI_HAZING_LAW/id_gnn/ThemeSync_identification-card_populated.svg"
         },
         {
+          "poster": "ARANTABAYAN.jpg",
+          "condition": "gnn",
           "use_gnn": true,
+          "structure_error": 0.0054,
+          "structure_error_all": 0.0038,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
           "timings_ms": {
+            "template_ingestion": 515.82,
+            "layout_parsing": 167.48,
+            "stylistic_markers": 3544.08,
+            "instantiation": 0.11,
+            "gnn_inference": 10.12,
+            "csp_resolution": 0.4,
+            "ranking": 769.74,
+            "rendering": 129.76,
+            "serialization": 0.28,
+            "total": 5137.79
+          },
+          "latency_total": 5137.79,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1483,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0066,
+          "mean_iou": 0.6884,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1483
+            ],
+            [
+              "Candidate_C",
+              0.1579
+            ],
+            [
+              "Candidate_E",
+              0.1579
+            ],
+            [
+              "Candidate_A",
+              0.1656
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ARANTABAYAN/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "CHS_BIRISTUHAN.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0246,
+          "structure_error_all": 0.0184,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 822.31,
+            "layout_parsing": 190.31,
+            "stylistic_markers": 1063.86,
             "instantiation": 0.1,
-            "gnn_inference": 12.36,
+            "gnn_inference": 10.11,
+            "csp_resolution": 0.42,
+            "ranking": 793.9,
+            "rendering": 107.34,
+            "serialization": 0.27,
+            "total": 2988.62
+          },
+          "latency_total": 2988.62,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1385,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0001,
+          "mean_iou": 0.4782,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1385
+            ],
+            [
+              "Candidate_C",
+              0.1481
+            ],
+            [
+              "Candidate_E",
+              0.1481
+            ],
+            [
+              "Candidate_A",
+              0.1531
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CHS_BIRISTUHAN/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "CMET.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0997,
+          "structure_error_all": 0.0875,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1965.38,
+            "layout_parsing": 278.12,
+            "stylistic_markers": 4759.29,
+            "instantiation": 0.1,
+            "gnn_inference": 10.24,
+            "csp_resolution": 0.42,
+            "ranking": 774.45,
+            "rendering": 179.47,
+            "serialization": 0.27,
+            "total": 7967.73
+          },
+          "latency_total": 7967.73,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1466,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0056,
+          "mean_iou": 0.1314,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1466
+            ],
+            [
+              "Candidate_C",
+              0.1563
+            ],
+            [
+              "Candidate_E",
+              0.1563
+            ],
+            [
+              "Candidate_A",
+              0.1653
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CMET/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "CTC.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.049,
+          "structure_error_all": 0.0424,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1003.46,
+            "layout_parsing": 260.7,
+            "stylistic_markers": 824.85,
+            "instantiation": 0.11,
+            "gnn_inference": 11.15,
+            "csp_resolution": 0.44,
+            "ranking": 775.86,
+            "rendering": 249.87,
+            "serialization": 0.28,
+            "total": 3126.73
+          },
+          "latency_total": 3126.73,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1494,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0074,
+          "mean_iou": 0.3271,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1494
+            ],
+            [
+              "Candidate_C",
+              0.1591
+            ],
+            [
+              "Candidate_E",
+              0.1591
+            ],
+            [
+              "Candidate_A",
+              0.1695
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CTC/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "DEAR_SENDER.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0505,
+          "structure_error_all": 0.0411,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1424.17,
+            "layout_parsing": 289.1,
+            "stylistic_markers": 1035.95,
+            "instantiation": 0.11,
+            "gnn_inference": 10.99,
             "csp_resolution": 0.43,
-            "ranking": 13.86,
-            "total": 26.76
+            "ranking": 812.11,
+            "rendering": 126.05,
+            "serialization": 0.29,
+            "total": 3699.19
           },
-          "mean_iou": 0.0,
-          "C_total": 1.3012,
-          "P_align": 0.0089,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
+          "latency_total": 3699.19,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.139,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0005,
+          "mean_iou": 0.2565,
           "num_nodes": 6,
-          "latency_total": 26.76
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.139
+            ],
+            [
+              "Candidate_C",
+              0.1485
+            ],
+            [
+              "Candidate_E",
+              0.1486
+            ],
+            [
+              "Candidate_A",
+              0.1535
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1855
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/DEAR_SENDER/id_gnn/ThemeSync_identification-card_populated.svg"
         },
         {
+          "poster": "DONATION_PROGRAM.jpg",
+          "condition": "gnn",
           "use_gnn": true,
+          "structure_error": 0.1252,
+          "structure_error_all": 0.1146,
+          "mapped_roles": [
+            "details",
+            "title"
+          ],
           "timings_ms": {
-            "instantiation": 0.12,
-            "gnn_inference": 127.45,
-            "csp_resolution": 0.53,
-            "ranking": 5.32,
-            "total": 133.41
+            "template_ingestion": 1393.78,
+            "layout_parsing": 352.36,
+            "stylistic_markers": 3865.71,
+            "instantiation": 0.11,
+            "gnn_inference": 10.11,
+            "csp_resolution": 0.42,
+            "ranking": 764.25,
+            "rendering": 167.82,
+            "serialization": 0.25,
+            "total": 6554.82
           },
-          "mean_iou": 0.0,
-          "C_total": 1.3012,
-          "P_align": 0.0089,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
+          "latency_total": 6554.82,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1494,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0074,
+          "mean_iou": 0.0554,
           "num_nodes": 6,
-          "latency_total": 133.41
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1494
+            ],
+            [
+              "Candidate_E",
+              0.1563
+            ],
+            [
+              "Candidate_C",
+              0.1591
+            ],
+            [
+              "Candidate_A",
+              0.1639
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/DONATION_PROGRAM/id_gnn/ThemeSync_identification-card_populated.svg"
         },
         {
+          "poster": "FLOWERS_OF_HOPE.jpg",
+          "condition": "gnn",
           "use_gnn": true,
+          "structure_error": 0.0593,
+          "structure_error_all": 0.0496,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
           "timings_ms": {
-            "instantiation": 0.19,
-            "gnn_inference": 127.02,
-            "csp_resolution": 0.69,
-            "ranking": 7.79,
-            "total": 135.7
+            "template_ingestion": 1967.09,
+            "layout_parsing": 547.49,
+            "stylistic_markers": 4302.3,
+            "instantiation": 0.11,
+            "gnn_inference": 10.09,
+            "csp_resolution": 0.42,
+            "ranking": 823.55,
+            "rendering": 178.94,
+            "serialization": 0.25,
+            "total": 7830.23
           },
-          "mean_iou": 0.0,
-          "C_total": 1.3012,
-          "P_align": 0.0089,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
+          "latency_total": 7830.23,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1396,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0009,
+          "mean_iou": 0.2338,
           "num_nodes": 6,
-          "latency_total": 135.7
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1396
+            ],
+            [
+              "Candidate_E",
+              0.1494
+            ],
+            [
+              "Candidate_C",
+              0.1503
+            ],
+            [
+              "Candidate_A",
+              0.1544
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/FLOWERS_OF_HOPE/id_gnn/ThemeSync_identification-card_populated.svg"
         },
         {
+          "poster": "GUESS_THE_TEACHER.jpg",
+          "condition": "gnn",
           "use_gnn": true,
+          "structure_error": 0.0105,
+          "structure_error_all": 0.0069,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
           "timings_ms": {
-            "instantiation": 0.2,
-            "gnn_inference": 129.33,
-            "csp_resolution": 0.8,
-            "ranking": 4.47,
-            "total": 134.8
+            "template_ingestion": 800.23,
+            "layout_parsing": 183.88,
+            "stylistic_markers": 1302.76,
+            "instantiation": 0.1,
+            "gnn_inference": 9.84,
+            "csp_resolution": 0.41,
+            "ranking": 988.49,
+            "rendering": 128.23,
+            "serialization": 0.28,
+            "total": 3414.23
           },
-          "mean_iou": 0.0,
-          "C_total": 1.3012,
-          "P_align": 0.0089,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
+          "latency_total": 3414.23,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1805,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0281,
+          "mean_iou": 0.7642,
           "num_nodes": 6,
-          "latency_total": 134.8
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1805
+            ],
+            [
+              "Candidate_C",
+              0.1901
+            ],
+            [
+              "Candidate_E",
+              0.1901
+            ],
+            [
+              "Candidate_B",
+              0.1916
+            ],
+            [
+              "Candidate_F",
+              0.1916
+            ],
+            [
+              "Candidate_A",
+              0.195
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/GUESS_THE_TEACHER/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "JFINEX.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0,
+          "structure_error_all": 0.0,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1285.29,
+            "layout_parsing": 434.41,
+            "stylistic_markers": 833.25,
+            "instantiation": 0.13,
+            "gnn_inference": 10.73,
+            "csp_resolution": 0.44,
+            "ranking": 762.05,
+            "rendering": 157.1,
+            "serialization": 0.29,
+            "total": 3483.68
+          },
+          "latency_total": 3483.68,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.155,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0111,
+          "mean_iou": 0.9361,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.155
+            ],
+            [
+              "Candidate_C",
+              0.1646
+            ],
+            [
+              "Candidate_E",
+              0.1646
+            ],
+            [
+              "Candidate_A",
+              0.1695
+            ],
+            [
+              "Candidate_B",
+              0.1884
+            ],
+            [
+              "Candidate_F",
+              0.1884
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/JFINEX/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "KAINANG_PAMILYA.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0171,
+          "structure_error_all": 0.01,
+          "mapped_roles": [
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2209.04,
+            "layout_parsing": 683.09,
+            "stylistic_markers": 7068.3,
+            "instantiation": 0.11,
+            "gnn_inference": 10.66,
+            "csp_resolution": 0.46,
+            "ranking": 770.34,
+            "rendering": 270.96,
+            "serialization": 0.28,
+            "total": 11013.25
+          },
+          "latency_total": 11013.25,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1605,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0148,
+          "mean_iou": 0.4476,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1605
+            ],
+            [
+              "Candidate_C",
+              0.1702
+            ],
+            [
+              "Candidate_E",
+              0.1702
+            ],
+            [
+              "Candidate_A",
+              0.175
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/KAINANG_PAMILYA/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "LUCKY_TERA.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0198,
+          "structure_error_all": 0.0134,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 823.4,
+            "layout_parsing": 300.77,
+            "stylistic_markers": 1949.76,
+            "instantiation": 0.11,
+            "gnn_inference": 10.29,
+            "csp_resolution": 0.41,
+            "ranking": 826.44,
+            "rendering": 358.03,
+            "serialization": 0.28,
+            "total": 4269.48
+          },
+          "latency_total": 4269.48,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1388,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0003,
+          "mean_iou": 0.7141,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1388
+            ],
+            [
+              "Candidate_E",
+              0.1485
+            ],
+            [
+              "Candidate_C",
+              0.1486
+            ],
+            [
+              "Candidate_A",
+              0.159
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1936
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/LUCKY_TERA/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "RXEADY.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0774,
+          "structure_error_all": 0.0649,
+          "mapped_roles": [
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2004.1,
+            "layout_parsing": 355.46,
+            "stylistic_markers": 858.72,
+            "instantiation": 0.1,
+            "gnn_inference": 10.34,
+            "csp_resolution": 0.4,
+            "ranking": 767.12,
+            "rendering": 165.24,
+            "serialization": 0.26,
+            "total": 4161.74
+          },
+          "latency_total": 4161.74,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": 0.1164,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/RXEADY/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "RZEADY_SET_BOOTH.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0891,
+          "structure_error_all": 0.0796,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2312.52,
+            "layout_parsing": 1191.82,
+            "stylistic_markers": 3348.53,
+            "instantiation": 0.11,
+            "gnn_inference": 10.32,
+            "csp_resolution": 0.44,
+            "ranking": 788.0,
+            "rendering": 26.16,
+            "serialization": 0.26,
+            "total": 7678.15
+          },
+          "latency_total": 7678.15,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.151,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0085,
+          "mean_iou": 0.1848,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": false,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.151
+            ],
+            [
+              "Candidate_E",
+              0.1607
+            ],
+            [
+              "Candidate_C",
+              0.1651
+            ],
+            [
+              "Candidate_A",
+              0.1741
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/RZEADY_SET_BOOTH/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SHARE_KO_LANG.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2220.97,
+            "layout_parsing": 665.42,
+            "stylistic_markers": 355.45,
+            "instantiation": 0.1,
+            "gnn_inference": 10.11,
+            "csp_resolution": 0.41,
+            "ranking": 765.37,
+            "rendering": 67.75,
+            "serialization": 0.25,
+            "total": 4085.85
+          },
+          "latency_total": 4085.85,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1682,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0199,
+          "mean_iou": 0.5773,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": false,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1682
+            ],
+            [
+              "Candidate_E",
+              0.1779
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ],
+            [
+              "Candidate_C",
+              0.1911
+            ],
+            [
+              "Candidate_A",
+              0.2001
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SHARE_KO_LANG/id_gnn/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SIGN_LANGUAGE_DAY.jpg",
+          "condition": "gnn",
+          "use_gnn": true,
+          "structure_error": 0.0935,
+          "structure_error_all": 0.0875,
+          "mapped_roles": [
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 798.64,
+            "layout_parsing": 170.36,
+            "stylistic_markers": 912.5,
+            "instantiation": 0.11,
+            "gnn_inference": 10.32,
+            "csp_resolution": 0.4,
+            "ranking": 774.88,
+            "rendering": 280.21,
+            "serialization": 0.27,
+            "total": 2947.69
+          },
+          "latency_total": 2947.69,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1439,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0037,
+          "mean_iou": 0.152,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1439
+            ],
+            [
+              "Candidate_C",
+              0.1535
+            ],
+            [
+              "Candidate_E",
+              0.1535
+            ],
+            [
+              "Candidate_A",
+              0.1574
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SIGN_LANGUAGE_DAY/id_gnn/ThemeSync_identification-card_populated.svg"
+        }
+      ],
+      "mapping_trials": [
+        {
+          "poster": "ANTI_HAZING_LAW.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0683,
+          "structure_error_all": 0.0571,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1878.19,
+            "layout_parsing": 392.64,
+            "stylistic_markers": 1931.32,
+            "instantiation": 0.1,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.42,
+            "ranking": 971.94,
+            "rendering": 231.69,
+            "serialization": 0.28,
+            "total": 5406.65
+          },
+          "latency_total": 5406.65,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1391,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0005,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1391
+            ],
+            [
+              "Candidate_C",
+              0.1487
+            ],
+            [
+              "Candidate_E",
+              0.1488
+            ],
+            [
+              "Candidate_A",
+              0.1535
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ],
+            [
+              "Candidate_B",
+              0.1855
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ANTI_HAZING_LAW/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "ARANTABAYAN.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0054,
+          "structure_error_all": 0.0038,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 516.43,
+            "layout_parsing": 167.85,
+            "stylistic_markers": 3568.91,
+            "instantiation": 0.1,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.4,
+            "ranking": 774.96,
+            "rendering": 128.63,
+            "serialization": 0.25,
+            "total": 5157.59
+          },
+          "latency_total": 5157.59,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1483,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0066,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1483
+            ],
+            [
+              "Candidate_C",
+              0.1579
+            ],
+            [
+              "Candidate_E",
+              0.1579
+            ],
+            [
+              "Candidate_A",
+              0.1656
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ARANTABAYAN/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "CHS_BIRISTUHAN.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0246,
+          "structure_error_all": 0.0184,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 824.46,
+            "layout_parsing": 191.61,
+            "stylistic_markers": 1059.75,
+            "instantiation": 0.1,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.41,
+            "ranking": 786.82,
+            "rendering": 110.33,
+            "serialization": 0.27,
+            "total": 2973.81
+          },
+          "latency_total": 2973.81,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1385,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0001,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1385
+            ],
+            [
+              "Candidate_C",
+              0.1481
+            ],
+            [
+              "Candidate_E",
+              0.1481
+            ],
+            [
+              "Candidate_A",
+              0.1531
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CHS_BIRISTUHAN/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "CMET.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0997,
+          "structure_error_all": 0.0875,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1986.69,
+            "layout_parsing": 281.15,
+            "stylistic_markers": 4800.67,
+            "instantiation": 0.1,
+            "gnn_inference": 0.07,
+            "csp_resolution": 0.41,
+            "ranking": 793.58,
+            "rendering": 181.83,
+            "serialization": 0.26,
+            "total": 8044.77
+          },
+          "latency_total": 8044.77,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1466,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0056,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1466
+            ],
+            [
+              "Candidate_C",
+              0.1563
+            ],
+            [
+              "Candidate_E",
+              0.1563
+            ],
+            [
+              "Candidate_A",
+              0.1653
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CMET/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "CTC.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.049,
+          "structure_error_all": 0.0424,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1000.43,
+            "layout_parsing": 266.66,
+            "stylistic_markers": 816.28,
+            "instantiation": 0.1,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.42,
+            "ranking": 774.57,
+            "rendering": 251.87,
+            "serialization": 0.28,
+            "total": 3110.67
+          },
+          "latency_total": 3110.67,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1494,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0074,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1494
+            ],
+            [
+              "Candidate_C",
+              0.1591
+            ],
+            [
+              "Candidate_E",
+              0.1591
+            ],
+            [
+              "Candidate_A",
+              0.1695
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CTC/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "DEAR_SENDER.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0505,
+          "structure_error_all": 0.0411,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1433.83,
+            "layout_parsing": 288.79,
+            "stylistic_markers": 1031.0,
+            "instantiation": 0.1,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.42,
+            "ranking": 809.4,
+            "rendering": 125.98,
+            "serialization": 0.28,
+            "total": 3689.87
+          },
+          "latency_total": 3689.87,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.139,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0005,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.139
+            ],
+            [
+              "Candidate_C",
+              0.1485
+            ],
+            [
+              "Candidate_E",
+              0.1486
+            ],
+            [
+              "Candidate_A",
+              0.1535
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1855
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/DEAR_SENDER/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "DONATION_PROGRAM.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.1252,
+          "structure_error_all": 0.1146,
+          "mapped_roles": [
+            "details",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1392.34,
+            "layout_parsing": 352.92,
+            "stylistic_markers": 3848.63,
+            "instantiation": 0.11,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.43,
+            "ranking": 764.11,
+            "rendering": 166.12,
+            "serialization": 0.27,
+            "total": 6525.01
+          },
+          "latency_total": 6525.01,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1494,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0074,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1494
+            ],
+            [
+              "Candidate_E",
+              0.1563
+            ],
+            [
+              "Candidate_C",
+              0.1591
+            ],
+            [
+              "Candidate_A",
+              0.1639
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/DONATION_PROGRAM/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "FLOWERS_OF_HOPE.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0593,
+          "structure_error_all": 0.0496,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1943.07,
+            "layout_parsing": 544.15,
+            "stylistic_markers": 4247.92,
+            "instantiation": 0.1,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.42,
+            "ranking": 816.8,
+            "rendering": 177.18,
+            "serialization": 0.27,
+            "total": 7729.98
+          },
+          "latency_total": 7729.98,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1396,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0009,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 1,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1396
+            ],
+            [
+              "Candidate_E",
+              0.1494
+            ],
+            [
+              "Candidate_C",
+              0.1503
+            ],
+            [
+              "Candidate_A",
+              0.1544
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/FLOWERS_OF_HOPE/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "GUESS_THE_TEACHER.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0105,
+          "structure_error_all": 0.0069,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 800.33,
+            "layout_parsing": 181.19,
+            "stylistic_markers": 1305.89,
+            "instantiation": 0.11,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.43,
+            "ranking": 764.11,
+            "rendering": 127.91,
+            "serialization": 0.27,
+            "total": 3180.29
+          },
+          "latency_total": 3180.29,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1805,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0281,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1805
+            ],
+            [
+              "Candidate_C",
+              0.1901
+            ],
+            [
+              "Candidate_E",
+              0.1901
+            ],
+            [
+              "Candidate_B",
+              0.1916
+            ],
+            [
+              "Candidate_F",
+              0.1916
+            ],
+            [
+              "Candidate_A",
+              0.195
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/GUESS_THE_TEACHER/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "JFINEX.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0,
+          "structure_error_all": 0.0,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 1281.56,
+            "layout_parsing": 437.61,
+            "stylistic_markers": 837.28,
+            "instantiation": 0.1,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.43,
+            "ranking": 765.5,
+            "rendering": 158.53,
+            "serialization": 0.27,
+            "total": 3481.35
+          },
+          "latency_total": 3481.35,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1494,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0074,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1494
+            ],
+            [
+              "Candidate_C",
+              0.1591
+            ],
+            [
+              "Candidate_E",
+              0.1591
+            ],
+            [
+              "Candidate_A",
+              0.1639
+            ],
+            [
+              "Candidate_B",
+              0.1869
+            ],
+            [
+              "Candidate_F",
+              0.1869
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/JFINEX/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "KAINANG_PAMILYA.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0171,
+          "structure_error_all": 0.01,
+          "mapped_roles": [
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2218.25,
+            "layout_parsing": 683.1,
+            "stylistic_markers": 7076.09,
+            "instantiation": 0.11,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.47,
+            "ranking": 779.25,
+            "rendering": 277.53,
+            "serialization": 0.28,
+            "total": 11035.13
+          },
+          "latency_total": 11035.13,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1605,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0148,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1605
+            ],
+            [
+              "Candidate_C",
+              0.1702
+            ],
+            [
+              "Candidate_E",
+              0.1702
+            ],
+            [
+              "Candidate_A",
+              0.175
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/KAINANG_PAMILYA/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "LUCKY_TERA.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0198,
+          "structure_error_all": 0.0134,
+          "mapped_roles": [
+            "details",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 832.08,
+            "layout_parsing": 294.12,
+            "stylistic_markers": 1933.88,
+            "instantiation": 0.11,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.42,
+            "ranking": 848.31,
+            "rendering": 362.21,
+            "serialization": 0.3,
+            "total": 4271.5
+          },
+          "latency_total": 4271.5,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1391,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0006,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1391
+            ],
+            [
+              "Candidate_C",
+              0.1486
+            ],
+            [
+              "Candidate_E",
+              0.1488
+            ],
+            [
+              "Candidate_A",
+              0.159
+            ],
+            [
+              "Candidate_B",
+              0.1858
+            ],
+            [
+              "Candidate_F",
+              0.1937
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/LUCKY_TERA/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "RXEADY.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0774,
+          "structure_error_all": 0.0649,
+          "mapped_roles": [
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2020.84,
+            "layout_parsing": 360.52,
+            "stylistic_markers": 855.95,
+            "instantiation": 0.11,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.42,
+            "ranking": 778.95,
+            "rendering": 169.85,
+            "serialization": 0.27,
+            "total": 4186.97
+          },
+          "latency_total": 4186.97,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/RXEADY/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "RZEADY_SET_BOOTH.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0891,
+          "structure_error_all": 0.0796,
+          "mapped_roles": [
+            "details",
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 2330.18,
+            "layout_parsing": 1187.2,
+            "stylistic_markers": 3349.55,
+            "instantiation": 0.11,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.42,
+            "ranking": 781.94,
+            "rendering": 26.96,
+            "serialization": 0.25,
+            "total": 7676.67
+          },
+          "latency_total": 7676.67,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.151,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0085,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": false,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.151
+            ],
+            [
+              "Candidate_E",
+              0.1607
+            ],
+            [
+              "Candidate_C",
+              0.1651
+            ],
+            [
+              "Candidate_A",
+              0.1741
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/RZEADY_SET_BOOTH/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SHARE_KO_LANG.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2221.52,
+            "layout_parsing": 660.41,
+            "stylistic_markers": 365.78,
+            "instantiation": 0.11,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.41,
+            "ranking": 764.92,
+            "rendering": 67.48,
+            "serialization": 0.24,
+            "total": 4080.87
+          },
+          "latency_total": 4080.87,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.155,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0111,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": false,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.155
+            ],
+            [
+              "Candidate_C",
+              0.1646
+            ],
+            [
+              "Candidate_E",
+              0.1646
+            ],
+            [
+              "Candidate_A",
+              0.1695
+            ],
+            [
+              "Candidate_F",
+              0.1884
+            ],
+            [
+              "Candidate_B",
+              0.1892
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SHARE_KO_LANG/id_mapping/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SIGN_LANGUAGE_DAY.jpg",
+          "condition": "mapping",
+          "use_gnn": false,
+          "structure_error": 0.0935,
+          "structure_error_all": 0.0875,
+          "mapped_roles": [
+            "header",
+            "logo",
+            "title"
+          ],
+          "timings_ms": {
+            "template_ingestion": 800.06,
+            "layout_parsing": 171.91,
+            "stylistic_markers": 927.46,
+            "instantiation": 0.11,
+            "gnn_inference": 0.06,
+            "csp_resolution": 0.42,
+            "ranking": 784.82,
+            "rendering": 282.07,
+            "serialization": 0.27,
+            "total": 2967.18
+          },
+          "latency_total": 2967.18,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1439,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0037,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1439
+            ],
+            [
+              "Candidate_C",
+              0.1535
+            ],
+            [
+              "Candidate_E",
+              0.1535
+            ],
+            [
+              "Candidate_A",
+              0.1574
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SIGN_LANGUAGE_DAY/id_mapping/ThemeSync_identification-card_populated.svg"
         }
       ],
       "base_trials": [
         {
+          "poster": "ANTI_HAZING_LAW.jpg",
+          "condition": "baseline",
           "use_gnn": false,
+          "structure_error": 0.1446,
+          "structure_error_all": 0.1433,
+          "mapped_roles": [],
           "timings_ms": {
-            "instantiation": 0.16,
-            "gnn_inference": 0.01,
-            "csp_resolution": 0.33,
-            "ranking": 4.01,
-            "total": 4.51
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.2834,
-          "P_align": 0.0,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
-          "num_nodes": 6,
-          "latency_total": 4.51
-        },
-        {
-          "use_gnn": false,
-          "timings_ms": {
-            "instantiation": 0.11,
-            "gnn_inference": 0.01,
-            "csp_resolution": 0.34,
-            "ranking": 24.79,
-            "total": 25.24
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.2834,
-          "P_align": 0.0,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
-          "num_nodes": 6,
-          "latency_total": 25.24
-        },
-        {
-          "use_gnn": false,
-          "timings_ms": {
-            "instantiation": 0.11,
-            "gnn_inference": 0.01,
-            "csp_resolution": 0.33,
-            "ranking": 24.91,
-            "total": 25.36
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.2834,
-          "P_align": 0.0,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
-          "num_nodes": 6,
-          "latency_total": 25.36
-        },
-        {
-          "use_gnn": false,
-          "timings_ms": {
-            "instantiation": 0.12,
-            "gnn_inference": 0.01,
-            "csp_resolution": 0.29,
-            "ranking": 14.97,
-            "total": 15.38
-          },
-          "mean_iou": 0.0,
-          "C_total": 1.2834,
-          "P_align": 0.0,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
-          "num_nodes": 6,
-          "latency_total": 15.38
-        },
-        {
-          "use_gnn": false,
-          "timings_ms": {
+            "template_ingestion": 1869.24,
+            "layout_parsing": 396.18,
+            "stylistic_markers": 1925.26,
             "instantiation": 0.12,
             "gnn_inference": 0.0,
-            "csp_resolution": 0.29,
-            "ranking": 8.62,
-            "total": 9.04
+            "csp_resolution": 0.43,
+            "ranking": 980.26,
+            "rendering": 231.09,
+            "serialization": 0.28,
+            "total": 5402.86
           },
-          "mean_iou": 0.0,
-          "C_total": 1.2834,
+          "latency_total": 5402.86,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1426,
+          "P_collision": 0.0,
           "P_align": 0.0,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
+          "P_space": 0.1383,
+          "P_legibility": 0.0029,
+          "mean_iou": null,
           "num_nodes": 6,
-          "latency_total": 9.04
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1426
+            ],
+            [
+              "Candidate_C",
+              0.1488
+            ],
+            [
+              "Candidate_E",
+              0.1491
+            ],
+            [
+              "Candidate_A",
+              0.1535
+            ],
+            [
+              "Candidate_F",
+              0.1854
+            ],
+            [
+              "Candidate_B",
+              0.1871
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ANTI_HAZING_LAW/id_baseline/ThemeSync_identification-card_populated.svg"
         },
         {
+          "poster": "ARANTABAYAN.jpg",
+          "condition": "baseline",
           "use_gnn": false,
+          "structure_error": 0.0659,
+          "structure_error_all": 0.0643,
+          "mapped_roles": [],
           "timings_ms": {
-            "instantiation": 0.1,
+            "template_ingestion": 516.78,
+            "layout_parsing": 166.96,
+            "stylistic_markers": 3550.83,
+            "instantiation": 0.12,
             "gnn_inference": 0.0,
-            "csp_resolution": 0.29,
-            "ranking": 23.0,
-            "total": 23.41
+            "csp_resolution": 0.43,
+            "ranking": 767.46,
+            "rendering": 129.09,
+            "serialization": 0.24,
+            "total": 5131.91
           },
-          "mean_iou": 0.0,
-          "C_total": 1.2834,
+          "latency_total": 5131.91,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1439,
+          "P_collision": 0.0,
           "P_align": 0.0,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
+          "P_space": 0.1383,
+          "P_legibility": 0.0037,
+          "mean_iou": null,
           "num_nodes": 6,
-          "latency_total": 23.41
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1439
+            ],
+            [
+              "Candidate_C",
+              0.1535
+            ],
+            [
+              "Candidate_E",
+              0.1535
+            ],
+            [
+              "Candidate_A",
+              0.1584
+            ],
+            [
+              "Candidate_F",
+              0.1874
+            ],
+            [
+              "Candidate_B",
+              0.1947
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/ARANTABAYAN/id_baseline/ThemeSync_identification-card_populated.svg"
         },
         {
+          "poster": "CHS_BIRISTUHAN.jpg",
+          "condition": "baseline",
           "use_gnn": false,
+          "structure_error": 0.0848,
+          "structure_error_all": 0.0835,
+          "mapped_roles": [],
           "timings_ms": {
-            "instantiation": 0.11,
-            "gnn_inference": 0.01,
-            "csp_resolution": 0.28,
-            "ranking": 37.95,
-            "total": 38.35
+            "template_ingestion": 825.19,
+            "layout_parsing": 196.51,
+            "stylistic_markers": 1073.05,
+            "instantiation": 0.12,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.42,
+            "ranking": 809.88,
+            "rendering": 110.7,
+            "serialization": 0.28,
+            "total": 3016.15
           },
-          "mean_iou": 0.0,
-          "C_total": 1.2834,
+          "latency_total": 3016.15,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
           "P_align": 0.0,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": null,
           "num_nodes": 6,
-          "latency_total": 38.35
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1547
+            ],
+            [
+              "Candidate_B",
+              0.1865
+            ],
+            [
+              "Candidate_F",
+              0.1867
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CHS_BIRISTUHAN/id_baseline/ThemeSync_identification-card_populated.svg"
         },
         {
+          "poster": "CMET.jpg",
+          "condition": "baseline",
           "use_gnn": false,
+          "structure_error": 0.1759,
+          "structure_error_all": 0.1743,
+          "mapped_roles": [],
           "timings_ms": {
+            "template_ingestion": 1959.24,
+            "layout_parsing": 432.4,
+            "stylistic_markers": 4791.69,
+            "instantiation": 0.13,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.44,
+            "ranking": 769.88,
+            "rendering": 180.27,
+            "serialization": 0.25,
+            "total": 8134.3
+          },
+          "latency_total": 8134.3,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1411,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0019,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1411
+            ],
+            [
+              "Candidate_C",
+              0.1508
+            ],
+            [
+              "Candidate_E",
+              0.1508
+            ],
+            [
+              "Candidate_A",
+              0.1556
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ],
+            [
+              "Candidate_B",
+              0.1978
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CMET/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "CTC.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1057,
+          "structure_error_all": 0.107,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 1000.08,
+            "layout_parsing": 268.42,
+            "stylistic_markers": 815.82,
+            "instantiation": 0.13,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.43,
+            "ranking": 769.43,
+            "rendering": 252.1,
+            "serialization": 0.25,
+            "total": 3106.66
+          },
+          "latency_total": 3106.66,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1439,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0037,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1439
+            ],
+            [
+              "Candidate_C",
+              0.1535
+            ],
+            [
+              "Candidate_E",
+              0.1535
+            ],
+            [
+              "Candidate_A",
+              0.1584
+            ],
+            [
+              "Candidate_F",
+              0.1916
+            ],
+            [
+              "Candidate_B",
+              0.1947
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/CTC/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "DEAR_SENDER.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1101,
+          "structure_error_all": 0.1085,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 1431.17,
+            "layout_parsing": 289.24,
+            "stylistic_markers": 1042.75,
+            "instantiation": 0.12,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.41,
+            "ranking": 827.35,
+            "rendering": 128.83,
+            "serialization": 0.27,
+            "total": 3720.15
+          },
+          "latency_total": 3720.15,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1386,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0002,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1386
+            ],
+            [
+              "Candidate_C",
+              0.1483
+            ],
+            [
+              "Candidate_E",
+              0.1483
+            ],
+            [
+              "Candidate_A",
+              0.1531
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/DEAR_SENDER/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "DONATION_PROGRAM.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.2015,
+          "structure_error_all": 0.2015,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 1397.27,
+            "layout_parsing": 397.0,
+            "stylistic_markers": 3846.15,
+            "instantiation": 0.13,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.42,
+            "ranking": 760.66,
+            "rendering": 168.45,
+            "serialization": 0.26,
+            "total": 6570.34
+          },
+          "latency_total": 6570.34,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1638,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.017,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1638
+            ],
+            [
+              "Candidate_E",
+              0.1728
+            ],
+            [
+              "Candidate_C",
+              0.1735
+            ],
+            [
+              "Candidate_A",
+              0.1776
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ],
+            [
+              "Candidate_B",
+              0.1884
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/DONATION_PROGRAM/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "FLOWERS_OF_HOPE.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1172,
+          "structure_error_all": 0.1153,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 1929.69,
+            "layout_parsing": 541.56,
+            "stylistic_markers": 4252.73,
+            "instantiation": 0.13,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.43,
+            "ranking": 850.42,
+            "rendering": 185.04,
+            "serialization": 0.29,
+            "total": 7760.28
+          },
+          "latency_total": 7760.28,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1397,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0009,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1397
+            ],
+            [
+              "Candidate_C",
+              0.1483
+            ],
+            [
+              "Candidate_E",
+              0.1484
+            ],
+            [
+              "Candidate_A",
+              0.1537
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/FLOWERS_OF_HOPE/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "GUESS_THE_TEACHER.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0664,
+          "structure_error_all": 0.0648,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 801.95,
+            "layout_parsing": 180.39,
+            "stylistic_markers": 1306.87,
+            "instantiation": 0.13,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.43,
+            "ranking": 770.05,
+            "rendering": 126.75,
+            "serialization": 0.26,
+            "total": 3186.82
+          },
+          "latency_total": 3186.82,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1605,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0148,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1605
+            ],
+            [
+              "Candidate_C",
+              0.1702
+            ],
+            [
+              "Candidate_E",
+              0.1702
+            ],
+            [
+              "Candidate_A",
+              0.175
+            ],
+            [
+              "Candidate_F",
+              0.1863
+            ],
+            [
+              "Candidate_B",
+              0.1884
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/GUESS_THE_TEACHER/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "JFINEX.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0444,
+          "structure_error_all": 0.0431,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 1280.6,
+            "layout_parsing": 436.84,
+            "stylistic_markers": 837.37,
+            "instantiation": 0.12,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.41,
+            "ranking": 766.82,
+            "rendering": 158.06,
+            "serialization": 0.24,
+            "total": 3480.47
+          },
+          "latency_total": 3480.47,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1439,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0037,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1439
+            ],
+            [
+              "Candidate_C",
+              0.1535
+            ],
+            [
+              "Candidate_E",
+              0.1535
+            ],
+            [
+              "Candidate_A",
+              0.1584
+            ],
+            [
+              "Candidate_B",
+              0.1853
+            ],
+            [
+              "Candidate_F",
+              0.1853
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/JFINEX/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "KAINANG_PAMILYA.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.0934,
+          "structure_error_all": 0.0918,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2227.33,
+            "layout_parsing": 678.86,
+            "stylistic_markers": 7216.81,
             "instantiation": 0.15,
             "gnn_inference": 0.0,
-            "csp_resolution": 0.3,
-            "ranking": 37.1,
-            "total": 37.56
+            "csp_resolution": 0.46,
+            "ranking": 782.28,
+            "rendering": 271.96,
+            "serialization": 0.25,
+            "total": 11178.11
           },
-          "mean_iou": 0.0,
-          "C_total": 1.2834,
+          "latency_total": 11178.11,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.155,
+          "P_collision": 0.0,
           "P_align": 0.0,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
+          "P_space": 0.1383,
+          "P_legibility": 0.0111,
+          "mean_iou": null,
           "num_nodes": 6,
-          "latency_total": 37.56
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.155
+            ],
+            [
+              "Candidate_C",
+              0.1646
+            ],
+            [
+              "Candidate_E",
+              0.1646
+            ],
+            [
+              "Candidate_A",
+              0.1695
+            ],
+            [
+              "Candidate_B",
+              0.1884
+            ],
+            [
+              "Candidate_F",
+              0.1884
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/KAINANG_PAMILYA/id_baseline/ThemeSync_identification-card_populated.svg"
         },
         {
+          "poster": "LUCKY_TERA.jpg",
+          "condition": "baseline",
           "use_gnn": false,
+          "structure_error": 0.0913,
+          "structure_error_all": 0.0895,
+          "mapped_roles": [],
           "timings_ms": {
-            "instantiation": 0.23,
-            "gnn_inference": 0.01,
-            "csp_resolution": 0.47,
-            "ranking": 6.65,
-            "total": 7.36
+            "template_ingestion": 832.93,
+            "layout_parsing": 302.38,
+            "stylistic_markers": 1938.3,
+            "instantiation": 0.14,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.44,
+            "ranking": 861.4,
+            "rendering": 358.9,
+            "serialization": 0.28,
+            "total": 4294.76
           },
-          "mean_iou": 0.0,
-          "C_total": 1.2834,
+          "latency_total": 4294.76,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 anti-diagonal",
+          "C_total": 0.1408,
+          "P_collision": 0.0,
           "P_align": 0.0,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
+          "P_space": 0.1383,
+          "P_legibility": 0.0017,
+          "mean_iou": null,
           "num_nodes": 6,
-          "latency_total": 7.36
+          "motifs_placed": 2,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1408
+            ],
+            [
+              "Candidate_C",
+              0.1483
+            ],
+            [
+              "Candidate_E",
+              0.1484
+            ],
+            [
+              "Candidate_A",
+              0.1546
+            ],
+            [
+              "Candidate_B",
+              0.1871
+            ],
+            [
+              "Candidate_F",
+              0.1871
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/LUCKY_TERA/id_baseline/ThemeSync_identification-card_populated.svg"
         },
         {
+          "poster": "RXEADY.jpg",
+          "condition": "baseline",
           "use_gnn": false,
+          "structure_error": 0.1537,
+          "structure_error_all": 0.1518,
+          "mapped_roles": [],
           "timings_ms": {
+            "template_ingestion": 2025.44,
+            "layout_parsing": 361.62,
+            "stylistic_markers": 864.16,
             "instantiation": 0.12,
             "gnn_inference": 0.0,
-            "csp_resolution": 0.29,
-            "ranking": 10.39,
-            "total": 10.8
+            "csp_resolution": 0.44,
+            "ranking": 815.73,
+            "rendering": 167.71,
+            "serialization": 0.26,
+            "total": 4235.48
           },
-          "mean_iou": 0.0,
-          "C_total": 1.2834,
+          "latency_total": 4235.48,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1383,
+          "P_collision": 0.0,
           "P_align": 0.0,
-          "P_space": 0.1584,
-          "P_legibility": 0.75,
+          "P_space": 0.1383,
+          "P_legibility": 0.0,
+          "mean_iou": null,
           "num_nodes": 6,
-          "latency_total": 10.8
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1383
+            ],
+            [
+              "Candidate_C",
+              0.148
+            ],
+            [
+              "Candidate_E",
+              0.148
+            ],
+            [
+              "Candidate_A",
+              0.1528
+            ],
+            [
+              "Candidate_B",
+              0.1869
+            ],
+            [
+              "Candidate_F",
+              0.1874
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/RXEADY/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "RZEADY_SET_BOOTH.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.1654,
+          "structure_error_all": 0.1638,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2313.9,
+            "layout_parsing": 1203.13,
+            "stylistic_markers": 3385.17,
+            "instantiation": 0.15,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.42,
+            "ranking": 778.51,
+            "rendering": 25.98,
+            "serialization": 0.25,
+            "total": 7707.52
+          },
+          "latency_total": 7707.52,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1439,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0037,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": false,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1439
+            ],
+            [
+              "Candidate_C",
+              0.1535
+            ],
+            [
+              "Candidate_E",
+              0.1535
+            ],
+            [
+              "Candidate_A",
+              0.1584
+            ],
+            [
+              "Candidate_B",
+              0.1869
+            ],
+            [
+              "Candidate_F",
+              0.1869
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/RZEADY_SET_BOOTH/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SHARE_KO_LANG.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": null,
+          "structure_error_all": null,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 2223.14,
+            "layout_parsing": 656.97,
+            "stylistic_markers": 354.35,
+            "instantiation": 0.15,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.44,
+            "ranking": 768.5,
+            "rendering": 67.61,
+            "serialization": 0.24,
+            "total": 4071.4
+          },
+          "latency_total": 4071.4,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.155,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0111,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": false,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.155
+            ],
+            [
+              "Candidate_C",
+              0.1646
+            ],
+            [
+              "Candidate_E",
+              0.1646
+            ],
+            [
+              "Candidate_A",
+              0.1695
+            ],
+            [
+              "Candidate_F",
+              0.1884
+            ],
+            [
+              "Candidate_B",
+              0.1892
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SHARE_KO_LANG/id_baseline/ThemeSync_identification-card_populated.svg"
+        },
+        {
+          "poster": "SIGN_LANGUAGE_DAY.jpg",
+          "condition": "baseline",
+          "use_gnn": false,
+          "structure_error": 0.155,
+          "structure_error_all": 0.1547,
+          "mapped_roles": [],
+          "timings_ms": {
+            "template_ingestion": 818.5,
+            "layout_parsing": 172.08,
+            "stylistic_markers": 921.29,
+            "instantiation": 0.12,
+            "gnn_inference": 0.0,
+            "csp_resolution": 0.42,
+            "ranking": 785.76,
+            "rendering": 282.38,
+            "serialization": 0.27,
+            "total": 2980.82
+          },
+          "latency_total": 2980.82,
+          "winner": "Candidate_D",
+          "winner_label": "left-aligned \u00b7 margin 72px \u00b7 gap 18px \u00b7 no motifs",
+          "C_total": 0.1402,
+          "P_collision": 0.0,
+          "P_align": 0.0,
+          "P_space": 0.1383,
+          "P_legibility": 0.0012,
+          "mean_iou": null,
+          "num_nodes": 6,
+          "motifs_placed": 0,
+          "title_artwork": true,
+          "candidates": [
+            [
+              "Candidate_D",
+              0.1402
+            ],
+            [
+              "Candidate_C",
+              0.1498
+            ],
+            [
+              "Candidate_E",
+              0.1498
+            ],
+            [
+              "Candidate_A",
+              0.1547
+            ],
+            [
+              "Candidate_B",
+              0.1871
+            ],
+            [
+              "Candidate_F",
+              0.2041
+            ]
+          ],
+          "rendered_svg": "data/rendered/phase3/SIGN_LANGUAGE_DAY/id_baseline/ThemeSync_identification-card_populated.svg"
         }
       ]
     }

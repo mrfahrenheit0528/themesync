@@ -98,7 +98,7 @@ dataset contains thousands of annotated graphic design layouts…"
   and 1,035 test posters, 4 element classes (logo, text, underlay,
   embellishment)**, from the RADM paper.
 
-### 3.2 🟡 New Research Instrument: the 124-image master-layout dataset (between "Training Data and Feature Mapping" and "Synthetic Administrative Templates", p.49)
+### 3.2 🟡 New Research Instrument: the 200-image master-layout dataset (between "Training Data and Feature Mapping" and "Synthetic Administrative Templates", p.49)
 
 **Now:** "Research Instruments and Data Gathering" (pp.45–50) lists only
 CGL-Dataset V2 and the synthetic certificate/ID templates. The group's own
@@ -113,7 +113,8 @@ annotated dataset is not mentioned anywhere in the manuscript.
 - **Purpose:** the Stage 0b YOLOv8 model trained only on CGL-Dataset V2
   didn't transfer to real master layouts (top confidence 0.03–0.11 on real
   CSPC posters, §3.5–3.7). Real branded designs are needed for fine-tuning.
-- **Source and scope:** 124 real event-poster/branding master layouts
+- **Source and scope:** 200 real event-poster/branding master layouts
+  (re-annotated 2026-10; it was 124 before)
   (a "master layout" is any generic branded design a user uploads). State
   where the images came from and the permission/usage basis. **Fill this
   in; it isn't in the notes.**
@@ -122,14 +123,23 @@ annotated dataset is not mentioned anywhere in the manuscript.
   - The 4 classes reuse CGL-Dataset's taxonomy (Zhou et al. 2022).
   - Written guidelines: `notes/annotation_guidelines.md`.
   - Who annotated, and the cross-checking between annotators.
-- **Split:** 99 train / 25 validation (80/20).
+- **Split:** 160 train / 40 validation (80/20).
 - **Quality control:**
-  - Export check: mixed polygon/box rows and a class-index reorder were
-    found and fixed before training (§3.12).
+  - Export checks: mixed polygon/box rows and a class-index reorder were
+    found and fixed before training (§3.12). The 200-image export had the
+    polygon problem again; `prepare_master_layout_dataset.py` converts
+    them, and it drops boxes covering over half a poster (§3.30).
   - Independent expert validation of a 15-image sample against the class
     definitions (`notes/annotation_validation_reference.md`).
-- **How it's used:** continued fine-tuning of the CGL-pretrained YOLOv8,
-  run in two stages: v2 on 65 images, v3 on 124.
+- **How it's used:** it trains the deployed detector.
+  - v2 (65 images) and v3 (124) continued fine-tuning the CGL-pretrained
+    YOLOv8n.
+  - The deployed **v4** is YOLOv8s from COCO weights, trained at 1024 px on
+    the 124 images, with the 60 over-half-poster boxes removed (notes
+    §3.25).
+  - The deployed **v5** is the same recipe on the 200-image
+    re-annotation (notes §3.30). It kept CGL's 4 classes, so no extension
+    of the taxonomy needs describing.
 
 ### 3.3 🟡 Phase 1 YOLOv8 text doesn't say what the detector is trained on (p.50)
 
@@ -137,8 +147,17 @@ annotated dataset is not mentioned anywhere in the manuscript.
 detection and Tesseract OCR…" There is no training-data statement for
 YOLOv8, while the GNN's is stated ("trained using the CGL-Dataset").
 
-**Add one sentence:** YOLOv8 is pretrained on CGL-Dataset V2, then
-fine-tuned on the master-layout dataset from item 3.2.
+**Add one sentence** stating what the deployed detector is (updated
+2026-09-29, notes §3.25): YOLOv8s initialised from COCO weights and trained
+at 1024 px on the master-layout dataset from item 3.2.
+
+- **Don't write "pretrained on CGL-Dataset V2".** That was v1–v3.
+  - CGL pretraining didn't transfer to real posters (top confidence
+    0.03–0.11, §3.5).
+  - The deployed v4 doesn't use it.
+  - CGL-Dataset V2 remains the **GNN's** training corpus.
+- **Optionally:** the v3 → v4 gain on the same validation labels (mAP50
+  0.363 → 0.454; logo 0.620 → 0.818) is a Chapter 4 result, not Chapter 3.
 
 **Consider also:** Figure 2's "Affine scaling" readout is now real. The
 detected logo's aspect ratio locks the certificate/ID logo's proportions
@@ -334,6 +353,204 @@ dropped (§3.10 Finding 3).
 **Blocked on the TA** (checklist B): fix the code, or revise Appendix A and
 report it as a limitation.
 
+### 3.13 🟡 Say what the GNN is trained to predict (pp.40–41; Phase 1, p.51)
+
+**Now:** the architecture is fully specified (Formulas 3.6–3.8), but not
+the training objective. "Trained using the CGL-Dataset" is all the reader
+gets.
+
+**Code (v2, notes §3.22):**
+- **Input:** each layout's logo and text elements start from a naive stack
+  (centred, stacked in reading order). This is Formula 3.6's (x_i, y_i) at
+  both training and inference, and exactly the arrangement the no-GNN
+  baseline builds.
+- **Target:** designers' real CGL positions (Smooth-L1), plus the offsets
+  between consecutive elements, plus the fitness function's collision and
+  in-bounds terms as regularisers.
+- **Validation split:** a seeded 5% of CGL train is held out (CGL's own
+  test split carries no annotations).
+
+**Add:** two or three sentences stating this, and the held-out result
+(position error 0.121 vs. 0.175 for the naive stack; gap error 0.074
+vs. 0.077). Don't mention v1 in Chapter 3; it belongs in Chapter 4.
+
+**Updated 2026-09-29 (v3, notes §3.26): the deployed GNN's input is the
+master's structure, so the sentences should say:**
+- **Input:**
+  - The target's elements that have a counterpart on the master (logo
+    row, header, and on the event ID also title and details) start where
+    the counterpart sits.
+  - The rest start in reading order between them.
+  - Without a master, the naive stack as before.
+- **Training:** CGL layouts from both starts. The structure start is a
+  layout's own positions, distorted the way a cross-format mapping
+  distorts them.
+- **Output:** registered to the master's anchors. The mapped elements keep
+  the master's positions, and the GNN places the others between them.
+- **Held-out numbers:**
+  - Position error 0.036 vs. 0.050 for the structure start alone.
+  - With exact anchors, unmapped elements 0.075 vs. 0.081 for
+    interpolation.
+
+### 3.14 🟡 Stylistic markers: say what is extracted and where it goes (p.38 "Stylistic Marker Identification"; p.51 Phase 1; p.53 Phase 3)
+
+**Now:**
+- p.38: SIFT recognises the logo, and builds a saliency map "of the
+  inpainted background layer".
+- p.53: the rendering step projects "the K-Means color clusters and
+  extracted stylistic typography" onto the boxes.
+
+**Code (notes §3.23), Stage 0c:**
+- The master's text-free background layer is rebuilt from the poster's
+  border (the implementation's "inpainted background").
+- Its motifs are YOLO detections cut out and ranked by SIFT keypoint
+  density:
+  - the embellishment class today;
+  - the new `illustration` class first, once the re-annotated v5 exists
+    (§3.25).
+- Its title artwork is cut out too.
+- The output is rendered on this layer, and the Legibility Penalty is
+  scored against its saliency.
+
+**Add:** a sentence each at p.38 (what "inpainted background" means here,
+and that motifs and title artwork are the markers carried across), and at
+p.53 (the rendering projects the background layer, motifs and title artwork
+as well as the palette).
+
+### 3.15 🟡 What the "parallel state-space explorations" vary (Phase 3, p.52; Figure 3, p.54)
+
+**Now:** candidates are "multiple layout candidates" and "parallel
+algorithmic layout variations", with nothing said about how they differ.
+
+**Code (updated 2026-09-29, notes §3.27):** six candidates. Each combines
+four things:
+- a **layout archetype**: classic centred, left-aligned, art column (the
+  title artwork in a side column), header banner, floating card (ID) or
+  full-width band (ID);
+- a page margin;
+- a vertical rhythm (the stack's minimum gap);
+- a motif arrangement: diagonal, anti-diagonal, four corners, side
+  columns, base pair, crown pair, or a single enlarged "hero" motif.
+
+Each is solved by Cassowary and scored on its own composed background.
+
+**Add:** one sentence listing the four varied parameters.
+
+### 3.16 🟡 Pre-orchestration schema validation: state the actual rules (p.44)
+
+**Now:** the rules are given only by example ("font weight is evaluated as
+a valid integer", "baseline tensor arrays do not exceed the viewport").
+
+**Code:** JSON Schema (Draft 2020-12), and a violation rejects the
+initialization.
+- **Typography:** weight ∈ {100, 200, …, 900}; base size from 8 px to 15%
+  of the viewport's shorter side.
+- **Content payload:** every schema variable present, as a string within
+  its `max_characters`.
+
+**Add:** the two rule sets, in a sentence or a small table.
+
+### 3.17 🟡 Optional: replace the Figure 2 and Figure 3 mockups with screenshots (pp.51, 53)
+
+**Now:** both figures are mockups built around a Christmas poster.
+
+**Code:** the dashboard now implements both, with the same panels and
+labels:
+- Visual DNA, User Injected and Target Initialization;
+- the Constraint Editor with its State Timeline (JSON Sync), and the
+  Recommendation Engine.
+
+Screenshots on a CSPC poster would show the real system. Keep the mockups
+if the committee prefers the figures as designed.
+
+### 3.18 🟡 Phase 3 inputs: synthetic templates *and* real posters (p.52)
+
+**Now:** Phase 3 "will be subjected to the synthetic administrative
+templates".
+
+**Code:**
+- `evaluate.py` still runs on the synthetic theme.
+- The Phase 3 battery (`experiment_runner.py`) runs on the 15 real,
+  unseen event posters, because the Legibility Penalty needs a real
+  background to measure anything.
+
+**Add:** name both inputs.
+
+### 3.19 🟡 Table 1's master-to-GNN mapping is now real: say how it works (Table 1; pp.40–41)
+
+**Now:**
+- Table 1 maps an ingested element's `bbox [x, y]` to the GNN's initial
+  feature encoding.
+- Nowhere does the text say how a poster's elements become a certificate's
+  or ID's starting positions, when the two formats have different
+  elements.
+
+**Code (notes §3.26):**
+- `structure_mapping.py` reads the master's logo row, header, title and
+  details from Stage 0b's detections.
+- It pins the target elements with the same role. Certificates take only
+  the logo row and header: a poster's title position doesn't suit a
+  certificate.
+- The rest are placed in order between them.
+- The GNN's output is registered back onto those anchors.
+
+**Add:** two sentences at Table 1 or pp.40–41: role mapping, then
+interpolation, then GNN refinement, registered to the anchors.
+
+### 3.20 🟡 Formulas 3.13 and 3.14 need their reference area stated (p.40, Formulas 3.13–3.14)
+
+**Now:**
+- Formula 3.13 measures distance to "a dynamically generated structural
+  grid G".
+- Formula 3.14 uses the canvas area.
+- Neither says what G is built from.
+
+**Code (notes §3.27):**
+- G spans the candidate's own content area: its margins, quarters and
+  centre.
+- An element counts as aligned when its left edge, centre or right edge is
+  on a gridline.
+- The whitespace ratio is taken over the candidate's content region. For
+  the art-column layout that is the text column, not the whole page.
+
+Otherwise a left-aligned or split layout is penalised simply for not being
+centred.
+
+**Add:** one sentence per formula.
+
+### 3.21 🟡 Figure 3's canvas and the event set (p.42 "event-driven"; p.53 Figure 3; p.54)
+
+**Now:**
+- p.42 lists the terminal events: on-drop, on-resize-complete, lock
+  toggles.
+- Figure 3 shows a canvas and a Constraint Editor.
+
+**Code (notes §3.28):**
+- The canvas is edited in place: select, drag, resize, lock, and
+  double-click to retype.
+- Each gesture sends one terminal event. The browser only previews while
+  the pointer moves, which matches p.42.
+- Two event kinds were added:
+  - **text edit:** re-validated against the content schema of p.44
+    before it's accepted;
+  - **undo/redo:** each restores an earlier state as a new one, so the
+    JSON chain stays append-only (Formula 3.9).
+
+**Add:** "text edit" to p.42's event list, and a sentence that undo/redo
+append rather than rewrite.
+
+### 3.22 🟡 Optional: K-Means initialisation (p.37, Formula 3.1)
+
+**Code (notes §3.29):**
+- The K-Means initialisation is seeded, best of 5 per k, so a master
+  always yields the same palette. Unseeded, identical runs could render
+  different colours.
+- p.37 doesn't describe the initialisation.
+
+**Add:** "k-means with seeded initialisations (best of five per k)"
+belongs in the implementation details. That's only needed if the
+committee asks about reproducibility.
+
 ---
 
 ## Chapter 4: Results (don't draft until asked)
@@ -345,13 +562,74 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
     posters.
   - v2 (65 images): mAP50 0.325.
   - v3 (124 images): mAP50 0.370; logo 0.620, text 0.595.
-  - Underlay and embellishment remain weak (§3.7, §3.12).
+  - **v4 (deployed):** YOLOv8s from COCO at 1024 px, the over-half boxes
+    removed. On the same cleaned validation labels as v3:
+    - mAP50 0.454 vs. 0.363;
+    - logo 0.818 (recall 0.76 vs. 0.55);
+    - text 0.682.
+  - Embellishment didn't move (recall 0.18). That's a label-definition
+    problem; the group is re-annotating with a new `illustration` class
+    (notes §3.25), and v5 comes after.
+  - The automatic logo row is right on **15 of 15** unseen posters (7 of 15
+    before).
+  - **v5 (deployed 2026-10-06, notes §3.30):** the group's 200-image
+    re-annotation, same recipe. On 32 validation images neither model
+    trained on, mAP50 0.728 vs. v4's 0.486; embellishment 0.609 vs. 0.263;
+    underlay 0.643 vs. 0.138. The dataset is now **200** images
+    (160 train / 40 validation); item 3.2 is updated.
 - **Data-quality catch:** a mixed-format export would have silently
   dropped about 23% of images (§3.12).
-- **GNN-guided vs. baseline fitness:** GNN better on average in the
-  multi-trial runs, but worse on the fixed certificate comparison
-  (C_total 1.2029 vs. 1.1876). Report both honestly.
-- **AAPA diversity collapses under GNN guidance:** a limitation (§1.4).
+- **GNN v1 → v2 (notes §3.22):** the first GNN predicted from inputs it
+  never saw in training; on 2,900 held-out CGL layouts it was worse than no
+  model (order kept 47%, i.e. chance). v2 cuts position error 43% and gap
+  error 79% against v1. The table is in `results/gnn_heldout_eval.json`.
+- **GNN v3, the master's structure as input (notes §3.26):**
+  - **Held-out:** v3 cuts the structure start's position error 28% (0.036
+    vs. 0.050) and its overlap 89%; v2 makes it worse (0.096).
+  - **With exact anchors:**
+    - raw v3 moves them by 2.6% of the height;
+    - registered to them, it keeps them and places the unmapped elements
+      8% better than interpolation (0.075 vs. 0.081);
+    - v2 registered is worse than interpolation.
+  - That's the case for registration, and for training on structure
+    starts.
+- **Phase 3 battery, three Stage 2 conditions (notes §3.26, §3.30,
+  `results/experiment_log.json`, run 20261006_144208: YOLO v5, the 16 new
+  Phase 4 posters):**
+  - **Structure transfer works.** The output is closer to the master than
+    the baseline:
+    - event IDs: on 15 of 16 (structure error 0.045 vs. 0.117);
+    - certificates: on 14 of 16 (0.056 vs. 0.089); the other two have no
+      roles to map.
+  - **Formula 3.11 doesn't reward it.**
+    - Certificates tie on 15 of 16.
+    - On IDs the baseline scores slightly better (0.1456 vs. 0.1492),
+      through legibility: text goes where the poster had artwork.
+    - Worth stating as a limitation of the fitness function. Phase 4's MOS
+      (hierarchy, brand consistency) is where this is judged.
+  - **GNN vs. mapping only:** the same anchors. The GNN moves the unmapped
+    elements on 13 of 32 runs, by ≤ 7.6% of the height. The formats' tall
+    stacks leave the solver's design rules little slack, so report the
+    GNN's gain from the held-out test, not from the fitness.
+  - The 2026-09-29 run (YOLO v4, the earlier 15 posters) showed the same
+    pattern. The older 2-condition numbers (1.2029 vs. 1.1876) are
+    obsolete.
+- **Manual refinements are retained:** simulated moves, resizes and locks
+  are kept exactly through re-solves, with no overlap (F1 1.0, `evaluate.py`,
+  `test_hard_constraints_preserved`).
+- **Stage 0b's automatic logo pick on unseen posters:** right on 7 of 15,
+  incomplete on 6, wrong object on 1, nothing on 1 with v3 (notes §3.21).
+  With v4 and the row-clustering rule it is right on 15 of 15 (§3.25). The
+  dashboard's pickers remain the human-in-the-loop fix.
+- **AAPA diversity:** candidates now differ in layout archetype, margin,
+  rhythm and motif arrangement (§3.15 above, notes §3.27), superseding the
+  earlier collapse finding (§1.4).
+- **Reproducibility catch:** Stage 0's K-Means was unseeded, so identical
+  runs could render different palettes and pick different winners (notes
+  §3.29). It is fixed, and everything reported comes from after the fix.
+- **HITL on the canvas:** moves, resizes, locks, text edits and undo/redo
+  are made directly on the Figure 3 canvas. Each is one terminal event,
+  verified in a real browser (notes §3.28).
 - **Phase 4 MOS results:** none yet.
 
 ---
@@ -359,7 +637,7 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
 ## Order of work
 
 1. **Can do now, no TA decision needed:** 1.1, 1.2, 3.1, 3.2, 3.3, 3.5,
-   3.6, 3.7b (tell the TA about 3.7b).
+   3.6, 3.7b (tell the TA about 3.7b), 3.13–3.16, 3.18–3.21.
    - These answer the TSA directly.
    - 3.2 needs the image source/permission details from the group.
 2. **After the consultant weighs in:** 3.4, 3.8, 3.9.

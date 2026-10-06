@@ -4,21 +4,26 @@ ThemeSync Pipeline Orchestrator
 Entry-point for the full end-to-end ThemeSync layout generation pipeline.
 
 Execution order:
-  0. Template Ingestion          (image → LAB centroids + SIFT saliency)  [optional]
+  0.  Template Ingestion         (image → LAB centroids + SIFT saliency)  [optional]
   0b. Semantic Layout Parsing    (image → detected logo/text/underlay/
                                    embellishment nodes via YOLO+OCR)      [optional]
-                                  Reports on the master layout's own structure.
-                                  Only the detected *logo* feeds the certificate/
-                                  ID being built (its aspect ratio + cropped
-                                  artwork, unless --logo_image overrides); see
-                                  notes/gnn_fixes_and_methodology_notes.md
-                                  sections 3.7, 3.11, 3.14.
-  1. Dynamic Node Instantiation  (payload → node tensors)
-  2. GNN Inference               (spatial position prediction)
-  3. CSP Resolution              (Cassowary hard + soft constraints)
-  4. Metaheuristic Ranking       (AAPA candidate exploration)
-  5. Aesthetic Rendering         (SVG output of top candidate)
-  6. State Serialization         (FSM final state snapshot)
+  0c. Stylistic Marker Extraction (image + 0b → text-free background,
+                                   motifs, title artwork; notes §3.23)   [optional]
+  —   Pre-orchestration schema validation (typography + content payload,
+      Chapter 3 p.44); a violation rejects the run
+  1.  Dynamic Node Instantiation (payload → node tensors)
+  2.  GNN Inference              (naive stack → learned vertical rhythm, v2)
+  3.  CSP Resolution             (Cassowary hard + soft constraints)
+  4.  Metaheuristic Ranking      (AAPA: margin × rhythm × motif arrangement,
+                                  each scored on its own composed background)
+  5.  Aesthetic Rendering        (SVG output of the active candidate)
+  6.  State Serialization        (JSON state chain, Formulas 3.9-3.10)
+
+OrchestrationSession keeps a run open for Figure 3's Active Orchestration
+workspace: after run(), each designer action (move, resize, lock) is a
+discrete event that re-solves the layout with the adjusted nodes as Hard
+constraints and appends a state to the chain. run_pipeline() is the one-shot
+wrapper the CLI, the tests and the evaluation scripts use.
 
 Usage:
   # Full pipeline — real template image + real content data
@@ -40,12 +45,13 @@ Usage:
 """
 
 import argparse
+import copy
 import json
 import os
 import sys
 import time
 import torch
-from PIL import Image, ImageDraw
+from PIL import Image
 
 # ---------------------------------------------------------------------------
 # Path bootstrap — resolve all sibling packages
@@ -58,11 +64,15 @@ for _sub in ("models", "solvers", "renderers", "data_preprocessing"):
 
 from dynamic_instantiation import NodeInstantiator
 from gnn_model import ThemeSyncGNN
-from graph_builder import LayoutGraphBuilder
+from graph_builder import LayoutGraphBuilder, naive_stack, register_to_anchors, structure_start
 from cassowary_engine import ConstraintSolverEngine
-from candidate_generator import MetaheuristicStateExplorer
-from aesthetic_renderer import AestheticSVGRenderer
-from state_manager import StateManager
+from candidate_generator import ARCHETYPES, MetaheuristicStateExplorer, solver_for, variations_for
+import structure_mapping
+from optimization_engine import HeuristicEvaluator
+from aesthetic_renderer import AestheticSVGRenderer, DEFAULT_TYPOGRAPHY, _palette_from_centroids, default_content
+from state_manager import StateChain, StateManager
+from schema_validation import content_schema, validate_content, validate_typography
+from stylistic_markers import build_style_kit, cut_out
 from template_ingestor import TemplateIngestor
 from layout_extractor import LayoutExtractor
 
@@ -70,14 +80,26 @@ from layout_extractor import LayoutExtractor
 # Constants — synthetic fallback values (used when no template image is given)
 # These match the values used during GNN training for the CSPC institution.
 # ---------------------------------------------------------------------------
-DEFAULT_WEIGHTS = os.path.join(os.path.dirname(_SRC), "themesync_gnn_v1.pth")
-# v3 (124-image real-poster fine-tune) preferred over v2 (65-image) over v1
-# (CGL-only) — see notes/gnn_fixes_and_methodology_notes.md sections 3.7, 3.12.
+# v3: trained to turn the master's mapped structure (or, without a master,
+# the naive stack) into a clean layout (notes §3.26); v2 (naive stack only,
+# §3.22) and v1 (degenerate y-predictions) are kept for the record.
+_GNN_V3 = os.path.join(os.path.dirname(_SRC), "themesync_gnn_v3.pth")
+_GNN_V2 = os.path.join(os.path.dirname(_SRC), "themesync_gnn_v2.pth")
+DEFAULT_WEIGHTS = _GNN_V3 if os.path.exists(_GNN_V3) else _GNN_V2
+# v5 (the batch re-annotated to guidelines v2, with an "illustration" class,
+# once trained) over v4 (YOLOv8s at 1024 px on the cleaned 124-image batch,
+# notes §3.25) over v3 (YOLOv8n, 124 images) over v2 (65 images) over v1
+# (CGL-only) — see notes/gnn_fixes_and_methodology_notes.md sections 3.7,
+# 3.12, 3.25 and notes/annotation_guidelines.md.
+_YOLO_V5 = os.path.join(os.path.dirname(_SRC), "themesync_yolo_v5.pt")   # re-annotated, 5 classes
+_YOLO_V4 = os.path.join(os.path.dirname(_SRC), "themesync_yolo_v4.pt")
 _YOLO_V3 = os.path.join(os.path.dirname(_SRC), "themesync_yolo_v3.pt")
 _YOLO_V2 = os.path.join(os.path.dirname(_SRC), "themesync_yolo_v2.pt")
 _YOLO_V1 = os.path.join(os.path.dirname(_SRC), "themesync_yolo_v1.pt")
 DEFAULT_YOLO_WEIGHTS = (
-    _YOLO_V3 if os.path.exists(_YOLO_V3)
+    _YOLO_V5 if os.path.exists(_YOLO_V5)
+    else _YOLO_V4 if os.path.exists(_YOLO_V4)
+    else _YOLO_V3 if os.path.exists(_YOLO_V3)
     else _YOLO_V2 if os.path.exists(_YOLO_V2)
     else _YOLO_V1
 )
@@ -169,19 +191,16 @@ def stage_layout_parsing(template_image_path: str, weights_path: str) -> tuple:
     extraction and independently of the JSON-schema-driven certificate/ID
     node instantiation (Stage 1) — this stage reports on the *master
     layout's own* structure ("Logo detected: True," per Figure 2's UI
-    mockup); its detected nodes/positions still do not feed into the
-    certificate/ID being generated. See notes/gnn_fixes_and_methodology_notes.md
-    sections 3.5-3.7 for why these stay separate.
-
-    One narrow, deliberate exception — the detected logo, and nothing else:
-      - its *aspect ratio* flows into Stage 1's sizing math for whichever
-        schema node the payload marks `lock_aspect_ratio: true` and names as
-        the logo (section 3.11, Figure 2's "Affine scaling");
-      - its *artwork*, cropped from the master layout, is what Stage 5
-        renders in the logo node / logo row (sections 3.14-3.15), so the
-        output carries the real brand marks instead of a drawn placeholder.
-    User-supplied `--logo_image` file(s) override both. See `_resolve_logos()`.
-    Positions of detected nodes still never feed the generated document.
+    mockup). The *positions* of detected nodes still never feed the
+    generated document (notes §3.5-3.7); what does:
+      - the detected logo's aspect ratio, into Stage 1's sizing for the
+        schema node marked `lock_aspect_ratio: true` (section 3.11, Figure
+        2's "Affine scaling");
+      - the logo artwork, cropped from the master layout, rendered in the
+        logo node / logo row (sections 3.14-3.15);
+      - the embellishment and title detections, from which Stage 0c cuts
+        the master's motifs and title artwork (section 3.23).
+    User-supplied logo files override the logo crops. See `_resolve_logos()`.
 
     Gracefully skipped (not a hard failure) if no fine-tuned weights file is
     present, so the rest of the pipeline still runs on a machine that hasn't
@@ -211,6 +230,30 @@ def stage_layout_parsing(template_image_path: str, weights_path: str) -> tuple:
     return nodes, elapsed
 
 
+def stage_stylistic_markers(template_image: str, detected_nodes: list, output_dir: str,
+                            stem: str, use_wordmark: bool = True, wordmark_path: str = None,
+                            motif_paths: list = None) -> tuple:
+    """
+    Stage 0c — Stylistic Marker Extraction (Chapter 3, p.38; p.51's
+    "scale-invariant stylistic markers"; Figure 1(b)'s inpainted
+    background). Builds the style kit the renderer projects onto the target
+    format: the master's text-free background, its motifs, and its title
+    artwork (stylistic_markers.py). Detected logos are excluded from the
+    motifs so the brand marks aren't doubled as decoration.
+    """
+    t0 = time.perf_counter()
+    logo_boxes = [n["bbox"] for n in detected_nodes or [] if n.get("semantic_category") == "logo"]
+    kit = build_style_kit(template_image, detected_nodes or [], os.path.join(output_dir, "style_kit"),
+                          stem, logo_boxes=logo_boxes, use_wordmark=use_wordmark,
+                          wordmark_path=wordmark_path, motif_paths=motif_paths)
+    elapsed = time.perf_counter() - t0
+    _print_stage("0c. Stylistic Marker Extraction", elapsed)
+    print(f"     → Background: text-free layer rebuilt from the master's border")
+    print(f"     → Motifs: {len(kit['motifs'])}  |  Title artwork: "
+          f"{kit['wordmark']['source'] if kit['wordmark'] else 'none (typed title)'}")
+    return kit, elapsed
+
+
 def stage_instantiate(payload_path: str, canvas_w: int, canvas_h: int,
                        detected_logo_ratio: float = None, logo_source: str = None):
     t0 = time.perf_counter()
@@ -236,66 +279,72 @@ def _overlap_ratio(a: list, b: list) -> float:
 
 
 def _select_logo_row(detected_layout_nodes: list, image_h: float, min_conf: float = 0.4,
-                     top_frac: float = 0.2, max_logos: int = 4) -> list:
+                     max_logos: int = 6) -> list:
     """
     The master layout's institutional logo row, left to right.
 
-    Real posters put their organisational logos (CSPC, CCS, SC, JPCS...) in a
-    small cluster along the top, while the other "logo" detections sit in
-    the footer (social-media icons, sponsor marks), and those can outscore
-    the real ones — e.g. YOUR_TEMPLATE3's footer icon at conf 0.75 vs its
-    seal at 0.71. So: logos whose centre lies in the top `top_frac` of the
-    image, conf >= `min_conf`, overlapping duplicates dropped (keeping the
-    more confident), at most `max_logos`. If the top band has none, falls
-    back to the single most confident logo anywhere.
+    Organisational logos (CSPC, SSC, CCS, JPCS...) sit side by side in a row
+    — usually along the top, sometimes in the footer (ORSEM, SEARCH SSC) or
+    a third of the way down (HALUBILO) — while other "logo" detections are
+    stray marks: an emblem behind a title, windows on an illustrated house,
+    social-media icons along the bottom edge. So (notes §3.25):
+      1. logos with conf >= `min_conf`, minus tiny marks in the bottom 5%
+         of the poster (social-media icons), overlapping duplicates dropped;
+      2. grouped into rows (centres within half a logo height, similar
+         heights);
+      3. the most confident row of at least two logos, looking first in
+         the top quarter of the poster, then the bottom quarter, then the
+         middle (the organisers' row outranks, e.g., SIKLAB's row of
+         participating colleges in its footer);
+      4. no such row: the single most confident logo, top band first.
+    At most `max_logos`, left to right.
     """
     logos = [n for n in (detected_layout_nodes or []) if n.get("semantic_category") == "logo"]
     if not logos:
         return []
-    top = [n for n in logos
-           if n.get("detection_confidence", 0.0) >= min_conf
-           and (n["bbox"][1] + n["bbox"][3] / 2.0) <= top_frac * image_h]
-    top.sort(key=lambda n: -n.get("detection_confidence", 0.0))
+
+    def cy(n):
+        return n["bbox"][1] + n["bbox"][3] / 2.0
+
+    strong = [n for n in logos if n.get("detection_confidence", 0.0) >= min_conf
+              and not (cy(n) >= 0.95 * image_h and n["bbox"][3] < 0.045 * image_h)]
+    strong.sort(key=lambda n: -n.get("detection_confidence", 0.0))
     kept = []
-    for n in top:
+    for n in strong:
         if all(_overlap_ratio(n["bbox"], k["bbox"]) < 0.5 for k in kept):
             kept.append(n)
-    kept = kept[:max_logos]
     if not kept:
-        kept = [max(logos, key=lambda n: n.get("detection_confidence", 0.0))]
-    return sorted(kept, key=lambda n: n["bbox"][0])
+        return [max(logos, key=lambda n: n.get("detection_confidence", 0.0))]
 
+    rows = []
+    for n in sorted(kept, key=cy):
+        for row in rows:
+            ref = max(row, key=lambda r: r["bbox"][3])
+            h_ratio = max(n["bbox"][3], ref["bbox"][3]) / max(1e-6, min(n["bbox"][3], ref["bbox"][3]))
+            if abs(cy(n) - cy(ref)) <= 0.5 * max(n["bbox"][3], ref["bbox"][3]) and h_ratio <= 1.8:
+                row.append(n)
+                break
+        else:
+            rows.append([n])
 
-def _clear_crop_background(crop: "Image.Image", thresh: int = 48,
-                           max_cleared: float = 0.85) -> "Image.Image":
-    """
-    Makes the poster background around a cropped logo transparent, so the
-    logo doesn't arrive on the certificate/ID as a pasted-on rectangle of
-    the master layout's artwork. Flood-fills from every border pixel whose
-    region hasn't been reached yet (tolerance `thresh`), so only background
-    *connected to the crop's edges* is cleared — the logo's own interior is
-    never touched, even where it shares the background's colour.
+    def band(row):
+        centre = sum(cy(n) for n in row) / len(row) / image_h
+        return "top" if centre <= 0.25 else "bottom" if centre >= 0.75 else "middle"
 
-    Safety valve: if the fill would clear more than `max_cleared` of the
-    crop (logo not visually separable from its surroundings), the original
-    crop is returned unchanged rather than a hollowed-out logo. An uploaded
-    `--logo_image` is the fix for those cases.
-    """
-    sentinel = (255, 0, 255)
-    rgb = crop.convert("RGB")
-    w, h = rgb.size
-    border = ([(x, 0) for x in range(w)] + [(x, h - 1) for x in range(w)] +
-              [(0, y) for y in range(h)] + [(w - 1, y) for y in range(h)])
-    for xy in border:
-        if rgb.getpixel(xy) != sentinel:
-            ImageDraw.floodfill(rgb, xy, sentinel, thresh=thresh)
-    mask = [px == sentinel for px in rgb.getdata()]
-    if sum(mask) > max_cleared * len(mask):
-        return crop
-    out = crop.copy()
-    out.putdata([(r, g, b, 0) if clear else (r, g, b, a)
-                 for (r, g, b, a), clear in zip(crop.getdata(), mask)])
-    return out
+    def confidence(row):
+        return sum(n.get("detection_confidence", 0.0) for n in row)
+
+    for tier in ("top", "bottom", "middle"):
+        rows_here = [r for r in rows if band(r) == tier and len(r) >= 2]
+        if rows_here:
+            best = max(rows_here, key=confidence)
+            best = sorted(best, key=lambda n: -n.get("detection_confidence", 0.0))[:max_logos]
+            return sorted(best, key=lambda n: n["bbox"][0])
+    for tier in ("top", "bottom", "middle"):
+        singles = [r[0] for r in rows if band(r) == tier]
+        if singles:
+            return [max(singles, key=lambda n: n.get("detection_confidence", 0.0))]
+    return [kept[0]]
 
 
 def _resolve_logos(logo_images: list, template_image: str, detected_layout_nodes: list,
@@ -329,12 +378,8 @@ def _resolve_logos(logo_images: list, template_image: str, detected_layout_nodes
         os.makedirs(output_dir, exist_ok=True)
         paths = []
         for i, node in enumerate(row):
-            x, y, w, h = node["bbox"]
-            pad_x, pad_y = w * 0.04, h * 0.04
-            box = (max(0, int(x - pad_x)), max(0, int(y - pad_y)),
-                   min(img.width, int(x + w + pad_x)), min(img.height, int(y + h + pad_y)))
             path = os.path.join(output_dir, f"ThemeSync_{stem}_logo_{i}.png")
-            _clear_crop_background(img.convert("RGBA").crop(box)).save(path)
+            cut_out(img, node["bbox"]).save(path)
             paths.append(path)
 
     best = max(range(len(row)), key=lambda i: row[i].get("detection_confidence", 0.0))
@@ -344,14 +389,38 @@ def _resolve_logos(logo_images: list, template_image: str, detected_layout_nodes
             "source": f"Stage 0b crop of {len(row)} logo(s), conf={confs}"}
 
 
+def _stack(nodes: list) -> list:
+    return sorted((n for n in nodes if n.get("structural_class") not in ("repeating_group", "decor")),
+                  key=lambda n: n["spatial_hierarchy"])
+
+
+def _starts(stack: list, canvas_w: float, canvas_h: float, structure: dict = None,
+            domain: str = None) -> tuple:
+    """Starting positions for the stacked nodes: from the master's mapped
+    structure when there is one (notes §3.26), else the naive stack."""
+    sizes = [(n["bbox"][2] / canvas_w, n["bbox"][3] / canvas_h) for n in stack]
+    anchors = structure_mapping.anchors_for(stack, structure, domain) if structure else {}
+    return (structure_start(sizes, anchors) if anchors else naive_stack(sizes)), anchors
+
+
 def stage_gnn_inference(nodes: list, canvas_w: int, canvas_h: int,
                          weights_path: str, device: torch.device,
-                         color_centroids: list, saliency_weight: float):
+                         color_centroids: list, saliency_weight: float, structure: dict = None,
+                         domain: str = None):
     """
     Stage 2 — GNN spatial inference.
 
-    The colour centroids and saliency weight now come from the template
-    ingestor (Stage 0) instead of hardcoded synthetic values.
+    The stacked (singular) nodes start from the master's mapped structure —
+    each node with a counterpart on the master (logo row, organisation
+    header, title, details) where that counterpart sits, the rest in order
+    between them (structure_mapping, graph_builder.structure_start) — or,
+    without a master, from the naive stack; the GNN (v3, notes §3.26) was
+    trained on both and turns either into a clean layout. With a master,
+    its output is registered to the anchors (register_to_anchors): the
+    mapped nodes keep the master's positions and the GNN places the rest.
+    Repeating groups (signature rows) and decor aren't part of the stack;
+    the CSP places them. Colour centroids and saliency weight come from
+    Stage 0.
     """
     t0 = time.perf_counter()
     model = ThemeSyncGNN(num_layers=3, node_dim=8, edge_dim=4, hidden_dim=64).to(device)
@@ -367,16 +436,20 @@ def stage_gnn_inference(nodes: list, canvas_w: int, canvas_h: int,
     model.eval()
     builder = LayoutGraphBuilder()
 
-    # Build the GNN graph with real (or fallback) extracted features
-    gnn_payload = {
-        "extracted_nodes":           nodes,
+    stack = _stack(nodes)
+    starts, anchors = _starts(stack, canvas_w, canvas_h, structure, domain)
+    for i, (node, (sx, sy)) in enumerate(zip(stack, starts)):
+        node["bbox"][0] = round(sx * canvas_w, 2)
+        node["bbox"][1] = round(sy * canvas_h, 2)
+        node["structure_anchor"] = i in anchors
+
+    graph_data = builder.build_graph({
+        "extracted_nodes":           stack,
         "extracted_color_centroids": color_centroids,   # ← real or fallback
         "extracted_saliency_weight": saliency_weight,   # ← real or fallback
         "canvas_w":                  canvas_w,
         "canvas_h":                  canvas_h,
-    }
-
-    graph_data = builder.build_graph(gnn_payload)
+    })
     predicted = False
 
     if graph_data is not None:
@@ -384,19 +457,50 @@ def stage_gnn_inference(nodes: list, canvas_w: int, canvas_h: int,
         with torch.no_grad():
             predicted_coords = model(graph_data)
 
-        builder.apply_predictions(nodes, predicted_coords, canvas_w, canvas_h)
+        builder.apply_predictions(stack, predicted_coords, canvas_w, canvas_h)
         predicted = True
+        if anchors:
+            cys = register_to_anchors([(n["bbox"][1] + n["bbox"][3] / 2.0) / canvas_h for n in stack], anchors)
+            for node, cy in zip(stack, cys):
+                node["bbox"][1] = round(max(0.0, min(cy * canvas_h - node["bbox"][3] / 2.0,
+                                                     canvas_h - node["bbox"][3])), 2)
 
     elapsed = time.perf_counter() - t0
     _print_stage("2. GNN Spatial Inference", elapsed)
     print(f"     → Weights: {weights_status}")
-    print(f"     → Predictions applied: {predicted}")
+    start = (f"master structure ({len(anchors)} of {len(stack)} node(s) anchored, output registered to them)"
+             if anchors else "naive stack")
+    print(f"     → Predictions applied: {predicted} ({len(stack)} stacked node(s), from the {start})")
     return nodes, elapsed
 
 
-def stage_csp_resolve(nodes: list, canvas_w: int, canvas_h: int):
+def stage_structure_hints(nodes: list, canvas_w: int, canvas_h: int, structure: dict,
+                          domain: str = None):
+    """
+    Ablation for Stage 2 (Phase 3, notes §3.26): the master's mapped
+    structure as the solver's position preferences *without* the GNN's
+    refinement — separates what the mapping contributes from what the GNN
+    adds.
+    """
     t0 = time.perf_counter()
-    engine = ConstraintSolverEngine(canvas_width=canvas_w, canvas_height=canvas_h)
+    stack = _stack(nodes)
+    starts, anchors = _starts(stack, canvas_w, canvas_h, structure, domain)
+    for i, (node, (sx, sy)) in enumerate(zip(stack, starts)):
+        node["bbox"][0] = round(sx * canvas_w, 2)
+        node["bbox"][1] = round(sy * canvas_h, 2)
+        node["structure_anchor"] = i in anchors
+        node["structure_hint"] = True
+    elapsed = time.perf_counter() - t0
+    _print_stage("2. Structure mapping (no GNN, ablation)", elapsed)
+    print(f"     → {len(anchors)} of {len(stack)} stacked node(s) anchored to the master")
+    return nodes, elapsed
+
+
+def stage_csp_resolve(nodes: list, canvas_w: int, canvas_h: int, margin: float = 50.0,
+                      vgap: float = 16.0):
+    t0 = time.perf_counter()
+    engine = ConstraintSolverEngine(canvas_width=canvas_w, canvas_height=canvas_h,
+                                    margin=margin, default_vgap=vgap)
     resolved = engine.execute_relational_logic(nodes)
     elapsed = time.perf_counter() - t0
     _print_stage("3. Cassowary CSP Resolution", elapsed)
@@ -405,56 +509,27 @@ def stage_csp_resolve(nodes: list, canvas_w: int, canvas_h: int):
     return resolved, elapsed
 
 
-def stage_rank_candidates(resolved_nodes: list, population: int, canvas_w: int, canvas_h: int,
-                          saliency_map: dict = None):
+def stage_rank_candidates(guided_nodes: list, population: int, canvas_w: int, canvas_h: int,
+                          saliency_map: dict = None, style_kit: dict = None,
+                          domain: str = "academic_certificate", panel_rgb: tuple = (255, 255, 255),
+                          palette: dict = None, structure_guided: bool = False):
     t0 = time.perf_counter()
     explorer = MetaheuristicStateExplorer(
-        canvas_width=canvas_w, canvas_height=canvas_h, saliency_map=saliency_map
+        canvas_width=canvas_w, canvas_height=canvas_h, saliency_map=saliency_map,
+        style_kit=style_kit, domain=domain, panel_rgb=panel_rgb, palette=palette,
+        structure_guided=structure_guided,
     )
-    ranked = explorer.generate_and_rank_candidates(resolved_nodes, population_size=population)
+    ranked = explorer.generate_and_rank_candidates(guided_nodes, population_size=population)
     elapsed = time.perf_counter() - t0
     _print_stage("4. Metaheuristic Candidate Ranking", elapsed)
     print(f"     → {len(ranked)} candidate(s) evaluated")
     print()
-    print(f"  {'Rank':<6} {'Candidate':<35} {'C_total':>8}")
-    print(f"  {'-'*6} {'-'*35} {'-'*8}")
+    print(f"  {'Rank':<6} {'Candidate':<14} {'C_total':>8}  Variation")
+    print(f"  {'-'*6} {'-'*14} {'-'*8}  {'-'*40}")
     for i, c in enumerate(ranked):
         marker = " ◀ WINNER" if i == 0 else ""
-        print(f"  [{i+1}]   {c['candidate_id']:<35} {c['c_total']:>8.4f}{marker}")
+        print(f"  [{i+1}]   {c['candidate_id']:<14} {c['c_total']:>8.4f}  {c['label']}{marker}")
     return ranked, elapsed
-
-
-def stage_render(winner_filepath: str, canvas_w: int, canvas_h: int,
-                 payload_meta: dict, output_dir: str,
-                 color_centroids: list, content_data: dict = None,
-                 font_family: str = None, logos: dict = None):
-    """
-    Stage 5 — Aesthetic SVG rendering.
-
-    Now receives real colour centroids from Stage 0 and real content strings
-    from --content_data — both replacing hardcoded defaults. font_family is
-    the "User Injected" administrative typography constraint from Table 1
-    (p. 49), e.g. set via the dashboard's Visual DNA panel.
-    """
-    t0 = time.perf_counter()
-    domain = payload_meta.get("domain_context", "layout")
-    stem = domain.replace("_", "-")
-
-    renderer = AestheticSVGRenderer(
-        canvas_width=canvas_w,
-        canvas_height=canvas_h,
-        original_filename=f"ThemeSync_{stem}",
-        color_centroids=color_centroids,     # ← drives palette from real image
-        mock_data=content_data,              # ← real user content, or None → domain defaults
-        domain_context=domain,
-        font_family=font_family,
-        logo_image_path=(logos or {}).get("primary"),
-        logo_row_paths=(logos or {}).get("row"),
-    )
-    renderer.render_layout(winner_filepath, output_dir=output_dir, with_border=True)
-    elapsed = time.perf_counter() - t0
-    _print_stage("5. Aesthetic SVG Rendering", elapsed)
-    return elapsed
 
 
 def stage_serialize_state(resolved_nodes: list):
@@ -468,7 +543,555 @@ def stage_serialize_state(resolved_nodes: list):
 
 
 # ---------------------------------------------------------------------------
-# Main orchestrator
+# Orchestration session
+# ---------------------------------------------------------------------------
+
+def _hex_to_rgb(hexcode: str) -> tuple:
+    return tuple(int(hexcode[i:i + 2], 16) for i in (1, 3, 5))
+
+
+class OrchestrationSession:
+    """
+    One master layout projected onto one target format, held open for
+    Figure 3's Active Orchestration workspace.
+
+    run() executes Stages 0-6 once. Afterwards every designer action is a
+    discrete, terminal event (Formula 3.9, S_{t+1} = δ(S_t, e_t)): the
+    layout is re-solved from the same GNN-guided nodes with every manually
+    adjusted node as a Hard constraint (Formula 3.10), re-scored, re-rendered,
+    and appended to the JSON state chain. Nothing already in the chain is
+    ever changed.
+
+    use_gnn / use_structure select the Stage 2 condition (notes §3.26):
+      GNN-guided      use_gnn=True  (structure defaults to on) — the master's
+                      mapped structure refined by the GNN
+      baseline        use_gnn=False, use_structure=False — naive stack, no GNN
+      mapping only    use_gnn=False, use_structure=True — the ablation
+    """
+
+    def __init__(self, payload_path: str, template_image: str = None, content_data=None,
+                 typography: dict = None, use_gnn: bool = True,
+                 weights_path: str = DEFAULT_WEIGHTS, yolo_weights_path: str = DEFAULT_YOLO_WEIGHTS,
+                 output_dir: str = "data/rendered/", logo_images: list = None, population: int = 6,
+                 canvas_w: int = None, canvas_h: int = None, font_family: str = None,
+                 use_wordmark: bool = True, wordmark_path: str = None, motif_paths: list = None,
+                 detected_nodes: list = None, use_structure: bool = None):
+        if not os.path.exists(payload_path):
+            raise FileNotFoundError(f"Payload not found at '{payload_path}'")
+        self.payload_path = payload_path
+        self.payload_meta = _load_json(payload_path)
+        self.domain = self.payload_meta.get("domain_context", "layout")
+        self.stem = self.domain.replace("_", "-")
+        self.template_image = template_image
+        self.content_data = _load_json(content_data) if isinstance(content_data, str) else content_data
+        self.content_data_path = content_data if isinstance(content_data, str) else None
+        self.typography = dict(DEFAULT_TYPOGRAPHY)
+        self.typography.update({k: v for k, v in (typography or {}).items() if v is not None})
+        if font_family:
+            self.typography["family"] = font_family
+        self.use_gnn = use_gnn
+        self.use_structure = use_gnn if use_structure is None else use_structure
+        self.weights_path = weights_path
+        self.yolo_weights_path = yolo_weights_path
+        self.output_dir = output_dir
+        self.logo_images = logo_images
+        self.population = population
+        self.use_wordmark = use_wordmark
+        self.wordmark_path = wordmark_path
+        self.motif_paths = motif_paths
+        self.canvas_w, self.canvas_h = _derive_canvas(self.payload_meta, canvas_w, canvas_h)
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        self.timings = {}
+        self.chain = StateChain()
+        self.detected_nodes = detected_nodes   # reuse Stage 0b from the dashboard if given
+        self.ingestion = None
+        self.style_kit = {}
+        self.structure = {}
+        self.structure_guided = False
+        self.logos = {"row": [], "primary": None, "ratio": None, "source": None}
+        self.candidates = []
+        self.validation = {}
+        # Restoring a state brings back the words and typography it was
+        # rendered with, too; these are the values before any edit.
+        self._initial_content = copy.deepcopy(self.content_data)
+        self._initial_typography = dict(self.typography)
+        self._undo, self._redo = [], []   # state indices (undo / redo)
+        self.rendered_path = os.path.join(output_dir, f"ThemeSync_{self.stem}_populated.svg")
+        self.chain_path = os.path.join(output_dir, f"ThemeSync_{self.stem}_state_chain.json")
+
+    @property
+    def condition(self) -> str:
+        if self.use_gnn:
+            return "gnn"
+        return "mapping" if self.use_structure else "baseline"
+
+    # -- stages ---------------------------------------------------------
+
+    def run(self) -> dict:
+        _print_header("ThemeSync — Design Orchestration Pipeline")
+
+        # Stage 0 / 0b / 0c
+        self.saliency_map = None
+        if self.template_image:
+            self.ingestion, self.timings["template_ingestion"] = stage_template_ingestion(self.template_image)
+            self.color_centroids = self.ingestion["color_centroids"]
+            self.saliency_weight = self.ingestion["saliency_weight"]
+            self.saliency_map = self.ingestion["saliency_map"]
+            ingestion_mode = f"real image → {self.ingestion['palette_hex']}"
+            if self.detected_nodes is None:
+                self.detected_nodes, self.timings["layout_parsing"] = stage_layout_parsing(
+                    self.template_image, self.yolo_weights_path)
+            else:
+                self.timings["layout_parsing"] = 0.0
+        else:
+            self.color_centroids = _FALLBACK_CENTROIDS
+            self.saliency_weight = _FALLBACK_SALIENCY
+            self.timings["template_ingestion"] = 0.0
+            self.timings["layout_parsing"] = 0.0
+            ingestion_mode = "synthetic fallback (no --template_image provided)"
+            print(f"\n  ⊘  Stage 0 skipped — {ingestion_mode}")
+
+        self.palette = _palette_from_centroids(self.color_centroids)
+        self.logos = _resolve_logos(self.logo_images, self.template_image, self.detected_nodes,
+                                    self.output_dir, self.stem)
+        if self.template_image:
+            self.style_kit, self.timings["stylistic_markers"] = stage_stylistic_markers(
+                self.template_image, self.detected_nodes, self.output_dir, self.stem,
+                use_wordmark=self.use_wordmark, wordmark_path=self.wordmark_path,
+                motif_paths=self.motif_paths)
+            if self.detected_nodes and self.use_structure:
+                with Image.open(self.template_image) as img:
+                    mw, mh = img.size
+                self.structure = structure_mapping.master_structure(
+                    self.detected_nodes, mw, mh, _select_logo_row(self.detected_nodes, mh))
+        else:
+            self.timings["stylistic_markers"] = 0.0
+        self.structure_guided = bool(self.structure) and self.use_structure
+
+        print(f"\n  Payload        : {self.payload_path}")
+        print(f"  Domain         : {self.domain}")
+        print(f"  Canvas         : {self.canvas_w} × {self.canvas_h} px")
+        print(f"  Device         : {self.device}")
+        print(f"  Template Image : {self.template_image or '(none — using synthetic fallback)'}")
+        print(f"  Content Data   : {self.content_data_path or ('(given)' if self.content_data else '(none — using domain defaults)')}")
+        print(f"  Condition      : {self.condition}")
+        print(f"  Master structure: {', '.join(f'{k} at {v[1]:.2f}' for k, v in self.structure.items()) or '(none)'}")
+        print(f"  Population     : {self.population}")
+        print(f"  Palette Source : {ingestion_mode}")
+
+        # Pre-orchestration schema validation (Chapter 3, p.44)
+        self.validation = {"typography": validate_typography(self.typography, self.canvas_w, self.canvas_h)}
+        if self.content_data:
+            self.validation["content"] = validate_content(self.content_data, self.payload_meta)
+        problems = [e for v in self.validation.values() for e in v["errors"]]
+        if problems:
+            raise ValueError("Schema validation rejected the initialization:\n  - " + "\n  - ".join(problems))
+        print(f"  Schema Check   : passed ({', '.join(self.validation)})")
+
+        # Stage 1
+        self.base_nodes, self.timings["instantiation"] = stage_instantiate(
+            self.payload_path, self.canvas_w, self.canvas_h,
+            detected_logo_ratio=self.logos["ratio"], logo_source=self.logos["source"])
+
+        # Stage 2
+        structure = self.structure if self.use_structure else None
+        if self.use_gnn:
+            self.guided_nodes, self.timings["gnn_inference"] = stage_gnn_inference(
+                copy.deepcopy(self.base_nodes), self.canvas_w, self.canvas_h, self.weights_path,
+                self.device, self.color_centroids, self.saliency_weight, structure=structure,
+                domain=self.domain)
+        elif structure:
+            self.guided_nodes, self.timings["gnn_inference"] = stage_structure_hints(
+                copy.deepcopy(self.base_nodes), self.canvas_w, self.canvas_h, structure, self.domain)
+        else:
+            print("\n  ⊘  GNN Inference skipped (baseline mode)")
+            self.guided_nodes = copy.deepcopy(self.base_nodes)
+            self.timings["gnn_inference"] = 0.0
+
+        # Stage 3 (the first variation on the unguided nodes — timing and State_00)
+        first = variations_for(self.domain)[0]
+        t0 = time.perf_counter()
+        baseline_nodes = solver_for(first, self.canvas_w, self.canvas_h).execute_relational_logic(
+            copy.deepcopy(self.base_nodes))
+        self.timings["csp_resolution"] = time.perf_counter() - t0
+        _print_stage("3. Cassowary CSP Resolution", self.timings["csp_resolution"])
+
+        # Stage 4
+        self.candidates, self.timings["ranking"] = stage_rank_candidates(
+            self.guided_nodes, self.population, self.canvas_w, self.canvas_h,
+            saliency_map=self.saliency_map, style_kit=self.style_kit, domain=self.domain,
+            panel_rgb=_hex_to_rgb(self.palette["panel"]), palette=self.palette,
+            structure_guided=self.structure_guided)
+        winner = self.candidates[0]
+
+        # States: baseline arrangement, then the ranked winner
+        schema_log = {k: ("passed" if v["valid"] else "rejected") for k, v in self.validation.items()}
+        self.chain.append("Baseline Init", {"type": "init", "schema_validation": schema_log},
+                          baseline_nodes, fitness=self._fitness(baseline_nodes, first),
+                          candidate_id=None, variation=dict(first))
+        label = {"gnn": "GNN Relational", "mapping": "Structure mapping",
+                 "baseline": "CSP Baseline"}[self.condition] + f" · {winner['candidate_id']}"
+        self.chain.append(label, {"type": "candidate", "candidate_id": winner["candidate_id"],
+                                  "rank": 1},
+                          winner["nodes"], fitness=winner["metrics"],
+                          candidate_id=winner["candidate_id"], variation=dict(winner["variation"]))
+
+        # Stage 5
+        t0 = time.perf_counter()
+        self.render(winner["nodes"], self.rendered_path, winner["variation"])
+        self.timings["rendering"] = time.perf_counter() - t0
+        _print_stage("5. Aesthetic SVG Rendering", self.timings["rendering"])
+
+        # Stage 6
+        self.timings["serialization"] = stage_serialize_state(winner["nodes"])
+        self.chain.save(self.chain_path)
+        print(f"     → State chain: {self.chain_path}")
+
+        self._print_summary(winner)
+        return self.summary()
+
+    # -- scoring and rendering -------------------------------------------
+
+    def _explorer(self) -> MetaheuristicStateExplorer:
+        return MetaheuristicStateExplorer(
+            canvas_width=self.canvas_w, canvas_height=self.canvas_h, saliency_map=self.saliency_map,
+            style_kit=self.style_kit, domain=self.domain, panel_rgb=_hex_to_rgb(self.palette["panel"]),
+            palette=self.palette, structure_guided=self.structure_guided)
+
+    def _saliency_for(self, nodes: list, variation: dict):
+        """The legibility map for a layout: its own composed background when
+        a style kit exists (as the explorer scores candidates), else the
+        master's map."""
+        if not self.style_kit.get("background"):
+            return self.saliency_map
+        return self._explorer().saliency(nodes, variation)
+
+    def _fitness(self, nodes: list, variation: dict) -> dict:
+        solver = solver_for(variation, self.canvas_w, self.canvas_h, self.structure_guided)
+        evaluator = HeuristicEvaluator(canvas_width=self.canvas_w, canvas_height=self.canvas_h,
+                                       saliency_map=self._saliency_for(nodes, variation),
+                                       grid_bounds=(solver.left_bound, solver.right_bound),
+                                       content_region=tuple(r * self.canvas_w for r in solver.region))
+        return evaluator.evaluate_layout(nodes)
+
+    def renderer(self) -> AestheticSVGRenderer:
+        return AestheticSVGRenderer(
+            canvas_width=self.canvas_w, canvas_height=self.canvas_h,
+            original_filename=f"ThemeSync_{self.stem}",
+            color_centroids=self.color_centroids,
+            mock_data=self.content_data,
+            domain_context=self.domain,
+            logo_image_path=self.logos.get("primary"),
+            logo_row_paths=self.logos.get("row"),
+            style_kit=self.style_kit,
+            typography=self.typography,
+        )
+
+    @staticmethod
+    def archetype_of(variation: dict) -> dict:
+        return ARCHETYPES[(variation or {}).get("archetype", "classic")]
+
+    def render(self, nodes: list, path: str, variation: dict = None) -> str:
+        variation = variation or (self.chain.current or {}).get("variation")
+        return self.renderer().render_nodes(nodes, path, archetype=self.archetype_of(variation))
+
+    def render_candidates(self, directory: str = None) -> list:
+        """Renders every ranked candidate (Figure 3's Recommendation Engine
+        thumbnails). Returns [(candidate, svg_path), ...] in rank order."""
+        directory = directory or os.path.join(self.output_dir, "candidates")
+        renderer = self.renderer()
+        return [(c, renderer.render_nodes(c["nodes"], os.path.join(directory, f"{c['candidate_id']}.svg"),
+                                          archetype=self.archetype_of(c["variation"])))
+                for c in self.candidates]
+
+    # -- human-in-the-loop events -----------------------------------------
+
+    def _resolve(self, nodes: list, variation: dict) -> list:
+        """
+        Re-solves a canvas after an event: every stacked node starts again
+        from its GNN-guided state, except Hard nodes, which keep the box the
+        designer gave them (Formula 3.10); decor is re-placed around the new
+        layout unless the designer has pinned a motif.
+        """
+        from decor import place_motifs
+
+        hard = {n["node_id"]: n for n in nodes if n.get("constraint_type") == "Hard"}
+        content = copy.deepcopy(self.guided_nodes)
+        for n in content:
+            if n["node_id"] in hard:
+                n["bbox"] = [float(v) for v in hard[n["node_id"]]["bbox"]]
+                n["constraint_type"] = "Hard"
+        engine = solver_for(variation, self.canvas_w, self.canvas_h, self.structure_guided)
+        content = engine.execute_relational_logic(content)
+
+        decor = [copy.deepcopy(n) for n in nodes if n.get("structural_class") == "decor"]
+        if self.style_kit.get("motifs") and not any(n.get("constraint_type") == "Hard" for n in decor):
+            decor = place_motifs(self.canvas_w, self.canvas_h, [n["bbox"] for n in content],
+                                 self.style_kit["motifs"], variation.get("arrangement", 0))
+        return content + decor
+
+    def apply_event(self, event_type: str, node_id: str, bbox: list = None, hard: bool = None) -> dict:
+        """
+        One terminal designer event (Chapter 3, p.42):
+          on-drop            node moved to bbox[0:2]      → Hard
+          on-resize-complete node resized to bbox          → Hard
+          lock-toggle        node pinned (hard=True) where it is, or released
+                             back to the algorithm (hard=False)
+        Returns the new state.
+        """
+        if event_type not in ("on-drop", "on-resize-complete", "lock-toggle"):
+            raise ValueError(f"Unknown event type '{event_type}'")
+        current = self.chain.current
+        nodes = copy.deepcopy(current["nodes"])
+        target = next((n for n in nodes if n["node_id"] == node_id), None)
+        if target is None:
+            raise KeyError(f"No node '{node_id}' on the canvas")
+        before = list(target["bbox"])
+        if bbox is not None:
+            target["bbox"] = [round(float(v), 2) for v in bbox]
+        if event_type == "lock-toggle":
+            target["constraint_type"] = "Hard" if hard else "Soft"
+        else:
+            target["constraint_type"] = "Hard"
+
+        variation = current.get("variation") or dict(variations_for(self.domain)[0])
+        if target.get("structural_class") == "decor":
+            resolved = nodes          # motifs sit outside the solver
+        else:
+            resolved = self._resolve(nodes, variation)
+        verb = {"on-drop": "Moved", "on-resize-complete": "Resized",
+                "lock-toggle": "Locked" if hard else "Released"}[event_type]
+        hard_note = "Hard Const." if target["constraint_type"] == "Hard" else "Soft"
+        fitness = self._fitness(resolved, variation)
+        self._mark()
+        state = self.chain.append(
+            f"{hard_note} [{node_id}]",
+            {"type": event_type, "node_id": node_id, "before": before, "after": list(target["bbox"]),
+             "constraint_type": target["constraint_type"], "summary": f"{verb} {node_id}"},
+            resolved, fitness=fitness,
+            candidate_id=current.get("candidate_id"), variation=variation)
+        self.render(resolved, self.rendered_path, variation)
+        self.chain.save(self.chain_path)
+        return state
+
+    def edit_text(self, node_id: str, text: str) -> dict:
+        """
+        A text edit on the canvas (double-click → type → Enter): the content
+        payload changes for one variable, is re-validated against the
+        format's content schema (max_characters, p.44), and the canvas
+        re-renders — the layout itself is unchanged; the renderer fits the
+        new words to the node's box. A rejected edit raises ValueError.
+        """
+        content = self.content()
+        if node_id not in self.canvas_text():
+            raise KeyError(f"'{node_id}' has no editable text")
+        before = content[node_id]
+        if text == before:
+            raise ValueError("The text is unchanged.")
+        content[node_id] = text
+        check = validate_content(content, self.payload_meta)
+        if not check["valid"]:
+            raise ValueError("Schema validation rejected the edit:\n  - " + "\n  - ".join(check["errors"]))
+        self._mark()
+        self.content_data = content
+        current = self.chain.current
+        state = self.chain.append(f"Text [{node_id}]",
+                                  {"type": "text-edit", "node_id": node_id, "before": before, "after": text,
+                                   "schema_validation": "passed", "summary": f"Edited text of {node_id}"},
+                                  current["nodes"], fitness=current.get("fitness"),
+                                  candidate_id=current.get("candidate_id"), variation=current.get("variation"),
+                                  content=dict(content))
+        self.render(current["nodes"], self.rendered_path, current.get("variation"))
+        self.chain.save(self.chain_path)
+        return state
+
+    def select_candidate(self, candidate_id: str) -> dict:
+        """Makes a ranked candidate the active canvas (Recommendation Engine)."""
+        cand = next(c for c in self.candidates if c["candidate_id"] == candidate_id)
+        rank = self.candidates.index(cand) + 1
+        self._mark()
+        state = self.chain.append(f"Candidate {candidate_id} (rank {rank})",
+                                  {"type": "candidate", "candidate_id": candidate_id, "rank": rank},
+                                  cand["nodes"], fitness=cand["metrics"], candidate_id=candidate_id,
+                                  variation=dict(cand["variation"]))
+        self.render(cand["nodes"], self.rendered_path, cand["variation"])
+        self.chain.save(self.chain_path)
+        return state
+
+    def restore_state(self, index: int, _label: str = None, _event: dict = None) -> dict:
+        """Brings back an earlier canvas — its layout, words and typography —
+        as a new state; the chain keeps everything in between."""
+        old = self.chain.states[index]
+        if _label is None:
+            self._mark()
+        self.content_data, self.typography = self._snapshot_at(index)
+        extra = {"typography": dict(self.typography)}
+        if self.content_data is not None:
+            extra["content"] = dict(self.content_data)
+        state = self.chain.append(_label or f"Restored {old['state_id']}",
+                                  _event or {"type": "restore", "restored": old["state_id"]},
+                                  old["nodes"], fitness=old.get("fitness"),
+                                  candidate_id=old.get("candidate_id"), variation=old.get("variation"),
+                                  **extra)
+        self.render(old["nodes"], self.rendered_path, old.get("variation"))
+        self.chain.save(self.chain_path)
+        return state
+
+    def _snapshot_at(self, index: int) -> tuple:
+        """(content, typography) in effect at state `index`: the latest text
+        edit, typography change or restore at or before it, else the
+        session's initial values."""
+        content = typography = None
+        for s in reversed(self.chain.states[:index + 1]):
+            if content is None and s.get("content") is not None:
+                content = s["content"]
+            if typography is None:
+                typography = s.get("typography") or (s["event"].get("typography")
+                                                     if s["event"].get("type") == "typography" else None)
+            if content is not None and typography is not None:
+                break
+        return (copy.deepcopy(content if content is not None else self._initial_content),
+                dict(typography or self._initial_typography))
+
+    # -- undo / redo (Figure 3's canvas: Ctrl+Z, Ctrl+Shift+Z) -------------
+
+    def _mark(self) -> None:
+        """Before an ordinary edit: the current state becomes the undo
+        point, and the redo trail ends (the edit starts a new branch)."""
+        self._undo.append(len(self.chain.states) - 1)
+        self._redo.clear()
+
+    @property
+    def can_undo(self) -> bool:
+        return bool(self._undo)
+
+    @property
+    def can_redo(self) -> bool:
+        return bool(self._redo)
+
+    def undo(self) -> dict:
+        """The canvas as it was before the last edit, appended as a new
+        state (like Restore — the chain is never rewritten)."""
+        if not self._undo:
+            raise ValueError("Nothing to undo.")
+        index = self._undo.pop()
+        self._redo.append(len(self.chain.states) - 1)
+        sid = self.chain.states[index]["state_id"]
+        return self.restore_state(index, _label=f"Undo → {sid}", _event={"type": "undo", "restored": sid})
+
+    def redo(self) -> dict:
+        """Re-applies the last undone edit (as a new state)."""
+        if not self._redo:
+            raise ValueError("Nothing to redo.")
+        index = self._redo.pop()
+        self._undo.append(len(self.chain.states) - 1)
+        sid = self.chain.states[index]["state_id"]
+        return self.restore_state(index, _label=f"Redo → {sid}", _event={"type": "redo", "restored": sid})
+
+    # -- the canvas's words ------------------------------------------------
+
+    def content(self) -> dict:
+        """The content payload the canvas renders (a copy): the given
+        content, or the format's sample content."""
+        return dict(self.content_data or default_content(self.domain))
+
+    def canvas_text(self) -> dict:
+        """Words the designer can edit on the canvas: node id → text, for
+        every text node and signature block — not logos, and not the event
+        title while it is drawn with the master's title artwork."""
+        kinds = {n["node_id"]: n.get("structural_class") for n in (self.chain.current or {}).get("nodes", [])}
+        artwork = bool(self.style_kit.get("wordmark"))
+        return {k: v for k, v in self.content().items()
+                if kinds.get(k) in ("text_node", "repeating_group") and not (artwork and "Event_Title" in k)}
+
+    def text_limits(self) -> dict:
+        """node id → max characters, from the format's content schema (p.44)."""
+        return {k: p["maxLength"] for k, p in content_schema(self.payload_meta)["properties"].items()
+                if "maxLength" in p}
+
+    def set_typography(self, typography: dict) -> dict:
+        """Re-validates and applies new administrative typography (the
+        layout is unchanged; the canvas re-renders)."""
+        proposed = dict(self.typography)
+        proposed.update({k: v for k, v in typography.items() if v is not None})
+        check = validate_typography(proposed, self.canvas_w, self.canvas_h)
+        if not check["valid"]:
+            raise ValueError("Schema validation rejected the typography:\n  - " + "\n  - ".join(check["errors"]))
+        self._mark()
+        self.typography = proposed
+        current = self.chain.current
+        state = self.chain.append("Typography", {"type": "typography", "typography": dict(proposed),
+                                                 "schema_validation": "passed"},
+                                  current["nodes"], fitness=current.get("fitness"),
+                                  candidate_id=current.get("candidate_id"),
+                                  variation=current.get("variation"))
+        self.render(current["nodes"], self.rendered_path, current.get("variation"))
+        self.chain.save(self.chain_path)
+        return state
+
+    # -- reporting --------------------------------------------------------
+
+    def _print_summary(self, winner: dict) -> None:
+        total = sum(self.timings.values())
+        _print_header("Pipeline Complete — Timing Summary")
+        print(f"\n  {'Stage':<42} {'Time (ms)':>10}")
+        print(f"  {'-'*42} {'-'*10}")
+        labels = {
+            "template_ingestion": "0. Template Ingestion",
+            "layout_parsing":     "0b. Semantic Layout Parsing (YOLO+OCR)",
+            "stylistic_markers":  "0c. Stylistic Marker Extraction",
+            "instantiation":      "1. Dynamic Node Instantiation",
+            "gnn_inference":      "2. GNN Spatial Inference",
+            "csp_resolution":     "3. Cassowary CSP Resolution",
+            "ranking":            "4. Metaheuristic Ranking",
+            "rendering":          "5. Aesthetic SVG Rendering",
+            "serialization":      "6. FSM State Serialization",
+        }
+        for key, label in labels.items():
+            t = self.timings.get(key, 0.0)
+            skipped = "  (skipped)" if t == 0.0 else ""
+            print(f"  {label:<42} {t*1000:>10.1f}{skipped}")
+        print(f"  {'─'*42} {'─'*10}")
+        print(f"  {'TOTAL END-TO-END':<42} {total*1000:>10.1f}")
+        print()
+        print(f"  Winner   : {winner['candidate_id']} — {winner['label']} (C_total = {winner['c_total']:.4f})")
+        print(f"  Output   : {self.rendered_path}")
+        print()
+
+    def summary(self) -> dict:
+        detected_path = None
+        if self.detected_nodes is not None:
+            os.makedirs(self.output_dir, exist_ok=True)
+            detected_path = os.path.join(self.output_dir, f"ThemeSync_{self.stem}_detected_master_layout.json")
+            with open(detected_path, "w") as f:
+                json.dump(self.detected_nodes, f, indent=2)
+        total = sum(self.timings.values())
+        winner = self.candidates[0]
+        return {
+            "timings_ms":     {k: round(v * 1000, 2) for k, v in self.timings.items()},
+            "total_ms":       round(total * 1000, 2),
+            "winner":         {k: v for k, v in winner.items() if k != "saliency_map"},
+            "candidates":     [{k: v for k, v in c.items() if k != "saliency_map"} for c in self.candidates],
+            "rendered_path":  self.rendered_path,
+            "condition":      self.condition,
+            "master_structure": self.structure,
+            "color_centroids": self.color_centroids,
+            "saliency_weight": self.saliency_weight,
+            "palette":         self.palette,
+            "style_kit":       self.style_kit,
+            "typography":      dict(self.typography),
+            "schema_validation": self.validation,
+            "state_chain_path": self.chain_path,
+            "detected_master_layout_nodes": self.detected_nodes,
+            "detected_master_layout_path":  detected_path,
+            "logo_paths":      self.logos["row"],
+            "logo_source":     self.logos["source"],
+        }
+
+
+# ---------------------------------------------------------------------------
+# One-shot entry point
 # ---------------------------------------------------------------------------
 
 def run_pipeline(
@@ -477,179 +1100,30 @@ def run_pipeline(
     content_data_path: str = None,
     canvas_w: int = None,
     canvas_h: int = None,
-    population: int = 5,
+    population: int = 6,
     use_gnn: bool = True,
     weights_path: str = DEFAULT_WEIGHTS,
     yolo_weights_path: str = DEFAULT_YOLO_WEIGHTS,
     output_dir: str = "data/rendered/",
     font_family: str = None,
     logo_images: list = None,
+    typography: dict = None,
+    use_wordmark: bool = True,
+    use_structure: bool = None,
 ):
-    _print_header("ThemeSync — Design Orchestration Pipeline")
-
+    """Runs Stages 0-6 once and returns the session summary (see
+    OrchestrationSession.summary)."""
     if not os.path.exists(payload_path):
         print(f"ERROR: Payload not found at '{payload_path}'")
         sys.exit(1)
-
-    payload_meta = _load_json(payload_path)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    # Load optional real content data
-    content_data = _load_json(content_data_path) if content_data_path else None
-
-    timings = {}
-
-    # ------------------------------------------------------------------
-    # Stage 0 — Template Ingestion (optional)
-    # ------------------------------------------------------------------
-    saliency_map = None
-    if template_image:
-        ingestion_result, timings["template_ingestion"] = stage_template_ingestion(template_image)
-        color_centroids = ingestion_result["color_centroids"]
-        saliency_weight = ingestion_result["saliency_weight"]
-        saliency_map    = ingestion_result["saliency_map"]
-        ingestion_mode  = f"real image → {ingestion_result['palette_hex']}"
-
-        # Stage 0b — Semantic Layout Parsing (YOLO+OCR on the same image).
-        # Independent of the colour/saliency extraction above and of the
-        # schema-driven node instantiation below — see stage_layout_parsing's
-        # docstring for why these three stay separate for now.
-        detected_layout_nodes, timings["layout_parsing"] = stage_layout_parsing(
-            template_image, yolo_weights_path
-        )
-    else:
-        color_centroids = _FALLBACK_CENTROIDS
-        saliency_weight = _FALLBACK_SALIENCY
-        timings["template_ingestion"] = 0.0
-        timings["layout_parsing"] = 0.0
-        detected_layout_nodes = None
-        ingestion_mode  = "synthetic fallback (no --template_image provided)"
-        print(f"\n  ⊘  Stage 0 skipped — {ingestion_mode}")
-
-    # Resolve canvas dimensions (CLI > domain default — see _derive_canvas)
-    canvas_w, canvas_h = _derive_canvas(payload_meta, canvas_w, canvas_h)
-
-    print(f"\n  Payload        : {payload_path}")
-    print(f"  Domain         : {payload_meta.get('domain_context', 'N/A')}")
-    print(f"  Canvas         : {canvas_w} × {canvas_h} px")
-    print(f"  Device         : {device}")
-    print(f"  Template Image : {template_image or '(none — using synthetic fallback)'}")
-    print(f"  Content Data   : {content_data_path or '(none — using domain defaults)'}")
-    print(f"  GNN            : {'enabled' if use_gnn else 'disabled (baseline mode)'}")
-    print(f"  Population     : {population}")
-    print(f"  Palette Source : {ingestion_mode}")
-
-    # ------------------------------------------------------------------
-    # Stage 1 — Instantiation
-    # ------------------------------------------------------------------
-    logos = _resolve_logos(
-        logo_images, template_image, detected_layout_nodes, output_dir,
-        payload_meta.get("domain_context", "layout").replace("_", "-"),
+    session = OrchestrationSession(
+        payload_path, template_image=template_image, content_data=content_data_path,
+        typography=typography, use_gnn=use_gnn, weights_path=weights_path,
+        yolo_weights_path=yolo_weights_path, output_dir=output_dir, logo_images=logo_images,
+        population=population, canvas_w=canvas_w, canvas_h=canvas_h, font_family=font_family,
+        use_wordmark=use_wordmark, use_structure=use_structure,
     )
-    nodes, timings["instantiation"] = stage_instantiate(
-        payload_path, canvas_w, canvas_h,
-        detected_logo_ratio=logos["ratio"], logo_source=logos["source"],
-    )
-
-    # ------------------------------------------------------------------
-    # Stage 2 — GNN Inference
-    # ------------------------------------------------------------------
-    if use_gnn:
-        nodes, timings["gnn_inference"] = stage_gnn_inference(
-            nodes, canvas_w, canvas_h, weights_path, device,
-            color_centroids, saliency_weight
-        )
-    else:
-        print("\n  ⊘  GNN Inference skipped (baseline mode)")
-        timings["gnn_inference"] = 0.0
-
-    # ------------------------------------------------------------------
-    # Stage 3 — CSP Resolution
-    # ------------------------------------------------------------------
-    resolved_nodes, timings["csp_resolution"] = stage_csp_resolve(nodes, canvas_w, canvas_h)
-
-    # ------------------------------------------------------------------
-    # Stage 4 — Metaheuristic Ranking
-    # ------------------------------------------------------------------
-    ranked_candidates, timings["ranking"] = stage_rank_candidates(
-        resolved_nodes, population, canvas_w, canvas_h, saliency_map=saliency_map
-    )
-
-    # ------------------------------------------------------------------
-    # Stage 5 — Render winner
-    # ------------------------------------------------------------------
-    winner = ranked_candidates[0]
-    timings["rendering"] = stage_render(
-        winner["filepath"], canvas_w, canvas_h, payload_meta, output_dir,
-        color_centroids=color_centroids,
-        content_data=content_data,
-        font_family=font_family,
-        logos=logos,
-    )
-
-    # ------------------------------------------------------------------
-    # Stage 6 — Serialize FSM state
-    # ------------------------------------------------------------------
-    timings["serialization"] = stage_serialize_state(resolved_nodes)
-
-    # Persist Stage 0b's detections too, if any — otherwise they only ever
-    # existed as console output.
-    detected_layout_path = None
-    if detected_layout_nodes is not None:
-        os.makedirs(output_dir, exist_ok=True)
-        domain_stem = payload_meta.get("domain_context", "layout").replace("_", "-")
-        detected_layout_path = os.path.join(
-            output_dir, f"ThemeSync_{domain_stem}_detected_master_layout.json"
-        )
-        with open(detected_layout_path, "w") as f:
-            json.dump(detected_layout_nodes, f, indent=2)
-
-    # ------------------------------------------------------------------
-    # Summary
-    # ------------------------------------------------------------------
-    total = sum(timings.values())
-    _print_header("Pipeline Complete — Timing Summary")
-    print(f"\n  {'Stage':<42} {'Time (ms)':>10}")
-    print(f"  {'-'*42} {'-'*10}")
-    labels = {
-        "template_ingestion": "0. Template Ingestion",
-        "layout_parsing":     "0b. Semantic Layout Parsing (YOLO+OCR)",
-        "instantiation":      "1. Dynamic Node Instantiation",
-        "gnn_inference":      "2. GNN Spatial Inference",
-        "csp_resolution":     "3. Cassowary CSP Resolution",
-        "ranking":            "4. Metaheuristic Ranking",
-        "rendering":          "5. Aesthetic SVG Rendering",
-        "serialization":      "6. FSM State Serialization",
-    }
-    for key, label in labels.items():
-        t = timings.get(key, 0.0)
-        skipped = "  (skipped)" if t == 0.0 else ""
-        print(f"  {label:<42} {t*1000:>10.1f}{skipped}")
-    print(f"  {'─'*42} {'─'*10}")
-    print(f"  {'TOTAL END-TO-END':<42} {total*1000:>10.1f}")
-    print()
-
-    domain = payload_meta.get("domain_context", "layout")
-    stem   = domain.replace("_", "-")
-    rendered_path = os.path.join(output_dir, f"ThemeSync_{stem}_populated.svg")
-    print(f"  Winner   : {winner['candidate_id']} (C_total = {winner['c_total']:.4f})")
-    print(f"  Output   : {rendered_path}")
-    if detected_layout_path:
-        print(f"  Detected master-layout nodes : {detected_layout_path}")
-    print()
-
-    return {
-        "timings_ms":     {k: round(v * 1000, 2) for k, v in timings.items()},
-        "total_ms":       round(total * 1000, 2),
-        "winner":         winner,
-        "rendered_path":  rendered_path,
-        "color_centroids": color_centroids,
-        "saliency_weight": saliency_weight,
-        "detected_master_layout_nodes": detected_layout_nodes,
-        "detected_master_layout_path":  detected_layout_path,
-        "logo_paths":      logos["row"],
-        "logo_source":     logos["source"],
-    }
+    return session.run()
 
 
 # ---------------------------------------------------------------------------
@@ -679,8 +1153,8 @@ Examples:
     parser.add_argument(
         "--template_image", type=str, default=None,
         help="Path to the master design image (PNG/JPG). "
-             "If provided, colours and saliency are extracted at runtime "
-             "via VisionExtractor (K-Means LAB + SIFT).",
+             "If provided, colours, saliency and stylistic markers are "
+             "extracted at runtime (K-Means LAB + SIFT + Stage 0c).",
     )
     parser.add_argument(
         "--content_data", type=str, default=None,
@@ -697,8 +1171,8 @@ Examples:
         help="Canvas height in pixels (overrides image size and domain defaults)",
     )
     parser.add_argument(
-        "--population", type=int, default=5,
-        help="Number of metaheuristic candidates to generate (default: 5)",
+        "--population", type=int, default=6,
+        help="Number of metaheuristic candidates to generate (default: 6, the full set)",
     )
     parser.add_argument(
         "--no_gnn", action="store_true",
@@ -711,10 +1185,9 @@ Examples:
     parser.add_argument(
         "--yolo_weights", type=str, default=DEFAULT_YOLO_WEIGHTS,
         help="Path to fine-tuned YOLOv8 weights for Stage 0b Semantic Layout "
-             "Parsing. Defaults to themesync_yolo_v3.pt (124-image real-poster "
-             "fine-tune) if present, else v2 (65-image), else v1 (CGL-Dataset "
-             "only). Stage 0b is skipped gracefully if none "
-             "exists.",
+             "Parsing. Defaults to the newest checkpoint in the repo root: "
+             "themesync_yolo_v5.pt (200-image re-annotation), else v4, v3, v2, "
+             "v1. Stage 0b is skipped gracefully if none exists.",
     )
     parser.add_argument(
         "--logo_image", type=str, nargs="+", default=None,
@@ -734,6 +1207,12 @@ Examples:
              "typography constraint (Table 1, p. 49). Defaults to the "
              "renderer's built-in Montserrat stack if omitted.",
     )
+    parser.add_argument("--font_weight", type=int, default=None,
+                        help="Heading font weight, 100-900 (default 700)")
+    parser.add_argument("--base_size", type=float, default=None,
+                        help="Baseline type size in px the type scale is built on (default 48)")
+    parser.add_argument("--no_wordmark", action="store_true",
+                        help="Always type the event title instead of using the master's title artwork")
 
     args = parser.parse_args()
 
@@ -750,6 +1229,8 @@ Examples:
         output_dir=args.output_dir,
         font_family=args.font_family,
         logo_images=args.logo_image,
+        typography={"weight": args.font_weight, "base_size": args.base_size},
+        use_wordmark=not args.no_wordmark,
     )
 
 

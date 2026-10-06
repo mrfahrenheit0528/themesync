@@ -1,320 +1,288 @@
 """
-ThemeSync — Experiment Runner
-==============================
-Runs a configurable N-trial battery across one or both payload domains,
-collecting all evaluation metrics per trial and writing a consolidated
-results log to results/experiment_log.json.
+ThemeSync — Experiment Runner (Phase 3 battery)
+================================================
+Runs the full pipeline (OrchestrationSession: Stages 0-6, the same code the
+dashboard and the Phase 4 packet use) on a set of real master layouts, for
+each target format, under three Stage 2 conditions (notes §3.26):
 
-Produces a summary table suitable for inclusion in the thesis results chapter.
+  gnn       the master's mapped structure refined by the GNN (the default)
+  mapping   the mapped structure alone, no GNN (the ablation)
+  baseline  no structure, no GNN: the naive stack
+
+and writes results/experiment_log.json for notebooks/results_analysis.ipynb.
+
+Besides the fitness terms (Formula 3.11), each run records its structure
+error: how far the winning layout's anchored elements (logo row, header,
+title, details — whichever the format maps) sit vertically from their
+counterparts on the master, as a fraction of the height. It measures what
+the fitness function can't: whether the output keeps the master's
+composition.
+
+Each "trial" is one master layout. The pipeline is deterministic for a given
+input, so repeating one input only repeats its numbers; what varies — and
+what the fitness comparison needs — is the master: its palette, motifs and
+background, against which the Legibility Penalty (Formula 3.15) now scores
+every candidate (notes §3.23).
+
+Content: a poster listed in data/raw/phase4_posters/manifest.csv gets its
+own event text (phase4_packet.content_for); any other gets the format's
+sample content.
 
 Usage:
-  python src/evaluation/experiment_runner.py
-  python src/evaluation/experiment_runner.py --trials 10
-  python src/evaluation/experiment_runner.py --trials 10 --domains both
-  python src/evaluation/experiment_runner.py --trials 5 --domains id
+  python src/evaluation/experiment_runner.py                     # the 15 Phase 4 posters
+  python src/evaluation/experiment_runner.py --limit 5 --domains id
+  python src/evaluation/experiment_runner.py --posters_dir data/raw/some_posters
 """
 
 import argparse
+import contextlib
+import datetime
+import io
 import json
 import os
-import sys
-import time
-import datetime
 import statistics
+import sys
 
-# ---------------------------------------------------------------------------
-# Path bootstrap
-# ---------------------------------------------------------------------------
 _EVAL_DIR = os.path.dirname(os.path.abspath(__file__))
-_SRC  = os.path.dirname(_EVAL_DIR)
+_SRC = os.path.dirname(_EVAL_DIR)
 _ROOT = os.path.dirname(_SRC)
-
-for _sub in ("models", "solvers", "renderers"):
-    _p = os.path.join(_SRC, _sub)
+for _p in (_EVAL_DIR, _SRC):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-import torch
-from dynamic_instantiation import NodeInstantiator
-from gnn_model import ThemeSyncGNN
-from graph_builder import LayoutGraphBuilder
-from cassowary_engine import ConstraintSolverEngine
-from candidate_generator import MetaheuristicStateExplorer
-from optimization_engine import HeuristicEvaluator
+import phase4_packet as p4                 # noqa: E402 — imports rasterize (fonts) first
+import pipeline                            # noqa: E402
+import structure_mapping                   # noqa: E402 — on the path via pipeline
+from PIL import Image                      # noqa: E402
 
-DEFAULT_WEIGHTS = os.path.join(_ROOT, "themesync_gnn_v1.pth")
-
-# ---------------------------------------------------------------------------
-# Metric helpers (shared with evaluate.py)
-# ---------------------------------------------------------------------------
-
-def _calculate_iou(box1: list, box2: list) -> float:
-    x1, y1, w1, h1 = box1
-    x2, y2, w2, h2 = box2
-    ix1 = max(x1, x2);  iy1 = max(y1, y2)
-    ix2 = min(x1+w1, x2+w2); iy2 = min(y1+h1, y2+h2)
-    inter = max(0.0, ix2-ix1) * max(0.0, iy2-iy1)
-    union = w1*h1 + w2*h2 - inter
-    return inter / union if union > 0 else 0.0
-
-
-def _run_single_trial(
-    payload_path: str,
-    canvas_w: int,
-    canvas_h: int,
-    use_gnn: bool,
-    device: torch.device,
-    population: int = 5,
-) -> dict:
-    """Execute one full pipeline pass and return collected metrics."""
-    t_start = time.perf_counter()
-
-    # Stage 1: Instantiation
-    t0 = time.perf_counter()
-    inst = NodeInstantiator(canvas_width=canvas_w, canvas_height=canvas_h)
-    nodes = inst.instantiate_payload(payload_path)
-    t_instantiation = time.perf_counter() - t0
-
-    # Stage 2: GNN Inference
-    t0 = time.perf_counter()
-    pre_csp_nodes = [dict(n, bbox=list(n["bbox"])) for n in nodes]
-    if use_gnn:
-        model = ThemeSyncGNN(num_layers=3, node_dim=8, edge_dim=4, hidden_dim=64).to(device)
-        if os.path.exists(DEFAULT_WEIGHTS):
-            model.load_state_dict(
-                torch.load(DEFAULT_WEIGHTS, map_location=device, weights_only=True)
-            )
-        model.eval()
-        builder = LayoutGraphBuilder()
-        gnn_payload = {
-            "extracted_nodes": nodes,
-            "extracted_color_centroids": [
-                [0.0, 51.0, 102.0], [255.0, 204.0, 0.0], [255.0, 255.0, 255.0]
-            ],
-            "extracted_saliency_weight": 0.75,
-            "canvas_w": canvas_w,
-            "canvas_h": canvas_h,
-        }
-        graph_data = builder.build_graph(gnn_payload)
-        if graph_data is not None:
-            graph_data = graph_data.to(device)
-            with torch.no_grad():
-                predicted = model(graph_data)
-            builder.apply_predictions(nodes, predicted, canvas_w, canvas_h)
-            pre_csp_nodes = [dict(n, bbox=list(n["bbox"])) for n in nodes]
-    t_gnn = time.perf_counter() - t0
-
-    # Stage 3: CSP Resolution
-    t0 = time.perf_counter()
-    engine = ConstraintSolverEngine(canvas_width=canvas_w, canvas_height=canvas_h)
-    resolved = engine.execute_relational_logic(nodes)
-    t_csp = time.perf_counter() - t0
-
-    # Stage 4: Ranking
-    t0 = time.perf_counter()
-    explorer = MetaheuristicStateExplorer(canvas_width=canvas_w, canvas_height=canvas_h)
-    ranked = explorer.generate_and_rank_candidates(resolved, population_size=population)
-    t_rank = time.perf_counter() - t0
-
-    t_total = time.perf_counter() - t_start
-
-    # IoU: GNN predictions vs CSP resolved positions
-    post_csp_map = {n["node_id"]: n for n in resolved}
-    iou_scores = []
-    for pre in pre_csp_nodes:
-        post = post_csp_map.get(pre["node_id"])
-        if post:
-            iou_scores.append(_calculate_iou(pre["bbox"], post["bbox"]))
-    mean_iou = round(sum(iou_scores) / len(iou_scores), 4) if iou_scores else 0.0
-
-    winner = ranked[0]
-    metrics = winner["metrics"]
-
-    return {
-        "use_gnn":    use_gnn,
-        "timings_ms": {
-            "instantiation": round(t_instantiation * 1000, 2),
-            "gnn_inference":  round(t_gnn * 1000, 2),
-            "csp_resolution": round(t_csp * 1000, 2),
-            "ranking":        round(t_rank * 1000, 2),
-            "total":          round(t_total * 1000, 2),
-        },
-        "mean_iou":   mean_iou,
-        "C_total":    winner["c_total"],
-        "P_align":    metrics.get("P_align", 0.0),
-        "P_space":    metrics.get("P_space", 0.0),
-        "P_legibility": metrics.get("P_legibility", 0.0),
-        "num_nodes":  len(resolved),
-    }
-
-
-# ---------------------------------------------------------------------------
-# Domain configurations
-# ---------------------------------------------------------------------------
+CONDITIONS = ("gnn", "mapping", "baseline")
 
 DOMAIN_CONFIGS = {
     "certificate": {
-        "label":      "Academic Certificate (4:3)",
-        "payload":    os.path.join(_ROOT, "data", "raw", "academic_payload.json"),
-        "canvas_w":   1200,
-        "canvas_h":   900,
+        "label":   "Academic Certificate (4:3)",
+        "payload": os.path.join(_ROOT, "data", "raw", "academic_payload.json"),
+        "sample":  os.path.join(_ROOT, "data", "raw", "sample_content.json"),
+        "format":  "certificate",
     },
     "id": {
-        "label":      "Event ID (A6, 1:1.414)",
-        "payload":    os.path.join(_ROOT, "data", "raw", "id_payload.json"),
-        "canvas_w":   744,
-        "canvas_h":   1052,
+        "label":   "Event ID (A6, 1:1.414)",
+        "payload": os.path.join(_ROOT, "data", "raw", "id_payload.json"),
+        "sample":  os.path.join(_ROOT, "data", "raw", "sample_content_id.json"),
+        "format":  "event_id",
     },
 }
-
+RUNS_DIR = os.path.join(_ROOT, "data", "rendered", "phase3")
 SEPARATOR = "=" * 72
 
 
-# ---------------------------------------------------------------------------
-# Aggregate helpers
-# ---------------------------------------------------------------------------
+def _iou(a: list, b: list) -> float:
+    ix = max(0.0, min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0]))
+    iy = max(0.0, min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1]))
+    inter = ix * iy
+    union = a[2] * a[3] + b[2] * b[3] - inter
+    return inter / union if union > 0 else 0.0
+
+
+def _content(poster_file: str, cfg: dict, manifest: dict, names: list) -> dict:
+    row = manifest.get(poster_file)
+    if row and row.get("event_title", "").strip():
+        return p4.content_for(row, names.index(poster_file))[cfg["format"]]
+    with open(cfg["sample"]) as f:
+        return json.load(f)
+
+
+def master_structure_of(session) -> dict:
+    """The master's structure, measured the same way for every condition
+    (including those that don't use it)."""
+    if not session.detected_nodes or not session.template_image:
+        return {}
+    if session.structure:
+        return session.structure
+    with Image.open(session.template_image) as img:
+        mw, mh = img.size
+    return structure_mapping.master_structure(session.detected_nodes, mw, mh,
+                                              pipeline._select_logo_row(session.detected_nodes, mh))
+
+
+def structure_error(session, nodes: list, structure: dict = None):
+    """Mean |output − master| vertical centre (fraction of the height) over
+    the stacked nodes the master's structure maps to; None without a
+    master or without mapped roles."""
+    structure = master_structure_of(session) if structure is None else structure
+    if not structure:
+        return None
+    stack = pipeline._stack(nodes)
+    anchors = structure_mapping.anchors_for(stack, structure, session.domain)
+    if not anchors:
+        return None
+    return round(statistics.mean(abs((stack[i]["bbox"][1] + stack[i]["bbox"][3] / 2.0) / session.canvas_h - cy)
+                                 for i, (_, cy) in anchors.items()), 4)
+
+
+def run_single(poster_path: str, domain_key: str, condition: str, content: dict,
+               population: int = 6) -> dict:
+    """One full pipeline pass on one master layout; returns its metrics."""
+    cfg = DOMAIN_CONFIGS[domain_key]
+    stem = os.path.splitext(os.path.basename(poster_path))[0]
+    out_dir = os.path.join(RUNS_DIR, stem, f"{domain_key}_{condition}")
+    use_gnn = condition == "gnn"
+    session = pipeline.OrchestrationSession(cfg["payload"], template_image=poster_path,
+                                            content_data=content, use_gnn=use_gnn,
+                                            use_structure=condition in ("gnn", "mapping"),
+                                            output_dir=out_dir, population=population)
+    with contextlib.redirect_stdout(io.StringIO()):
+        summary = session.run()
+    winner = session.candidates[0]
+    metrics = winner["metrics"]
+    structure = master_structure_of(session)
+
+    # IoU between the GNN's predicted boxes (before the solver) and where the
+    # solver finally put them — how much of the prediction survived Stage 3.
+    mean_iou = None
+    if use_gnn:
+        resolved = {n["node_id"]: n["bbox"] for n in winner["nodes"]}
+        pairs = [(n["bbox"], resolved[n["node_id"]]) for n in session.guided_nodes
+                 if n.get("gnn_predicted") and n["node_id"] in resolved]
+        mean_iou = round(sum(_iou(a, b) for a, b in pairs) / len(pairs), 4) if pairs else 0.0
+
+    timings = summary["timings_ms"]
+    return {
+        "poster":        os.path.basename(poster_path),
+        "condition":     condition,
+        "use_gnn":       use_gnn,
+        "structure_error": structure_error(session, winner["nodes"], structure),
+        # the same over all six candidates: the Stage 2 effect without the
+        # ranking's pick (certificate candidates often tie on C_total)
+        "structure_error_all": _mean([structure_error(session, c["nodes"], structure)
+                                      for c in session.candidates]),
+        "mapped_roles":  sorted(session.structure) if session.structure else [],
+        "timings_ms":    dict(timings, total=summary["total_ms"]),
+        "latency_total": summary["total_ms"],
+        "winner":        winner["candidate_id"],
+        "winner_label":  winner["label"],
+        "C_total":       winner["c_total"],
+        "P_collision":   metrics.get("P_collision", 0.0),
+        "P_align":       metrics.get("P_align", 0.0),
+        "P_space":       metrics.get("P_space", 0.0),
+        "P_legibility":  metrics.get("P_legibility", 0.0),
+        "mean_iou":      mean_iou,
+        "num_nodes":     sum(1 for n in winner["nodes"] if n.get("structural_class") != "decor"),
+        "motifs_placed": sum(1 for n in winner["nodes"] if n.get("structural_class") == "decor"),
+        "title_artwork": bool(session.style_kit.get("wordmark")),
+        "candidates":    [[c["candidate_id"], c["c_total"]] for c in session.candidates],
+        "rendered_svg":  os.path.relpath(summary["rendered_path"], _ROOT),
+    }
+
 
 def _mean(values):
-    return round(statistics.mean(values), 4) if values else 0.0
+    values = [v for v in values if v is not None]
+    return round(statistics.mean(values), 4) if values else None
+
 
 def _stdev(values):
+    values = [v for v in values if v is not None]
     return round(statistics.stdev(values), 4) if len(values) > 1 else 0.0
 
 
-def _print_summary_table(domain_label: str, gnn_trials: list, base_trials: list):
+def _print_summary_table(domain_label: str, trials: dict):
+    gnn, mapping, base = trials["gnn"], trials["mapping"], trials["baseline"]
     print(f"\n  Domain: {domain_label}")
-    print(f"  Trials: {len(gnn_trials)} GNN-guided  |  {len(base_trials)} Baseline")
+    print(f"  Master layouts: {len(gnn)}  (each run GNN-guided, mapping only, and baseline)")
     print()
-    metrics_def = [
-        ("Mean IoU",            "mean_iou",     True),
-        ("C_total  (↓ better)", "C_total",      False),
-        ("P_align",             "P_align",       False),
-        ("P_space",             "P_space",       False),
-        ("P_legibility",        "P_legibility",  False),
-        ("Latency total (ms)",  "latency_total", False),
-    ]
+    print(f"  {'Metric':<26} {'GNN':>9} {'σ':>7} {'Mapping':>9} {'σ':>7} {'Base':>9} {'σ':>7}")
+    print(f"  {'-'*26} {'-'*9} {'-'*7} {'-'*9} {'-'*7} {'-'*9} {'-'*7}")
+    for label, key in [("C_total (↓ better)", "C_total"), ("P_collision", "P_collision"),
+                       ("P_align", "P_align"), ("P_space", "P_space"), ("P_legibility", "P_legibility"),
+                       ("Structure error, winner (↓)", "structure_error"),
+                       ("Structure error, all 6 (↓)", "structure_error_all"),
+                       ("Latency total (ms)", "latency_total")]:
+        cells = []
+        for ts in (gnn, mapping, base):
+            vs = [t[key] for t in ts]
+            m = _mean(vs)
+            cells.append(f"{m:>9.4f} {_stdev(vs):>7.4f}" if m is not None else f"{'—':>9} {'':>7}")
+        print(f"  {label:<26} " + " ".join(cells))
 
-    # Pre-compute latency as a flat field
-    for t in gnn_trials:
-        t["latency_total"] = t["timings_ms"]["total"]
-    for t in base_trials:
-        t["latency_total"] = t["timings_ms"]["total"]
+    def tally(a, b):
+        wins = sum(1 for x, y in zip(a, b) if x["C_total"] < y["C_total"])
+        ties = sum(1 for x, y in zip(a, b) if x["C_total"] == y["C_total"])
+        return wins, ties, len(a) - wins - ties
 
-    print(f"  {'Metric':<28} {'GNN Mean':>10} {'GNN σ':>8} {'Base Mean':>10} {'Base σ':>8} {'Δ Mean':>9} {'Better?':>8}")
-    print(f"  {'-'*28} {'-'*10} {'-'*8} {'-'*10} {'-'*8} {'-'*9} {'-'*8}")
-
-    for label, key, higher_better in metrics_def:
-        gv = [t[key] for t in gnn_trials]
-        bv = [t[key] for t in base_trials]
-        gm, gs = _mean(gv), _stdev(gv)
-        bm, bs = _mean(bv), _stdev(bv)
-        delta = gm - bm
-        if higher_better:
-            better = "GNN ✓" if delta > 0 else ("=" if delta == 0 else "Base ✓")
-        else:
-            better = "GNN ✓" if delta < 0 else ("=" if delta == 0 else "Base ✓")
-        print(f"  {label:<28} {gm:>10.4f} {gs:>8.4f} {bm:>10.4f} {bs:>8.4f} {delta:>+9.4f} {better:>8}")
-
-    # GNN latency breakdown
-    print()
-    print("  GNN Latency Breakdown (mean ms):")
-    stages = ["instantiation", "gnn_inference", "csp_resolution", "ranking"]
-    for s in stages:
-        vals = [t["timings_ms"][s] for t in gnn_trials]
-        print(f"    {s:<20} {_mean(vals):>8.2f} ms")
+    for name, other in (("baseline", base), ("mapping only", mapping)):
+        w, t, l = tally(gnn, other)
+        print(f"  Per master, GNN vs {name}: lower C_total on {w}, equal on {t}, higher on {l}")
 
 
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
-
-def run_experiment(trials: int = 5, domains: list = None, population: int = 5):
-    if domains is None:
-        domains = ["certificate", "id"]
-
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+def run_experiment(posters_dir: str = p4.POSTERS_DIR, domains: list = None,
+                   population: int = 6, limit: int = None) -> dict:
+    domains = domains or list(DOMAIN_CONFIGS)
+    manifest = {r["poster_file"]: r for r in p4.read_manifest(posters_dir)}
+    names = sorted(manifest)
+    posters = p4.poster_files(posters_dir)[:limit] if limit else p4.poster_files(posters_dir)
     run_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    print(f"\n{SEPARATOR}")
-    print("  ThemeSync — Experiment Runner")
-    print(f"{SEPARATOR}")
-    print(f"  Run ID   : {run_id}")
-    print(f"  Trials   : {trials}")
-    print(f"  Domains  : {domains}")
-    print(f"  Device   : {device}")
+    print(f"\n{SEPARATOR}\n  ThemeSync — Experiment Runner (Phase 3)\n{SEPARATOR}")
+    print(f"  Run ID    : {run_id}")
+    print(f"  Masters   : {len(posters)} from {os.path.relpath(posters_dir, _ROOT)}")
+    print(f"  Domains   : {domains}")
+    print(f"  GNN       : {os.path.basename(pipeline.DEFAULT_WEIGHTS)}")
+    print(f"  YOLO      : {os.path.basename(pipeline.DEFAULT_YOLO_WEIGHTS)}")
+    print(f"  Conditions: {', '.join(CONDITIONS)}")
     print(f"  Population: {population}")
 
     all_results = {
-        "run_id":    run_id,
+        "run_id": run_id,
         "timestamp": datetime.datetime.now().isoformat(),
-        "config":    {"trials": trials, "domains": domains, "population": population},
-        "results":   {},
+        "config": {"masters": len(posters), "posters_dir": os.path.relpath(posters_dir, _ROOT),
+                   "domains": domains, "population": population,
+                   "gnn_weights": os.path.basename(pipeline.DEFAULT_WEIGHTS),
+                   "yolo_weights": os.path.basename(pipeline.DEFAULT_YOLO_WEIGHTS),
+                   "conditions": list(CONDITIONS),
+                   "trial_unit": "one master layout (the pipeline is deterministic per input)"},
+        "results": {},
     }
-
     for domain_key in domains:
         cfg = DOMAIN_CONFIGS[domain_key]
-        print(f"\n{SEPARATOR}")
-        print(f"  Running: {cfg['label']}")
-        print(SEPARATOR)
+        print(f"\n{SEPARATOR}\n  Running: {cfg['label']}\n{SEPARATOR}")
+        trials = {c: [] for c in CONDITIONS}
+        for k, poster in enumerate(posters, start=1):
+            path = os.path.join(posters_dir, poster)
+            content = _content(poster, cfg, manifest, names)
+            runs = {c: run_single(path, domain_key, c, content, population) for c in CONDITIONS}
+            for c, r in runs.items():
+                trials[c].append(r)
 
-        gnn_trials  = []
-        base_trials = []
+            def cell(r):
+                err = r["structure_error"]
+                return f"C={r['C_total']:.4f} ({r['winner'][-1]}) s={err if err is not None else '—'}"
+            print(f"  {k:>2}/{len(posters)} {poster[:20]:<20} | GNN {cell(runs['gnn'])} | "
+                  f"Map {cell(runs['mapping'])} | Base {cell(runs['baseline'])} "
+                  f"| {runs['gnn']['latency_total']:.0f} ms", flush=True)
+        _print_summary_table(cfg["label"], trials)
+        all_results["results"][domain_key] = {"domain_label": cfg["label"],
+                                              "gnn_trials": trials["gnn"],
+                                              "mapping_trials": trials["mapping"],
+                                              "base_trials": trials["baseline"]}
 
-        for trial_num in range(1, trials + 1):
-            print(f"  Trial {trial_num:>2}/{trials} ", end="", flush=True)
-
-            r_gnn  = _run_single_trial(cfg["payload"], cfg["canvas_w"], cfg["canvas_h"],
-                                        use_gnn=True,  device=device, population=population)
-            r_base = _run_single_trial(cfg["payload"], cfg["canvas_w"], cfg["canvas_h"],
-                                        use_gnn=False, device=device, population=population)
-            gnn_trials.append(r_gnn)
-            base_trials.append(r_base)
-
-            print(f"| GNN C={r_gnn['C_total']:.4f} t={r_gnn['timings_ms']['total']:.0f}ms  "
-                  f"| Base C={r_base['C_total']:.4f} t={r_base['timings_ms']['total']:.0f}ms")
-
-        _print_summary_table(cfg["label"], gnn_trials, base_trials)
-
-        all_results["results"][domain_key] = {
-            "domain_label": cfg["label"],
-            "gnn_trials":   gnn_trials,
-            "base_trials":  base_trials,
-        }
-
-    # Save consolidated log
-    results_dir = os.path.join(_ROOT, "results")
-    os.makedirs(results_dir, exist_ok=True)
-    log_path = os.path.join(results_dir, "experiment_log.json")
+    log_path = os.path.join(_ROOT, "results", "experiment_log.json")
+    os.makedirs(os.path.dirname(log_path), exist_ok=True)
     with open(log_path, "w") as f:
         json.dump(all_results, f, indent=2)
-
-    print(f"\n{SEPARATOR}")
-    print(f"  Experiment complete. {trials} trial(s) × {len(domains)} domain(s) = "
-          f"{trials * len(domains) * 2} total pipeline runs.")
-    print(f"  Log saved → {log_path}")
-    print(f"{SEPARATOR}\n")
-
+    runs = len(posters) * len(domains) * len(CONDITIONS)
+    print(f"\n{SEPARATOR}\n  Experiment complete: {len(posters)} master(s) × {len(domains)} format(s) × "
+          f"{len(CONDITIONS)} conditions = {runs} pipeline runs.\n  Log saved → {log_path}\n{SEPARATOR}\n")
     return all_results
 
 
-# ---------------------------------------------------------------------------
-# CLI
-# ---------------------------------------------------------------------------
-
 def main():
-    parser = argparse.ArgumentParser(description="ThemeSync Experiment Runner")
-    parser.add_argument("--trials",     type=int, default=5,
-                        help="Number of independent trials per domain (default: 5)")
-    parser.add_argument("--domains",    type=str, default="both",
-                        choices=["both", "certificate", "id"],
-                        help="Which domain(s) to run (default: both)")
-    parser.add_argument("--population", type=int, default=5,
-                        help="Metaheuristic candidate population size (default: 5)")
+    parser = argparse.ArgumentParser(description="ThemeSync Experiment Runner (Phase 3)")
+    parser.add_argument("--posters_dir", default=p4.POSTERS_DIR)
+    parser.add_argument("--limit", type=int, default=None, help="use only the first N master layouts")
+    parser.add_argument("--domains", default="both", choices=["both", "certificate", "id"])
+    parser.add_argument("--population", type=int, default=6)
     args = parser.parse_args()
-
-    domains = list(DOMAIN_CONFIGS.keys()) if args.domains == "both" else [args.domains]
-
-    run_experiment(trials=args.trials, domains=domains, population=args.population)
+    domains = list(DOMAIN_CONFIGS) if args.domains == "both" else [args.domains]
+    run_experiment(args.posters_dir, domains, args.population, args.limit)
 
 
 if __name__ == "__main__":

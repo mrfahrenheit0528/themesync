@@ -143,6 +143,62 @@ class LayoutFSM:
 
 
 # ---------------------------------------------------------------------------
+# StateChain — the immutable JSON state chain (Formulas 3.9-3.10)
+# ---------------------------------------------------------------------------
+
+class StateChain:
+    """
+    The Bi-directional State Machine's serialized history (Chapter 3,
+    pp. 42-43; Figure 3's "State Timeline (JSON Sync)"): an append-only list
+    of canvas states.
+
+    Each designer action is one discrete, terminal event e_t — on-drop,
+    on-resize-complete, or a lock toggle, never a drag stream — producing
+    S_{t+1} = δ(S_t, e_t) (Formula 3.9). Every state records which nodes are
+    Hard (manually adjusted, U_manual) and which are Soft (algorithmic,
+    A_algorithmic) (Formula 3.10). No state is ever overwritten; restoring an
+    earlier canvas appends a new state that copies it, so the history itself
+    is never rewritten either. Serializes to and loads from JSON.
+    """
+
+    def __init__(self, states: list = None):
+        self.states = list(states or [])
+
+    def append(self, label: str, event: dict, nodes: list, fitness: dict = None, **extra) -> dict:
+        import copy
+        state = {
+            "state_id":   f"State_{len(self.states):02d}",
+            "label":      label,
+            "timestamp":  datetime.datetime.now().isoformat(timespec="milliseconds"),
+            "event":      dict(event or {}),
+            "nodes":      copy.deepcopy(nodes),
+            "fitness":    dict(fitness) if fitness else None,
+            "hard_nodes": [n["node_id"] for n in nodes if n.get("constraint_type") == "Hard"],
+        }
+        state.update(extra)
+        self.states.append(state)
+        return state
+
+    @property
+    def current(self) -> dict:
+        return self.states[-1] if self.states else None
+
+    def to_json(self) -> str:
+        return json.dumps({"state_chain": self.states}, indent=2)
+
+    def save(self, path: str) -> str:
+        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+        with open(path, "w") as f:
+            f.write(self.to_json())
+        return path
+
+    @classmethod
+    def load(cls, path: str) -> "StateChain":
+        with open(path) as f:
+            return cls(json.load(f)["state_chain"])
+
+
+# ---------------------------------------------------------------------------
 # StateManager — serialization and human-in-the-loop helpers
 # ---------------------------------------------------------------------------
 

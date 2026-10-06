@@ -1387,3 +1387,870 @@ was re-executed (0 errors, 4 charts):
 2. The TA's answer on 1 vs 3–5 experts; this affects only how many
    `packet` runs are needed.
 3. A colour test print, on the same printer for every copy.
+
+### 3.21 Phase 4 set collected; Stage 0b logo pick on unseen posters; dashboard page (2026-09-28)
+
+**The set.** The group collected 15 CSPC event pubmats (2023–2026) in
+`data/raw/phase4_posters/`, all unseen by every YOLO checkpoint (the
+difference-hash check found no match in the annotated batch). YUGTO 2025
+is a different design from the YUGTO 2026 poster in the training data. Event details were read off each poster into `manifest.csv`.
+Judgement calls to confirm with the group:
+- the JPCS header on both HALUBILO posters (inferred from the logo and
+  handle; not printed on the poster);
+- the pageant-night date for Mr and Ms CSPC 2025;
+- the header on ULAYAW (no organizer printed; CSPC only);
+- shortened titles, cut to the event ID's 40-character title limit.
+
+**Finding: the automatic logo pick on unseen posters.** `_select_logo_row`
+(top 20% of the poster, conf ≥ 0.4, else the single most confident logo
+anywhere) was run with v3 on all 15 posters:
+
+| Outcome | Posters |
+|---|---|
+| Correct | 7 (ALPAS, Aqua-ASK, EDUKWELA, KINAADMAN (4 of 6 by the row cap), ORGBIT, PASALABAT, YUGTO 2025) |
+| Incomplete | 6 (HALUBILO 2025 and 2026: JPCS only of CSPC/CCS/JPCS; SEARCH SSC 2025 and 2026: CSPC only; SIKLAB: 2 of 3; ORSEM: a faded SSC only) |
+| Wrong object | 1 (Mr and Ms CSPC: a red bokeh orb near the top, while the real logos sit at the bottom) |
+| Nothing detected | 1 (ULAYAW; the renderer falls back to a drawn badge) |
+
+The misses come from where these posters put their logos: lower down
+(about 30% down, or in the footer), which the top-band rule doesn't
+expect. This is a real Stage 0b limitation worth reporting in Chapter 4.
+
+**Fix: human-in-the-loop logo pick in the dashboard.** New page
+`src/dashboard/views/phase4.py` (the dashboard's Phase 4 page):
+- shows each poster with every Stage 0b logo detection boxed and
+  numbered;
+- lets the user tick the right ones (ThemeSync's own pick comes
+  pre-ticked) or upload a logo it missed;
+- saves the event text and logo choice to the same `manifest.csv` and
+  `logos/` folder the CLI uses;
+- previews both outputs, then runs `generate` and `packet` with a
+  progress bar and download buttons.
+
+A confirmed automatic pick is stored as a blank `logo_files`, so the key
+records it as `logo_choice=automatic`; a changed pick is `manual`. Both
+conditions of a poster always get the same logos.
+
+Supporting changes:
+- `pipeline._crop_logo()` (shared crop and background clearing);
+- `phase4_packet` helpers made public;
+- `logo_files` paths are now relative to the posters folder;
+- `poster_overlap.dhash` is cached, so the unseen check reads each
+  annotated image once;
+- `generate` now refuses to replace an existing answer key without
+  `--overwrite`, and moves earlier packets to `packets_superseded_<time>/`,
+  since their sample codes would no longer match.
+
+### 3.22 GNN v2: the train/inference mismatch, and retraining (2026-09-28)
+
+**What the user saw:** certificates with a ~200 px gap under the logo.
+Measured on 6 posters, the first gap was 184–227 px on every GNN-guided
+certificate while every other gap had collapsed to 6 px.
+
+**Cause: v1 was never learning a layout.**
+- **Mismatched input:** training fed each CGL layout's *true* positions
+  as input. At inference Stage 1 handed every node (0, 0), an input it
+  never saw in training.
+- **Wrong target:** the loss rewarded only "centred, in bounds, no
+  overlap", so nothing taught vertical order or spacing.
+- **How the solver amplified it:** GNN positions are `medium`
+  preferences, and the stack's gap was a solver variable with a 6 px
+  floor. The solver shrank every gap to 6 px to pack the text near the
+  GNN's (similar) predicted y's. The logo kept its own predicted y near
+  the top, which left the hole.
+
+**Fix (`src/models/train_gnn.py`, `graph_builder.naive_stack`):**
+- **Same start in training and inference:** a *naive stack* (elements
+  centred, stacked in reading order, uniform gap, stack centred
+  vertically). Inference stacks in `spatial_hierarchy` order. The naive
+  stack is also exactly what the CSP builds in baseline mode, so the GNN's
+  contribution is precisely its learned departure from the baseline.
+- **Target:** CGL-Dataset V2's real positions (Smooth-L1), plus a
+  relational term on consecutive offsets (spacing and alignment
+  structure), plus the fitness function's collision and in-bounds terms
+  (weight 0.1) as regularisers.
+- **Elements:** CGL logos and text only (58,011 layouts with ≥2 such
+  elements). Underlays and embellishments are decoration, placed by the
+  renderer (§3.23).
+- **Validation split:** CGL's own test split has no annotations
+  (placeholder boxes), so a seeded 5% of train (2,900 layouts) is held
+  out.
+
+**Held-out results** (`src/evaluation/gnn_heldout_eval.py` →
+`results/gnn_heldout_eval.json`; fractions of the canvas):
+
+| Model | Position MAE | Gap MAE | Order kept |
+|---|---|---|---|
+| v1 as deployed (0,0 start) | 0.210 | 0.349 | 47.1% |
+| Naive stack (no model = baseline start) | 0.175 | 0.077 | 100% |
+| v2, positions only (ablation) | 0.118 | 0.101 | 99.8% |
+| **v2, positions + relations (default)** | **0.121** | **0.074** | **99.9%** |
+
+v1 was worse than no model at all, and its 47% order rate is chance. v2
+cuts position error 43% and gap error 79% relative to v1, and beats the
+naive stack on both. The positions-only ablation places elements slightly
+better but spaces them 31% worse than naive; spacing is what a stacked
+certificate/ID depends on, so the relational model is the default.
+Weights: `themesync_gnn_v2.pth` (default); `themesync_gnn_v2_posonly.pth`
+(ablation); v1 kept for the record. Training logs: `results/gnn_v2/`.
+
+**Solver changes (`cassowary_engine.py`):**
+- **Minimum gap:** the candidate's vertical rhythm is a `strong` minimum
+  gap (was `medium`), so the GNN can add space but never squeeze.
+- **Maximum gap:** any one gap is capped at 10% of the canvas height
+  (`strong`), so no prediction can open a hole.
+- **Centre axis:** all stacked nodes share the centre axis at `strong`
+  (every one of the 18 sample IDs is centred). The GNN's `medium`
+  preference is now y only: it decides the vertical rhythm.
+
+**Thesis implications:**
+- Chapter 3 (pp.40–41) describes the architecture but not the training
+  objective (revision list 3.13).
+- Chapter 4 has a clean before/after (the table above).
+
+### 3.23 Projecting the master's look: background, motifs, title artwork (2026-09-28)
+
+**What the user saw:** "the generated IDs and certificates all look the
+same, only differ in color."
+
+**Cause:**
+- The master reached the output only through its K-Means palette and
+  logos.
+- Every output was the same flat card with the same centred stack.
+- The Legibility Penalty (Formula 3.15) scored text against the
+  *stretched master poster*, a background the output never showed.
+
+**The manuscript already implies more:**
+- p.38 builds the saliency map from "the inpainted background layer".
+- Figure 1(b) shows CGL's inpainted backgrounds.
+- Figure 3's candidates carry the master's ornaments and lettering.
+
+The group's 18 real event IDs all reuse their pubmat's artwork. The user
+approved (2026-09-28) projecting background, motifs and title artwork,
+lifting their earlier deferral.
+
+**Stage 0c — `src/data_preprocessing/stylistic_markers.py`:**
+- **Text-free background:** the poster's central area is rebuilt from its
+  border by harmonic (Laplace) interpolation at 64 px.
+  - YOLO misses big titles on unseen posters (HALUBILO, ORSEM), so
+    inpainting only detected boxes left readable ghost titles.
+  - OpenCV TELEA inpainting of large areas smears and leaves X-shaped
+    seams.
+  - The border fill keeps each backdrop's colours and light (sky over
+    grass, magenta rays, dark space) with no text at all.
+- **Motifs:** YOLO embellishment detections cut out with their
+  surroundings cleared.
+  - They are kept only if they separate cleanly: ≥50% of the outer ring
+    cleared, 10–85% of the crop cleared.
+  - Anything that is a logo, the title, or larger than 20% of the poster
+    is excluded.
+  - Motifs are ranked by confidence × SIFT keypoint density (the element's
+    stylistic descriptor).
+- **Title artwork:**
+  - YOLO's line boxes are first merged into title groups (vertically
+    adjacent, horizontally overlapping, comparable line heights). SIKLAB's
+    title came as "SIKLAB / CSPC INTRAMURALS" plus a separate "2025", and
+    a small tagline is kept out of a big title.
+  - The largest title-sized group that separates cleanly is cut out.
+  - A crop edge that still runs into artwork grows the box.
+- **Human-in-the-loop:** motif ticks, a title-artwork toggle or upload,
+  and logo picks on the Figure 2 page.
+
+**Rendering (`decor.py`, `aesthetic_renderer.py`):**
+- **Layers:** text-free background (cover-scaled) → certificate panel
+  (near-white with the poster's hue, 6.5% inset, so the poster art frames
+  it) with a double border → the event's title artwork as an 8% watermark
+  on the panel → motifs → content.
+- **Motifs:** placed in corners and along the sides, bleeding 18% off the
+  edge. Right-hand ones are mirrored. They are shrunk, then dropped,
+  rather than allowed to cover content.
+- **Event ID:** the title artwork replaces the typed title when present.
+- **Text colour:** picked against what is actually underneath (WCAG
+  4.5:1). White with a soft shadow is used on dark art. The role band uses
+  the poster's accent colour, deepened to 4.5:1 with white.
+- **Typography:** Figure 2's user-injected font weight and base size B,
+  collected but ignored until now, drive a type scale. Certificate title
+  1.1 B, name 1.0 B, body text 0.36 B, date/ID 0.3 B, each capped by its
+  box.
+- **Certificate text boxes grew:** title 10% of the height, name 8.5%,
+  citation 9%. The old 40 px title floated in an empty page.
+
+**Scoring:**
+- **Candidates:** each varies margin × vertical rhythm × motif
+  arrangement (6 arrangements).
+- **Legibility:** each candidate is scored against *its own* composed
+  background's SIFT saliency map, which makes Formula 3.15 truthful.
+- **Motifs in the fitness terms:**
+  - Alignment and whitespace leave motifs out: they are placed off-grid
+    and bleed off the page on purpose.
+  - Collision ignores motif–motif overlap but counts a motif over
+    content.
+  - Motif boxes aren't clamped onto the canvas for overlap tests.
+
+**Refinements after reviewing all 15 posters (2026-09-29):**
+- **Motif filters:**
+  - Small marks in the footer band are dropped (a Facebook "f" had become
+    a HALUBILO 2025 motif).
+  - Strips and slivers (aspect outside 0.3–3.3: a game health bar, side
+    panels) are dropped.
+  - Scattered fragments (less than 25% of the trimmed box visible) are
+    dropped.
+  - Anything showing a human face is dropped. ULAYAW's photo collage of
+    real students had been cut as a "motif". Face detection uses OpenCV's
+    YuNet model, bundled at `assets/models/` with its MIT licence, since
+    OpenCV 5 no longer ships the Haar cascade classifier.
+- **Title growth:**
+  - A crop grows sideways while the raw poster shows lettering just
+    outside its left or right end. This is needed because the background
+    clearing erases letters that touch the crop border.
+  - Vertical growth only follows visible content: an edge test pulled
+    taglines and neighbouring art into titles.
+  - Title art is now whole on 12 of 13 posters where it is found.
+    SEARCH SSC 2025 keeps white letters on a near-white sky that the
+    clearing still thins.
+- **Per-poster override for Phase 4:** a `title_artwork` column in
+  `manifest.csv` ("no" types the title), with a checkbox on the Phase 4
+  page next to the preview.
+
+**Known limits:**
+- A title YOLO misses entirely (HALUBILO 2026) is typed, not cut.
+- Motifs on busy art don't always separate, and are dropped.
+- ORSEM's title artwork carries a patch of its glow.
+- The automatic logo pick is still wrong on Mr and Ms CSPC (a red orb)
+  and finds nothing on ULAYAW (a drawn badge) — both fixed with the
+  Phase 4 page's logo picker (§3.21).
+
+### 3.24 Dashboard: Figures 2 and 3, the orchestration session, and the state chain (2026-09-29)
+
+**`OrchestrationSession` (`src/pipeline.py`):**
+- `run()` executes Stages 0–6 (now with 0c and pre-orchestration schema
+  validation).
+- The session then stays open for Figure 3. Each designer action is one
+  terminal event (on-drop, on-resize-complete, lock-toggle; never a drag
+  stream).
+- Each event re-solves from the same GNN-guided nodes, with every manually
+  adjusted node Hard (Formula 3.10), then re-scores, re-renders and
+  appends a state to the JSON chain (Formula 3.9).
+- Selecting a candidate or changing typography are events too. Restoring
+  appends a copy of the old state, so the chain is never rewritten.
+- `run_pipeline()` keeps its old signature and return keys (CLI, tests,
+  Phase 4 packet).
+
+**Supporting modules:**
+- **`StateChain` (`state_manager.py`):** an append-only, JSON-serialized
+  history. Each state carries its event, nodes, fitness, Hard/Soft split,
+  candidate and variation.
+- **`schema_validation.py`:** JSON Schema (Draft 2020-12) for the
+  typography and for the content payload.
+  - Typography: weight ∈ {100…900}; base size 8 px to 15% of the
+    viewport's shorter side.
+  - Content payload: every variable present, within `max_characters`.
+  - A violation rejects the initialization (p.44).
+
+**Dashboard (`src/dashboard/`):**
+- **`app.py`:** a router with named pages.
+- **`views/ingestion.py`:** Figure 2.
+  - Master preview with a Stage 0b overlay.
+  - K-Means swatches with the renderer's roles.
+  - SIFT/SURF keypoints.
+  - The relational node graph.
+  - Stage 0c markers with ticks and uploads.
+  - The logo picker.
+  - Validated typography.
+  - Target format, fields and an editable, validated content payload.
+  - GNN/baseline toggle.
+  - Initialize → Figure 3.
+- **`views/orchestration.py`:** Figure 3.
+  - **Active canvas:** Cairo PNG with the selected node outlined; SVG/PNG/PDF
+    downloads.
+  - **Constraint Editor:** X/Y/W/H, font, Soft/Hard, nudges, Apply, the
+    typography re-validation, the JSON state timeline with Restore and a
+    download, and the latest event as JSON.
+  - **Recommendation Engine:** every ranked candidate with its thumbnail
+    and all four penalties, and "Use this candidate".
+- **`views/phase4.py`:** the Phase 4 page (moved from `pages/`).
+- **`components.py`:** shared across pages — one cached YOLO model, cut-outs,
+  the numbered-box poster view and Cairo previews.
+
+**Tested headlessly (Streamlit AppTest):**
+- The Figure 2 → Initialize → Figure 3 flow on PASALABAT (6 s).
+- Nudge → State_02 Hard [logo row].
+- Lock via Apply → State_03 (Hard set accumulates).
+- Use candidate → State_04.
+- Restore → State_05.
+- The chain is saved after every event.
+
+**Evaluation updates:**
+- **`evaluate.py`:** runs the session.
+  - Its "constraint F1" was trivially 1.0 (no Hard node ever existed in a
+    synthetic run). It now measures retention of manual refinements: a
+    move, a resize and a lock are simulated, and every Hard node must be
+    where the designer left it after re-solving.
+  - Result: 3/3 kept, P_collision 0.
+- **Tests:** they now call the deployed Stage 2.
+  - New `test_hard_constraints_preserved`: move + resize kept exactly,
+    no overlap, one state per event.
+  - All 10 tests pass.
+- **`experiment_runner.py`:** runs the Phase 3 battery through the session
+  on real master layouts (default: the 15 Phase 4 posters). Each master is
+  one trial, since the pipeline is deterministic per input.
+
+### 3.25 Weak detection on master layouts: model size and resolution first, labels second (2026-09-29)
+
+**The user's question:** "the system weakly detects the logos and other
+stuff from the master layout, is it because on how we annotated the
+dataset?"
+
+**Answer: partly the labels, mostly the model and its input size.**
+- **Model and resolution.** v3 was YOLOv8n (3 M parameters) run at 640 px.
+  Poster logos are small, often under 3% of the image. At 640 px a logo row
+  is a few dozen pixels high.
+- **Labels, two problems:**
+  - 60 boxes cover more than half their poster (e.g., `underlay` 100% on
+    ARKI SEARCH and CELAKBO, `embellishment` 75% on BU). They teach "the
+    whole poster is an object".
+  - `embellishment` holds both 2% sparkles and 40% mascots, two things the
+    model can't learn as one rule.
+
+**Experiment (v4):**
+- **Model:** YOLOv8s from COCO, whole network, at 1024 px.
+- **Training:** 120 epochs (patience 25), batch 8, seed 0.
+- **Data:** a copy of the 124-image batch with the 60 over-half boxes
+  deleted (`data/processed/yolo_master_v4/`, images symlinked).
+
+Both models are scored on the same cleaned validation labels
+(`results/yolo_v4_experiment.json`):
+
+| | mAP50 | logo | text | underlay | embellishment |
+|---|---|---|---|---|---|
+| v3 (YOLOv8n, 640, original labels) | 0.363 | 0.620 | 0.584 | 0.037 | 0.212 |
+| v4 (YOLOv8s, 1024, cleaned labels) | **0.454** | **0.818** | **0.682** | 0.115 | 0.201 |
+| recall v3 → v4 | | 0.551 → 0.757 | 0.554 → 0.672 | 0.024 → 0.098 | 0.165 → 0.182 |
+
+- **How to read it:** logos and text improved most, which is the
+  capacity/resolution fix. Embellishment didn't move, which is the
+  class-definition problem, and no model size fixes that.
+- **Confound:** v4 changed size, resolution, initialisation and labels at
+  once. The v5 re-annotation, trained with v4's exact recipe, isolates the
+  labels' share.
+- **v4 is the default** (`pipeline.DEFAULT_YOLO_WEIGHTS`, `themesync_yolo_v4.pt`).
+
+**Inference changes (`layout_extractor.py`):**
+- It predicts at the checkpoint's own training size (1024 for v4). Before,
+  it always used 640.
+- Title-sized text (≥ 5% of the image) is kept down to confidence 0.15. Big
+  stylised titles score low, and false positives that large are rare.
+- Class names come from the checkpoint (`model.names`), so a 5-class v5
+  needs no code change. An unknown class maps to `image_node`.
+
+**Logo row (`pipeline._select_logo_row`), rewritten:**
+- Drop tiny footer icons.
+- De-duplicate overlapping boxes.
+- Cluster the logos into rows: centres within half the taller height,
+  height ratio ≤ 1.8.
+- Prefer a top-band row (≤ 25% of the height) with ≥ 2 logos, then a
+  bottom-band row, then the middle. Otherwise take the single best logo.
+
+On the 15 unseen Phase 4 posters the automatic row is now right on
+**15 of 15** (7 of 15 with v3 and the old top-20% rule, §3.21).
+
+**Fixing the labels (the user chose a re-annotation):**
+- **`notes/annotation_guidelines.md` v2:**
+  - a fifth class, `illustration`, for characters, mascots, emblems and
+    objects;
+  - `embellishment` restricted to small accents;
+  - no box over half the poster;
+  - photographs of people left unboxed;
+  - the Roboflow steps (same split, no resize).
+- **`finetune_yolo_master_layout.py`:**
+  - `--check_only` lists per-class counts, class ids outside `names`
+    (training refuses them) and over-half boxes (warned);
+  - `--data` and `--seed` are new;
+  - the v5 command uses v4's recipe.
+- **Stage 0c (`stylistic_markers.MOTIF_CLASSES`)** takes motifs from
+  `illustration` first (weight 1.0, up to 35% of the poster), then
+  `embellishment` (0.6, up to 20%). With a 4-class model nothing changes
+  (checked on SIKLAB, YUGTO 2025 and ORSEM: same motifs).
+- `pipeline.DEFAULT_YOLO_WEIGHTS` prefers `themesync_yolo_v5.pt` once it
+  exists.
+
+**Pending (group):** the Roboflow pass, then v5 training and the v4-vs-v5
+comparison (the guidelines list the checks).
+
+### 3.26 The GNN reads the master's structure (v3), registered to the master's anchors (2026-09-29)
+
+**The user's observation:** "the gnn effect on the layouts is
+insignificant."
+
+**Why that was true:**
+- v2 saw only the target's own boxes (sizes, palette, saliency). It started
+  from the same naive stack for every master, so it learned one
+  "CGL-looking" rhythm and applied it everywhere: a fixed 4–6% shift per
+  poster.
+- Nothing about the master's composition reached it. Table 1 maps an
+  ingested element's `bbox [x, y]` to the GNN's initial feature encoding,
+  but the implementation never passed the master's positions in (§3.11's
+  boundary).
+
+**Structure mapping (`src/models/structure_mapping.py`):**
+- `master_structure()` reads four roles from Stage 0b's detections:
+  - the logo row, if it sits above the title;
+  - the organisation header: the text group between the logos and the
+    title;
+  - the title: the merged title group (§3.23);
+  - the details: the first text group below the title, footer excluded.
+- `anchors_for()` pins each target node with the same role to that centre.
+- **Certificates anchor only the logo and header.** A poster's title and
+  details positions don't transfer to a certificate's composition:
+  anchoring them opened a 254 px hole in the art-column archetype.
+- `graph_builder.structure_start()` places the unmapped nodes between the
+  anchors in reading order.
+
+**v3 training (`train_gnn.py --starts naive,structure`, `themesync_gnn_v3.pth`):**
+- Each CGL layout is used twice:
+  - from the naive stack, the no-master case;
+  - from a distorted version of its own structure, as a cross-format
+    mapping would deliver it: rescaled 0.75–1.25 and shifted ±8%
+    vertically, jittered (σ 2.5% vertical, 3% horizontal), with up to half
+    the elements unmapped.
+- 60 epochs over 110,222 graphs; the best epoch is 55.
+- Same loss as v2: positions, consecutive offsets, and the collision /
+  in-bounds regularisers.
+
+**Solver:** when the positions carry the master's composition, vertical
+balance drops from `strong` to `weak` and a single gap may reach 30% of the
+height. So a title placed low on the page, with room above for the hero,
+survives the solve.
+
+**Held-out CGL layouts (2,900, `results/gnn_heldout_eval.json`),**
+fractions of the canvas:
+
+| input → model | position error | gap error | order kept | overlap |
+|---|---|---|---|---|
+| naive stack, no model | 0.1750 | 0.0766 | 1.000 | 0.0000 |
+| naive → v2 | 0.1207 | 0.0741 | 0.999 | 0.0000 |
+| naive → v3 | 0.1212 | 0.0739 | 0.999 | 0.0000 |
+| structure start, no model (mapping only) | 0.0503 | 0.0517 | 0.981 | 0.0044 |
+| structure → v2 | 0.0961 | 0.0969 | 0.924 | 0.0037 |
+| **structure → v3** | **0.0364** | **0.0411** | 0.971 | **0.0005** |
+
+- With a structure to start from, v3 cuts the mapping's position error by
+  28%, its gap error by 20% and its overlap by 89%.
+- v2, never trained on such a start, makes it worse.
+- Without a master, v3 is as good as v2.
+
+**Found in evaluation, and fixed: v3 moved the master's own anchors.**
+- **On real posters:** the first battery run had v3's structure error above
+  the mapping's on several certificates (EDUKWELA: mapping 0.000, GNN
+  0.078).
+  - v3 was trained only on distorted starts, so it always "corrects".
+  - On a real master the anchors aren't noise; they are the composition
+    being transferred.
+  - That run's palettes weren't seeded (§3.29), so its numbers aren't
+    reported.
+- **The clean test:** held-out layouts with **exact** anchors (real
+  centres, up to half the elements unmapped). Vertical-centre error, as a
+  fraction of the height (`exact_anchors` in the same JSON):
+
+| | anchored elements | unmapped elements |
+|---|---|---|
+| mapping only (interpolation) | 0.0000 | 0.0812 |
+| v3, raw | 0.0264 | 0.0843 |
+| **v3, registered** | **0.0000** | **0.0746** |
+| v2, registered | 0.0000 | 0.1088 |
+
+- **Reading it:**
+  - Raw v3 pulls correct anchors off by 2.6% of the height, and places the
+    unmapped elements no better than interpolation.
+  - **Registered to the anchors** (`graph_builder.register_to_anchors`), it
+    keeps them exactly and places the unmapped elements 8% better than
+    interpolation.
+  - v2, registered, is worse than interpolation: v3's structure training is
+    what earns the gain.
+- **What Stage 2 does now:**
+  - The mapped nodes keep the master's positions.
+  - Each unmapped node goes between its neighbouring anchors in proportion
+    to where the GNN put it.
+  - In short, the mapping transfers the composition, and the GNN infers
+    where the target's other elements go.
+- **The solver respects the same order.**
+  - An anchored node's position is held at `ANCHOR`
+    (`cassowary_engine.py`), ten times `medium` and still below `strong`.
+    So when not everything fits, the GNN's inferred nodes give way before
+    the master's composition, and the design rules still win over both.
+  - Found on EDUKWELA's certificate. Registration had put the logo row
+    exactly, but the GNN's tight spacing under it made the solver trade the
+    two `medium` preferences, and the logo moved up 3% of the height. With
+    `ANCHOR` it stays and the text below moves.
+  - The flag travels with the guided nodes, so the designer's re-solves
+    (Figure 3) keep it too.
+
+**Phase 3 battery (15 unseen posters × 2 formats × 3 conditions,
+`results/experiment_log.json`):**
+
+Run `20260929_103736`: YOLO v4, GNN v3 registered, seeded palettes.
+Structure error is a fraction of the height (lower = closer to the
+master); C_total is Formula 3.11.
+
+| | GNN-guided | mapping only | baseline |
+|---|---|---|---|
+| **Certificates** — structure error, mean of 6 candidates | 0.113 (median 0.098) | 0.113 | 0.147 (median 0.133) |
+| Certificates — C_total (winner) | 0.0015 | 0.0015 | 0.0017 |
+| **Event IDs** — structure error, mean of 6 candidates | 0.067 (median 0.047) | 0.067 | 0.137 (median 0.115) |
+| Event IDs — C_total (winner) | 0.1426 | 0.1420 | 0.1402 |
+| Event IDs — P_legibility | 0.0029 | 0.0025 | 0.0013 |
+
+**Structure error** (new in `experiment_runner.py`):
+- It is how far the output's anchored elements sit vertically from their
+  counterparts on the master, as a fraction of the height.
+- It is reported for the winner and averaged over all six candidates. On
+  certificates the candidates often tie on C_total, so the winner alone
+  mostly reflects the ranking's tie-break.
+- It measures what Formula 3.11 can't: whether the output keeps the
+  master's composition.
+- With registration, GNN and mapping share their anchored positions, so
+  this metric separates structure from no structure. The GNN's own
+  contribution, the unmapped elements, shows in the exact-anchor table
+  above and is for Phase 4 to judge.
+
+**Reading the battery:**
+- **The master's structure now reaches the output, measurably.**
+  - The GNN-guided output is closer to the master than the baseline on
+    **15 of 15 event IDs**, at half the distance.
+  - It is closer on **13 of 15 certificates**. The other two (MMCSPC,
+    ORSEM) have no logo row or header above the title, and those are the
+    only roles a certificate takes.
+- **Formula 3.11 doesn't reward it:**
+  - Certificates tie on 14 of 15.
+  - On event IDs the baseline scores slightly better (GNN lower on 5,
+    equal on 4, higher on 6), through legibility. Following a poster's
+    composition puts text where the poster had its artwork, and the
+    text-free background keeps that artwork, so the area is busier.
+  - Nothing in the fitness function encodes "keeps the master's
+    composition". That is the MOS's "visual hierarchy preservation" and
+    "brand consistency", i.e. Phase 4.
+- **GNN vs. mapping only:**
+  - They share the winner, fitness and anchor positions on 29 of 30 runs.
+  - The unmapped elements (name, role, the certificate's lower block) end
+    up in different places on 8 of 30 runs: 3 certificates and 5 IDs, by
+    up to 7.5% of the height (mean 0.6%).
+  - Both formats are tall stacks with little vertical slack. Once the
+    anchors are placed, Cassowary's `strong` rules leave the unmapped
+    elements few choices.
+  - So in this pipeline the GNN's contribution is small and bounded by
+    design. Its advantage over interpolation is measured on held-out data
+    (the exact-anchor table), not in the fitness scores.
+  - Not tuned away: loosening the design rules to make the GNN "matter
+    more" would bias the comparison.
+- **Outlier: ULAYAW.** Its only logo is a badge in the middle of the
+  poster, just above a low title. A certificate or ID can't put its
+  leading logo row 60% of the way down with the rest of the stack still
+  fitting below, so every condition scores about 0.32–0.42. That's a real
+  limit of role mapping when the master's order conflicts with the
+  target's, and it's why the medians are given too.
+- **A trade-off the expert will see (ORSEM, event ID):** GNN and mapping
+  reproduce the master's structure exactly (error 0.000) but score 0.164
+  and 0.155 against the baseline's 0.138.
+
+### 3.27 Candidate variety: layout archetypes, a hero motif, and scoring each archetype fairly (2026-09-29)
+
+**The user's complaint:** "the candidates look just the same."
+
+**Cause:** all six candidates were the same centred stack on the same
+panel. Margin, gap and which corners held the motifs were the only
+differences, and at thumbnail size those don't show.
+
+**Layout archetypes (`candidate_generator.ARCHETYPES`).** How a candidate
+frames and aligns its content:
+
+| archetype | frame | content |
+|---|---|---|
+| classic centred | panel (certificate) / card (ID) | centred, full width |
+| left-aligned | same | shares the region's left edge |
+| art column (certificates) | the event's title artwork in a column at the left 36% | centred in the right 64% |
+| header banner (certificates) | an accent band behind the first two elements | centred |
+| floating card (IDs) | a card inset 7% on each side | centred on the card |
+| full-width band (IDs) | the role band runs edge to edge, like the sample IDs' footers | centred |
+
+**The six candidates per format:**
+- Each combines an archetype, a margin, a gap and a motif arrangement
+  (`VARIATIONS`).
+- Certificates: classic ×2, art column ×2, banner, left-aligned.
+- IDs: classic ×2, card ×2, band, left-aligned.
+
+**Also new:**
+- **Hero arrangement:** the top motif, enlarged into the largest vertical
+  gap (at least 12% of the height), instead of sitting in a corner.
+- **Dark posters:**
+  - The ID card turns dark (80% opacity) when the text-free background's
+    mean luminance is under 0.2.
+  - SIKLAB's silver title artwork had been unreadable on a light card.
+
+**Scoring each archetype on its own terms.** Otherwise the fitness
+function picks the classic layout by construction:
+- **Formula 3.13 (alignment):**
+  - The grid G is the candidate's own content area: its two margins,
+    quarters and centre.
+  - A node counts as aligned when its left edge, centre or right edge sits
+    on a gridline.
+  - Before, the grid was centred on the canvas and only centres counted,
+    so a left-aligned layout paid a penalty for being left-aligned.
+- **Formula 3.14 (whitespace):** measured over the candidate's content
+  region. An art column filled with title artwork isn't empty page.
+- **Formula 3.15 (legibility):** unchanged. It was already scored on each
+  candidate's own composed background (§3.23).
+
+**Resulting ranks on SIKLAB and YUGTO 2025:**
+- **Certificates:** left-aligned ≈ 0.0007–0.0008 and classic ≈
+  0.0008–0.0012 lead; banner ≈ 0.001. The art column scores ≈ 0.076: its
+  text is denser, and the whitespace term sees that.
+- **IDs:** left-aligned wins at ≈ 0.14; band and classic ≈ 0.148–0.155;
+  card ≈ 0.185–0.19.
+- **Visual check:** the contact sheets show six visibly different designs
+  per poster.
+
+### 3.28 Figure 3's canvas, edited in place (2026-09-29)
+
+**The user's question:** "is it possible that i could edit directly on the
+active canvas … just like in canva or photoshop". They chose the full set
+plus text editing.
+
+**What the canvas does** (`src/dashboard/canvas_editor.py`, `.js`, `.css`,
+a Streamlit components-v2 element that replaces the static PNG):
+
+| gesture | event sent to the session |
+|---|---|
+| click a node | selection (the Constraint Editor follows) |
+| drag | `on-drop` |
+| drag a corner or edge handle (Shift keeps the ratio; logos flagged `lock_aspect_ratio` always do) | `on-resize-complete` |
+| double-click text, type, Enter (Shift+Enter for a new line) | `text-edit` |
+| arrow keys: 1 px, or 10 px with Shift | one `on-drop` after a 0.7 s pause |
+| L | `lock-toggle` |
+| Ctrl+Z / Ctrl+Shift+Z | `undo` / `redo` |
+| Tab | cycles the selection |
+
+**How it follows p.42 (discrete terminal events, never a drag stream):**
+- While the pointer moves, only the browser works. The node's SVG group is
+  translated or scaled as a preview, and nothing is sent.
+- Releasing sends one event. The session applies it as before: the node
+  becomes Hard, Cassowary re-flows the Soft nodes, and a state is appended
+  and re-rendered.
+
+**Helpers on the canvas:**
+- **Snapping:** moves snap to the canvas centre, to the candidate's
+  Formula 3.13 grid (shown while dragging) and to other nodes' edges. Alt
+  disables it.
+- **Hard-node badges:** Hard nodes carry a padlock badge, the visual form
+  of Formula 3.10's split.
+- **Overlap warning:** an event that leaves two Hard nodes overlapping gets
+  a warning, since the solver can't separate them.
+
+**Text edits:**
+- The editor's `maxlength` comes from the content schema.
+- The session re-validates the whole payload (p.44) before accepting.
+- Logos, motifs and the event title drawn as artwork say why they have no
+  text to edit.
+
+**Session additions (`pipeline.OrchestrationSession`):**
+- **`edit_text`:** schema-validated, appends a "Text [node]" state.
+- **`undo()` / `redo()`:**
+  - Each restores a state as a new one ("Undo → State_03"), so the chain
+    stays append-only.
+  - A new edit ends the redo trail.
+- **`restore_state`** now brings back the words and typography that state
+  was rendered with, not only the layout.
+- **`canvas_text()` and `text_limits()`:** which words are editable, and
+  their limits.
+
+**Transport:**
+- A rendered SVG is about 0.9 MB because its images are embedded.
+- Each image goes to the browser once per session (hash tokens), so a
+  rerun carries about 4 KB of markup.
+- The bundled Montserrat goes once too, cut down to Latin text as WOFF:
+  618 KB for six faces. It is built once per machine in the temp dir (about
+  9 s).
+- So the canvas shows the same typeface as the exported PNG/PDF.
+
+**Tested in a real browser:**
+- **Setup:** headless Firefox 156 through Selenium, installed in a scratch
+  venv; nothing was added to `themesync_env`.
+- **Event ID on SIKLAB:** select (the Constraint Editor follows), drag,
+  handle-resize, double-click retype ("Organizer" → "Facilitator", in the
+  re-rendered SVG), `maxlength` 24, L, Ctrl+Z / Ctrl+Shift+Z, and 3 ×
+  Shift+↑ (one on-drop, −30 px).
+- **Certificate on YUGTO 2025:** Tab, a two-line signature edit, a motif
+  drag (no content node moved), the name dropped on the title (overlap
+  warning), and a logo double-click (explained).
+- **Result:** no JS errors.
+
+**Three bugs the browser found, all fixed:**
+1. **Double-click never opened the editor.** The first click's drag had
+   captured the pointer, so the browser aimed `dblclick` at the stage. The
+   fix is a hit test by canvas coordinates.
+2. **Keyboard shortcuts died after a selection.**
+   - The one-shot success message at the top of the page exists only in
+     the run after an event. On the next rerun every element below it
+     shifted, and Streamlit remounted the canvas, dropping its focus.
+   - Fix: a fixed `st.empty()` slot for the message, plus a focus restore
+     if a remount happens anyway.
+3. **A selection rerun wiped the canvas's own note.** Now only an event's
+   outcome replaces it.
+
+**Tests:** new `test_text_edit_undo_redo`; 11/11 pass.
+
+**Operating notes:**
+- Streamlit doesn't hot-reload helper modules (`canvas_editor.py`,
+  `pipeline.py`). Restart the dashboard after pulling changes.
+- `streamlit run` binds every interface by default. On the school server it
+  printed the machine's public address, so the dashboard (no login,
+  students' names in the content) may be reachable from outside. Running
+  it with `--server.address 127.0.0.1` and opening it through an SSH tunnel
+  keeps it private. Not changed without the group's say: it changes how
+  you open the dashboard.
+
+### 3.29 Stage 0's colour clustering was unseeded, so identical runs differed (2026-09-29)
+
+**How it was found:** the battery's three conditions picked different
+winners on ALAPS, even though two of them run identical code there.
+- A quick test of two sessions agreed: K-Means often converges to the same
+  clusters from different starts.
+- Within one battery run, though, ALAPS's "Baseline Init" state scored
+  0.0041 in two sessions and 0.0007 in the third. That state is the same
+  unguided solve in every condition.
+
+**Cause:** `vision_extraction._kmeans_cuda` (Formula 3.1) drew its initial
+centroids with an unseeded `torch.randperm`. So a poster's palette could
+come out different on every run, and so could the elbow-chosen k. That
+changed:
+- the panel and text colours;
+- the Legibility Penalty;
+- the winning candidate.
+
+The grayscale path was already seeded (scikit-learn,
+`random_state=42`).
+
+**Fix:**
+- Seeded initialisations.
+- Each k keeps the best of 5, like the grayscale path's `n_init`.
+- Cluster means are one one-hot matrix product instead of a per-cluster
+  loop. That is faster (about 1.5 s per poster), and it avoids atomic
+  scatter-adds, whose summation order varies on a GPU.
+- Checked: repeated extraction gives identical centroids, and ALAPS's
+  palette is unchanged from the loop version.
+
+**Consequences:**
+- Every result before this fix carries some palette noise, including the
+  earlier batteries, the stale Phase 4 packet and the candidate sheets.
+- The Phase 3 numbers in §3.26 come from the first run after it.
+- The Phase 4 set has to be regenerated anyway (it predates §3.23–3.27).
+
+### 3.30 YOLO v5 on the group's 200-image re-annotation; a new Phase 4 set (2026-10-06)
+
+**What the group delivered:**
+- A Roboflow export (v3, 2026-10-05): 200 images, split 160 train / 40
+  validation, with fixed annotations. It kept the **4 original classes**
+  (now numbered alphabetically). The `illustration` class from guidelines
+  v2 wasn't added.
+- 15 new Phase 4 posters in `data/raw/phase4_posters/`. They replace the
+  previous 15 and their `manifest.csv`.
+
+**Problems found in the export, and fixed:**
+- **Polygon rows again (as in §3.12).** 658 polygon rows sat in 166 of the
+  200 label files. Ultralytics drops a file that mixes polygons with
+  boxes, so training on the raw export would have lost most of the
+  dataset.
+  - New `src/data_preprocessing/prepare_master_layout_dataset.py` writes a
+    training copy (`data/processed/yolo_master_v5/`, images symlinked):
+    polygons become their enclosing boxes, and the 21 remaining over-half
+    boxes are dropped, as for v4. The export itself is untouched.
+- **The label check misread polygons.** `finetune_yolo_master_layout.py
+  --check_only` had treated polygon rows as huge boxes (it reported 114).
+  It now measures them correctly (21) and refuses to train on files that
+  still contain polygons.
+- **A duplicate across splits.** HIRAYA is in the training split as a
+  `.jpg` and in validation as a `.png`; one copy should be deleted in
+  Roboflow.
+- **PUP_FORUM is not unseen.** `data/raw/phase4_posters/PUP_FORUM.jpg` is
+  identical (dhash distance 0) to `PUP_FORUM_2026` in the training set,
+  so it has to be replaced for Phase 4. The other 14 new posters appear in
+  no training set.
+
+**Training:**
+- v4's recipe: YOLOv8s from COCO, 1024 px, whole network, 120 epochs,
+  seed 0, AMP on (new `--amp` flag).
+- Took 8 minutes.
+- Written to a candidate name first, since the pipeline adopts
+  `themesync_yolo_v5.pt` as soon as it exists.
+
+**v4 vs. v5** (`src/evaluation/yolo_compare.py`, `results/yolo_v5_comparison.json`):
+- **Method:** both are scored on the new validation labels, each at its
+  own training size and in its own class order.
+- **Exclusions:** 8 images are left out: 7 v4 trained on, plus the HIRAYA
+  duplicate. 32 images remain.
+- **Caveat:** 25 of the 32 were v4's own validation images, which picked
+  its best checkpoint, so v4 is, if anything, flattered.
+
+| | mAP50 | logo | text | underlay | embellishment |
+|---|---|---|---|---|---|
+| v4 | 0.486 | 0.864 (R 0.87) | 0.680 (R 0.66) | 0.138 (R 0.10) | 0.263 (R 0.21) |
+| **v5** | **0.728** | **0.977** (R 0.94) | 0.684 (R 0.72) | **0.643** (R 0.52) | **0.609** (R 0.51) |
+
+**Reading it:**
+- The re-annotation fixed what model size couldn't: embellishment recall
+  0.21 → 0.51, underlay 0.10 → 0.52.
+- Part of the gain is v5 having learned the new labelling conventions that
+  the validation labels also follow. Logo and embellishment improve on any
+  reading.
+- **Promoted:** `themesync_yolo_v5.pt` is the default.
+
+**Downstream, on the 15 new posters:** the automatic logo row matches v4's
+on 12. Of the other three:
+- **JFINEX:** v5 is right (v4 picked the footer's social icons).
+- **DONATION_PROGRAM:** v5 finds 1 of the 3 logos; the dashboard's picker
+  is the fix.
+- **CTC:** v5 takes the whole anniversary badge, where v4 took the seal
+  inside it.
+
+The dashboard flow (Figure 2 → Initialize → Figure 3) runs cleanly with v5.
+
+**Housekeeping:** `poster_overlap.TRAINING_IMAGES` now maps v3/v4 to
+`_raw_v4_backup` (the 124 images) and v5 to the current batch.
+
+**The Phase 4 set, finalised (2026-10-06):**
+- **PUP_FORUM replaced:** the group swapped it for two new posters,
+  DEAR_SENDER and SHARE_KO_LANG. That makes **16**, all checked against
+  every training batch: none seen.
+- **Manifest drafted from the posters:** `manifest.csv`, 16 rows. Every
+  row passes both formats' content schemas.
+- **Guesses the group should confirm:**
+  - ANTI_HAZING_LAW: the university is inferred from its handles.
+  - CMET: the year, from "Student Council 2026-2027".
+  - GUESS_THE_TEACHER: the college's acronym, DEBESMSCAT; the full name
+    exceeds the certificate's 60 characters.
+  - Dates missing on DEAR_SENDER, LUCKY_TERA and SHARE_KO_LANG, which
+    are a radio segment, a greeting and a radio segment.
+
+**Phase 3 battery re-run on the new set** (run 20261006_144208, YOLO v5,
+16 posters × 2 formats × 3 conditions = 96 runs; the 2026-09-29 run is kept
+as `results/experiment_log_20260929_old15_v4.json`):
+
+| | GNN | mapping only | baseline |
+|---|---|---|---|
+| Certificates — structure error, mean of 6 | 0.056 | 0.056 | 0.089 |
+| Certificates — C_total | 0.0020 | 0.0020 | 0.0021 |
+| Event IDs — structure error, mean of 6 | 0.045 | 0.045 | 0.117 |
+| Event IDs — C_total | 0.1492 | 0.1480 | 0.1456 |
+
+**The same pattern as §3.26:**
+- **Structure:** the output is closer to the master on 15 of 16 IDs and
+  14 of 16 certificates.
+- **Fitness:** certificates tie on 15 of 16. On IDs the baseline is
+  slightly better on 11, through legibility.
+- **GNN vs. mapping:** the same anchors everywhere; the GNN moves the
+  unmapped elements on 13 of 32 runs (≤ 7.6% of the height).
+- **No mapped roles:**
+  - SHARE_KO_LANG: its script title isn't detected as a title.
+  - DONATION_PROGRAM (certificate): the organisation name beside the logos
+    was merged into the title group, so nothing sits above the "title".
+
+The notebook is updated and re-executed.

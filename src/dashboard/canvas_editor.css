@@ -1,0 +1,130 @@
+/* ThemeSync — Active Canvas editor (see canvas_editor.py). */
+
+.ts-root {
+  outline: none;
+  color: var(--st-text-color, #31333f);
+  font-family: var(--st-font, "Source Sans Pro", sans-serif);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.ts-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 34px;
+  margin-bottom: 6px;
+}
+.ts-sel { font-weight: 600; }
+.ts-chip {
+  border-radius: 999px;
+  padding: 1px 9px;
+  font-size: 12px;
+  border: 1px solid transparent;
+}
+.ts-chip:empty { display: none; }
+.ts-chip.soft { background: rgba(56, 142, 255, 0.12); border-color: rgba(56, 142, 255, 0.45); }
+.ts-chip.hard { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.6); }
+.ts-spacer { flex: 1; }
+.ts-btn {
+  font: inherit;
+  color: inherit;
+  background: var(--st-secondary-background-color, #f0f2f6);
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  border-radius: 6px;
+  padding: 3px 10px;
+  cursor: pointer;
+}
+.ts-btn:hover:not(:disabled) { border-color: var(--st-primary-color, #ff4b4b); }
+.ts-btn:disabled { opacity: 0.4; cursor: default; }
+
+.ts-stage {
+  position: relative;
+  /* the whole design fits: full width, or 76% of the window's height for
+     portrait formats (--ts-ar = width / height, set from the data) */
+  width: min(100%, calc(76vh * var(--ts-ar, 1)));
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  border-radius: 4px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+}
+.ts-root:focus-visible .ts-stage { box-shadow: 0 0 0 2px var(--st-primary-color, #ff4b4b); }
+.ts-host { line-height: 0; }
+.ts-svg { display: block; width: 100%; height: auto; }
+.ts-svg [data-node-id] { cursor: move; }
+
+/* overlay (drawn in canvas units; strokes stay 1-2 screen px) */
+.ts-overlay * { vector-effect: non-scaling-stroke; }
+.ts-hover { fill: none; stroke: #38bdf8; stroke-width: 1.5; stroke-dasharray: 5 3; pointer-events: none; }
+.ts-selbox { fill: none; stroke: #ff4081; stroke-width: 2; pointer-events: none; }
+.ts-selbox.hard { stroke: #f59e0b; }
+.ts-handle { fill: #fff; stroke: #ff4081; stroke-width: 1.5; }
+.ts-grid { stroke: #ff4081; stroke-opacity: 0.28; stroke-width: 1; stroke-dasharray: 2 4; pointer-events: none; }
+.ts-guide { stroke: #d946ef; stroke-width: 1.5; pointer-events: none; }
+.ts-lock circle { fill: #f59e0b; stroke: #fff; stroke-width: 1.5; }
+.ts-lock rect { fill: #fff; }
+.ts-lock path { fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; }
+.ts-lock { pointer-events: none; }
+
+.ts-editor {
+  position: absolute;
+  display: none;
+  box-sizing: border-box;
+  z-index: 3;
+  margin: 0;
+  padding: 6px 8px;
+  resize: none;
+  font: 15px/1.35 "Montserrat", sans-serif;
+  color: #111;
+  background: rgba(255, 255, 255, 0.97);
+  border: 2px solid #ff4081;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  outline: none;
+}
+.ts-count {
+  position: absolute;
+  display: none;
+  z-index: 3;
+  padding: 1px 6px;
+  font-size: 11px;
+  color: #fff;
+  background: #ff4081;
+  border-radius: 0 0 4px 4px;
+}
+.ts-count.over { background: #dc2626; }
+
+.ts-busy {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: progress;
+}
+.ts-busy.on { display: flex; }
+.ts-busy span {
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(17, 24, 39, 0.85);
+  font-size: 13px;
+}
+
+.ts-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+.ts-readout { font-variant-numeric: tabular-nums; }
+.ts-msg.error { color: #dc2626; opacity: 1; font-weight: 600; white-space: pre-line; }
+.ts-msg.warn { color: #b45309; opacity: 1; font-weight: 600; }
+.ts-hint { width: 100%; opacity: 0.75; }

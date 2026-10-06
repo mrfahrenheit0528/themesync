@@ -34,15 +34,24 @@ from ultralytics import YOLO
 # the certificate domain, not a generic visual category), so it's never
 # auto-assigned here; a detected run of similar adjacent text boxes could be
 # heuristically grouped into one later, but that's out of scope for this pass.
+# Fallback class names (v1-v4's 4-class CGL taxonomy); a checkpoint's own
+# `names` take precedence, so a re-annotated model with an "illustration"
+# class (notes/annotation_guidelines.md, v2) works unchanged.
 _YOLO_CLASS_NAMES = {0: "logo", 1: "text", 2: "underlay", 3: "embellishment"}
 _CLASS_TO_STRUCTURAL = {
     "logo":          "image_node",
     "text":          "text_node",
     "underlay":      "image_node",
     "embellishment": "image_node",
+    "illustration":  "image_node",
 }
 
 DEFAULT_CONFIDENCE = 0.25
+# Title-sized text (>= 5% of the poster) is kept down to this confidence:
+# big stylised titles score low (v4: PASALABAT's 3D title at 0.22) while
+# false positives that large are rare (notes §3.25).
+TITLE_CONFIDENCE = 0.15
+TITLE_MIN_AREA = 0.05
 
 
 class LayoutExtractor:
@@ -55,6 +64,9 @@ class LayoutExtractor:
             )
         self.model = YOLO(weights_path)
         self.confidence = confidence
+        # Predict at the resolution the checkpoint was trained at (v4: 1024
+        # px; v1-v3: 640). Small logos lose most of their pixels otherwise.
+        self.imgsz = int((getattr(self.model, "ckpt", None) or {}).get("train_args", {}).get("imgsz", 640))
 
     def extract(self, image_path):
         """
@@ -71,13 +83,21 @@ class LayoutExtractor:
             raise RuntimeError(f"OpenCV failed to decode image: '{image_path}'")
         rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
 
-        results = self.model.predict(image_path, conf=self.confidence, verbose=False)
+        results = self.model.predict(image_path, conf=min(self.confidence, TITLE_CONFIDENCE),
+                                     imgsz=self.imgsz, verbose=False)
+        names = getattr(self.model, "names", None) or _YOLO_CLASS_NAMES
         detections = []
         for result in results:
+            img_h, img_w = result.orig_shape
             for box in result.boxes:
                 cls_id = int(box.cls.item())
-                class_name = _YOLO_CLASS_NAMES.get(cls_id, "embellishment")
+                class_name = names.get(cls_id, "embellishment") if isinstance(names, dict) else names[cls_id]
                 x1, y1, x2, y2 = [float(v) for v in box.xyxy[0].tolist()]
+                conf = float(box.conf.item())
+                title_sized = (class_name == "text" and
+                               (x2 - x1) * (y2 - y1) >= TITLE_MIN_AREA * img_w * img_h)
+                if conf < self.confidence and not title_sized:
+                    continue
                 detections.append({
                     "class_name":  class_name,
                     "confidence":  float(box.conf.item()),
@@ -96,7 +116,7 @@ class LayoutExtractor:
         for idx, det in enumerate(detections):
             x1, y1, x2, y2 = det["bbox_xyxy"]
             w, h = x2 - x1, y2 - y1
-            structural_class = _CLASS_TO_STRUCTURAL[det["class_name"]]
+            structural_class = _CLASS_TO_STRUCTURAL.get(det["class_name"], "image_node")
 
             node = {
                 "node_id":           f"auto_{det['class_name']}_{idx}",

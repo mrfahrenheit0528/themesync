@@ -9,3 +9,8 @@ runs/
 repomix-output.xml
 .ipynb_checkpoints/
 data/phase4/
+
+# public base weights (Ultralytics downloads them on demand) and unpromoted candidates
+yolo26n.pt
+yolov8s.pt
+*_candidate.pt
