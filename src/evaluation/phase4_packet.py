@@ -5,8 +5,9 @@ Builds the printed packet the domain expert(s) use to rate ThemeSync's
 outputs with the MOS instrument (Chapter 3, pp. 54, 57-58).
 
 Design (agreed with the group, notes §3.20):
-  - 15 unseen master layouts (event posters) x 2 formats (certificate,
-    event ID) x 2 conditions (GNN-guided, no-GNN baseline) = 60 layouts.
+  - 16 unseen master layouts (event posters) x 2 formats (certificate,
+    event ID) x 2 conditions (GNN-guided, no-GNN baseline) = 64 layouts
+    (15 and 60 in the first design; the group's set has 16, 2026-10-06).
   - Blind: every page shows only a random sample code (e.g. S23). Both
     conditions of a poster get identical content, so only the layout
     differs; pages from the same poster are never adjacent. The answer
@@ -26,7 +27,7 @@ Steps:
 
   # 2. Generate every layout (runs the full pipeline 4x per poster);
   #    --overwrite replaces an existing answer key (older packets are set aside)
-  python src/evaluation/phase4_packet.py generate --n_posters 15
+  python src/evaluation/phase4_packet.py generate --n_posters 16
 
   # 3. One printable PDF + score-entry CSV per expert
   python src/evaluation/phase4_packet.py packet --expert "Evaluator A" --order_seed 1
@@ -571,7 +572,7 @@ def main():
     g = sub.add_parser("generate", help="generate all layouts and the private answer key")
     g.add_argument("--posters_dir", default=POSTERS_DIR)
     g.add_argument("--out_dir", default=OUT_DIR)
-    g.add_argument("--n_posters", type=int, default=15)
+    g.add_argument("--n_posters", type=int, default=16)
     g.add_argument("--select_seed", type=int, default=2026, help="picks the posters if more than n")
     g.add_argument("--key_seed", type=int, default=2026, help="assigns the blind sample codes")
     g.add_argument("--allow_seen", action="store_true",

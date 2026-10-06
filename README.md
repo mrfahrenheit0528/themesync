@@ -167,7 +167,7 @@ buttons. The same steps from the terminal:
 python src/evaluation/phase4_packet.py template
 
 # 2. generate every layout (each poster × certificate/ID × GNN/baseline) and the private answer key
-python src/evaluation/phase4_packet.py generate --n_posters 15
+python src/evaluation/phase4_packet.py generate --overwrite
 
 # 3. one printable PDF + score sheet per expert (use a different --order_seed for each)
 python src/evaluation/phase4_packet.py packet --expert "Evaluator A" --order_seed 1
@@ -188,8 +188,9 @@ python src/evaluation/mos_collector.py --report
     from the poster is clipped or the wrong region.
   - `motifs` = `no` leaves the poster's decorations out, when a
     "decoration" is really a stamp, lettering or a logo.
-- **Poster count:** `generate` uses 15 posters by default. With more in
-  the folder it picks 15 (seeded); `--n_posters 16` uses all 16.
+- **Poster count:** `generate` uses 16 posters by default, all of the
+  current set. With more in the folder it picks 16 (seeded); change
+  `--n_posters` to use a different number.
 - **Regenerating:** if the system changes after a set was generated, add
   `--overwrite`. Older packets are moved aside, not deleted.
 

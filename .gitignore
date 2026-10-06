@@ -3,7 +3,17 @@ __pycache__/
 *.pyc
 data/processed/
 data/rendered/
-data/raw/
+# data/raw: only what a clone needs to run and retrain. Never the 18 sample
+# IDs (data/raw/ID_layouts: real people's photos) or dashboard uploads.
+data/raw/*
+!data/raw/master_layout_batch/
+data/raw/master_layout_batch/_raw_v1_backup/
+data/raw/master_layout_batch/_raw_v2_backup/
+data/raw/master_layout_batch/_raw_v3_backup/
+data/raw/master_layout_batch/_stale_export_997boxes_backup/
+!data/raw/phase4_posters/
+!data/raw/validation_sample/
+*.cache
 runs/
 *.arrow
 repomix-output.xml

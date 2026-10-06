@@ -42,7 +42,7 @@ SET_ASIDE_DIR = os.path.join(POSTERS_DIR, "_set_aside")
 PREVIEW_DIR = os.path.join(p4.OUT_DIR, "preview")
 PACKETS_DIR = os.path.join(p4.OUT_DIR, "packets")
 P4_SCRIPT = os.path.join(_SRC, "evaluation", "phase4_packet.py")
-N_POSTERS = 15
+N_POSTERS = 16
 
 with open(p4.FORMATS["event_id"]) as _f:
     _ID_LIMITS = {k.strip("{}"): v.get("max_characters")
