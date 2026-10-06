@@ -2254,3 +2254,122 @@ as `results/experiment_log_20260929_old15_v4.json`):
     was merged into the title group, so nothing sits above the "title".
 
 The notebook is updated and re-executed.
+
+### 3.31 The layout type follows the master's composition (2026-10-06)
+
+**The user's observation:** "all IDs are left aligned and the certificates
+are mostly centered. there are no variance." So the Phase 4 packet would
+show one layout per format.
+
+**Cause** (run 20261006_144208): Formula 3.11 can't tell the archetypes
+apart.
+- **Certificates:** "classic centred" won 14 of 16, because the top
+  candidates tie exactly on C_total and the first in the list wins.
+- **Event IDs:** "left-aligned" won 16 of 16, by a small, steady margin
+  (median 0.0097).
+
+The six candidates differed, but only the winner reaches the packet.
+
+**Change:**
+- Formula 3.11 still scores every candidate.
+- The **active candidate** (the output, `candidates[0]`) is the fittest of
+  the **archetype the master's composition calls for**. The rest stay in
+  fitness order.
+- Without a master there's no preference, and fitness alone decides.
+- Both conditions (GNN and baseline) read the same master, so they get the
+  same archetype and the comparison stays fair.
+
+**The cues** (`structure_mapping.master_composition`, from Stage 0b's
+detections):
+
+| cue | measured as |
+|---|---|
+| left-aligned text | ≥ 50% of the text-group area (footer excluded) sits left of the centre band (±8% of the width) |
+| a large artwork beside the text | the largest embellishment/illustration is ≥ 15% of the poster, with its centre ≥ 12% off the axis |
+| text on a panel | an underlay ≥ 50% wide and ≥ 20% tall |
+| a footer band | an underlay ≥ 75% wide, centred in the bottom 15% |
+
+**Archetype** (`structure_mapping.archetype_for`), first match wins:
+
+| cue | certificate | event ID |
+|---|---|---|
+| left-aligned text | left-aligned | left-aligned |
+| a large artwork beside the text | art column | left-aligned (text beside the art) |
+| text on a panel | header banner | floating card |
+| a footer band | classic | full-width band |
+| none | classic | classic |
+
+**On the 16 Phase 4 posters:**
+
+| poster | certificate | event ID | cue |
+|---|---|---|---|
+| ARANTABAYAN | banner | card | panel |
+| RXEADY | banner | card | panel |
+| GUESS_THE_TEACHER | art column | left | artwork right of centre |
+| KAINANG_PAMILYA | art column | left | artwork right of centre |
+| SIGN_LANGUAGE_DAY | left | left | left-aligned text |
+| DONATION_PROGRAM | classic | band | footer band |
+| LUCKY_TERA | classic | band | footer band |
+| the other 9 | classic | classic | centred, no other cue |
+
+Most event posters *are* centred, so classic stays the most common. Now
+it's because each poster is centred, not because of a tie-break.
+
+**Where it shows:**
+- The Recommendation Engine marks the active candidate "Recommended:
+  follows the master's composition (…)".
+- `summary()` records `master_composition` and `preferred_archetype`.
+- The pipeline log prints the layout type and its evidence.
+
+**Trade-off, visible in the fitness:** the chosen candidate isn't always
+the lowest C_total.
+- The art column scores ≈ 0.076, against ≈ 0.002 for classic: its text
+  is packed into a narrower column, and Formula 3.14 measures that.
+- The card scores ≈ 0.185 against ≈ 0.149.
+
+The expert's MOS decides whether following the master's composition is
+worth that.
+
+**Stage 0c problems a review of all 32 outputs found, and what was done:**
+- **Wrong title artwork** on three posters. The manifest now types their
+  titles (`title_artwork` = no):
+  - CMET: the cut was the crown, not "CMET MODEL";
+  - SIGN_LANGUAGE_DAY: a hand and a date fragment;
+  - ANTI_HAZING_LAW: the statue covers part of "GENDER".
+- **Lettering used as a motif.** DEAR_SENDER's "PSUB Broadcast Center"
+  logotype had become a corner decoration.
+  - New Stage 0c rule: a motif candidate ≥ 25% covered by text detections
+    is lettering, not decoration, and is skipped
+    (`stylistic_markers.MOTIF_MAX_TEXT`).
+- **A stamp used as a motif.** ANTI_HAZING_LAW's "CLOSED" stamp overlaps
+  no text detection, so no automatic rule can catch it.
+  - New per-poster manifest column `motifs` ("no" leaves the poster's
+    decorations out), with a matching checkbox on the Phase 4 page, and
+    `run_pipeline(use_motifs=)`. Set for ANTI_HAZING_LAW.
+  - Like the logo picks, these switches are human-in-the-loop choices for
+    the packet. The Phase 3 battery stays automatic.
+- **Not fixed:** on DONATION_PROGRAM the logos touch the poster's top
+  edge, so the rebuilt background smears a blurred copy of the logo row
+  behind the ID's header.
+
+**Phase 3 battery with this change** (run 20261006_195534, YOLO v5, 16
+posters × 2 formats × 3 conditions; it supersedes 20261006_144208):
+
+| | GNN | mapping only | baseline |
+|---|---|---|---|
+| Certificates — structure error, mean of 6 | 0.056 | 0.056 | 0.089 |
+| Certificates — C_total (output) | 0.0125 | 0.0125 | 0.0126 |
+| Event IDs — structure error, mean of 6 | 0.045 | 0.045 | 0.117 |
+| Event IDs — C_total (output) | 0.1633 | 0.1621 | 0.1583 |
+
+- **Layout types:** certificates classic 11, banner 2, art column 2, left
+  1; event IDs classic 9, card 2, band 2, left 3. Identical for both
+  conditions of every poster.
+- **Structure:** the GNN-guided output is closer to the master on 15 of 16
+  IDs and 14 of 16 certificates (unchanged).
+- **Fitness:** C_total rises where the chosen type costs more (the art
+  column, the card). GNN vs. baseline: certificates equal on 10, lower on
+  4, higher on 2; IDs higher on 13 of 16.
+- **GNN vs. mapping only:** the same fitness on 29 of 32 runs; the GNN
+  moves the unmapped elements on 14 of 32 (≤ 7.5% of the height).
+- **Tests:** all 11 pass.

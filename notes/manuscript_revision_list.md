@@ -551,6 +551,25 @@ append rather than rewrite.
 belongs in the implementation details. That's only needed if the
 committee asks about reproducibility.
 
+### 3.23 🟡 Which candidate becomes the output (Phase 3, p.52; Figure 3's Recommendation Engine)
+
+**Now:** candidates are "ranked" by the Heuristic Fitness Function, which
+implies the lowest C_total is the output.
+
+**Code (notes §3.31):**
+- Formula 3.11 scores every candidate.
+- The output is the fittest candidate of the layout type (archetype) the
+  master's composition calls for: left-aligned text, an artwork beside the
+  text, text on a panel, or a footer band. Classic is the default.
+- Without a master, it's the lowest C_total.
+- Reason: Formula 3.11 can't distinguish the archetypes (exact ties on
+  certificates; one archetype won every ID), so every poster's output had
+  the same layout.
+
+**Add:** a sentence at Phase 3 (and in the Figure 3 description) saying
+the master's composition picks the layout type and the fitness function
+ranks within and across types.
+
 ---
 
 ## Chapter 4: Results (don't draft until asked)
@@ -594,21 +613,21 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
   - That's the case for registration, and for training on structure
     starts.
 - **Phase 3 battery, three Stage 2 conditions (notes §3.26, §3.30,
-  `results/experiment_log.json`, run 20261006_144208: YOLO v5, the 16 new
-  Phase 4 posters):**
+  `results/experiment_log.json`, run 20261006_195534: YOLO v5, the 16 new
+  Phase 4 posters, layout type from the master, item 3.23):**
   - **Structure transfer works.** The output is closer to the master than
     the baseline:
     - event IDs: on 15 of 16 (structure error 0.045 vs. 0.117);
     - certificates: on 14 of 16 (0.056 vs. 0.089); the other two have no
       roles to map.
   - **Formula 3.11 doesn't reward it.**
-    - Certificates tie on 15 of 16.
-    - On IDs the baseline scores slightly better (0.1456 vs. 0.1492),
+    - Certificates mostly tie (equal on 10 of 16).
+    - On IDs the baseline scores slightly better (0.1583 vs. 0.1633),
       through legibility: text goes where the poster had artwork.
     - Worth stating as a limitation of the fitness function. Phase 4's MOS
       (hierarchy, brand consistency) is where this is judged.
   - **GNN vs. mapping only:** the same anchors. The GNN moves the unmapped
-    elements on 13 of 32 runs, by ≤ 7.6% of the height. The formats' tall
+    elements on 14 of 32 runs, by ≤ 7.5% of the height. The formats' tall
     stacks leave the solver's design rules little slack, so report the
     GNN's gain from the held-out test, not from the fitness.
   - The 2026-09-29 run (YOLO v4, the earlier 15 posters) showed the same
@@ -624,6 +643,18 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
 - **AAPA diversity:** candidates now differ in layout archetype, margin,
   rhythm and motif arrangement (§3.15 above, notes §3.27), superseding the
   earlier collapse finding (§1.4).
+- **The ranking picks the same layout type for nearly every poster**
+  (run 20261006_144208):
+  - certificates: "classic centred" on 14 of 16, because the top
+    candidates tie exactly on C_total and the first in the list wins;
+  - event IDs: "left-aligned" on 16 of 16, by a small, steady margin.
+  - So every poster's output had the same layout per format, and the
+    candidates' variety was visible only in the Recommendation Engine.
+  - **Fixed before Phase 4 (2026-10-06, notes §3.31):** the master's
+    composition now picks the layout type (item 3.23). The Phase 4 set
+    has 4 layout types per format across the 16 posters. Chapter 4
+    should report the cost: the chosen type isn't always the lowest
+    C_total.
 - **Reproducibility catch:** Stage 0's K-Means was unseeded, so identical
   runs could render different palettes and pick different winners (notes
   §3.29). It is fixed, and everything reported comes from after the fix.
@@ -637,7 +668,7 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
 ## Order of work
 
 1. **Can do now, no TA decision needed:** 1.1, 1.2, 3.1, 3.2, 3.3, 3.5,
-   3.6, 3.7b (tell the TA about 3.7b), 3.13–3.16, 3.18–3.21.
+   3.6, 3.7b (tell the TA about 3.7b), 3.13–3.16, 3.18–3.21, 3.23.
    - These answer the TSA directly.
    - 3.2 needs the image source/permission details from the group.
 2. **After the consultant weighs in:** 3.4, 3.8, 3.9.

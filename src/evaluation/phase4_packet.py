@@ -73,7 +73,7 @@ KEY_PATH = os.path.join(OUT_DIR, "phase4_key.csv")
 IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".webp")
 
 MANIFEST_FIELDS = ["poster_file", "event_title", "event_date", "event_venue",
-                   "organization_header", "logo_files", "title_artwork"]
+                   "organization_header", "logo_files", "title_artwork", "motifs"]
 
 FORMATS = {
     "certificate": os.path.join(_ROOT, "data", "raw", "academic_payload.json"),
@@ -144,6 +144,13 @@ def use_title_artwork(row: dict) -> bool:
     return row.get("title_artwork", "").strip().lower() not in ("no", "off", "false", "0")
 
 
+def use_motifs(row: dict) -> bool:
+    """The `motifs` column: blank (default) carries the poster's decorations
+    onto both formats; "no" leaves them out, for a poster whose detected
+    "decoration" is really lettering, a stamp or a logo."""
+    return row.get("motifs", "").strip().lower() not in ("no", "off", "false", "0")
+
+
 def logo_paths(row: dict, posters_dir: str) -> list:
     """A row's `logo_files`, resolved against the posters folder. None means
     no override: the pipeline crops the logo row Stage 0b detects."""
@@ -163,7 +170,8 @@ def cmd_template(args) -> None:
     print(f"  Manifest → {path}")
     print("  Fill in per poster: event_title (required), event_date, event_venue,")
     print("  organization_header (use ' | ' between lines), title_artwork (blank, or \"no\" to")
-    print("  type the event title instead of the poster's title artwork), logo_files (optional,")
+    print("  type the event title instead of the poster's title artwork), motifs (blank, or \"no\"")
+    print("  to leave the poster's decorations out), logo_files (optional,")
     print(f"  ';'-separated paths relative to this folder, e.g. {LOGOS_DIRNAME}/x.png, only to")
     print("  override the logos detected on the poster).")
     seen = seen_matches([os.path.join(args.posters_dir, f) for f in files])
@@ -212,7 +220,8 @@ def content_for(row: dict, i: int) -> dict:
 
 
 def generate_sample(poster_path: str, content: dict, fmt: str, cond: str,
-                    out_dir: str, logos: list = None, use_wordmark: bool = True) -> tuple:
+                    out_dir: str, logos: list = None, use_wordmark: bool = True,
+                    use_motifs: bool = True) -> tuple:
     """One full pipeline run for one poster/format/condition, rasterized at
     2x the way the packet prints it. Returns (pipeline result, PNG path)."""
     import pipeline  # heavy (torch, YOLO); only needed here
@@ -225,7 +234,7 @@ def generate_sample(poster_path: str, content: dict, fmt: str, cond: str,
         result = pipeline.run_pipeline(
             payload_path=FORMATS[fmt], template_image=poster_path,
             content_data_path=content_path, use_gnn=(cond == "gnn"),
-            output_dir=out_dir, logo_images=logos, use_wordmark=use_wordmark,
+            output_dir=out_dir, logo_images=logos, use_wordmark=use_wordmark, use_motifs=use_motifs,
         )
     return result, rasterize.svg_to_png(result["rendered_path"], scale=2.0)
 
@@ -272,7 +281,8 @@ def cmd_generate(args) -> None:
             for cond in CONDITIONS:
                 out_dir = os.path.join(args.out_dir, "samples", stem, f"{fmt}_{cond}")
                 result, png = generate_sample(poster_path, content, fmt, cond, out_dir, logos,
-                                              use_wordmark=use_title_artwork(row))
+                                              use_wordmark=use_title_artwork(row),
+                                              use_motifs=use_motifs(row))
                 outputs[(fmt, cond)] = result["rendered_path"]
                 samples.append({
                     "poster_file": row["poster_file"], "event_title": row["event_title"],

@@ -1,9 +1,9 @@
-[ WARN:0@5.587] global net_impl_backend.cpp:345 setPreferableTarget Targets are not supported by the new graph engine for now
+[ WARN:0@5.001] global net_impl_backend.cpp:345 setPreferableTarget Targets are not supported by the new graph engine for now
 
 ========================================================================
   ThemeSync — Experiment Runner (Phase 3)
 ========================================================================
-  Run ID    : 20261006_144208
+  Run ID    : 20261006_195534
   Masters   : 16 from data/raw/phase4_posters
   Domains   : ['certificate', 'id']
   GNN       : themesync_gnn_v3.pth
@@ -14,74 +14,74 @@
 ========================================================================
   Running: Academic Certificate (4:3)
 ========================================================================
-   1/16 ANTI_HAZING_LAW.jpg  | GNN C=0.0011 (A) s=0.079 | Map C=0.0011 (A) s=0.079 | Base C=0.0011 (A) s=0.1191 | 7554 ms
-   2/16 ARANTABAYAN.jpg      | GNN C=0.0007 (A) s=0.013 | Map C=0.0007 (A) s=0.013 | Base C=0.0007 (D) s=0.0508 | 5576 ms
-   3/16 CHS_BIRISTUHAN.jpg   | GNN C=0.0011 (A) s=0.0384 | Map C=0.0011 (A) s=0.0384 | Base C=0.0011 (A) s=0.0759 | 3450 ms
-   4/16 CMET.jpg             | GNN C=0.0011 (A) s=0.084 | Map C=0.0011 (A) s=0.084 | Base C=0.0011 (A) s=0.1243 | 8783 ms
-   5/16 CTC.jpg              | GNN C=0.0032 (A) s=0.0 | Map C=0.0032 (A) s=0.0 | Base C=0.0032 (A) s=0.0273 | 3644 ms
-   6/16 DEAR_SENDER.jpg      | GNN C=0.0006 (A) s=0.0745 | Map C=0.0006 (A) s=0.0745 | Base C=0.0006 (A) s=0.112 | 4207 ms
-   7/16 DONATION_PROGRAM.jpg | GNN C=0.0013 (A) s=— | Map C=0.0013 (A) s=— | Base C=0.0013 (A) s=— | 7091 ms
-   8/16 FLOWERS_OF_HOPE.jpg  | GNN C=0.0029 (D) s=0.1127 | Map C=0.0029 (D) s=0.1127 | Base C=0.0029 (D) s=0.1146 | 8361 ms
-   9/16 GUESS_THE_TEACHER.jp | GNN C=0.0009 (A) s=0.0437 | Map C=0.0009 (A) s=0.0437 | Base C=0.0009 (A) s=0.0812 | 4564 ms
-  10/16 JFINEX.jpg           | GNN C=0.0098 (A) s=0.005 | Map C=0.0098 (A) s=0.005 | Base C=0.0107 (C) s=0.0514 | 4025 ms
-  11/16 KAINANG_PAMILYA.jpg  | GNN C=0.0008 (A) s=0.0361 | Map C=0.0008 (A) s=0.0361 | Base C=0.0008 (A) s=0.0736 | 12043 ms
-  12/16 LUCKY_TERA.jpg       | GNN C=0.0011 (E) s=0.0935 | Map C=0.0011 (E) s=0.0935 | Base C=0.0011 (E) s=0.0935 | 4886 ms
-  13/16 RXEADY.jpg           | GNN C=0.0026 (A) s=0.0804 | Map C=0.0026 (A) s=0.0804 | Base C=0.0026 (A) s=0.1179 | 4692 ms
-  14/16 RZEADY_SET_BOOTH.jpg | GNN C=0.0026 (A) s=0.1188 | Map C=0.0026 (A) s=0.1188 | Base C=0.0026 (A) s=0.1563 | 7979 ms
-  15/16 SHARE_KO_LANG.jpg    | GNN C=0.0016 (A) s=— | Map C=0.0016 (A) s=— | Base C=0.0016 (A) s=— | 4414 ms
-  16/16 SIGN_LANGUAGE_DAY.jp | GNN C=0.0009 (A) s=0.0397 | Map C=0.0009 (A) s=0.0397 | Base C=0.0009 (A) s=0.0696 | 3517 ms
+   1/16 ANTI_HAZING_LAW.jpg  | GNN C=0.0011 (A) s=0.079 | Map C=0.0011 (A) s=0.079 | Base C=0.0011 (A) s=0.1191 | 6985 ms
+   2/16 ARANTABAYAN.jpg      | GNN C=0.0116 (C) s=0.0163 | Map C=0.0116 (C) s=0.0163 | Base C=0.0091 (C) s=0.0586 | 4448 ms
+   3/16 CHS_BIRISTUHAN.jpg   | GNN C=0.0011 (A) s=0.0384 | Map C=0.0011 (A) s=0.0384 | Base C=0.0011 (A) s=0.0759 | 3486 ms
+   4/16 CMET.jpg             | GNN C=0.0011 (A) s=0.084 | Map C=0.0011 (A) s=0.084 | Base C=0.0011 (A) s=0.1243 | 8635 ms
+   5/16 CTC.jpg              | GNN C=0.0032 (A) s=0.0 | Map C=0.0032 (A) s=0.0 | Base C=0.0032 (A) s=0.0273 | 3667 ms
+   6/16 DEAR_SENDER.jpg      | GNN C=0.0006 (A) s=0.0745 | Map C=0.0006 (A) s=0.0745 | Base C=0.0006 (A) s=0.112 | 4297 ms
+   7/16 DONATION_PROGRAM.jpg | GNN C=0.0013 (A) s=— | Map C=0.0013 (A) s=— | Base C=0.0013 (A) s=— | 7257 ms
+   8/16 FLOWERS_OF_HOPE.jpg  | GNN C=0.0049 (A) s=0.0771 | Map C=0.0049 (A) s=0.0771 | Base C=0.0071 (A) s=0.1146 | 8657 ms
+   9/16 GUESS_THE_TEACHER.jp | GNN C=0.0759 (B) s=0.02 | Map C=0.0759 (B) s=0.02 | Base C=0.0760 (F) s=0.0656 | 4106 ms
+  10/16 JFINEX.jpg           | GNN C=0.0098 (A) s=0.005 | Map C=0.0098 (A) s=0.005 | Base C=0.0140 (A) s=0.0425 | 4070 ms
+  11/16 KAINANG_PAMILYA.jpg  | GNN C=0.0760 (F) s=0.005 | Map C=0.0760 (F) s=0.005 | Base C=0.0762 (B) s=0.0825 | 12082 ms
+  12/16 LUCKY_TERA.jpg       | GNN C=0.0011 (E) s=0.0935 | Map C=0.0011 (E) s=0.0935 | Base C=0.0011 (E) s=0.0935 | 4901 ms
+  13/16 RXEADY.jpg           | GNN C=0.0068 (C) s=0.0838 | Map C=0.0068 (C) s=0.0838 | Base C=0.0047 (C) s=0.1257 | 4724 ms
+  14/16 RZEADY_SET_BOOTH.jpg | GNN C=0.0026 (A) s=0.1188 | Map C=0.0026 (A) s=0.1188 | Base C=0.0026 (A) s=0.1563 | 8002 ms
+  15/16 SHARE_KO_LANG.jpg    | GNN C=0.0016 (A) s=— | Map C=0.0016 (A) s=— | Base C=0.0016 (A) s=— | 4417 ms
+  16/16 SIGN_LANGUAGE_DAY.jp | GNN C=0.0009 (D) s=0.0677 | Map C=0.0009 (D) s=0.0677 | Base C=0.0009 (D) s=0.0696 | 3494 ms
 
   Domain: Academic Certificate (4:3)
   Master layouts: 16  (each run GNN-guided, mapping only, and baseline)
 
   Metric                           GNN       σ   Mapping       σ      Base       σ
   -------------------------- --------- ------- --------- ------- --------- -------
-  C_total (↓ better)            0.0020  0.0022    0.0020  0.0022    0.0021  0.0024
+  C_total (↓ better)            0.0125  0.0250    0.0125  0.0250    0.0126  0.0251
   P_collision                   0.0000  0.0000    0.0000  0.0000    0.0000  0.0000
   P_align                       0.0000  0.0000    0.0000  0.0000    0.0000  0.0000
-  P_space                       0.0014  0.0008    0.0014  0.0008    0.0014  0.0008
-  P_legibility                  0.0004  0.0015    0.0004  0.0015    0.0004  0.0016
-  Structure error, winner (↓)    0.0585  0.0387    0.0585  0.0387    0.0905  0.0353
+  P_space                       0.0108  0.0254    0.0108  0.0254    0.0108  0.0254
+  P_legibility                  0.0011  0.0023    0.0011  0.0023    0.0012  0.0025
+  Structure error, winner (↓)    0.0545  0.0391    0.0545  0.0391    0.0905  0.0364
   Structure error, all 6 (↓)    0.0564  0.0319    0.0564  0.0319    0.0887  0.0357
-  Latency total (ms)         5924.0525 2453.6422 5874.8956 2458.6557 5899.5969 2391.7402
-  Per master, GNN vs baseline: lower C_total on 1, equal on 15, higher on 0
+  Latency total (ms)         5826.7387 2491.0246 5719.1256 2501.2539 5772.4225 2553.8399
+  Per master, GNN vs baseline: lower C_total on 4, equal on 10, higher on 2
   Per master, GNN vs mapping only: lower C_total on 0, equal on 16, higher on 0
 
 ========================================================================
   Running: Event ID (A6, 1:1.414)
 ========================================================================
-   1/16 ANTI_HAZING_LAW.jpg  | GNN C=0.1395 (D) s=0.0683 | Map C=0.1391 (D) s=0.0683 | Base C=0.1426 (D) s=0.1446 | 5396 ms
-   2/16 ARANTABAYAN.jpg      | GNN C=0.1483 (D) s=0.0054 | Map C=0.1483 (D) s=0.0054 | Base C=0.1439 (D) s=0.0659 | 5138 ms
-   3/16 CHS_BIRISTUHAN.jpg   | GNN C=0.1385 (D) s=0.0246 | Map C=0.1385 (D) s=0.0246 | Base C=0.1383 (D) s=0.0848 | 2989 ms
-   4/16 CMET.jpg             | GNN C=0.1466 (D) s=0.0997 | Map C=0.1466 (D) s=0.0997 | Base C=0.1411 (D) s=0.1759 | 7968 ms
-   5/16 CTC.jpg              | GNN C=0.1494 (D) s=0.049 | Map C=0.1494 (D) s=0.049 | Base C=0.1439 (D) s=0.1057 | 3127 ms
-   6/16 DEAR_SENDER.jpg      | GNN C=0.1390 (D) s=0.0505 | Map C=0.1390 (D) s=0.0505 | Base C=0.1386 (D) s=0.1101 | 3699 ms
-   7/16 DONATION_PROGRAM.jpg | GNN C=0.1494 (D) s=0.1252 | Map C=0.1494 (D) s=0.1252 | Base C=0.1638 (D) s=0.2015 | 6555 ms
-   8/16 FLOWERS_OF_HOPE.jpg  | GNN C=0.1396 (D) s=0.0593 | Map C=0.1396 (D) s=0.0593 | Base C=0.1397 (D) s=0.1172 | 7830 ms
-   9/16 GUESS_THE_TEACHER.jp | GNN C=0.1805 (D) s=0.0105 | Map C=0.1805 (D) s=0.0105 | Base C=0.1605 (D) s=0.0664 | 3414 ms
-  10/16 JFINEX.jpg           | GNN C=0.1550 (D) s=0.0 | Map C=0.1494 (D) s=0.0 | Base C=0.1439 (D) s=0.0444 | 3484 ms
-  11/16 KAINANG_PAMILYA.jpg  | GNN C=0.1605 (D) s=0.0171 | Map C=0.1605 (D) s=0.0171 | Base C=0.1550 (D) s=0.0934 | 11013 ms
-  12/16 LUCKY_TERA.jpg       | GNN C=0.1388 (D) s=0.0198 | Map C=0.1391 (D) s=0.0198 | Base C=0.1408 (D) s=0.0913 | 4269 ms
-  13/16 RXEADY.jpg           | GNN C=0.1383 (D) s=0.0774 | Map C=0.1383 (D) s=0.0774 | Base C=0.1383 (D) s=0.1537 | 4162 ms
-  14/16 RZEADY_SET_BOOTH.jpg | GNN C=0.1510 (D) s=0.0891 | Map C=0.1510 (D) s=0.0891 | Base C=0.1439 (D) s=0.1654 | 7678 ms
-  15/16 SHARE_KO_LANG.jpg    | GNN C=0.1682 (D) s=— | Map C=0.1550 (D) s=— | Base C=0.1550 (D) s=— | 4086 ms
-  16/16 SIGN_LANGUAGE_DAY.jp | GNN C=0.1439 (D) s=0.0935 | Map C=0.1439 (D) s=0.0935 | Base C=0.1402 (D) s=0.155 | 2948 ms
+   1/16 ANTI_HAZING_LAW.jpg  | GNN C=0.1493 (E) s=0.0702 | Map C=0.1488 (E) s=0.0702 | Base C=0.1491 (E) s=0.1399 | 5478 ms
+   2/16 ARANTABAYAN.jpg      | GNN C=0.1853 (B) s=0.0003 | Map C=0.1853 (B) s=0.0003 | Base C=0.1874 (F) s=0.0621 | 3984 ms
+   3/16 CHS_BIRISTUHAN.jpg   | GNN C=0.1481 (E) s=0.0234 | Map C=0.1481 (E) s=0.0234 | Base C=0.1480 (E) s=0.08 | 3015 ms
+   4/16 CMET.jpg             | GNN C=0.1563 (E) s=0.1006 | Map C=0.1563 (E) s=0.1006 | Base C=0.1508 (E) s=0.1702 | 8325 ms
+   5/16 CTC.jpg              | GNN C=0.1591 (E) s=0.0535 | Map C=0.1591 (E) s=0.0535 | Base C=0.1535 (E) s=0.1105 | 3149 ms
+   6/16 DEAR_SENDER.jpg      | GNN C=0.1624 (E) s=0.0491 | Map C=0.1624 (E) s=0.0491 | Base C=0.1548 (E) s=0.1044 | 4088 ms
+   7/16 DONATION_PROGRAM.jpg | GNN C=0.1591 (C) s=0.1176 | Map C=0.1591 (C) s=0.1176 | Base C=0.1735 (C) s=0.2015 | 6636 ms
+   8/16 FLOWERS_OF_HOPE.jpg  | GNN C=0.1707 (E) s=0.0579 | Map C=0.1707 (E) s=0.0579 | Base C=0.1535 (E) s=0.1102 | 7460 ms
+   9/16 GUESS_THE_TEACHER.jp | GNN C=0.1805 (D) s=0.0105 | Map C=0.1805 (D) s=0.0105 | Base C=0.1605 (D) s=0.0664 | 3221 ms
+  10/16 JFINEX.jpg           | GNN C=0.1646 (E) s=0.0 | Map C=0.1591 (E) s=0.0 | Base C=0.1535 (E) s=0.0397 | 3489 ms
+  11/16 KAINANG_PAMILYA.jpg  | GNN C=0.1605 (D) s=0.0171 | Map C=0.1605 (D) s=0.0171 | Base C=0.1550 (D) s=0.0934 | 11211 ms
+  12/16 LUCKY_TERA.jpg       | GNN C=0.1486 (C) s=0.0148 | Map C=0.1486 (C) s=0.0148 | Base C=0.1483 (C) s=0.0913 | 4294 ms
+  13/16 RXEADY.jpg           | GNN C=0.1853 (B) s=0.0444 | Map C=0.1853 (B) s=0.0444 | Base C=0.1869 (B) s=0.1559 | 4198 ms
+  14/16 RZEADY_SET_BOOTH.jpg | GNN C=0.1607 (E) s=0.0901 | Map C=0.1607 (E) s=0.0901 | Base C=0.1535 (E) s=0.1597 | 7805 ms
+  15/16 SHARE_KO_LANG.jpg    | GNN C=0.1779 (E) s=— | Map C=0.1646 (E) s=— | Base C=0.1646 (E) s=— | 4104 ms
+  16/16 SIGN_LANGUAGE_DAY.jp | GNN C=0.1439 (D) s=0.0935 | Map C=0.1439 (D) s=0.0935 | Base C=0.1402 (D) s=0.155 | 2991 ms
 
   Domain: Event ID (A6, 1:1.414)
   Master layouts: 16  (each run GNN-guided, mapping only, and baseline)
 
   Metric                           GNN       σ   Mapping       σ      Base       σ
   -------------------------- --------- ------- --------- ------- --------- -------
-  C_total (↓ better)            0.1492  0.0120    0.1480  0.0109    0.1456  0.0082
+  C_total (↓ better)            0.1633  0.0133    0.1621  0.0128    0.1583  0.0135
   P_collision                   0.0000  0.0000    0.0000  0.0000    0.0000  0.0000
   P_align                       0.0000  0.0000    0.0000  0.0000    0.0000  0.0000
-  P_space                       0.1383  0.0000    0.1383  0.0000    0.1383  0.0000
-  P_legibility                  0.0072  0.0080    0.0065  0.0073    0.0049  0.0055
-  Structure error, winner (↓)    0.0526  0.0390    0.0526  0.0390    0.1184  0.0458
+  P_space                       0.1508  0.0140    0.1508  0.0140    0.1508  0.0140
+  P_legibility                  0.0083  0.0081    0.0075  0.0075    0.0050  0.0054
+  Structure error, winner (↓)    0.0495  0.0385    0.0495  0.0385    0.1160  0.0460
   Structure error, all 6 (↓)    0.0451  0.0362    0.0451  0.0362    0.1171  0.0460
-  Latency total (ms)         5234.6825 2341.0241 5219.8944 2355.5743 5248.6269 2385.7292
-  Per master, GNN vs baseline: lower C_total on 4, equal on 1, higher on 11
-  Per master, GNN vs mapping only: lower C_total on 1, equal on 12, higher on 3
+  Latency total (ms)         5215.5525 2399.6691 5177.5019 2363.8448 5153.6056 2392.6120
+  Per master, GNN vs baseline: lower C_total on 3, equal on 0, higher on 13
+  Per master, GNN vs mapping only: lower C_total on 0, equal on 13, higher on 3
 
 ========================================================================
   Experiment complete: 16 master(s) × 2 format(s) × 3 conditions = 96 pipeline runs.

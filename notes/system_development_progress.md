@@ -77,20 +77,24 @@ has to be regenerated with the current system first.
 
 **Phase 3 estimate: ~92%** — implemented, run on real posters, UI built. The CNN aesthetic evaluator is still not wired into ranking (revision list 3.11).
 
-*Update 2026-10-06 (notes §3.26, §3.30):* the Phase 3 battery runs the
-group's new set of 16 unseen Phase 4 posters × 2 formats × 3 Stage 2
+*Update 2026-10-06 (notes §3.26, §3.30, §3.31):* the Phase 3 battery runs
+the group's new set of 16 unseen Phase 4 posters × 2 formats × 3 Stage 2
 conditions (GNN, mapping only, baseline) with YOLO v5: 96 full runs
-(`results/experiment_log.json`, `notebooks/results_analysis.ipynb`).
+(run 20261006_195534, `results/experiment_log.json`,
+`notebooks/results_analysis.ipynb`).
+- **Each poster's output follows its own composition** (§3.31): 4 layout
+  types per format across the 16 posters, where before every ID was
+  left-aligned.
 - **Structure transfer works.** The output is closer to the master than
   the baseline:
   - event IDs: on 15 of 16 (structure error 0.045 vs. 0.117);
   - certificates: on 14 of 16 (0.056 vs. 0.089).
 - **Formula 3.11 doesn't see it.**
   - Certificates tie on 15 of 16.
-  - On IDs the baseline is slightly better (0.1456 vs. 0.1492), through
+  - On IDs the baseline is slightly better (0.1583 vs. 0.1633), through
     legibility.
 - **GNN vs. mapping only:** the same anchors; the GNN moves the unmapped
-  elements on 13 of 32 runs. Its gain is shown on held-out data.
+  elements on 14 of 32 runs. Its gain is shown on held-out data.
 - **Reading:** report this as is. Phase 4's blind MOS judges composition.
 
 ### Phase 4: Expert Aesthetic Validation (p. 54, 57-58)

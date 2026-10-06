@@ -54,6 +54,25 @@ def variations_for(domain: str) -> list:
     return VARIATIONS.get(domain, VARIATIONS["academic_certificate"])
 
 
+def prefer_archetype(ranked: list, archetype: str, composition: dict = None) -> list:
+    """
+    The candidate list with the active candidate first: the fittest
+    (lowest C_total, Formula 3.11) of the archetype the master's composition
+    calls for (structure_mapping.archetype_for), the rest in fitness order.
+    Without a preference — no master, or no candidate of that archetype —
+    the fitness order stands. Formula 3.11 still scores every candidate; it
+    can't tell the archetypes apart (certificate candidates tie exactly, and
+    one ID archetype won every poster by a small, steady margin), so the
+    master decides which kind of layout its output is (notes §3.31).
+    """
+    match = next((c for c in ranked if c.get("archetype", {}).get("name") == archetype), None)
+    if not archetype or match is None:
+        return list(ranked)
+    evidence = "; ".join((composition or {}).get("evidence", [])) or "centred text, no panel, band or side artwork"
+    match = dict(match, chosen_because=f"follows the master's composition ({evidence})")
+    return [match] + [c for c in ranked if c["candidate_id"] != match["candidate_id"]]
+
+
 def solver_for(variation: dict, canvas_w: float, canvas_h: float, structure_guided: bool = False):
     """The Cassowary engine configured for one variation. When the GNN's
     positions carry the master's composition (`structure_guided`), the

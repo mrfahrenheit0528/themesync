@@ -66,7 +66,7 @@ from dynamic_instantiation import NodeInstantiator
 from gnn_model import ThemeSyncGNN
 from graph_builder import LayoutGraphBuilder, naive_stack, register_to_anchors, structure_start
 from cassowary_engine import ConstraintSolverEngine
-from candidate_generator import ARCHETYPES, MetaheuristicStateExplorer, solver_for, variations_for
+from candidate_generator import ARCHETYPES, MetaheuristicStateExplorer, prefer_archetype, solver_for, variations_for
 import structure_mapping
 from optimization_engine import HeuristicEvaluator
 from aesthetic_renderer import AestheticSVGRenderer, DEFAULT_TYPOGRAPHY, _palette_from_centroids, default_content
@@ -608,6 +608,8 @@ class OrchestrationSession:
         self.ingestion = None
         self.style_kit = {}
         self.structure = {}
+        self.composition = {}          # the master's composition cues (notes §3.31)
+        self.preferred_archetype = None
         self.structure_guided = False
         self.logos = {"row": [], "primary": None, "ratio": None, "source": None}
         self.candidates = []
@@ -660,11 +662,16 @@ class OrchestrationSession:
                 self.template_image, self.detected_nodes, self.output_dir, self.stem,
                 use_wordmark=self.use_wordmark, wordmark_path=self.wordmark_path,
                 motif_paths=self.motif_paths)
-            if self.detected_nodes and self.use_structure:
+            if self.detected_nodes:
                 with Image.open(self.template_image) as img:
                     mw, mh = img.size
-                self.structure = structure_mapping.master_structure(
-                    self.detected_nodes, mw, mh, _select_logo_row(self.detected_nodes, mh))
+                # Every condition follows the master's composition (the
+                # archetype); only GNN and mapping use its structure.
+                self.composition = structure_mapping.master_composition(self.detected_nodes, mw, mh)
+                self.preferred_archetype = structure_mapping.archetype_for(self.composition, self.domain)
+                if self.use_structure:
+                    self.structure = structure_mapping.master_structure(
+                        self.detected_nodes, mw, mh, _select_logo_row(self.detected_nodes, mh))
         else:
             self.timings["stylistic_markers"] = 0.0
         self.structure_guided = bool(self.structure) and self.use_structure
@@ -677,6 +684,8 @@ class OrchestrationSession:
         print(f"  Content Data   : {self.content_data_path or ('(given)' if self.content_data else '(none — using domain defaults)')}")
         print(f"  Condition      : {self.condition}")
         print(f"  Master structure: {', '.join(f'{k} at {v[1]:.2f}' for k, v in self.structure.items()) or '(none)'}")
+        print(f"  Layout type    : {self.preferred_archetype or '(fitness alone)'}"
+              + (f" — {'; '.join(self.composition.get('evidence', []))}" if self.composition.get('evidence') else ""))
         print(f"  Population     : {self.population}")
         print(f"  Palette Source : {ingestion_mode}")
 
@@ -723,6 +732,7 @@ class OrchestrationSession:
             saliency_map=self.saliency_map, style_kit=self.style_kit, domain=self.domain,
             panel_rgb=_hex_to_rgb(self.palette["panel"]), palette=self.palette,
             structure_guided=self.structure_guided)
+        self.candidates = prefer_archetype(self.candidates, self.preferred_archetype, self.composition)
         winner = self.candidates[0]
 
         # States: baseline arrangement, then the ranked winner
@@ -1076,6 +1086,8 @@ class OrchestrationSession:
             "rendered_path":  self.rendered_path,
             "condition":      self.condition,
             "master_structure": self.structure,
+            "master_composition": self.composition,
+            "preferred_archetype": self.preferred_archetype,
             "color_centroids": self.color_centroids,
             "saliency_weight": self.saliency_weight,
             "palette":         self.palette,
@@ -1110,9 +1122,12 @@ def run_pipeline(
     typography: dict = None,
     use_wordmark: bool = True,
     use_structure: bool = None,
+    use_motifs: bool = True,
 ):
     """Runs Stages 0-6 once and returns the session summary (see
-    OrchestrationSession.summary)."""
+    OrchestrationSession.summary). use_motifs=False leaves the master's
+    motifs out (a per-poster human-in-the-loop choice, e.g. a stamp with
+    words that Stage 0c can't tell from decoration)."""
     if not os.path.exists(payload_path):
         print(f"ERROR: Payload not found at '{payload_path}'")
         sys.exit(1)
@@ -1122,6 +1137,7 @@ def run_pipeline(
         yolo_weights_path=yolo_weights_path, output_dir=output_dir, logo_images=logo_images,
         population=population, canvas_w=canvas_w, canvas_h=canvas_h, font_family=font_family,
         use_wordmark=use_wordmark, use_structure=use_structure,
+        motif_paths=None if use_motifs else [],
     )
     return session.run()
 

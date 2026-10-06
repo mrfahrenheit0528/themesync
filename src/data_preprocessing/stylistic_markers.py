@@ -42,6 +42,7 @@ MOTIF_MIN_CONF = 0.25
 # cover: an illustration (a mascot, an emblem) can be big; the v1-v4
 # "embellishment" class mixes art with small accents. A 4-class model
 # (v1-v4) has no "illustration" class, so its motifs are embellishments.
+MOTIF_MAX_TEXT = 0.25   # a motif candidate this covered by text detections is lettering
 MOTIF_CLASSES = {"illustration": {"weight": 1.0, "max_area": 0.35},
                  "embellishment": {"weight": 0.6, "max_area": 0.20}}
 # Title-sized text survives Stage 0b down to 0.15 (layout_extractor
@@ -389,6 +390,13 @@ def title_group_box(detected_nodes: list, image_w: float, image_h: float):
     return list(best["bbox"])
 
 
+def _intersection(a: list, b: list) -> float:
+    """Overlap area of two [x, y, w, h] boxes."""
+    ix = max(0.0, min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0]))
+    iy = max(0.0, min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1]))
+    return ix * iy
+
+
 def extract_markers(image_path: str, detected_nodes: list, logo_boxes: list = (),
                     max_motifs: int = MAX_MOTIFS) -> dict:
     """
@@ -440,10 +448,17 @@ def extract_markers(image_path: str, detected_nodes: list, logo_boxes: list = ()
                       if n.get("semantic_category") in MOTIF_CLASSES
                       and n.get("detection_confidence", 0.0) >= MOTIF_MIN_CONF),
                      key=lambda n: -MOTIF_CLASSES[n["semantic_category"]]["weight"] * n["detection_confidence"])
+    texts = [t["bbox"] for t in detected_nodes or []
+             if t.get("semantic_category") == "text" and t.get("detection_confidence", 0.0) >= MOTIF_MIN_CONF]
     for n in sources:
         x, y, w, h = n["bbox"]
         limit = MOTIF_CLASSES[n["semantic_category"]]["max_area"]
         if w * h > limit * area or any(_overlap_ratio(n["bbox"], t) >= 0.3 for t in taken):
+            continue
+        # Lettering isn't decoration: a detection mostly covered by text
+        # detections is a logotype or a stamp with words (e.g. a radio
+        # station's name), not a motif.
+        if sum(_intersection(n["bbox"], t) for t in texts) >= MOTIF_MAX_TEXT * w * h:
             continue
         # Social-media icons and similar small marks in the footer band
         # are contact details, not decoration (e.g. a Facebook "f").

@@ -100,3 +100,81 @@ def anchors_for(stack_nodes: list, structure: dict, domain: str = None) -> dict:
                 anchors[i] = structure[role]
                 break
     return anchors
+
+
+# ---------------------------------------------------------------------------
+# Composition: which layout archetype follows the master (notes §3.31)
+# ---------------------------------------------------------------------------
+
+# Thresholds, as fractions of the poster.
+CENTRE_BAND = 0.08     # a text group whose centre is within this of the axis is centred
+SIDE_ART_AREA = 0.15   # a "large artwork" covers at least this much of the poster...
+SIDE_ART_OFFSET = 0.12  # ...with its centre at least this far off the axis
+PANEL_W, PANEL_H = 0.50, 0.20      # an underlay this wide and tall is a panel behind text
+BAND_W, BAND_CY = 0.75, 0.85       # an underlay this wide, centred this low, is a footer band
+
+
+def master_composition(detected_nodes: list, image_w: float, image_h: float) -> dict:
+    """
+    How the master is composed, from Stage 0b's detections:
+      align      "center" or "left": how the text groups (footer excluded)
+                 sit, weighted by area — the title usually decides
+      side_art   "left"/"right" when the largest artwork (embellishment or
+                 illustration, ≥ 15% of the poster) sits off the centre line
+      panel      an underlay ≥ 50% wide and ≥ 20% tall behind the text
+      footer_band an underlay ≥ 75% wide across the bottom
+    plus a short `evidence` string for each cue found.
+    """
+    W, H = float(image_w), float(image_h)
+    groups = [g for g in text_groups(detected_nodes, W, H)
+              if g["bbox"][1] + g["bbox"][3] / 2.0 < 0.9 * H and g["bbox"][2] * g["bbox"][3] > 0.002 * W * H]
+    share = {"center": 0.0, "left": 0.0, "right": 0.0}
+    for g in groups:
+        x, _, w, h = g["bbox"]
+        off = (x + w / 2.0) / W - 0.5
+        share["center" if abs(off) <= CENTRE_BAND else "left" if off < 0 else "right"] += w * h
+    total = sum(share.values()) or 1.0
+    align = "left" if share["left"] / total >= 0.5 else "center"
+    out = {"align": align, "side_art": None, "panel": False, "footer_band": False, "evidence": []}
+    if align == "left":
+        out["evidence"].append(f"text left of the centre line ({share['left'] / total:.0%} of the text area)")
+
+    art = [n for n in detected_nodes or [] if n.get("semantic_category") in ("embellishment", "illustration")]
+    if art:
+        x, y, w, h = max(art, key=lambda n: n["bbox"][2] * n["bbox"][3])["bbox"]
+        off = (x + w / 2.0) / W - 0.5
+        if w * h >= SIDE_ART_AREA * W * H and abs(off) >= SIDE_ART_OFFSET:
+            out["side_art"] = "left" if off < 0 else "right"
+            out["evidence"].append(f"a large artwork {out['side_art']} of centre ({w * h / (W * H):.0%} of the poster)")
+    for n in detected_nodes or []:
+        if n.get("semantic_category") != "underlay":
+            continue
+        x, y, w, h = n["bbox"]
+        if w >= PANEL_W * W and h >= PANEL_H * H and not out["panel"]:
+            out["panel"] = True
+            out["evidence"].append(f"text on a panel ({w / W:.0%} × {h / H:.0%} of the poster)")
+        elif w >= BAND_W * W and (y + h / 2.0) >= BAND_CY * H and not out["footer_band"]:
+            out["footer_band"] = True
+            out["evidence"].append("a full-width band along the bottom")
+    return out
+
+
+def archetype_for(composition: dict, domain: str) -> str:
+    """The layout archetype (candidate_generator.ARCHETYPES) that follows
+    the master's composition. In order: left-aligned text → left; a large
+    artwork beside the text → art column (certificate) or left-aligned (ID:
+    text beside the art); text on a panel → header banner (certificate) or
+    floating card (ID); a footer band → full-width band (ID); else
+    classic centred."""
+    if not composition:
+        return None
+    is_id = domain == "identification_card"
+    if composition.get("align") == "left":
+        return "left"
+    if composition.get("side_art"):
+        return "left" if is_id else "split"
+    if composition.get("panel"):
+        return "card" if is_id else "banner"
+    if composition.get("footer_band") and is_id:
+        return "band"
+    return "classic"

@@ -182,6 +182,12 @@ python src/evaluation/mos_collector.py --report
   key that makes the rating blind.
 - **Posters must be unseen.** `template` warns if one matches an image in
   the training set; replace it.
+- **Fixing a poster's output:** two manifest columns (also checkboxes on
+  the Phase 4 page) help when the output looks wrong.
+  - `title_artwork` = `no` types the event title, when the artwork cut
+    from the poster is clipped or the wrong region.
+  - `motifs` = `no` leaves the poster's decorations out, when a
+    "decoration" is really a stamp, lettering or a logo.
 - **Poster count:** `generate` uses 15 posters by default. With more in
   the folder it picks 15 (seeded); `--n_posters 16` uses all 16.
 - **Regenerating:** if the system changes after a set was generated, add

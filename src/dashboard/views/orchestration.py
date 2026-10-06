@@ -174,8 +174,9 @@ with panel_col:
 
     with tab_reco:
         st.markdown("**Heuristic Recommendation Engine**")
-        st.caption("Parallel layout variations — margin, vertical rhythm and motif arrangement — each "
-                   "solved by Cassowary and ranked by the fitness function (lower is better).")
+        st.caption("Parallel layout variations — layout type, margin, vertical rhythm and motif "
+                   "arrangement — each solved by Cassowary and scored by the fitness function (lower is "
+                   "better). The first is the fittest of the layout type the master's composition calls for.")
         thumbs_key = (id(session), json.dumps(session.typography, sort_keys=True))
         cached = st.session_state.get("orch_thumbs")
         if not cached or cached["key"] != thumbs_key:
@@ -191,6 +192,8 @@ with panel_col:
                 info_col.markdown(f"**[ {cand['candidate_id'].replace('_', ' ')} ]** · rank {rank}"
                                   + ("  ◀ active" if active else ""))
                 info_col.caption(cand["label"])
+                if cand.get("chosen_because"):
+                    info_col.caption(f"Recommended: {cand['chosen_because']}.")
                 info_col.markdown(_metrics_line(cand["metrics"]))
                 if info_col.button("Use this candidate", key=f"use_{cand['candidate_id']}", disabled=active):
                     new = session.select_candidate(cand["candidate_id"])

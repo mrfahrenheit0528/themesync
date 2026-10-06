@@ -307,6 +307,11 @@ else:
                               help="Untick when the artwork cut from the poster looks clipped or messy "
                                    "in the preview; the event ID then types the title.")
         draft["title_artwork"] = "" if use_art else "no"
+        use_deco = st.checkbox("Use the poster's decorations (motifs)", key=f"{stem}_motifs",
+                               value=p4.use_motifs(row),
+                               help="Untick when a 'decoration' in the preview is really lettering, a "
+                                    "stamp or a logo.")
+        draft["motifs"] = "" if use_deco else "no"
 
         st.subheader("Logos")
         if not any(c["kind"] == "detected" for c in cands):
@@ -386,7 +391,8 @@ else:
                 for fmt in p4.FORMATS:
                     _, pngs[fmt] = p4.generate_sample(poster_path, content, fmt, "gnn",
                                                       os.path.join(PREVIEW_DIR, stem, fmt), logos,
-                                                      use_wordmark=p4.use_title_artwork(saved_row))
+                                                      use_wordmark=p4.use_title_artwork(saved_row),
+                                                      use_motifs=p4.use_motifs(saved_row))
             st.session_state[f"{stem}_preview"] = {"pngs": pngs, "row": saved_row}
             st.rerun()
 
