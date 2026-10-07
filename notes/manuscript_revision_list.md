@@ -9,8 +9,9 @@ when asked for explicitly.
 
 - Page numbers are the manuscript's printed page numbers.
 - Checked against the PDF text on 2026-09-28. Chapter 3 was re-read
-  against the code on 2026-10-07, which added items 3.24–3.27. The PDF
-  itself is unchanged since May, so no item has been applied yet.
+  against the code on 2026-10-07, which added items 3.24–3.29, and every
+  item's page numbers were re-checked against the PDF (six were off). The
+  PDF itself is unchanged since May, so no item has been applied yet.
 
 **Legend:**
 - 🔴 **Must fix.** Wrong, contradicts the code, or a missing citation the
@@ -265,7 +266,7 @@ system now generates that format.
 **Tell the TA.** It narrows the ID format rather than adding scope, but
 it changes wording she has already read.
 
-### 3.7c 🟡 Optional: name the vertical-balance rule among Cassowary's soft constraints (pp.38–39)
+### 3.7c 🟡 Optional: name the vertical-balance rule among Cassowary's soft constraints (p.39)
 
 **Now:** p.39 says soft constraints are "standard design rules (e.g.,
 default margins)." The solver now also applies an equal top/bottom margin
@@ -357,7 +358,7 @@ dropped (§3.10 Finding 3).
 **Blocked on the TA** (checklist B): fix the code, or revise Appendix A and
 report it as a limitation.
 
-### 3.13 🟡 Say what the GNN is trained to predict (pp.40–41; Phase 1, p.51)
+### 3.13 🟡 Say what the GNN is trained to predict (pp.39–41; Phase 1, p.51)
 
 **Now:** the architecture is fully specified (Formulas 3.6–3.8), but not
 the training objective. "Trained using the CGL-Dataset" is all the reader
@@ -396,12 +397,12 @@ master's structure, so the sentences should say:**
   - With exact anchors, unmapped elements 0.075 vs. 0.081 for
     interpolation.
 
-### 3.14 🟡 Stylistic markers: say what is extracted and where it goes (p.38 "Stylistic Marker Identification"; p.51 Phase 1; p.53 Phase 3)
+### 3.14 🟡 Stylistic markers: say what is extracted and where it goes (p.37 "Stylistic Marker Identification"; p.51 Phase 1; p.52 Phase 3)
 
 **Now:**
-- p.38: SIFT recognises the logo, and builds a saliency map "of the
+- p.37: SIFT recognises the logo, and builds a saliency map "of the
   inpainted background layer".
-- p.53: the rendering step projects "the K-Means color clusters and
+- p.52: the rendering step projects "the K-Means color clusters and
   extracted stylistic typography" onto the boxes.
 
 **Code (notes §3.23), Stage 0c:**
@@ -416,9 +417,9 @@ master's structure, so the sentences should say:**
 - The output is rendered on this layer, and the Legibility Penalty is
   scored against its saliency.
 
-**Add:** a sentence each at p.38 (what "inpainted background" means here,
+**Add:** a sentence each at p.37 (what "inpainted background" means here,
 and that motifs and title artwork are the markers carried across), and at
-p.53 (the rendering projects the background layer, motifs and title artwork
+p.52 (the rendering projects the background layer, motifs and title artwork
 as well as the palette).
 
 ### 3.15 🟡 What the "parallel state-space explorations" vary (Phase 3, p.52; Figure 3, p.54)
@@ -440,7 +441,7 @@ Each is solved by Cassowary and scored on its own composed background.
 
 **Add:** one sentence listing the four varied parameters.
 
-### 3.16 🟡 Pre-orchestration schema validation: state the actual rules (p.44)
+### 3.16 🟡 Pre-orchestration schema validation: state the actual rules (p.43)
 
 **Now:** the rules are given only by example ("font weight is evaluated as
 a valid integer", "baseline tensor arrays do not exceed the viewport").
@@ -480,7 +481,7 @@ templates".
 
 **Add:** name both inputs.
 
-### 3.19 🟡 Table 1's master-to-GNN mapping is now real: say how it works (Table 1; pp.40–41)
+### 3.19 🟡 Table 1's master-to-GNN mapping is now real: say how it works (Table 1, p.49; pp.39–41)
 
 **Now:**
 - Table 1 maps an ingested element's `bbox [x, y]` to the GNN's initial
@@ -498,10 +499,10 @@ templates".
 - The rest are placed in order between them.
 - The GNN's output is registered back onto those anchors.
 
-**Add:** two sentences at Table 1 or pp.40–41: role mapping, then
+**Add:** two sentences at Table 1 or pp.39–41: role mapping, then
 interpolation, then GNN refinement, registered to the anchors.
 
-### 3.20 🟡 Formulas 3.13 and 3.14 need their reference area stated (p.40, Formulas 3.13–3.14)
+### 3.20 🟡 Formulas 3.13 and 3.14 need their reference area stated (p.44, Formulas 3.13–3.14)
 
 **Now:**
 - Formula 3.13 measures distance to "a dynamically generated structural
@@ -543,13 +544,13 @@ centred.
 **Add:** "text edit" to p.42's event list, and a sentence that undo/redo
 append rather than rewrite.
 
-### 3.22 🟡 Optional: K-Means initialisation (p.37, Formula 3.1)
+### 3.22 🟡 Optional: K-Means initialisation (p.36, Formula 3.1)
 
 **Code (notes §3.29):**
 - The K-Means initialisation is seeded, best of 5 per k, so a master
   always yields the same palette. Unseeded, identical runs could render
   different colours.
-- p.37 doesn't describe the initialisation.
+- p.36 doesn't describe the initialisation.
 
 **Add:** "k-means with seeded initialisations (best of five per k)"
 belongs in the implementation details. That's only needed if the
