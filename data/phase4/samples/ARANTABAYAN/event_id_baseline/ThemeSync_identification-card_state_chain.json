@@ -3,7 +3,7 @@
     {
       "state_id": "State_00",
       "label": "Baseline Init",
-      "timestamp": "2026-10-06T18:25:21.759",
+      "timestamp": "2026-10-07T14:33:18.936",
       "event": {
         "type": "init",
         "schema_validation": {
@@ -110,11 +110,11 @@
     },
     {
       "state_id": "State_01",
-      "label": "CSP Baseline \u00b7 Candidate_D",
-      "timestamp": "2026-10-06T18:25:21.759",
+      "label": "CSP Baseline \u00b7 Candidate_F",
+      "timestamp": "2026-10-07T14:33:18.937",
       "event": {
         "type": "candidate",
-        "candidate_id": "Candidate_D",
+        "candidate_id": "Candidate_F",
         "rank": 1
       },
       "nodes": [
@@ -124,8 +124,8 @@
           "structural_class": "image_node",
           "spatial_hierarchy": 0,
           "bbox": [
-            72.0,
-            152.25,
+            141.36,
+            142.25,
             461.28,
             78.9
           ],
@@ -137,9 +137,9 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 1,
           "bbox": [
-            72.0,
-            249.15,
-            595.2,
+            92.08,
+            243.15,
+            559.84,
             47.34
           ],
           "constraint_type": "Soft"
@@ -150,9 +150,9 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 2,
           "bbox": [
-            72.0,
-            314.49,
-            600.0,
+            92.08,
+            312.49,
+            559.84,
             263.0
           ],
           "constraint_type": "Soft"
@@ -163,9 +163,9 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 3,
           "bbox": [
-            72.0,
-            595.49,
-            580.32,
+            92.08,
+            597.49,
+            559.84,
             57.86
           ],
           "constraint_type": "Soft"
@@ -176,9 +176,9 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 4,
           "bbox": [
-            72.0,
-            671.35,
-            600.0,
+            92.08,
+            677.35,
+            559.84,
             115.72
           ],
           "constraint_type": "Soft"
@@ -189,9 +189,9 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 5,
           "bbox": [
-            72.0,
-            805.07,
-            600.0,
+            92.08,
+            815.07,
+            559.84,
             94.68
           ],
           "constraint_type": "Soft"
@@ -200,18 +200,18 @@
       "fitness": {
         "P_collision": 0.0,
         "P_align": 0.0,
-        "P_space": 0.1383,
-        "P_legibility": 0.0037,
-        "Total_Cost": 0.1439
+        "P_space": 0.1853,
+        "P_legibility": 0.0014,
+        "Total_Cost": 0.1874
       },
       "hard_nodes": [],
-      "candidate_id": "Candidate_D",
+      "candidate_id": "Candidate_F",
       "variation": {
-        "name": "Candidate_D",
-        "archetype": "left",
-        "margin": 72.0,
-        "vgap": 18.0,
-        "arrangement": 1
+        "name": "Candidate_F",
+        "archetype": "card",
+        "margin": 40.0,
+        "vgap": 22.0,
+        "arrangement": 6
       }
     }
   ]

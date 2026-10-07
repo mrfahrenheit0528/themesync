@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: LUCKY_TERA.jpg (1080×1080 px)
   [TemplateIngestor] Extracted palette: #1F315F | #D6C8A2 | #74985F
   [TemplateIngestor] Saliency weight:   0.0904
-  ✔  0. Template Ingestion                      [825.0 ms]
+  ✔  0. Template Ingestion                      [3493.3 ms]
      → Palette: #1F315F | #D6C8A2 | #74985F
      → Saliency: 0.0904  | Native size: 1080×1080 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1555.9 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1826.0 ms]
      → Weights: themesync_yolo_v5.pt
      → 17 node(s) detected on the master layout
        · auto_logo_0            conf=0.88
@@ -28,7 +28,7 @@
        · auto_embellishment_14  conf=0.84
        · auto_text_15           conf=0.82  ocr="(coedstudentcouncil27 @ gmail.com"
        · auto_text_16           conf=0.81  ocr="CUP COED Student Council"
-  ✔  0c. Stylistic Marker Extraction            [1960.1 ms]
+  ✔  0c. Stylistic Marker Extraction            [2464.5 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 1  |  Title artwork: Stage 0c: title artwork
 
@@ -40,17 +40,18 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/LUCKY_TERA/event_id_gnn/content.json
   Condition      : gnn
   Master structure: title at 0.34, logo at 0.05, details at 0.66
+  Layout type    : band — a full-width band along the bottom
   Population     : 6
   Palette Source : real image → ['#1F315F', '#D6C8A2', '#74985F']
   Schema Check   : passed (typography, content)
   ✔  1. Dynamic Node Instantiation              [0.1 ms]
      → 6 node(s) instantiated for canvas 744×1052
      → Logo aspect ratio locked to 0.94:1 (Stage 0b crop of 2 logo(s), conf=0.85, 0.88, Affine scaling)
-  ✔  2. GNN Spatial Inference                   [9.9 ms]
+  ✔  2. GNN Spatial Inference                   [223.9 ms]
      → Weights: loaded from themesync_gnn_v3.pth
      → Predictions applied: True (6 stacked node(s), from the master structure (3 of 6 node(s) anchored, output registered to them))
-  ✔  3. Cassowary CSP Resolution                [0.4 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [835.1 ms]
+  ✔  3. Cassowary CSP Resolution                [0.6 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [982.4 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -61,7 +62,7 @@
   [4]   Candidate_A      0.1590  classic centred · margin 60px · gap 20px · hero
   [5]   Candidate_B      0.1853  floating card · margin 40px · gap 16px · diagonal
   [6]   Candidate_F      0.1936  floating card · margin 40px · gap 22px · hero
-  ✔  5. Aesthetic SVG Rendering                 [358.5 ms]
+  ✔  5. Aesthetic SVG Rendering                 [369.1 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
   ✔  6. FSM State Serialization                 [0.3 ms]
      → Saved: data/processed/layout_state_v1.json
@@ -73,18 +74,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                           825.0
-  0b. Semantic Layout Parsing (YOLO+OCR)         1555.9
-  0c. Stylistic Marker Extraction                1960.1
+  0. Template Ingestion                          3493.3
+  0b. Semantic Layout Parsing (YOLO+OCR)         1826.0
+  0c. Stylistic Marker Extraction                2464.5
   1. Dynamic Node Instantiation                     0.1
-  2. GNN Spatial Inference                          9.9
-  3. Cassowary CSP Resolution                       0.4
-  4. Metaheuristic Ranking                        835.1
-  5. Aesthetic SVG Rendering                      358.5
+  2. GNN Spatial Inference                        223.9
+  3. Cassowary CSP Resolution                       0.6
+  4. Metaheuristic Ranking                        982.4
+  5. Aesthetic SVG Rendering                      369.1
   6. FSM State Serialization                        0.3
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               5545.3
+  TOTAL END-TO-END                               9360.2
 
-  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · anti-diagonal (C_total = 0.1388)
+  Winner   : Candidate_C — full-width band · margin 64px · gap 18px · crown pair (C_total = 0.1486)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/LUCKY_TERA/event_id_gnn/ThemeSync_identification-card_populated.svg
 

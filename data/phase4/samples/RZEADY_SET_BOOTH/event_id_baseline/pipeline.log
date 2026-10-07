@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: RZEADY_SET_BOOTH.jpg (2048×2048 px)
   [TemplateIngestor] Extracted palette: #513259 | #E0CEB8 | #A97176
   [TemplateIngestor] Saliency weight:   0.1532
-  ✔  0. Template Ingestion                      [2311.6 ms]
+  ✔  0. Template Ingestion                      [4989.1 ms]
      → Palette: #513259 | #E0CEB8 | #A97176
      → Saliency: 0.1532  | Native size: 2048×2048 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2248.0 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2612.8 ms]
      → Weights: themesync_yolo_v5.pt
      → 12 node(s) detected on the master layout
        · auto_logo_0            conf=0.89
@@ -23,7 +23,7 @@
        · auto_embellishment_9   conf=0.25
        · auto_embellishment_10  conf=0.81
        · auto_text_11           conf=0.73  ocr="CSPC - College of H@atfff®aciences Stude"
-  ✔  0c. Stylistic Marker Extraction            [3328.8 ms]
+  ✔  0c. Stylistic Marker Extraction            [4045.5 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 0  |  Title artwork: none (typed title)
 
@@ -35,16 +35,17 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/RZEADY_SET_BOOTH/event_id_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : classic
   Population     : 6
   Palette Source : real image → ['#513259', '#E0CEB8', '#A97176']
   Schema Check   : passed (typography, content)
-  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
      → 6 node(s) instantiated for canvas 744×1052
      → Logo aspect ratio locked to 0.78:1 (Stage 0b crop of 3 logo(s), conf=0.89, 0.89, 0.87, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [0.4 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [791.4 ms]
+  ✔  3. Cassowary CSP Resolution                [0.8 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [921.7 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -55,7 +56,7 @@
   [4]   Candidate_A      0.1584  classic centred · margin 60px · gap 20px · no motifs
   [5]   Candidate_B      0.1869  floating card · margin 40px · gap 16px · no motifs
   [6]   Candidate_F      0.1869  floating card · margin 40px · gap 22px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [25.8 ms]
+  ✔  5. Aesthetic SVG Rendering                 [29.6 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
   ✔  6. FSM State Serialization                 [0.2 ms]
      → Saved: data/processed/layout_state_v1.json
@@ -67,18 +68,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          2311.6
-  0b. Semantic Layout Parsing (YOLO+OCR)         2248.0
-  0c. Stylistic Marker Extraction                3328.8
-  1. Dynamic Node Instantiation                     0.1
+  0. Template Ingestion                          4989.1
+  0b. Semantic Layout Parsing (YOLO+OCR)         2612.8
+  0c. Stylistic Marker Extraction                4045.5
+  1. Dynamic Node Instantiation                     0.2
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       0.4
-  4. Metaheuristic Ranking                        791.4
-  5. Aesthetic SVG Rendering                       25.8
+  3. Cassowary CSP Resolution                       0.8
+  4. Metaheuristic Ranking                        921.7
+  5. Aesthetic SVG Rendering                       29.6
   6. FSM State Serialization                        0.2
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               8706.3
+  TOTAL END-TO-END                              12599.9
 
-  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · no motifs (C_total = 0.1439)
+  Winner   : Candidate_E — classic centred · margin 64px · gap 24px · no motifs (C_total = 0.1535)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/RZEADY_SET_BOOTH/event_id_baseline/ThemeSync_identification-card_populated.svg
 

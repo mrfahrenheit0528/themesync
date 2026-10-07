@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: LUCKY_TERA.jpg (1080×1080 px)
   [TemplateIngestor] Extracted palette: #1F315F | #D6C8A2 | #74985F
   [TemplateIngestor] Saliency weight:   0.0904
-  ✔  0. Template Ingestion                      [821.6 ms]
+  ✔  0. Template Ingestion                      [3468.9 ms]
      → Palette: #1F315F | #D6C8A2 | #74985F
      → Saliency: 0.0904  | Native size: 1080×1080 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1547.4 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1896.8 ms]
      → Weights: themesync_yolo_v5.pt
      → 17 node(s) detected on the master layout
        · auto_logo_0            conf=0.88
@@ -28,7 +28,7 @@
        · auto_embellishment_14  conf=0.84
        · auto_text_15           conf=0.82  ocr="(coedstudentcouncil27 @ gmail.com"
        · auto_text_16           conf=0.81  ocr="CUP COED Student Council"
-  ✔  0c. Stylistic Marker Extraction            [1951.4 ms]
+  ✔  0c. Stylistic Marker Extraction            [2210.5 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 1  |  Title artwork: Stage 0c: title artwork
 
@@ -40,16 +40,17 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/LUCKY_TERA/certificate_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : classic — a full-width band along the bottom
   Population     : 6
   Palette Source : real image → ['#1F315F', '#D6C8A2', '#74985F']
   Schema Check   : passed (typography, content)
-  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
      → 11 node(s) instantiated for canvas 1200×900
      → Logo aspect ratio locked to 0.94:1 (Stage 0b crop of 2 logo(s), conf=0.85, 0.88, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [1.1 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [1400.4 ms]
+  ✔  3. Cassowary CSP Resolution                [1.2 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [1529.1 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -60,7 +61,7 @@
   [4]   Candidate_C      0.0019  header banner · margin 76px · gap 16px · base pair
   [5]   Candidate_B      0.0757  art column · margin 44px · gap 16px · crown pair
   [6]   Candidate_F      0.0757  art column · margin 44px · gap 22px · anti-diagonal
-  ✔  5. Aesthetic SVG Rendering                 [415.3 ms]
+  ✔  5. Aesthetic SVG Rendering                 [434.3 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
   ✔  6. FSM State Serialization                 [0.4 ms]
      → Saved: data/processed/layout_state_v1.json
@@ -72,17 +73,17 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                           821.6
-  0b. Semantic Layout Parsing (YOLO+OCR)         1547.4
-  0c. Stylistic Marker Extraction                1951.4
-  1. Dynamic Node Instantiation                     0.1
+  0. Template Ingestion                          3468.9
+  0b. Semantic Layout Parsing (YOLO+OCR)         1896.8
+  0c. Stylistic Marker Extraction                2210.5
+  1. Dynamic Node Instantiation                     0.2
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       1.1
-  4. Metaheuristic Ranking                       1400.4
-  5. Aesthetic SVG Rendering                      415.3
+  3. Cassowary CSP Resolution                       1.2
+  4. Metaheuristic Ranking                       1529.1
+  5. Aesthetic SVG Rendering                      434.3
   6. FSM State Serialization                        0.4
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               6137.8
+  TOTAL END-TO-END                               9541.4
 
   Winner   : Candidate_E — classic centred · margin 84px · gap 24px · four corners (C_total = 0.0011)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/LUCKY_TERA/certificate_baseline/ThemeSync_academic-certificate_populated.svg

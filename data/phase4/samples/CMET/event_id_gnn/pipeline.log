@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: CMET.jpg (2000×2000 px)
   [TemplateIngestor] Extracted palette: #585D69 | #A6A5A7 | #1F283F
   [TemplateIngestor] Saliency weight:   0.0722
-  ✔  0. Template Ingestion                      [1959.6 ms]
+  ✔  0. Template Ingestion                      [4267.7 ms]
      → Palette: #585D69 | #A6A5A7 | #1F283F
      → Saliency: 0.0722  | Native size: 2000×2000 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [958.6 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1396.2 ms]
      → Weights: themesync_yolo_v5.pt
      → 7 node(s) detected on the master layout
        · auto_logo_0            conf=0.91
@@ -18,9 +18,9 @@
        · auto_text_4            conf=0.85  ocr="SAIL THE SPOTLIGHT"
        · auto_embellishment_5   conf=0.85
        · auto_text_6            conf=0.87
-  ✔  0c. Stylistic Marker Extraction            [4790.0 ms]
+  ✔  0c. Stylistic Marker Extraction            [4833.6 ms]
      → Background: text-free layer rebuilt from the master's border
-     → Motifs: 0  |  Title artwork: Stage 0c: title artwork
+     → Motifs: 0  |  Title artwork: none (typed title)
 
   Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
   Domain         : identification_card
@@ -30,17 +30,18 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/CMET/event_id_gnn/content.json
   Condition      : gnn
   Master structure: title at 0.59, logo at 0.06, header at 0.13, details at 0.88
+  Layout type    : classic
   Population     : 6
   Palette Source : real image → ['#585D69', '#A6A5A7', '#1F283F']
   Schema Check   : passed (typography, content)
   ✔  1. Dynamic Node Instantiation              [0.1 ms]
      → 6 node(s) instantiated for canvas 744×1052
      → Logo aspect ratio locked to 1.05:1 (Stage 0b crop of 2 logo(s), conf=0.91, 0.63, Affine scaling)
-  ✔  2. GNN Spatial Inference                   [9.9 ms]
+  ✔  2. GNN Spatial Inference                   [178.3 ms]
      → Weights: loaded from themesync_gnn_v3.pth
      → Predictions applied: True (6 stacked node(s), from the master structure (4 of 6 node(s) anchored, output registered to them))
-  ✔  3. Cassowary CSP Resolution                [0.4 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [784.8 ms]
+  ✔  3. Cassowary CSP Resolution                [0.5 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [790.6 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -51,9 +52,9 @@
   [4]   Candidate_A      0.1653  classic centred · margin 60px · gap 20px · no motifs
   [5]   Candidate_B      0.1853  floating card · margin 40px · gap 16px · no motifs
   [6]   Candidate_F      0.1853  floating card · margin 40px · gap 22px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [180.6 ms]
+  ✔  5. Aesthetic SVG Rendering                 [37.8 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
-  ✔  6. FSM State Serialization                 [0.3 ms]
+  ✔  6. FSM State Serialization                 [0.2 ms]
      → Saved: data/processed/layout_state_v1.json
      → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/CMET/event_id_gnn/ThemeSync_identification-card_state_chain.json
 
@@ -63,18 +64,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          1959.6
-  0b. Semantic Layout Parsing (YOLO+OCR)          958.6
-  0c. Stylistic Marker Extraction                4790.0
+  0. Template Ingestion                          4267.7
+  0b. Semantic Layout Parsing (YOLO+OCR)         1396.2
+  0c. Stylistic Marker Extraction                4833.6
   1. Dynamic Node Instantiation                     0.1
-  2. GNN Spatial Inference                          9.9
-  3. Cassowary CSP Resolution                       0.4
-  4. Metaheuristic Ranking                        784.8
-  5. Aesthetic SVG Rendering                      180.6
-  6. FSM State Serialization                        0.3
+  2. GNN Spatial Inference                        178.3
+  3. Cassowary CSP Resolution                       0.5
+  4. Metaheuristic Ranking                        790.6
+  5. Aesthetic SVG Rendering                       37.8
+  6. FSM State Serialization                        0.2
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               8684.2
+  TOTAL END-TO-END                              11504.9
 
-  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · no motifs (C_total = 0.1466)
+  Winner   : Candidate_E — classic centred · margin 64px · gap 24px · no motifs (C_total = 0.1563)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/CMET/event_id_gnn/ThemeSync_identification-card_populated.svg
 

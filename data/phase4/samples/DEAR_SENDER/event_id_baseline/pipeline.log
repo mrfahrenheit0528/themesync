@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: DEAR_SENDER.jpg (1466×2048 px)
   [TemplateIngestor] Extracted palette: #FCFBFB | #D9AAB3 | #E93758
   [TemplateIngestor] Saliency weight:   0.0383
-  ✔  0. Template Ingestion                      [1444.6 ms]
+  ✔  0. Template Ingestion                      [3455.2 ms]
      → Palette: #FCFBFB | #D9AAB3 | #E93758
      → Saliency: 0.0383  | Native size: 1466×2048 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1908.1 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2002.1 ms]
      → Weights: themesync_yolo_v5.pt
      → 18 node(s) detected on the master layout
        · auto_logo_0            conf=0.94
@@ -29,9 +29,9 @@
        · auto_text_15           conf=0.56
        · auto_text_16           conf=0.86  ocr="Broadcasting live at University Broadcas"
        · auto_text_17           conf=0.89  ocr="Send your messages to our textline 09854"
-  ✔  0c. Stylistic Marker Extraction            [1319.5 ms]
+  ✔  0c. Stylistic Marker Extraction            [1193.4 ms]
      → Background: text-free layer rebuilt from the master's border
-     → Motifs: 1  |  Title artwork: Stage 0c: title artwork
+     → Motifs: 0  |  Title artwork: Stage 0c: title artwork
 
   Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
   Domain         : identification_card
@@ -41,6 +41,7 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/DEAR_SENDER/event_id_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : classic
   Population     : 6
   Palette Source : real image → ['#FCFBFB', '#D9AAB3', '#E93758']
   Schema Check   : passed (typography, content)
@@ -50,20 +51,20 @@
 
   ⊘  GNN Inference skipped (baseline mode)
   ✔  3. Cassowary CSP Resolution                [0.6 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [1182.1 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [920.8 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
   ------ -------------- --------  ----------------------------------------
-  [1]   Candidate_D      0.1386  left-aligned · margin 72px · gap 18px · anti-diagonal ◀ WINNER
-  [2]   Candidate_C      0.1483  full-width band · margin 64px · gap 18px · crown pair
-  [3]   Candidate_E      0.1483  classic centred · margin 64px · gap 24px · four corners
-  [4]   Candidate_A      0.1531  classic centred · margin 60px · gap 20px · diagonal
-  [5]   Candidate_B      0.1853  floating card · margin 40px · gap 16px · diagonal
-  [6]   Candidate_F      0.1853  floating card · margin 40px · gap 22px · diagonal
-  ✔  5. Aesthetic SVG Rendering                 [163.2 ms]
+  [1]   Candidate_D      0.1455  left-aligned · margin 72px · gap 18px · no motifs ◀ WINNER
+  [2]   Candidate_E      0.1548  classic centred · margin 64px · gap 24px · no motifs
+  [3]   Candidate_C      0.1554  full-width band · margin 64px · gap 18px · no motifs
+  [4]   Candidate_A      0.1596  classic centred · margin 60px · gap 20px · no motifs
+  [5]   Candidate_B      0.1853  floating card · margin 40px · gap 16px · no motifs
+  [6]   Candidate_F      0.1853  floating card · margin 40px · gap 22px · no motifs
+  ✔  5. Aesthetic SVG Rendering                 [137.0 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
-  ✔  6. FSM State Serialization                 [0.5 ms]
+  ✔  6. FSM State Serialization                 [0.3 ms]
      → Saved: data/processed/layout_state_v1.json
      → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/DEAR_SENDER/event_id_baseline/ThemeSync_identification-card_state_chain.json
 
@@ -73,18 +74,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          1444.6
-  0b. Semantic Layout Parsing (YOLO+OCR)         1908.1
-  0c. Stylistic Marker Extraction                1319.5
+  0. Template Ingestion                          3455.2
+  0b. Semantic Layout Parsing (YOLO+OCR)         2002.1
+  0c. Stylistic Marker Extraction                1193.4
   1. Dynamic Node Instantiation                     0.2
   2. GNN Spatial Inference                          0.0  (skipped)
   3. Cassowary CSP Resolution                       0.6
-  4. Metaheuristic Ranking                       1182.1
-  5. Aesthetic SVG Rendering                      163.2
-  6. FSM State Serialization                        0.5
+  4. Metaheuristic Ranking                        920.8
+  5. Aesthetic SVG Rendering                      137.0
+  6. FSM State Serialization                        0.3
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               6018.8
+  TOTAL END-TO-END                               7709.5
 
-  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · anti-diagonal (C_total = 0.1386)
+  Winner   : Candidate_E — classic centred · margin 64px · gap 24px · no motifs (C_total = 0.1548)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/DEAR_SENDER/event_id_baseline/ThemeSync_identification-card_populated.svg
 

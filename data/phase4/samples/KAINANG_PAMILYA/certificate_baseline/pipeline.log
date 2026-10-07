@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: KAINANG_PAMILYA.jpg (2048×2048 px)
   [TemplateIngestor] Extracted palette: #DED1AC | #9EAB43 | #786C39 | #332821
   [TemplateIngestor] Saliency weight:   0.0913
-  ✔  0. Template Ingestion                      [2193.2 ms]
+  ✔  0. Template Ingestion                      [5014.3 ms]
      → Palette: #DED1AC | #9EAB43 | #786C39 | #332821
      → Saliency: 0.0913  | Native size: 2048×2048 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1786.0 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2021.7 ms]
      → Weights: themesync_yolo_v5.pt
      → 13 node(s) detected on the master layout
        · auto_logo_0            conf=0.92
@@ -24,7 +24,7 @@
        · auto_embellishment_10  conf=0.86
        · auto_text_11           conf=0.82  ocr="CUP COED Student Council"
        · auto_text_12           conf=0.80  ocr="coedstudentcouncil27 @ gmail.com"
-  ✔  0c. Stylistic Marker Extraction            [6987.7 ms]
+  ✔  0c. Stylistic Marker Extraction            [7497.4 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 0  |  Title artwork: Stage 0c: title artwork
 
@@ -36,6 +36,7 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/KAINANG_PAMILYA/certificate_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : split — a large artwork right of centre (27% of the poster)
   Population     : 6
   Palette Source : real image → ['#DED1AC', '#9EAB43', '#786C39', '#332821']
   Schema Check   : passed (typography, content)
@@ -44,8 +45,8 @@
      → Logo aspect ratio locked to 0.98:1 (Stage 0b crop of 2 logo(s), conf=0.89, 0.92, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [1.1 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [1599.8 ms]
+  ✔  3. Cassowary CSP Resolution                [1.6 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [1687.2 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -56,7 +57,7 @@
   [4]   Candidate_C      0.0061  header banner · margin 76px · gap 16px · no motifs
   [5]   Candidate_B      0.0762  art column · margin 44px · gap 16px · no motifs
   [6]   Candidate_F      0.0762  art column · margin 44px · gap 22px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [367.6 ms]
+  ✔  5. Aesthetic SVG Rendering                 [369.7 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
   ✔  6. FSM State Serialization                 [0.3 ms]
      → Saved: data/processed/layout_state_v1.json
@@ -68,18 +69,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          2193.2
-  0b. Semantic Layout Parsing (YOLO+OCR)         1786.0
-  0c. Stylistic Marker Extraction                6987.7
+  0. Template Ingestion                          5014.3
+  0b. Semantic Layout Parsing (YOLO+OCR)         2021.7
+  0c. Stylistic Marker Extraction                7497.4
   1. Dynamic Node Instantiation                     0.2
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       1.1
-  4. Metaheuristic Ranking                       1599.8
-  5. Aesthetic SVG Rendering                      367.6
+  3. Cassowary CSP Resolution                       1.6
+  4. Metaheuristic Ranking                       1687.2
+  5. Aesthetic SVG Rendering                      369.7
   6. FSM State Serialization                        0.3
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                              12935.8
+  TOTAL END-TO-END                              16592.4
 
-  Winner   : Candidate_A — classic centred · margin 72px · gap 18px · no motifs (C_total = 0.0008)
+  Winner   : Candidate_B — art column · margin 44px · gap 16px · no motifs (C_total = 0.0762)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/KAINANG_PAMILYA/certificate_baseline/ThemeSync_academic-certificate_populated.svg
 

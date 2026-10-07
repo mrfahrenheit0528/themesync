@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: DONATION_PROGRAM.jpg (1448×2048 px)
   [TemplateIngestor] Extracted palette: #DB6541 | #FDEFE0 | #BAAF98 | #5F3E3A
   [TemplateIngestor] Saliency weight:   0.0426
-  ✔  0. Template Ingestion                      [1582.9 ms]
+  ✔  0. Template Ingestion                      [3112.4 ms]
      → Palette: #DB6541 | #FDEFE0 | #BAAF98 | #5F3E3A
      → Saliency: 0.0426  | Native size: 1448×2048 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1822.8 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1862.1 ms]
      → Weights: themesync_yolo_v5.pt
      → 15 node(s) detected on the master layout
        · auto_logo_0            conf=0.30
@@ -26,7 +26,7 @@
        · auto_text_12           conf=0.85  ocr="Food - Medicine - Toys - etc."
        · auto_underlay_13       conf=0.28
        · auto_text_14           conf=0.85  ocr="From April 16-26, 2025"
-  ✔  0c. Stylistic Marker Extraction            [3800.7 ms]
+  ✔  0c. Stylistic Marker Extraction            [4473.5 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 0  |  Title artwork: Stage 0c: title artwork
 
@@ -38,17 +38,18 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/DONATION_PROGRAM/certificate_gnn/content.json
   Condition      : gnn
   Master structure: title at 0.22, details at 0.40
+  Layout type    : classic — a full-width band along the bottom
   Population     : 6
   Palette Source : real image → ['#DB6541', '#FDEFE0', '#BAAF98', '#5F3E3A']
   Schema Check   : passed (typography, content)
-  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
      → 11 node(s) instantiated for canvas 1200×900
      → Logo aspect ratio locked to 0.92:1 (Stage 0b crop of 1 logo(s), conf=0.89, Affine scaling)
-  ✔  2. GNN Spatial Inference                   [10.5 ms]
+  ✔  2. GNN Spatial Inference                   [202.2 ms]
      → Weights: loaded from themesync_gnn_v3.pth
      → Predictions applied: True (8 stacked node(s), from the naive stack)
-  ✔  3. Cassowary CSP Resolution                [1.1 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [1316.3 ms]
+  ✔  3. Cassowary CSP Resolution                [1.3 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [1403.9 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -59,7 +60,7 @@
   [4]   Candidate_C      0.0055  header banner · margin 76px · gap 16px · no motifs
   [5]   Candidate_B      0.0752  art column · margin 44px · gap 16px · no motifs
   [6]   Candidate_F      0.0752  art column · margin 44px · gap 22px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [220.7 ms]
+  ✔  5. Aesthetic SVG Rendering                 [231.7 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
   ✔  6. FSM State Serialization                 [0.3 ms]
      → Saved: data/processed/layout_state_v1.json
@@ -71,17 +72,17 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          1582.9
-  0b. Semantic Layout Parsing (YOLO+OCR)         1822.8
-  0c. Stylistic Marker Extraction                3800.7
-  1. Dynamic Node Instantiation                     0.1
-  2. GNN Spatial Inference                         10.5
-  3. Cassowary CSP Resolution                       1.1
-  4. Metaheuristic Ranking                       1316.3
-  5. Aesthetic SVG Rendering                      220.7
+  0. Template Ingestion                          3112.4
+  0b. Semantic Layout Parsing (YOLO+OCR)         1862.1
+  0c. Stylistic Marker Extraction                4473.5
+  1. Dynamic Node Instantiation                     0.2
+  2. GNN Spatial Inference                        202.2
+  3. Cassowary CSP Resolution                       1.3
+  4. Metaheuristic Ranking                       1403.9
+  5. Aesthetic SVG Rendering                      231.7
   6. FSM State Serialization                        0.3
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               8755.4
+  TOTAL END-TO-END                              11287.6
 
   Winner   : Candidate_A — classic centred · margin 72px · gap 18px · no motifs (C_total = 0.0013)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/DONATION_PROGRAM/certificate_gnn/ThemeSync_academic-certificate_populated.svg

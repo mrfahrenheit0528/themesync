@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: SIGN_LANGUAGE_DAY.jpg (1080×1080 px)
   [TemplateIngestor] Extracted palette: #3A5D7E | #CB5E40 | #152E4D | #DFBFAA
   [TemplateIngestor] Saliency weight:   0.0415
-  ✔  0. Template Ingestion                      [809.0 ms]
+  ✔  0. Template Ingestion                      [3307.6 ms]
      → Palette: #3A5D7E | #CB5E40 | #152E4D | #DFBFAA
      → Saliency: 0.0415  | Native size: 1080×1080 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1014.8 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1083.4 ms]
      → Weights: themesync_yolo_v5.pt
      → 13 node(s) detected on the master layout
        · auto_logo_0            conf=0.94
@@ -24,9 +24,9 @@
        · auto_text_10           conf=0.79  ocr="CUP COED Student Council"
        · auto_embellishment_11  conf=0.86
        · auto_text_12           conf=0.81  ocr="coedcouncil @cup.edu.ph"
-  ✔  0c. Stylistic Marker Extraction            [947.0 ms]
+  ✔  0c. Stylistic Marker Extraction            [837.9 ms]
      → Background: text-free layer rebuilt from the master's border
-     → Motifs: 0  |  Title artwork: Stage 0c: title artwork
+     → Motifs: 0  |  Title artwork: none (typed title)
 
   Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
   Domain         : identification_card
@@ -36,16 +36,17 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/SIGN_LANGUAGE_DAY/event_id_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : left — text left of the centre line (100% of the text area)
   Population     : 6
   Palette Source : real image → ['#3A5D7E', '#CB5E40', '#152E4D', '#DFBFAA']
   Schema Check   : passed (typography, content)
-  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
      → 6 node(s) instantiated for canvas 744×1052
      → Logo aspect ratio locked to 0.97:1 (Stage 0b crop of 2 logo(s), conf=0.93, 0.94, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [0.4 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [1442.9 ms]
+  ✔  3. Cassowary CSP Resolution                [0.7 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [863.9 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -56,9 +57,9 @@
   [4]   Candidate_A      0.1547  classic centred · margin 60px · gap 20px · no motifs
   [5]   Candidate_B      0.1871  floating card · margin 40px · gap 16px · no motifs
   [6]   Candidate_F      0.2041  floating card · margin 40px · gap 22px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [285.5 ms]
+  ✔  5. Aesthetic SVG Rendering                 [20.7 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
-  ✔  6. FSM State Serialization                 [82.3 ms]
+  ✔  6. FSM State Serialization                 [0.2 ms]
      → Saved: data/processed/layout_state_v1.json
      → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/SIGN_LANGUAGE_DAY/event_id_baseline/ThemeSync_identification-card_state_chain.json
 
@@ -68,17 +69,17 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                           809.0
-  0b. Semantic Layout Parsing (YOLO+OCR)         1014.8
-  0c. Stylistic Marker Extraction                 947.0
-  1. Dynamic Node Instantiation                     0.1
+  0. Template Ingestion                          3307.6
+  0b. Semantic Layout Parsing (YOLO+OCR)         1083.4
+  0c. Stylistic Marker Extraction                 837.9
+  1. Dynamic Node Instantiation                     0.2
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       0.4
-  4. Metaheuristic Ranking                       1442.9
-  5. Aesthetic SVG Rendering                      285.5
-  6. FSM State Serialization                       82.3
+  3. Cassowary CSP Resolution                       0.7
+  4. Metaheuristic Ranking                        863.9
+  5. Aesthetic SVG Rendering                       20.7
+  6. FSM State Serialization                        0.2
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               4582.0
+  TOTAL END-TO-END                               6114.8
 
   Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · no motifs (C_total = 0.1402)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/SIGN_LANGUAGE_DAY/event_id_baseline/ThemeSync_identification-card_populated.svg

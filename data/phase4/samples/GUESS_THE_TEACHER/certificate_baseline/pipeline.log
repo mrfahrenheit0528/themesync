@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: GUESS_THE_TEACHER.jpg (1080×1080 px)
   [TemplateIngestor] Extracted palette: #806047 | #C49774 | #F7E8CB
   [TemplateIngestor] Saliency weight:   0.0796
-  ✔  0. Template Ingestion                      [783.5 ms]
+  ✔  0. Template Ingestion                      [3156.3 ms]
      → Palette: #806047 | #C49774 | #F7E8CB
      → Saliency: 0.0796  | Native size: 1080×1080 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1504.0 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1847.1 ms]
      → Weights: themesync_yolo_v5.pt
      → 16 node(s) detected on the master layout
        · auto_logo_0            conf=0.84
@@ -27,7 +27,7 @@
        · auto_text_13           conf=0.84  ocr="“class, |cant mest youre"
        · auto_text_14           conf=0.80  ocr=""Okay class, lets move on”"
        · auto_text_15           conf=0.79
-  ✔  0c. Stylistic Marker Extraction            [1357.0 ms]
+  ✔  0c. Stylistic Marker Extraction            [1735.5 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 0  |  Title artwork: Stage 0c: title artwork
 
@@ -39,6 +39,7 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/GUESS_THE_TEACHER/certificate_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : split — a large artwork right of centre (20% of the poster)
   Population     : 6
   Palette Source : real image → ['#806047', '#C49774', '#F7E8CB']
   Schema Check   : passed (typography, content)
@@ -47,8 +48,8 @@
      → Logo aspect ratio locked to 0.96:1 (Stage 0b crop of 2 logo(s), conf=0.84, 0.93, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [1.4 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [1226.3 ms]
+  ✔  3. Cassowary CSP Resolution                [1.6 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [1499.8 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -59,7 +60,7 @@
   [4]   Candidate_C      0.0051  header banner · margin 76px · gap 16px · no motifs
   [5]   Candidate_F      0.0760  art column · margin 44px · gap 22px · no motifs
   [6]   Candidate_B      0.0762  art column · margin 44px · gap 16px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [160.0 ms]
+  ✔  5. Aesthetic SVG Rendering                 [196.5 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
   ✔  6. FSM State Serialization                 [0.3 ms]
      → Saved: data/processed/layout_state_v1.json
@@ -71,18 +72,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                           783.5
-  0b. Semantic Layout Parsing (YOLO+OCR)         1504.0
-  0c. Stylistic Marker Extraction                1357.0
+  0. Template Ingestion                          3156.3
+  0b. Semantic Layout Parsing (YOLO+OCR)         1847.1
+  0c. Stylistic Marker Extraction                1735.5
   1. Dynamic Node Instantiation                     0.1
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       1.4
-  4. Metaheuristic Ranking                       1226.3
-  5. Aesthetic SVG Rendering                      160.0
+  3. Cassowary CSP Resolution                       1.6
+  4. Metaheuristic Ranking                       1499.8
+  5. Aesthetic SVG Rendering                      196.5
   6. FSM State Serialization                        0.3
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               5032.7
+  TOTAL END-TO-END                               8437.1
 
-  Winner   : Candidate_A — classic centred · margin 72px · gap 18px · no motifs (C_total = 0.0009)
+  Winner   : Candidate_F — art column · margin 44px · gap 22px · no motifs (C_total = 0.0760)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/GUESS_THE_TEACHER/certificate_baseline/ThemeSync_academic-certificate_populated.svg
 

@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: DONATION_PROGRAM.jpg (1448×2048 px)
   [TemplateIngestor] Extracted palette: #DB6541 | #FDEFE0 | #BAAF98 | #5F3E3A
   [TemplateIngestor] Saliency weight:   0.0426
-  ✔  0. Template Ingestion                      [1383.5 ms]
+  ✔  0. Template Ingestion                      [3302.1 ms]
      → Palette: #DB6541 | #FDEFE0 | #BAAF98 | #5F3E3A
      → Saliency: 0.0426  | Native size: 1448×2048 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1886.0 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1992.0 ms]
      → Weights: themesync_yolo_v5.pt
      → 15 node(s) detected on the master layout
        · auto_logo_0            conf=0.30
@@ -26,7 +26,7 @@
        · auto_text_12           conf=0.85  ocr="Food - Medicine - Toys - etc."
        · auto_underlay_13       conf=0.28
        · auto_text_14           conf=0.85  ocr="From April 16-26, 2025"
-  ✔  0c. Stylistic Marker Extraction            [3798.2 ms]
+  ✔  0c. Stylistic Marker Extraction            [4162.5 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 0  |  Title artwork: Stage 0c: title artwork
 
@@ -38,16 +38,17 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/DONATION_PROGRAM/event_id_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : band — a full-width band along the bottom
   Population     : 6
   Palette Source : real image → ['#DB6541', '#FDEFE0', '#BAAF98', '#5F3E3A']
   Schema Check   : passed (typography, content)
-  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
      → 6 node(s) instantiated for canvas 744×1052
      → Logo aspect ratio locked to 0.92:1 (Stage 0b crop of 1 logo(s), conf=0.89, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [0.4 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [777.1 ms]
+  ✔  3. Cassowary CSP Resolution                [0.6 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [811.3 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -58,9 +59,9 @@
   [4]   Candidate_A      0.1776  classic centred · margin 60px · gap 20px · no motifs
   [5]   Candidate_F      0.1853  floating card · margin 40px · gap 22px · no motifs
   [6]   Candidate_B      0.1884  floating card · margin 40px · gap 16px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [166.5 ms]
+  ✔  5. Aesthetic SVG Rendering                 [172.7 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
-  ✔  6. FSM State Serialization                 [0.3 ms]
+  ✔  6. FSM State Serialization                 [0.2 ms]
      → Saved: data/processed/layout_state_v1.json
      → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/DONATION_PROGRAM/event_id_baseline/ThemeSync_identification-card_state_chain.json
 
@@ -70,18 +71,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          1383.5
-  0b. Semantic Layout Parsing (YOLO+OCR)         1886.0
-  0c. Stylistic Marker Extraction                3798.2
-  1. Dynamic Node Instantiation                     0.1
+  0. Template Ingestion                          3302.1
+  0b. Semantic Layout Parsing (YOLO+OCR)         1992.0
+  0c. Stylistic Marker Extraction                4162.5
+  1. Dynamic Node Instantiation                     0.2
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       0.4
-  4. Metaheuristic Ranking                        777.1
-  5. Aesthetic SVG Rendering                      166.5
-  6. FSM State Serialization                        0.3
+  3. Cassowary CSP Resolution                       0.6
+  4. Metaheuristic Ranking                        811.3
+  5. Aesthetic SVG Rendering                      172.7
+  6. FSM State Serialization                        0.2
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               8012.1
+  TOTAL END-TO-END                              10441.5
 
-  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · no motifs (C_total = 0.1638)
+  Winner   : Candidate_C — full-width band · margin 64px · gap 18px · no motifs (C_total = 0.1735)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/DONATION_PROGRAM/event_id_baseline/ThemeSync_identification-card_populated.svg
 

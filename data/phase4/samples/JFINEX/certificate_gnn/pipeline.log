@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: JFINEX.jpg (1432×1600 px)
   [TemplateIngestor] Extracted palette: #20306E | #71A7D4 | #3363C2
   [TemplateIngestor] Saliency weight:   0.0220
-  ✔  0. Template Ingestion                      [1254.7 ms]
+  ✔  0. Template Ingestion                      [4090.0 ms]
      → Palette: #20306E | #71A7D4 | #3363C2
      → Saliency: 0.0220  | Native size: 1432×1600 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2330.2 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2313.0 ms]
      → Weights: themesync_yolo_v5.pt
      → 13 node(s) detected on the master layout
        · auto_logo_0            conf=0.93
@@ -24,7 +24,7 @@
        · auto_embellishment_10  conf=0.86
        · auto_text_11           conf=0.85  ocr="Junior Financial Executives - CSPC Chapt"
        · auto_text_12           conf=0.84  ocr="JFINEX@CSPC.EDU.PH"
-  ✔  0c. Stylistic Marker Extraction            [1068.2 ms]
+  ✔  0c. Stylistic Marker Extraction            [1081.5 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 0  |  Title artwork: Stage 0c: title artwork
 
@@ -36,17 +36,18 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/JFINEX/certificate_gnn/content.json
   Condition      : gnn
   Master structure: title at 0.46, logo at 0.13, details at 0.64
+  Layout type    : classic
   Population     : 6
   Palette Source : real image → ['#20306E', '#71A7D4', '#3363C2']
   Schema Check   : passed (typography, content)
   ✔  1. Dynamic Node Instantiation              [0.2 ms]
      → 11 node(s) instantiated for canvas 1200×900
      → Logo aspect ratio locked to 0.97:1 (Stage 0b crop of 1 logo(s), conf=0.93, Affine scaling)
-  ✔  2. GNN Spatial Inference                   [14.5 ms]
+  ✔  2. GNN Spatial Inference                   [211.8 ms]
      → Weights: loaded from themesync_gnn_v3.pth
      → Predictions applied: True (8 stacked node(s), from the master structure (1 of 8 node(s) anchored, output registered to them))
-  ✔  3. Cassowary CSP Resolution                [1.5 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [1753.6 ms]
+  ✔  3. Cassowary CSP Resolution                [1.6 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [1634.4 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -57,9 +58,9 @@
   [4]   Candidate_C      0.0178  header banner · margin 76px · gap 16px · no motifs
   [5]   Candidate_B      0.0760  art column · margin 44px · gap 16px · no motifs
   [6]   Candidate_F      0.0760  art column · margin 44px · gap 22px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [242.6 ms]
+  ✔  5. Aesthetic SVG Rendering                 [242.5 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
-  ✔  6. FSM State Serialization                 [0.4 ms]
+  ✔  6. FSM State Serialization                 [0.3 ms]
      → Saved: data/processed/layout_state_v1.json
      → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/JFINEX/certificate_gnn/ThemeSync_academic-certificate_state_chain.json
 
@@ -69,17 +70,17 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          1254.7
-  0b. Semantic Layout Parsing (YOLO+OCR)         2330.2
-  0c. Stylistic Marker Extraction                1068.2
+  0. Template Ingestion                          4090.0
+  0b. Semantic Layout Parsing (YOLO+OCR)         2313.0
+  0c. Stylistic Marker Extraction                1081.5
   1. Dynamic Node Instantiation                     0.2
-  2. GNN Spatial Inference                         14.5
-  3. Cassowary CSP Resolution                       1.5
-  4. Metaheuristic Ranking                       1753.6
-  5. Aesthetic SVG Rendering                      242.6
-  6. FSM State Serialization                        0.4
+  2. GNN Spatial Inference                        211.8
+  3. Cassowary CSP Resolution                       1.6
+  4. Metaheuristic Ranking                       1634.4
+  5. Aesthetic SVG Rendering                      242.5
+  6. FSM State Serialization                        0.3
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               6666.0
+  TOTAL END-TO-END                               9575.4
 
   Winner   : Candidate_A — classic centred · margin 72px · gap 18px · no motifs (C_total = 0.0098)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/JFINEX/certificate_gnn/ThemeSync_academic-certificate_populated.svg

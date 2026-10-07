@@ -3,7 +3,7 @@
     {
       "state_id": "State_00",
       "label": "Baseline Init",
-      "timestamp": "2026-10-06T22:43:56.305",
+      "timestamp": "2026-10-07T14:32:22.188",
       "event": {
         "type": "init",
         "schema_validation": {
@@ -176,7 +176,7 @@
     {
       "state_id": "State_01",
       "label": "CSP Baseline \u00b7 Candidate_A",
-      "timestamp": "2026-10-06T22:43:56.305",
+      "timestamp": "2026-10-07T14:32:22.188",
       "event": {
         "type": "candidate",
         "candidate_id": "Candidate_A",
@@ -255,7 +255,7 @@
           "spatial_hierarchy": 5,
           "bbox": [
             120.0,
-            530.89,
+            530.9,
             960.0,
             81.0
           ],
@@ -325,6 +325,40 @@
             72.0
           ],
           "constraint_type": "Soft"
+        },
+        {
+          "node_id": "decor_motif_0",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 100,
+          "constraint_type": "Soft",
+          "bbox": [
+            -48.6,
+            -42.64,
+            270.0,
+            236.9
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/phase4/samples/ANTI_HAZING_LAW/certificate_baseline/style_kit/academic-certificate_motif_0.png",
+          "slot": "TL",
+          "arrangement": "diagonal",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_1",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 101,
+          "constraint_type": "Soft",
+          "bbox": [
+            1078.23,
+            793.16,
+            148.5,
+            130.3
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/phase4/samples/ANTI_HAZING_LAW/certificate_baseline/style_kit/academic-certificate_motif_0.png",
+          "slot": "BR",
+          "arrangement": "diagonal",
+          "flip": true
         }
       ],
       "fitness": {

@@ -3,7 +3,7 @@
     {
       "state_id": "State_00",
       "label": "Baseline Init",
-      "timestamp": "2026-10-06T18:25:07.070",
+      "timestamp": "2026-10-07T14:33:03.280",
       "event": {
         "type": "init",
         "schema_validation": {
@@ -175,11 +175,11 @@
     },
     {
       "state_id": "State_01",
-      "label": "CSP Baseline \u00b7 Candidate_D",
-      "timestamp": "2026-10-06T18:25:07.070",
+      "label": "CSP Baseline \u00b7 Candidate_C",
+      "timestamp": "2026-10-07T14:33:03.281",
       "event": {
         "type": "candidate",
-        "candidate_id": "Candidate_D",
+        "candidate_id": "Candidate_C",
         "rank": 1
       },
       "nodes": [
@@ -189,8 +189,8 @@
           "structural_class": "image_node",
           "spatial_hierarchy": 0,
           "bbox": [
-            104.0,
-            106.06,
+            550.5,
+            114.06,
             99.0,
             98.37
           ],
@@ -202,8 +202,8 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 1,
           "bbox": [
-            104.0,
-            222.44,
+            180.0,
+            228.44,
             840.0,
             40.5
           ],
@@ -215,8 +215,8 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 2,
           "bbox": [
-            104.0,
-            280.94,
+            120.0,
+            284.94,
             960.0,
             90.0
           ],
@@ -228,8 +228,8 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 3,
           "bbox": [
-            104.0,
-            388.94,
+            270.0,
+            390.93,
             660.0,
             31.5
           ],
@@ -241,7 +241,7 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 4,
           "bbox": [
-            104.0,
+            150.0,
             438.44,
             900.0,
             76.5
@@ -254,8 +254,8 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 5,
           "bbox": [
-            104.0,
-            532.93,
+            120.0,
+            530.93,
             960.0,
             81.0
           ],
@@ -267,8 +267,8 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 6,
           "bbox": [
-            104.0,
-            631.93,
+            390.0,
+            627.93,
             420.0,
             27.0
           ],
@@ -280,8 +280,8 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 7,
           "bbox": [
-            104.0,
-            676.93,
+            390.0,
+            670.94,
             420.0,
             27.0
           ],
@@ -293,8 +293,8 @@
           "structural_class": "repeating_group",
           "spatial_hierarchy": 8,
           "bbox": [
-            154.0,
-            721.93,
+            140.0,
+            713.94,
             264.0,
             72.0
           ],
@@ -307,7 +307,7 @@
           "spatial_hierarchy": 8,
           "bbox": [
             468.0,
-            721.93,
+            713.94,
             264.0,
             72.0
           ],
@@ -319,8 +319,8 @@
           "structural_class": "repeating_group",
           "spatial_hierarchy": 8,
           "bbox": [
-            782.0,
-            721.93,
+            796.0,
+            713.94,
             264.0,
             72.0
           ],
@@ -331,17 +331,17 @@
         "P_collision": 0.0,
         "P_align": 0.0,
         "P_space": 0.0007,
-        "P_legibility": 0.0,
-        "Total_Cost": 0.0007
+        "P_legibility": 0.0056,
+        "Total_Cost": 0.0091
       },
       "hard_nodes": [],
-      "candidate_id": "Candidate_D",
+      "candidate_id": "Candidate_C",
       "variation": {
-        "name": "Candidate_D",
-        "archetype": "left",
-        "margin": 104.0,
-        "vgap": 18.0,
-        "arrangement": 3
+        "name": "Candidate_C",
+        "archetype": "banner",
+        "margin": 76.0,
+        "vgap": 16.0,
+        "arrangement": 4
       }
     }
   ]

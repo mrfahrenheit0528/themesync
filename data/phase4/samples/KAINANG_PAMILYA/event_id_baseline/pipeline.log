@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: KAINANG_PAMILYA.jpg (2048×2048 px)
   [TemplateIngestor] Extracted palette: #DED1AC | #9EAB43 | #786C39 | #332821
   [TemplateIngestor] Saliency weight:   0.0913
-  ✔  0. Template Ingestion                      [2209.5 ms]
+  ✔  0. Template Ingestion                      [5353.2 ms]
      → Palette: #DED1AC | #9EAB43 | #786C39 | #332821
      → Saliency: 0.0913  | Native size: 2048×2048 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1803.3 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2180.8 ms]
      → Weights: themesync_yolo_v5.pt
      → 13 node(s) detected on the master layout
        · auto_logo_0            conf=0.92
@@ -24,7 +24,7 @@
        · auto_embellishment_10  conf=0.86
        · auto_text_11           conf=0.82  ocr="CUP COED Student Council"
        · auto_text_12           conf=0.80  ocr="coedstudentcouncil27 @ gmail.com"
-  ✔  0c. Stylistic Marker Extraction            [7071.3 ms]
+  ✔  0c. Stylistic Marker Extraction            [8114.6 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 0  |  Title artwork: Stage 0c: title artwork
 
@@ -36,16 +36,17 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/KAINANG_PAMILYA/event_id_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : left — a large artwork right of centre (27% of the poster)
   Population     : 6
   Palette Source : real image → ['#DED1AC', '#9EAB43', '#786C39', '#332821']
   Schema Check   : passed (typography, content)
-  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
      → 6 node(s) instantiated for canvas 744×1052
      → Logo aspect ratio locked to 0.98:1 (Stage 0b crop of 2 logo(s), conf=0.89, 0.92, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [0.4 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [779.4 ms]
+  ✔  3. Cassowary CSP Resolution                [0.6 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [811.6 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -56,9 +57,9 @@
   [4]   Candidate_A      0.1695  classic centred · margin 60px · gap 20px · no motifs
   [5]   Candidate_B      0.1884  floating card · margin 40px · gap 16px · no motifs
   [6]   Candidate_F      0.1884  floating card · margin 40px · gap 22px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [272.3 ms]
+  ✔  5. Aesthetic SVG Rendering                 [280.8 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
-  ✔  6. FSM State Serialization                 [0.3 ms]
+  ✔  6. FSM State Serialization                 [0.2 ms]
      → Saved: data/processed/layout_state_v1.json
      → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/KAINANG_PAMILYA/event_id_baseline/ThemeSync_identification-card_state_chain.json
 
@@ -68,17 +69,17 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          2209.5
-  0b. Semantic Layout Parsing (YOLO+OCR)         1803.3
-  0c. Stylistic Marker Extraction                7071.3
-  1. Dynamic Node Instantiation                     0.1
+  0. Template Ingestion                          5353.2
+  0b. Semantic Layout Parsing (YOLO+OCR)         2180.8
+  0c. Stylistic Marker Extraction                8114.6
+  1. Dynamic Node Instantiation                     0.2
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       0.4
-  4. Metaheuristic Ranking                        779.4
-  5. Aesthetic SVG Rendering                      272.3
-  6. FSM State Serialization                        0.3
+  3. Cassowary CSP Resolution                       0.6
+  4. Metaheuristic Ranking                        811.6
+  5. Aesthetic SVG Rendering                      280.8
+  6. FSM State Serialization                        0.2
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                              12136.6
+  TOTAL END-TO-END                              16742.0
 
   Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · no motifs (C_total = 0.1550)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/KAINANG_PAMILYA/event_id_baseline/ThemeSync_identification-card_populated.svg

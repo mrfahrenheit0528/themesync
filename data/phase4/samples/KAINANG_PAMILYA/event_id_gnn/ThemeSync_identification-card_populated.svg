@@ -19,10 +19,10 @@
 </g>
 <g data-node-id="{{Participant_Name}}" data-kind="text_node">
 <rect x="72.0" y="751.6" width="600.0" height="115.7" rx="57.9" fill="#FFFFFF" stroke="#9EAB43" stroke-width="2.5" />
-<text x="372.0" y="809.5" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="64.8" font-weight="900" letter-spacing="2.0" fill="#332821" text-anchor="middle" dominant-baseline="central">CARLO</text>
+<text x="372.0" y="809.5" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="64.8" font-weight="900" letter-spacing="2.0" fill="#332821" text-anchor="middle" dominant-baseline="central">JANELLE</text>
 </g>
 <g data-node-id="{{Participant_Role}}" data-kind="text_node">
 <rect x="72.0" y="885.3" width="600.0" height="94.7" rx="6" fill="#6F782F" />
-<text x="372.0" y="932.7" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="47.3" font-weight="bold" letter-spacing="4.0" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">VOLUNTEER</text>
+<text x="372.0" y="932.7" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="47.3" font-weight="bold" letter-spacing="4.0" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">ORGANIZER</text>
 </g>
 </svg>

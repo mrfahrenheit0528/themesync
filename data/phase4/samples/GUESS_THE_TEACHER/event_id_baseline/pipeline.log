@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: GUESS_THE_TEACHER.jpg (1080×1080 px)
   [TemplateIngestor] Extracted palette: #806047 | #C49774 | #F7E8CB
   [TemplateIngestor] Saliency weight:   0.0796
-  ✔  0. Template Ingestion                      [797.3 ms]
+  ✔  0. Template Ingestion                      [3226.6 ms]
      → Palette: #806047 | #C49774 | #F7E8CB
      → Saliency: 0.0796  | Native size: 1080×1080 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1495.9 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1598.7 ms]
      → Weights: themesync_yolo_v5.pt
      → 16 node(s) detected on the master layout
        · auto_logo_0            conf=0.84
@@ -27,7 +27,7 @@
        · auto_text_13           conf=0.84  ocr="“class, |cant mest youre"
        · auto_text_14           conf=0.80  ocr=""Okay class, lets move on”"
        · auto_text_15           conf=0.79
-  ✔  0c. Stylistic Marker Extraction            [1333.0 ms]
+  ✔  0c. Stylistic Marker Extraction            [1399.7 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 0  |  Title artwork: Stage 0c: title artwork
 
@@ -39,16 +39,17 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/GUESS_THE_TEACHER/event_id_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : left — a large artwork right of centre (20% of the poster)
   Population     : 6
   Palette Source : real image → ['#806047', '#C49774', '#F7E8CB']
   Schema Check   : passed (typography, content)
-  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
      → 6 node(s) instantiated for canvas 744×1052
      → Logo aspect ratio locked to 0.96:1 (Stage 0b crop of 2 logo(s), conf=0.84, 0.93, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [0.4 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [794.9 ms]
+  ✔  3. Cassowary CSP Resolution                [0.7 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [818.9 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -59,9 +60,9 @@
   [4]   Candidate_A      0.1750  classic centred · margin 60px · gap 20px · no motifs
   [5]   Candidate_F      0.1863  floating card · margin 40px · gap 22px · no motifs
   [6]   Candidate_B      0.1884  floating card · margin 40px · gap 16px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [127.5 ms]
+  ✔  5. Aesthetic SVG Rendering                 [135.7 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
-  ✔  6. FSM State Serialization                 [0.3 ms]
+  ✔  6. FSM State Serialization                 [0.2 ms]
      → Saved: data/processed/layout_state_v1.json
      → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/GUESS_THE_TEACHER/event_id_baseline/ThemeSync_identification-card_state_chain.json
 
@@ -71,17 +72,17 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                           797.3
-  0b. Semantic Layout Parsing (YOLO+OCR)         1495.9
-  0c. Stylistic Marker Extraction                1333.0
-  1. Dynamic Node Instantiation                     0.1
+  0. Template Ingestion                          3226.6
+  0b. Semantic Layout Parsing (YOLO+OCR)         1598.7
+  0c. Stylistic Marker Extraction                1399.7
+  1. Dynamic Node Instantiation                     0.2
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       0.4
-  4. Metaheuristic Ranking                        794.9
-  5. Aesthetic SVG Rendering                      127.5
-  6. FSM State Serialization                        0.3
+  3. Cassowary CSP Resolution                       0.7
+  4. Metaheuristic Ranking                        818.9
+  5. Aesthetic SVG Rendering                      135.7
+  6. FSM State Serialization                        0.2
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               4549.5
+  TOTAL END-TO-END                               7180.7
 
   Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · no motifs (C_total = 0.1605)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/GUESS_THE_TEACHER/event_id_baseline/ThemeSync_identification-card_populated.svg

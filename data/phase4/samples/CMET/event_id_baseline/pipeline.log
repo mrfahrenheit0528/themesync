@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: CMET.jpg (2000×2000 px)
   [TemplateIngestor] Extracted palette: #585D69 | #A6A5A7 | #1F283F
   [TemplateIngestor] Saliency weight:   0.0722
-  ✔  0. Template Ingestion                      [1966.6 ms]
+  ✔  0. Template Ingestion                      [4288.7 ms]
      → Palette: #585D69 | #A6A5A7 | #1F283F
      → Saliency: 0.0722  | Native size: 2000×2000 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [954.4 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1177.0 ms]
      → Weights: themesync_yolo_v5.pt
      → 7 node(s) detected on the master layout
        · auto_logo_0            conf=0.91
@@ -18,9 +18,9 @@
        · auto_text_4            conf=0.85  ocr="SAIL THE SPOTLIGHT"
        · auto_embellishment_5   conf=0.85
        · auto_text_6            conf=0.87
-  ✔  0c. Stylistic Marker Extraction            [4793.6 ms]
+  ✔  0c. Stylistic Marker Extraction            [4766.6 ms]
      → Background: text-free layer rebuilt from the master's border
-     → Motifs: 0  |  Title artwork: Stage 0c: title artwork
+     → Motifs: 0  |  Title artwork: none (typed title)
 
   Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
   Domain         : identification_card
@@ -30,6 +30,7 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/CMET/event_id_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : classic
   Population     : 6
   Palette Source : real image → ['#585D69', '#A6A5A7', '#1F283F']
   Schema Check   : passed (typography, content)
@@ -38,8 +39,8 @@
      → Logo aspect ratio locked to 1.05:1 (Stage 0b crop of 2 logo(s), conf=0.91, 0.63, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [0.4 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [786.5 ms]
+  ✔  3. Cassowary CSP Resolution                [0.5 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [785.1 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -50,9 +51,9 @@
   [4]   Candidate_A      0.1556  classic centred · margin 60px · gap 20px · no motifs
   [5]   Candidate_F      0.1853  floating card · margin 40px · gap 22px · no motifs
   [6]   Candidate_B      0.1978  floating card · margin 40px · gap 16px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [184.2 ms]
+  ✔  5. Aesthetic SVG Rendering                 [37.6 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
-  ✔  6. FSM State Serialization                 [0.3 ms]
+  ✔  6. FSM State Serialization                 [0.2 ms]
      → Saved: data/processed/layout_state_v1.json
      → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/CMET/event_id_baseline/ThemeSync_identification-card_state_chain.json
 
@@ -62,18 +63,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          1966.6
-  0b. Semantic Layout Parsing (YOLO+OCR)          954.4
-  0c. Stylistic Marker Extraction                4793.6
+  0. Template Ingestion                          4288.7
+  0b. Semantic Layout Parsing (YOLO+OCR)         1177.0
+  0c. Stylistic Marker Extraction                4766.6
   1. Dynamic Node Instantiation                     0.1
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       0.4
-  4. Metaheuristic Ranking                        786.5
-  5. Aesthetic SVG Rendering                      184.2
-  6. FSM State Serialization                        0.3
+  3. Cassowary CSP Resolution                       0.5
+  4. Metaheuristic Ranking                        785.1
+  5. Aesthetic SVG Rendering                       37.6
+  6. FSM State Serialization                        0.2
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               8686.1
+  TOTAL END-TO-END                              11055.8
 
-  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · no motifs (C_total = 0.1411)
+  Winner   : Candidate_E — classic centred · margin 64px · gap 24px · no motifs (C_total = 0.1508)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/CMET/event_id_baseline/ThemeSync_identification-card_populated.svg
 

@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: ARANTABAYAN.jpg (940×788 px)
   [TemplateIngestor] Extracted palette: #B9BCC5 | #281F1D | #F08635
   [TemplateIngestor] Saliency weight:   0.0969
-  ✔  0. Template Ingestion                      [536.2 ms]
+  ✔  0. Template Ingestion                      [2175.9 ms]
      → Palette: #B9BCC5 | #281F1D | #F08635
      → Saliency: 0.0969  | Native size: 940×788 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1242.9 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1440.2 ms]
      → Weights: themesync_yolo_v5.pt
      → 18 node(s) detected on the master layout
        · auto_logo_0            conf=0.93
@@ -29,7 +29,7 @@
        · auto_text_15           conf=0.40
        · auto_text_16           conf=0.65
        · auto_embellishment_17  conf=0.62
-  ✔  0c. Stylistic Marker Extraction            [3545.7 ms]
+  ✔  0c. Stylistic Marker Extraction            [2492.5 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 0  |  Title artwork: Stage 0c: title artwork
 
@@ -41,16 +41,17 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/ARANTABAYAN/event_id_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : card — text on a panel (71% × 48% of the poster)
   Population     : 6
   Palette Source : real image → ['#B9BCC5', '#281F1D', '#F08635']
   Schema Check   : passed (typography, content)
-  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
      → 6 node(s) instantiated for canvas 744×1052
      → Logo aspect ratio locked to 1.01:1 (Stage 0b crop of 2 logo(s), conf=0.93, 0.93, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [0.5 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [782.1 ms]
+  ✔  3. Cassowary CSP Resolution                [0.7 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [829.7 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -61,9 +62,9 @@
   [4]   Candidate_A      0.1584  classic centred · margin 60px · gap 20px · no motifs
   [5]   Candidate_F      0.1874  floating card · margin 40px · gap 22px · no motifs
   [6]   Candidate_B      0.1947  floating card · margin 40px · gap 16px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [129.4 ms]
+  ✔  5. Aesthetic SVG Rendering                 [140.3 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
-  ✔  6. FSM State Serialization                 [0.3 ms]
+  ✔  6. FSM State Serialization                 [0.2 ms]
      → Saved: data/processed/layout_state_v1.json
      → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/ARANTABAYAN/event_id_baseline/ThemeSync_identification-card_state_chain.json
 
@@ -73,18 +74,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                           536.2
-  0b. Semantic Layout Parsing (YOLO+OCR)         1242.9
-  0c. Stylistic Marker Extraction                3545.7
-  1. Dynamic Node Instantiation                     0.1
+  0. Template Ingestion                          2175.9
+  0b. Semantic Layout Parsing (YOLO+OCR)         1440.2
+  0c. Stylistic Marker Extraction                2492.5
+  1. Dynamic Node Instantiation                     0.2
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       0.5
-  4. Metaheuristic Ranking                        782.1
-  5. Aesthetic SVG Rendering                      129.4
-  6. FSM State Serialization                        0.3
+  3. Cassowary CSP Resolution                       0.7
+  4. Metaheuristic Ranking                        829.7
+  5. Aesthetic SVG Rendering                      140.3
+  6. FSM State Serialization                        0.2
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               6237.2
+  TOTAL END-TO-END                               7079.7
 
-  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · no motifs (C_total = 0.1439)
+  Winner   : Candidate_F — floating card · margin 40px · gap 22px · no motifs (C_total = 0.1874)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/ARANTABAYAN/event_id_baseline/ThemeSync_identification-card_populated.svg
 

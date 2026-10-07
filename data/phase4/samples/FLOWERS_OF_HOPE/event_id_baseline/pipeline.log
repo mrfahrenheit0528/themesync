@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: FLOWERS_OF_HOPE.jpg (2048×2048 px)
   [TemplateIngestor] Extracted palette: #DBC1BF | #480704 | #9C251F
   [TemplateIngestor] Saliency weight:   0.0221
-  ✔  0. Template Ingestion                      [1920.6 ms]
+  ✔  0. Template Ingestion                      [4193.6 ms]
      → Palette: #DBC1BF | #480704 | #9C251F
      → Saliency: 0.0221  | Native size: 2048×2048 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2187.4 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2280.5 ms]
      → Weights: themesync_yolo_v5.pt
      → 21 node(s) detected on the master layout
        · auto_logo_0            conf=0.90
@@ -32,9 +32,9 @@
        · auto_embellishment_18  conf=0.84
        · auto_text_19           conf=0.79  ocr="CSPC - College of Health Sciences Studen"
        · auto_text_20           conf=0.85  ocr="chs-csc@cspc.edu.ph"
-  ✔  0c. Stylistic Marker Extraction            [4214.5 ms]
+  ✔  0c. Stylistic Marker Extraction            [5205.0 ms]
      → Background: text-free layer rebuilt from the master's border
-     → Motifs: 1  |  Title artwork: Stage 0c: title artwork
+     → Motifs: 0  |  Title artwork: Stage 0c: title artwork
 
   Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
   Domain         : identification_card
@@ -44,29 +44,30 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/FLOWERS_OF_HOPE/event_id_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : classic
   Population     : 6
   Palette Source : real image → ['#DBC1BF', '#480704', '#9C251F']
   Schema Check   : passed (typography, content)
-  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
      → 6 node(s) instantiated for canvas 744×1052
      → Logo aspect ratio locked to 0.78:1 (Stage 0b crop of 3 logo(s), conf=0.90, 0.92, 0.90, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [0.4 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [862.8 ms]
+  ✔  3. Cassowary CSP Resolution                [0.7 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [846.5 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
   ------ -------------- --------  ----------------------------------------
-  [1]   Candidate_D      0.1397  left-aligned · margin 72px · gap 18px · anti-diagonal ◀ WINNER
-  [2]   Candidate_C      0.1483  full-width band · margin 64px · gap 18px · crown pair
-  [3]   Candidate_E      0.1484  classic centred · margin 64px · gap 24px · four corners
-  [4]   Candidate_A      0.1537  classic centred · margin 60px · gap 20px · diagonal
-  [5]   Candidate_B      0.1853  floating card · margin 40px · gap 16px · diagonal
-  [6]   Candidate_F      0.1853  floating card · margin 40px · gap 22px · diagonal
-  ✔  5. Aesthetic SVG Rendering                 [180.2 ms]
+  [1]   Candidate_D      0.1439  left-aligned · margin 72px · gap 18px · no motifs ◀ WINNER
+  [2]   Candidate_C      0.1535  full-width band · margin 64px · gap 18px · no motifs
+  [3]   Candidate_E      0.1535  classic centred · margin 64px · gap 24px · no motifs
+  [4]   Candidate_A      0.1584  classic centred · margin 60px · gap 20px · no motifs
+  [5]   Candidate_B      0.1853  floating card · margin 40px · gap 16px · no motifs
+  [6]   Candidate_F      0.1853  floating card · margin 40px · gap 22px · no motifs
+  ✔  5. Aesthetic SVG Rendering                 [144.4 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
-  ✔  6. FSM State Serialization                 [0.3 ms]
+  ✔  6. FSM State Serialization                 [0.2 ms]
      → Saved: data/processed/layout_state_v1.json
      → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/FLOWERS_OF_HOPE/event_id_baseline/ThemeSync_identification-card_state_chain.json
 
@@ -76,18 +77,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          1920.6
-  0b. Semantic Layout Parsing (YOLO+OCR)         2187.4
-  0c. Stylistic Marker Extraction                4214.5
-  1. Dynamic Node Instantiation                     0.1
+  0. Template Ingestion                          4193.6
+  0b. Semantic Layout Parsing (YOLO+OCR)         2280.5
+  0c. Stylistic Marker Extraction                5205.0
+  1. Dynamic Node Instantiation                     0.2
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       0.4
-  4. Metaheuristic Ranking                        862.8
-  5. Aesthetic SVG Rendering                      180.2
-  6. FSM State Serialization                        0.3
+  3. Cassowary CSP Resolution                       0.7
+  4. Metaheuristic Ranking                        846.5
+  5. Aesthetic SVG Rendering                      144.4
+  6. FSM State Serialization                        0.2
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               9366.4
+  TOTAL END-TO-END                              12671.1
 
-  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · anti-diagonal (C_total = 0.1397)
+  Winner   : Candidate_E — classic centred · margin 64px · gap 24px · no motifs (C_total = 0.1535)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/FLOWERS_OF_HOPE/event_id_baseline/ThemeSync_identification-card_populated.svg
 

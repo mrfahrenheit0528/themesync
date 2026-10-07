@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: CTC.jpg (1313×1313 px)
   [TemplateIngestor] Extracted palette: #52596F | #C2B78C | #21233C
   [TemplateIngestor] Saliency weight:   0.0245
-  ✔  0. Template Ingestion                      [1006.7 ms]
+  ✔  0. Template Ingestion                      [3527.9 ms]
      → Palette: #52596F | #C2B78C | #21233C
      → Saliency: 0.0245  | Native size: 1313×1313 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1155.6 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1273.0 ms]
      → Weights: themesync_yolo_v5.pt
      → 14 node(s) detected on the master layout
        · auto_logo_0            conf=0.47
@@ -25,7 +25,7 @@
        · auto_embellishment_11  conf=0.79
        · auto_text_12           conf=0.84  ocr="ceguerairiga@ gmail.com"
        · auto_text_13           conf=0.77  ocr="(059) 299-2224"
-  ✔  0c. Stylistic Marker Extraction            [825.5 ms]
+  ✔  0c. Stylistic Marker Extraction            [864.4 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 0  |  Title artwork: Stage 0c: title artwork
 
@@ -37,6 +37,7 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/CTC/event_id_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : classic
   Population     : 6
   Palette Source : real image → ['#52596F', '#C2B78C', '#21233C']
   Schema Check   : passed (typography, content)
@@ -45,8 +46,8 @@
      → Logo aspect ratio locked to 1.40:1 (Stage 0b crop of 1 logo(s), conf=0.47, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [0.4 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [795.4 ms]
+  ✔  3. Cassowary CSP Resolution                [0.6 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [896.9 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -57,7 +58,7 @@
   [4]   Candidate_A      0.1584  classic centred · margin 60px · gap 20px · no motifs
   [5]   Candidate_F      0.1916  floating card · margin 40px · gap 22px · no motifs
   [6]   Candidate_B      0.1947  floating card · margin 40px · gap 16px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [252.7 ms]
+  ✔  5. Aesthetic SVG Rendering                 [329.2 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
   ✔  6. FSM State Serialization                 [0.3 ms]
      → Saved: data/processed/layout_state_v1.json
@@ -69,18 +70,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          1006.7
-  0b. Semantic Layout Parsing (YOLO+OCR)         1155.6
-  0c. Stylistic Marker Extraction                 825.5
+  0. Template Ingestion                          3527.9
+  0b. Semantic Layout Parsing (YOLO+OCR)         1273.0
+  0c. Stylistic Marker Extraction                 864.4
   1. Dynamic Node Instantiation                     0.1
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       0.4
-  4. Metaheuristic Ranking                        795.4
-  5. Aesthetic SVG Rendering                      252.7
+  3. Cassowary CSP Resolution                       0.6
+  4. Metaheuristic Ranking                        896.9
+  5. Aesthetic SVG Rendering                      329.2
   6. FSM State Serialization                        0.3
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               4036.8
+  TOTAL END-TO-END                               6892.2
 
-  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · no motifs (C_total = 0.1439)
+  Winner   : Candidate_E — classic centred · margin 64px · gap 24px · no motifs (C_total = 0.1535)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/CTC/event_id_baseline/ThemeSync_identification-card_populated.svg
 

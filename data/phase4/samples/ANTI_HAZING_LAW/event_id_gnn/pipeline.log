@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: ANTI_HAZING_LAW.jpg (1875×1875 px)
   [TemplateIngestor] Extracted palette: #431006 | #B84F20 | #F4D8A7
   [TemplateIngestor] Saliency weight:   0.0434
-  ✔  0. Template Ingestion                      [1881.9 ms]
+  ✔  0. Template Ingestion                      [3943.7 ms]
      → Palette: #431006 | #B84F20 | #F4D8A7
      → Saliency: 0.0434  | Native size: 1875×1875 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2006.1 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [5720.2 ms]
      → Weights: themesync_yolo_v5.pt
      → 12 node(s) detected on the master layout
        · auto_logo_0            conf=0.90
@@ -23,9 +23,9 @@
        · auto_embellishment_9   conf=0.88
        · auto_text_10           conf=0.83  ocr="cosoapupll6@gmail.com"
        · auto_text_11           conf=0.82  ocr="/pup.sccosoa"
-  ✔  0c. Stylistic Marker Extraction            [1542.4 ms]
+  ✔  0c. Stylistic Marker Extraction            [2343.6 ms]
      → Background: text-free layer rebuilt from the master's border
-     → Motifs: 0  |  Title artwork: none (typed title)
+     → Motifs: 1  |  Title artwork: Stage 0c: title artwork
 
   Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
   Domain         : identification_card
@@ -42,22 +42,22 @@
   ✔  1. Dynamic Node Instantiation              [0.1 ms]
      → 6 node(s) instantiated for canvas 744×1052
      → Logo aspect ratio locked to 1.05:1 (Stage 0b crop of 1 logo(s), conf=0.90, Affine scaling)
-  ✔  2. GNN Spatial Inference                   [11.2 ms]
+  ✔  2. GNN Spatial Inference                   [27.2 ms]
      → Weights: loaded from themesync_gnn_v3.pth
      → Predictions applied: True (6 stacked node(s), from the master structure (3 of 6 node(s) anchored, output registered to them))
-  ✔  3. Cassowary CSP Resolution                [0.4 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [769.5 ms]
+  ✔  3. Cassowary CSP Resolution                [0.5 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [1042.9 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
   ------ -------------- --------  ----------------------------------------
-  [1]   Candidate_D      0.1613  left-aligned · margin 72px · gap 18px · no motifs ◀ WINNER
-  [2]   Candidate_E      0.1709  classic centred · margin 64px · gap 24px · no motifs
-  [3]   Candidate_C      0.1753  full-width band · margin 64px · gap 18px · no motifs
-  [4]   Candidate_A      0.1802  classic centred · margin 60px · gap 20px · no motifs
-  [5]   Candidate_B      0.2009  floating card · margin 40px · gap 16px · no motifs
-  [6]   Candidate_F      0.2009  floating card · margin 40px · gap 22px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [28.2 ms]
+  [1]   Candidate_D      0.1395  left-aligned · margin 72px · gap 18px · anti-diagonal ◀ WINNER
+  [2]   Candidate_C      0.1490  full-width band · margin 64px · gap 18px · crown pair
+  [3]   Candidate_E      0.1493  classic centred · margin 64px · gap 24px · four corners
+  [4]   Candidate_A      0.1538  classic centred · margin 60px · gap 20px · diagonal
+  [5]   Candidate_B      0.1854  floating card · margin 40px · gap 16px · diagonal
+  [6]   Candidate_F      0.1854  floating card · margin 40px · gap 22px · diagonal
+  ✔  5. Aesthetic SVG Rendering                 [271.8 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
   ✔  6. FSM State Serialization                 [0.3 ms]
      → Saved: data/processed/layout_state_v1.json
@@ -69,18 +69,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          1881.9
-  0b. Semantic Layout Parsing (YOLO+OCR)         2006.1
-  0c. Stylistic Marker Extraction                1542.4
+  0. Template Ingestion                          3943.7
+  0b. Semantic Layout Parsing (YOLO+OCR)         5720.2
+  0c. Stylistic Marker Extraction                2343.6
   1. Dynamic Node Instantiation                     0.1
-  2. GNN Spatial Inference                         11.2
-  3. Cassowary CSP Resolution                       0.4
-  4. Metaheuristic Ranking                        769.5
-  5. Aesthetic SVG Rendering                       28.2
+  2. GNN Spatial Inference                         27.2
+  3. Cassowary CSP Resolution                       0.5
+  4. Metaheuristic Ranking                       1042.9
+  5. Aesthetic SVG Rendering                      271.8
   6. FSM State Serialization                        0.3
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               6240.2
+  TOTAL END-TO-END                              13350.3
 
-  Winner   : Candidate_E — classic centred · margin 64px · gap 24px · no motifs (C_total = 0.1709)
+  Winner   : Candidate_E — classic centred · margin 64px · gap 24px · four corners (C_total = 0.1493)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/ANTI_HAZING_LAW/event_id_gnn/ThemeSync_identification-card_populated.svg
 

@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: CHS_BIRISTUHAN.jpg (1080×1080 px)
   [TemplateIngestor] Extracted palette: #6F5E61 | #B490BE | #DABED4 | #9B9372
   [TemplateIngestor] Saliency weight:   0.0941
-  ✔  0. Template Ingestion                      [825.6 ms]
+  ✔  0. Template Ingestion                      [3451.8 ms]
      → Palette: #6F5E61 | #B490BE | #DABED4 | #9B9372
      → Saliency: 0.0941  | Native size: 1080×1080 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1313.0 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1454.9 ms]
      → Weights: themesync_yolo_v5.pt
      → 20 node(s) detected on the master layout
        · auto_logo_0            conf=0.92
@@ -31,7 +31,7 @@
        · auto_embellishment_17  conf=0.81
        · auto_text_18           conf=0.55
        · auto_text_19           conf=0.85  ocr="chs-csc@cspc.edu.ph"
-  ✔  0c. Stylistic Marker Extraction            [1068.7 ms]
+  ✔  0c. Stylistic Marker Extraction            [1377.8 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 2  |  Title artwork: Stage 0c: title artwork
 
@@ -43,17 +43,18 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/CHS_BIRISTUHAN/certificate_gnn/content.json
   Condition      : gnn
   Master structure: title at 0.45, logo at 0.10, details at 0.73
+  Layout type    : classic
   Population     : 6
   Palette Source : real image → ['#6F5E61', '#B490BE', '#DABED4', '#9B9372']
   Schema Check   : passed (typography, content)
   ✔  1. Dynamic Node Instantiation              [0.1 ms]
      → 11 node(s) instantiated for canvas 1200×900
      → Logo aspect ratio locked to 0.95:1 (Stage 0b crop of 5 logo(s), conf=0.91, 0.92, 0.92, 0.89, 0.92, Affine scaling)
-  ✔  2. GNN Spatial Inference                   [10.4 ms]
+  ✔  2. GNN Spatial Inference                   [205.5 ms]
      → Weights: loaded from themesync_gnn_v3.pth
      → Predictions applied: True (8 stacked node(s), from the master structure (1 of 8 node(s) anchored, output registered to them))
-  ✔  3. Cassowary CSP Resolution                [1.1 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [1202.4 ms]
+  ✔  3. Cassowary CSP Resolution                [1.4 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [1380.4 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -64,7 +65,7 @@
   [4]   Candidate_D      0.0015  left-aligned · margin 104px · gap 18px · side columns
   [5]   Candidate_F      0.0757  art column · margin 44px · gap 22px · anti-diagonal
   [6]   Candidate_B      0.0758  art column · margin 44px · gap 16px · crown pair
-  ✔  5. Aesthetic SVG Rendering                 [133.0 ms]
+  ✔  5. Aesthetic SVG Rendering                 [138.6 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
   ✔  6. FSM State Serialization                 [0.4 ms]
      → Saved: data/processed/layout_state_v1.json
@@ -76,17 +77,17 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                           825.6
-  0b. Semantic Layout Parsing (YOLO+OCR)         1313.0
-  0c. Stylistic Marker Extraction                1068.7
+  0. Template Ingestion                          3451.8
+  0b. Semantic Layout Parsing (YOLO+OCR)         1454.9
+  0c. Stylistic Marker Extraction                1377.8
   1. Dynamic Node Instantiation                     0.1
-  2. GNN Spatial Inference                         10.4
-  3. Cassowary CSP Resolution                       1.1
-  4. Metaheuristic Ranking                       1202.4
-  5. Aesthetic SVG Rendering                      133.0
+  2. GNN Spatial Inference                        205.5
+  3. Cassowary CSP Resolution                       1.4
+  4. Metaheuristic Ranking                       1380.4
+  5. Aesthetic SVG Rendering                      138.6
   6. FSM State Serialization                        0.4
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               4554.6
+  TOTAL END-TO-END                               8011.0
 
   Winner   : Candidate_A — classic centred · margin 72px · gap 18px · diagonal (C_total = 0.0011)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/CHS_BIRISTUHAN/certificate_gnn/ThemeSync_academic-certificate_populated.svg

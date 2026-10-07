@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: ARANTABAYAN.jpg (940×788 px)
   [TemplateIngestor] Extracted palette: #B9BCC5 | #281F1D | #F08635
   [TemplateIngestor] Saliency weight:   0.0969
-  ✔  0. Template Ingestion                      [573.5 ms]
+  ✔  0. Template Ingestion                      [2164.3 ms]
      → Palette: #B9BCC5 | #281F1D | #F08635
      → Saliency: 0.0969  | Native size: 940×788 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1272.4 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1446.7 ms]
      → Weights: themesync_yolo_v5.pt
      → 18 node(s) detected on the master layout
        · auto_logo_0            conf=0.93
@@ -29,7 +29,7 @@
        · auto_text_15           conf=0.40
        · auto_text_16           conf=0.65
        · auto_embellishment_17  conf=0.62
-  ✔  0c. Stylistic Marker Extraction            [3557.4 ms]
+  ✔  0c. Stylistic Marker Extraction            [2475.4 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 0  |  Title artwork: Stage 0c: title artwork
 
@@ -41,16 +41,17 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/ARANTABAYAN/certificate_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : banner — text on a panel (71% × 48% of the poster)
   Population     : 6
   Palette Source : real image → ['#B9BCC5', '#281F1D', '#F08635']
   Schema Check   : passed (typography, content)
-  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
      → 11 node(s) instantiated for canvas 1200×900
      → Logo aspect ratio locked to 1.01:1 (Stage 0b crop of 2 logo(s), conf=0.93, 0.93, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [1.1 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [1191.1 ms]
+  ✔  3. Cassowary CSP Resolution                [1.2 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [1262.7 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -61,7 +62,7 @@
   [4]   Candidate_C      0.0091  header banner · margin 76px · gap 16px · no motifs
   [5]   Candidate_B      0.0766  art column · margin 44px · gap 16px · no motifs
   [6]   Candidate_F      0.0766  art column · margin 44px · gap 22px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [153.7 ms]
+  ✔  5. Aesthetic SVG Rendering                 [162.9 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
   ✔  6. FSM State Serialization                 [0.3 ms]
      → Saved: data/processed/layout_state_v1.json
@@ -73,18 +74,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                           573.5
-  0b. Semantic Layout Parsing (YOLO+OCR)         1272.4
-  0c. Stylistic Marker Extraction                3557.4
-  1. Dynamic Node Instantiation                     0.1
+  0. Template Ingestion                          2164.3
+  0b. Semantic Layout Parsing (YOLO+OCR)         1446.7
+  0c. Stylistic Marker Extraction                2475.4
+  1. Dynamic Node Instantiation                     0.2
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       1.1
-  4. Metaheuristic Ranking                       1191.1
-  5. Aesthetic SVG Rendering                      153.7
+  3. Cassowary CSP Resolution                       1.2
+  4. Metaheuristic Ranking                       1262.7
+  5. Aesthetic SVG Rendering                      162.9
   6. FSM State Serialization                        0.3
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               6749.6
+  TOTAL END-TO-END                               7513.7
 
-  Winner   : Candidate_D — left-aligned · margin 104px · gap 18px · no motifs (C_total = 0.0007)
+  Winner   : Candidate_C — header banner · margin 76px · gap 16px · no motifs (C_total = 0.0091)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/ARANTABAYAN/certificate_baseline/ThemeSync_academic-certificate_populated.svg
 

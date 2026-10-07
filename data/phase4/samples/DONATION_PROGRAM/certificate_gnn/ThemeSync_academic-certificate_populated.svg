@@ -17,17 +17,17 @@
 <text x="600.0" y="374.0" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15.8" font-weight="normal" font-style="italic" letter-spacing="0.5" text-anchor="middle" fill="#855751">is proudly presented to</text>
 </g>
 <g data-node-id="{{Student_Name}}" data-kind="text_node">
-<text x="600.0" y="451.6" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="47.4" font-weight="700" font-style="normal" letter-spacing="0.8" text-anchor="middle" fill="#5F3E3A">John Paul Mendoza</text>
+<text x="600.0" y="451.6" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="47.4" font-weight="700" font-style="normal" letter-spacing="0.8" text-anchor="middle" fill="#5F3E3A">Angelica Rose Navarro</text>
 </g>
 <g data-node-id="{{Citation_Body}}" data-kind="text_node">
-<text x="600.0" y="558.8" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="17.3" font-weight="normal" font-style="normal" letter-spacing="0.2" text-anchor="middle" fill="#334155">For active participation as organizer in Stray Cats &amp; Dogs Donation Program 2025, held on April</text>
+<text x="600.0" y="558.8" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="17.3" font-weight="normal" font-style="normal" letter-spacing="0.2" text-anchor="middle" fill="#334155">For active participation as participant in Stray Cats &amp; Dogs Donation Program 2025, held on April</text>
 <text x="600.0" y="582.1" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="17.3" font-weight="normal" font-style="normal" letter-spacing="0.2" text-anchor="middle" fill="#334155">16-26, 2025.</text>
 </g>
 <g data-node-id="{{Date_Issued}}" data-kind="text_node">
 <text x="600.0" y="670.9" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13.5" font-weight="normal" font-style="normal" letter-spacing="0.5" text-anchor="middle" fill="#855751">April 16-26, 2025</text>
 </g>
 <g data-node-id="{{Certificate_ID}}" data-kind="text_node">
-<text x="600.0" y="726.9" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13.5" font-weight="normal" font-style="normal" letter-spacing="0.5" text-anchor="middle" fill="#855751">CSPC-2025-006</text>
+<text x="600.0" y="726.9" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13.5" font-weight="normal" font-style="normal" letter-spacing="0.5" text-anchor="middle" fill="#855751">CSPC-2025-007</text>
 </g>
 <g data-node-id="{{Signature_Blocks}}_0" data-kind="repeating_group">
 <line x1="148.0" y1="788.4" x2="392.0" y2="788.4" stroke="#5F3E3A" stroke-width="1.2" opacity="0.85" />

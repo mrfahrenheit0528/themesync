@@ -3,7 +3,7 @@
     {
       "state_id": "State_00",
       "label": "Baseline Init",
-      "timestamp": "2026-10-06T18:25:37.990",
+      "timestamp": "2026-10-07T14:33:43.596",
       "event": {
         "type": "init",
         "schema_validation": {
@@ -110,11 +110,11 @@
     },
     {
       "state_id": "State_01",
-      "label": "GNN Relational \u00b7 Candidate_D",
-      "timestamp": "2026-10-06T18:25:37.990",
+      "label": "GNN Relational \u00b7 Candidate_E",
+      "timestamp": "2026-10-07T14:33:43.596",
       "event": {
         "type": "candidate",
-        "candidate_id": "Candidate_D",
+        "candidate_id": "Candidate_E",
         "rank": 1
       },
       "nodes": [
@@ -124,8 +124,8 @@
           "structural_class": "image_node",
           "spatial_hierarchy": 0,
           "bbox": [
-            72.0,
-            72.0,
+            141.36,
+            64.0,
             461.28,
             78.9
           ],
@@ -139,7 +139,7 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 1,
           "bbox": [
-            72.0,
+            74.4,
             231.07,
             595.2,
             47.34
@@ -154,9 +154,9 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 2,
           "bbox": [
-            72.0,
+            64.0,
             343.8,
-            600.0,
+            616.0,
             263.0
           ],
           "constraint_type": "Soft",
@@ -169,8 +169,8 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 3,
           "bbox": [
-            72.0,
-            675.74,
+            81.84,
+            671.74,
             580.32,
             57.86
           ],
@@ -184,9 +184,9 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 4,
           "bbox": [
-            72.0,
-            751.6,
-            600.0,
+            64.0,
+            753.6,
+            616.0,
             115.72
           ],
           "constraint_type": "Soft",
@@ -199,9 +199,9 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 5,
           "bbox": [
-            72.0,
-            885.32,
-            600.0,
+            64.0,
+            893.32,
+            616.0,
             94.68
           ],
           "constraint_type": "Soft",
@@ -215,32 +215,66 @@
           "spatial_hierarchy": 100,
           "constraint_type": "Soft",
           "bbox": [
-            565.55,
-            -40.18,
-            217.62,
-            223.2
+            -25.04,
+            -15.45,
+            139.13,
+            85.84
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/phase4/samples/CHS_BIRISTUHAN/event_id_gnn/style_kit/identification-card_motif_0.png",
+          "slot": "TL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_1",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 101,
+          "constraint_type": "Soft",
+          "bbox": [
+            632.77,
+            -25.04,
+            135.65,
+            139.13
           ],
           "motif_path": "/home/guillerangelohermoso/themesync/data/phase4/samples/CHS_BIRISTUHAN/event_id_gnn/style_kit/identification-card_motif_1.png",
           "slot": "TR",
-          "arrangement": "anti-diagonal",
+          "arrangement": "four corners",
           "flip": true
+        },
+        {
+          "node_id": "decor_motif_2",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 102,
+          "constraint_type": "Soft",
+          "bbox": [
+            -16.2,
+            1006.45,
+            90.02,
+            55.55
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/phase4/samples/CHS_BIRISTUHAN/event_id_gnn/style_kit/identification-card_motif_0.png",
+          "slot": "BL",
+          "arrangement": "four corners",
+          "flip": false
         }
       ],
       "fitness": {
         "P_collision": 0.0,
         "P_align": 0.0,
-        "P_space": 0.1383,
+        "P_space": 0.148,
         "P_legibility": 0.0001,
-        "Total_Cost": 0.1385
+        "Total_Cost": 0.1481
       },
       "hard_nodes": [],
-      "candidate_id": "Candidate_D",
+      "candidate_id": "Candidate_E",
       "variation": {
-        "name": "Candidate_D",
-        "archetype": "left",
-        "margin": 72.0,
-        "vgap": 18.0,
-        "arrangement": 1
+        "name": "Candidate_E",
+        "archetype": "classic",
+        "margin": 64.0,
+        "vgap": 24.0,
+        "arrangement": 2
       }
     }
   ]

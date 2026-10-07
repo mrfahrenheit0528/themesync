@@ -16,16 +16,17 @@
 <text x="600.0" y="374.0" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15.8" font-weight="normal" font-style="italic" letter-spacing="0.5" text-anchor="middle" fill="#70457B">is proudly presented to</text>
 </g>
 <g data-node-id="{{Student_Name}}" data-kind="text_node">
-<text x="600.0" y="451.6" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="47.4" font-weight="700" font-style="normal" letter-spacing="0.8" text-anchor="middle" fill="#513259">Andrea Faith Gonzales</text>
+<text x="600.0" y="451.6" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="47.4" font-weight="700" font-style="normal" letter-spacing="0.8" text-anchor="middle" fill="#513259">Kevin Rafael Morales</text>
 </g>
 <g data-node-id="{{Citation_Body}}" data-kind="text_node">
-<text x="600.0" y="543.0" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="17.3" font-weight="normal" font-style="normal" letter-spacing="0.2" text-anchor="middle" fill="#334155">For active participation as delegate in Rxeady Set Booth, held on August 10, 2026 at CSPC Auditorium.</text>
+<text x="600.0" y="531.4" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="17.3" font-weight="normal" font-style="normal" letter-spacing="0.2" text-anchor="middle" fill="#334155">For active participation as facilitator in Rxeady Set Booth, held on August 10, 2026 at CSPC</text>
+<text x="600.0" y="554.7" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="17.3" font-weight="normal" font-style="normal" letter-spacing="0.2" text-anchor="middle" fill="#334155">Auditorium.</text>
 </g>
 <g data-node-id="{{Date_Issued}}" data-kind="text_node">
 <text x="600.0" y="614.4" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13.5" font-weight="normal" font-style="normal" letter-spacing="0.5" text-anchor="middle" fill="#70457B">August 10, 2026</text>
 </g>
 <g data-node-id="{{Certificate_ID}}" data-kind="text_node">
-<text x="600.0" y="659.4" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13.5" font-weight="normal" font-style="normal" letter-spacing="0.5" text-anchor="middle" fill="#70457B">CSPC-2026-013</text>
+<text x="600.0" y="659.4" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13.5" font-weight="normal" font-style="normal" letter-spacing="0.5" text-anchor="middle" fill="#70457B">CSPC-2026-014</text>
 </g>
 <g data-node-id="{{Signature_Blocks}}_0" data-kind="repeating_group">
 <line x1="148.0" y1="720.9" x2="392.0" y2="720.9" stroke="#513259" stroke-width="1.2" opacity="0.85" />

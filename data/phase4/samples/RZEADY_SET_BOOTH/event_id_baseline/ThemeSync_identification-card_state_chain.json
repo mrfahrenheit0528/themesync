@@ -3,7 +3,7 @@
     {
       "state_id": "State_00",
       "label": "Baseline Init",
-      "timestamp": "2026-10-06T18:31:44.065",
+      "timestamp": "2026-10-07T14:42:10.700",
       "event": {
         "type": "init",
         "schema_validation": {
@@ -110,11 +110,11 @@
     },
     {
       "state_id": "State_01",
-      "label": "CSP Baseline \u00b7 Candidate_D",
-      "timestamp": "2026-10-06T18:31:44.065",
+      "label": "CSP Baseline \u00b7 Candidate_E",
+      "timestamp": "2026-10-07T14:42:10.700",
       "event": {
         "type": "candidate",
-        "candidate_id": "Candidate_D",
+        "candidate_id": "Candidate_E",
         "rank": 1
       },
       "nodes": [
@@ -124,8 +124,8 @@
           "structural_class": "image_node",
           "spatial_hierarchy": 0,
           "bbox": [
-            72.0,
-            152.25,
+            141.36,
+            137.25,
             461.28,
             78.9
           ],
@@ -137,8 +137,8 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 1,
           "bbox": [
-            72.0,
-            249.15,
+            74.4,
+            240.15,
             595.2,
             47.34
           ],
@@ -150,9 +150,9 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 2,
           "bbox": [
-            72.0,
-            314.49,
-            600.0,
+            64.0,
+            311.49,
+            616.0,
             263.0
           ],
           "constraint_type": "Soft"
@@ -163,8 +163,8 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 3,
           "bbox": [
-            72.0,
-            595.49,
+            81.84,
+            598.49,
             580.32,
             57.86
           ],
@@ -176,9 +176,9 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 4,
           "bbox": [
-            72.0,
-            671.35,
-            600.0,
+            64.0,
+            680.35,
+            616.0,
             115.72
           ],
           "constraint_type": "Soft"
@@ -189,9 +189,9 @@
           "structural_class": "text_node",
           "spatial_hierarchy": 5,
           "bbox": [
-            72.0,
-            805.07,
-            600.0,
+            64.0,
+            820.07,
+            616.0,
             94.68
           ],
           "constraint_type": "Soft"
@@ -200,18 +200,18 @@
       "fitness": {
         "P_collision": 0.0,
         "P_align": 0.0,
-        "P_space": 0.1383,
+        "P_space": 0.148,
         "P_legibility": 0.0037,
-        "Total_Cost": 0.1439
+        "Total_Cost": 0.1535
       },
       "hard_nodes": [],
-      "candidate_id": "Candidate_D",
+      "candidate_id": "Candidate_E",
       "variation": {
-        "name": "Candidate_D",
-        "archetype": "left",
-        "margin": 72.0,
-        "vgap": 18.0,
-        "arrangement": 1
+        "name": "Candidate_E",
+        "archetype": "classic",
+        "margin": 64.0,
+        "vgap": 24.0,
+        "arrangement": 2
       }
     }
   ]

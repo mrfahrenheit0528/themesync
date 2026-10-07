@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: CMET.jpg (2000×2000 px)
   [TemplateIngestor] Extracted palette: #585D69 | #A6A5A7 | #1F283F
   [TemplateIngestor] Saliency weight:   0.0722
-  ✔  0. Template Ingestion                      [1974.3 ms]
+  ✔  0. Template Ingestion                      [4267.9 ms]
      → Palette: #585D69 | #A6A5A7 | #1F283F
      → Saliency: 0.0722  | Native size: 2000×2000 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [936.0 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1248.8 ms]
      → Weights: themesync_yolo_v5.pt
      → 7 node(s) detected on the master layout
        · auto_logo_0            conf=0.91
@@ -18,9 +18,9 @@
        · auto_text_4            conf=0.85  ocr="SAIL THE SPOTLIGHT"
        · auto_embellishment_5   conf=0.85
        · auto_text_6            conf=0.87
-  ✔  0c. Stylistic Marker Extraction            [4796.1 ms]
+  ✔  0c. Stylistic Marker Extraction            [5543.1 ms]
      → Background: text-free layer rebuilt from the master's border
-     → Motifs: 0  |  Title artwork: Stage 0c: title artwork
+     → Motifs: 0  |  Title artwork: none (typed title)
 
   Payload        : /home/guillerangelohermoso/themesync/data/raw/academic_payload.json
   Domain         : academic_certificate
@@ -30,16 +30,17 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/CMET/certificate_baseline/content.json
   Condition      : baseline
   Master structure: (none)
+  Layout type    : classic
   Population     : 6
   Palette Source : real image → ['#585D69', '#A6A5A7', '#1F283F']
   Schema Check   : passed (typography, content)
-  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
      → 11 node(s) instantiated for canvas 1200×900
      → Logo aspect ratio locked to 1.05:1 (Stage 0b crop of 2 logo(s), conf=0.91, 0.63, Affine scaling)
 
   ⊘  GNN Inference skipped (baseline mode)
-  ✔  3. Cassowary CSP Resolution                [1.1 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [1346.2 ms]
+  ✔  3. Cassowary CSP Resolution                [1.5 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [1205.8 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -48,9 +49,9 @@
   [2]   Candidate_D      0.0011  left-aligned · margin 104px · gap 18px · no motifs
   [3]   Candidate_E      0.0011  classic centred · margin 84px · gap 24px · no motifs
   [4]   Candidate_C      0.0053  header banner · margin 76px · gap 16px · no motifs
-  [5]   Candidate_B      0.0759  art column · margin 44px · gap 16px · no motifs
-  [6]   Candidate_F      0.0759  art column · margin 44px · gap 22px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [231.8 ms]
+  [5]   Candidate_B      0.0827  art column · margin 44px · gap 16px · no motifs
+  [6]   Candidate_F      0.0827  art column · margin 44px · gap 22px · no motifs
+  ✔  5. Aesthetic SVG Rendering                 [48.5 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
   ✔  6. FSM State Serialization                 [0.3 ms]
      → Saved: data/processed/layout_state_v1.json
@@ -62,17 +63,17 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          1974.3
-  0b. Semantic Layout Parsing (YOLO+OCR)          936.0
-  0c. Stylistic Marker Extraction                4796.1
-  1. Dynamic Node Instantiation                     0.1
+  0. Template Ingestion                          4267.9
+  0b. Semantic Layout Parsing (YOLO+OCR)         1248.8
+  0c. Stylistic Marker Extraction                5543.1
+  1. Dynamic Node Instantiation                     0.2
   2. GNN Spatial Inference                          0.0  (skipped)
-  3. Cassowary CSP Resolution                       1.1
-  4. Metaheuristic Ranking                       1346.2
-  5. Aesthetic SVG Rendering                      231.8
+  3. Cassowary CSP Resolution                       1.5
+  4. Metaheuristic Ranking                       1205.8
+  5. Aesthetic SVG Rendering                       48.5
   6. FSM State Serialization                        0.3
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               9286.0
+  TOTAL END-TO-END                              12316.1
 
   Winner   : Candidate_A — classic centred · margin 72px · gap 18px · no motifs (C_total = 0.0011)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/CMET/certificate_baseline/ThemeSync_academic-certificate_populated.svg

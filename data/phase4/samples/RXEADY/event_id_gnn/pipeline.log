@@ -5,10 +5,10 @@
   [TemplateIngestor] Image loaded: RXEADY.jpg (2048×2048 px)
   [TemplateIngestor] Extracted palette: #6A6B33 | #DAAB3E | #E9DBCE | #B895AD
   [TemplateIngestor] Saliency weight:   0.0253
-  ✔  0. Template Ingestion                      [2334.8 ms]
+  ✔  0. Template Ingestion                      [4741.3 ms]
      → Palette: #6A6B33 | #DAAB3E | #E9DBCE | #B895AD
      → Saliency: 0.0253  | Native size: 2048×2048 px
-  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1900.2 ms]
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2123.0 ms]
      → Weights: themesync_yolo_v5.pt
      → 16 node(s) detected on the master layout
        · auto_logo_0            conf=0.90
@@ -27,7 +27,7 @@
        · auto_embellishment_13  conf=0.87
        · auto_text_14           conf=0.79  ocr="» CSPC - College of Health Sciences Stud"
        · auto_text_15           conf=0.81  ocr="chs-csc@cspc.edu.ph"
-  ✔  0c. Stylistic Marker Extraction            [1063.7 ms]
+  ✔  0c. Stylistic Marker Extraction            [879.5 ms]
      → Background: text-free layer rebuilt from the master's border
      → Motifs: 0  |  Title artwork: Stage 0c: title artwork
 
@@ -39,17 +39,18 @@
   Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/RXEADY/event_id_gnn/content.json
   Condition      : gnn
   Master structure: title at 0.65, logo at 0.06, header at 0.14
+  Layout type    : card — text on a panel (62% × 26% of the poster)
   Population     : 6
   Palette Source : real image → ['#6A6B33', '#DAAB3E', '#E9DBCE', '#B895AD']
   Schema Check   : passed (typography, content)
-  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
      → 6 node(s) instantiated for canvas 744×1052
      → Logo aspect ratio locked to 0.78:1 (Stage 0b crop of 3 logo(s), conf=0.91, 0.91, 0.90, Affine scaling)
-  ✔  2. GNN Spatial Inference                   [12.4 ms]
+  ✔  2. GNN Spatial Inference                   [213.8 ms]
      → Weights: loaded from themesync_gnn_v3.pth
      → Predictions applied: True (6 stacked node(s), from the master structure (3 of 6 node(s) anchored, output registered to them))
   ✔  3. Cassowary CSP Resolution                [0.5 ms]
-  ✔  4. Metaheuristic Candidate Ranking         [954.1 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [809.0 ms]
      → 6 candidate(s) evaluated
 
   Rank   Candidate       C_total  Variation
@@ -60,9 +61,9 @@
   [4]   Candidate_A      0.1528  classic centred · margin 60px · gap 20px · no motifs
   [5]   Candidate_B      0.1853  floating card · margin 40px · gap 16px · no motifs
   [6]   Candidate_F      0.1853  floating card · margin 40px · gap 22px · no motifs
-  ✔  5. Aesthetic SVG Rendering                 [207.2 ms]
+  ✔  5. Aesthetic SVG Rendering                 [175.5 ms]
 State version v1 successfully serialized to data/processed/layout_state_v1.json
-  ✔  6. FSM State Serialization                 [0.4 ms]
+  ✔  6. FSM State Serialization                 [0.3 ms]
      → Saved: data/processed/layout_state_v1.json
      → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/RXEADY/event_id_gnn/ThemeSync_identification-card_state_chain.json
 
@@ -72,18 +73,18 @@ State version v1 successfully serialized to data/processed/layout_state_v1.json
 
   Stage                                       Time (ms)
   ------------------------------------------ ----------
-  0. Template Ingestion                          2334.8
-  0b. Semantic Layout Parsing (YOLO+OCR)         1900.2
-  0c. Stylistic Marker Extraction                1063.7
-  1. Dynamic Node Instantiation                     0.1
-  2. GNN Spatial Inference                         12.4
+  0. Template Ingestion                          4741.3
+  0b. Semantic Layout Parsing (YOLO+OCR)         2123.0
+  0c. Stylistic Marker Extraction                 879.5
+  1. Dynamic Node Instantiation                     0.2
+  2. GNN Spatial Inference                        213.8
   3. Cassowary CSP Resolution                       0.5
-  4. Metaheuristic Ranking                        954.1
-  5. Aesthetic SVG Rendering                      207.2
-  6. FSM State Serialization                        0.4
+  4. Metaheuristic Ranking                        809.0
+  5. Aesthetic SVG Rendering                      175.5
+  6. FSM State Serialization                        0.3
   ────────────────────────────────────────── ──────────
-  TOTAL END-TO-END                               6473.4
+  TOTAL END-TO-END                               8943.0
 
-  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · no motifs (C_total = 0.1383)
+  Winner   : Candidate_B — floating card · margin 40px · gap 16px · no motifs (C_total = 0.1853)
   Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/RXEADY/event_id_gnn/ThemeSync_identification-card_populated.svg
 
