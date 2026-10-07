@@ -1,0 +1,89 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: LUCKY_TERA.jpg (1080×1080 px)
+  [TemplateIngestor] Extracted palette: #1F315F | #D6C8A2 | #74985F
+  [TemplateIngestor] Saliency weight:   0.0904
+  ✔  0. Template Ingestion                      [834.9 ms]
+     → Palette: #1F315F | #D6C8A2 | #74985F
+     → Saliency: 0.0904  | Native size: 1080×1080 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1547.9 ms]
+     → Weights: themesync_yolo_v5.pt
+     → 17 node(s) detected on the master layout
+       · auto_logo_0            conf=0.88
+       · auto_logo_1            conf=0.85
+       · auto_text_2            conf=0.86  ocr="CTY UNIVERSITY OF PASAY. ‘COLLEGE OF EDU"
+       · auto_text_3            conf=0.58  ocr="=)  : ZA Py  nie Zz, Ek  ; PASS"
+       · auto_text_4            conf=0.82  ocr="1) LYWASS!"
+       · auto_text_5            conf=0.81
+       · auto_underlay_6        conf=0.40
+       · auto_text_7            conf=0.83
+       · auto_embellishment_8   conf=0.26
+       · auto_underlay_9        conf=0.31
+       · auto_text_10           conf=0.86  ocr="LET Takers!"
+       · auto_text_11           conf=0.82  ocr="GOOD LUCK"
+       · auto_underlay_12       conf=0.30
+       · auto_embellishment_13  conf=0.82
+       · auto_embellishment_14  conf=0.84
+       · auto_text_15           conf=0.82  ocr="(coedstudentcouncil27 @ gmail.com"
+       · auto_text_16           conf=0.81  ocr="CUP COED Student Council"
+  ✔  0c. Stylistic Marker Extraction            [1955.1 ms]
+     → Background: text-free layer rebuilt from the master's border
+     → Motifs: 1  |  Title artwork: Stage 0c: title artwork
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/LUCKY_TERA.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/LUCKY_TERA/event_id_baseline/content.json
+  Condition      : baseline
+  Master structure: (none)
+  Population     : 6
+  Palette Source : real image → ['#1F315F', '#D6C8A2', '#74985F']
+  Schema Check   : passed (typography, content)
+  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 0.94:1 (Stage 0b crop of 2 logo(s), conf=0.85, 0.88, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [0.4 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [860.6 ms]
+     → 6 candidate(s) evaluated
+
+  Rank   Candidate       C_total  Variation
+  ------ -------------- --------  ----------------------------------------
+  [1]   Candidate_D      0.1408  left-aligned · margin 72px · gap 18px · anti-diagonal ◀ WINNER
+  [2]   Candidate_C      0.1483  full-width band · margin 64px · gap 18px · crown pair
+  [3]   Candidate_E      0.1484  classic centred · margin 64px · gap 24px · four corners
+  [4]   Candidate_A      0.1546  classic centred · margin 60px · gap 20px · diagonal
+  [5]   Candidate_B      0.1871  floating card · margin 40px · gap 16px · diagonal
+  [6]   Candidate_F      0.1871  floating card · margin 40px · gap 22px · diagonal
+  ✔  5. Aesthetic SVG Rendering                 [355.3 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+     → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/LUCKY_TERA/event_id_baseline/ThemeSync_identification-card_state_chain.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                           834.9
+  0b. Semantic Layout Parsing (YOLO+OCR)         1547.9
+  0c. Stylistic Marker Extraction                1955.1
+  1. Dynamic Node Instantiation                     0.1
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       0.4
+  4. Metaheuristic Ranking                        860.6
+  5. Aesthetic SVG Rendering                      355.3
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               5554.6
+
+  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · anti-diagonal (C_total = 0.1408)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/LUCKY_TERA/event_id_baseline/ThemeSync_identification-card_populated.svg
+

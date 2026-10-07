@@ -1,0 +1,230 @@
+[
+  {
+    "node_id": "auto_logo_0",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 0,
+    "bbox": [
+      945.17,
+      110.12,
+      188.56,
+      191.22
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8359
+  },
+  {
+    "node_id": "auto_logo_1",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 1,
+    "bbox": [
+      878.95,
+      466.54,
+      283.41,
+      254.26
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2902
+  },
+  {
+    "node_id": "auto_logo_2",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 2,
+    "bbox": [
+      1635.96,
+      467.98,
+      173.49,
+      166.57
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.642
+  },
+  {
+    "node_id": "auto_logo_3",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 3,
+    "bbox": [
+      956.66,
+      1556.17,
+      136.25,
+      153.53
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8845
+  },
+  {
+    "node_id": "auto_logo_4",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 4,
+    "bbox": [
+      1091.21,
+      1560.21,
+      132.15,
+      137.47
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6974
+  },
+  {
+    "node_id": "auto_logo_5",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 5,
+    "bbox": [
+      824.74,
+      1563.05,
+      123.85,
+      134.1
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5756
+  },
+  {
+    "node_id": "auto_logo_6",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 6,
+    "bbox": [
+      1296.05,
+      1752.83,
+      171.74,
+      170.88
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3218
+  },
+  {
+    "node_id": "auto_logo_7",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 7,
+    "bbox": [
+      559.09,
+      1753.97,
+      176.05,
+      197.43
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5334
+  },
+  {
+    "node_id": "auto_underlay_8",
+    "semantic_category": "underlay",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 8,
+    "bbox": [
+      23.07,
+      81.94,
+      2024.93,
+      1862.27
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5854
+  },
+  {
+    "node_id": "auto_embellishment_9",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 9,
+    "bbox": [
+      883.55,
+      467.91,
+      277.7,
+      255.26
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5832
+  },
+  {
+    "node_id": "auto_text_10",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 10,
+    "bbox": [
+      374.4,
+      740.88,
+      1567.56,
+      578.26
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8008,
+    "ocr_text": "MR AND MS\n\nCBD ADIMLI Cove LLIiL nA te DDS LCI! IC h CTCNKRIC ."
+  },
+  {
+    "node_id": "auto_embellishment_11",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 11,
+    "bbox": [
+      1319.31,
+      858.52,
+      361.18,
+      395.65
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3149
+  },
+  {
+    "node_id": "auto_text_12",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 12,
+    "bbox": [
+      433.35,
+      1286.41,
+      912.6,
+      50.9
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2748,
+    "ocr_text": "SEARCH FOR THE MOST PRECIOL"
+  },
+  {
+    "node_id": "auto_text_13",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 13,
+    "bbox": [
+      681.4,
+      1362.86,
+      708.5,
+      73.64
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4728,
+    "ocr_text": "JFFICIAL SCREENING OF CANDIDATE\n@OGIOBERZ4 52025:"
+  },
+  {
+    "node_id": "auto_text_14",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 14,
+    "bbox": [
+      791.61,
+      1449.5,
+      447.85,
+      78.53
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4753,
+    "ocr_text": "GRAND PAGEANT NIGHT\nMOVEMBER 10, 2025"
+  },
+  {
+    "node_id": "auto_embellishment_15",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 15,
+    "bbox": [
+      1300.64,
+      1753.86,
+      166.77,
+      164.19
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3208
+  }
+]

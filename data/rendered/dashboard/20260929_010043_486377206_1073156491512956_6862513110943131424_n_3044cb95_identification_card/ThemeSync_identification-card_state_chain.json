@@ -1,0 +1,1445 @@
+{
+  "state_chain": [
+    {
+      "state_id": "State_00",
+      "label": "Baseline Init",
+      "timestamp": "2026-09-29T01:00:54.511",
+      "event": {
+        "type": "init",
+        "schema_validation": {
+          "typography": "passed",
+          "content": "passed"
+        }
+      },
+      "nodes": [
+        {
+          "node_id": "{{Organization_Logos}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            141.36,
+            152.25,
+            461.28,
+            78.9
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Organization_Header}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            74.4,
+            249.15,
+            595.2,
+            47.34
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Event_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            64.0,
+            314.49,
+            639.84,
+            263.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Event_Details}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            81.84,
+            595.49,
+            580.32,
+            57.86
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Participant_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            64.0,
+            671.35,
+            624.96,
+            115.72
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Participant_Role}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            64.0,
+            805.07,
+            624.96,
+            94.68
+          ],
+          "constraint_type": "Soft"
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.0047,
+        "P_space": 0.1584,
+        "P_legibility": 0.0185,
+        "Total_Cost": 0.1955
+      },
+      "hard_nodes": [],
+      "candidate_id": null,
+      "variation": {
+        "name": "Candidate_A",
+        "margin": 64.0,
+        "vgap": 18.0,
+        "arrangement": 0
+      }
+    },
+    {
+      "state_id": "State_01",
+      "label": "GNN Relational \u00b7 Candidate_C",
+      "timestamp": "2026-09-29T01:00:54.511",
+      "event": {
+        "type": "candidate",
+        "candidate_id": "Candidate_C",
+        "rank": 1
+      },
+      "nodes": [
+        {
+          "node_id": "{{Organization_Logos}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            141.36,
+            60.0,
+            461.28,
+            78.9
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Organization_Header}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            74.4,
+            162.9,
+            595.2,
+            47.34
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            60.0,
+            234.24,
+            639.84,
+            263.0
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Details}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            81.84,
+            578.89,
+            580.32,
+            57.86
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            60.0,
+            715.59,
+            624.96,
+            115.72
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Role}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            60.0,
+            897.32,
+            624.96,
+            94.68
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "decor_motif_0",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 100,
+          "constraint_type": "Soft",
+          "bbox": [
+            -25.04,
+            -13.26,
+            139.13,
+            73.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_1",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 101,
+          "constraint_type": "Soft",
+          "bbox": [
+            629.92,
+            -13.26,
+            139.13,
+            73.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TR",
+          "arrangement": "four corners",
+          "flip": true
+        },
+        {
+          "node_id": "decor_motif_2",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 102,
+          "constraint_type": "Soft",
+          "bbox": [
+            -16.2,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_3",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 103,
+          "constraint_type": "Soft",
+          "bbox": [
+            670.18,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BR",
+          "arrangement": "four corners",
+          "flip": true
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.002,
+        "P_space": 0.1584,
+        "P_legibility": 0.0044,
+        "Total_Cost": 0.169
+      },
+      "hard_nodes": [],
+      "candidate_id": "Candidate_C",
+      "variation": {
+        "name": "Candidate_C",
+        "margin": 60.0,
+        "vgap": 24.0,
+        "arrangement": 2
+      }
+    },
+    {
+      "state_id": "State_02",
+      "label": "Hard Const. [{{Organization_Logos}}]",
+      "timestamp": "2026-09-29T01:01:13.870",
+      "event": {
+        "type": "on-drop",
+        "node_id": "{{Organization_Logos}}",
+        "before": [
+          141.36,
+          60.0,
+          461.28,
+          78.9
+        ],
+        "after": [
+          141.36,
+          50.0,
+          461.28,
+          78.9
+        ],
+        "constraint_type": "Hard",
+        "summary": "Moved {{Organization_Logos}}"
+      },
+      "nodes": [
+        {
+          "node_id": "{{Organization_Logos}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            141.36,
+            50.0,
+            461.28,
+            78.9
+          ],
+          "constraint_type": "Hard",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Organization_Header}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            74.4,
+            152.9,
+            595.2,
+            47.34
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            60.0,
+            224.24,
+            639.84,
+            263.0
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Details}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            81.84,
+            578.89,
+            580.32,
+            57.86
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            60.0,
+            715.59,
+            624.96,
+            115.72
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Role}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            60.0,
+            897.32,
+            624.96,
+            94.68
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "decor_motif_0",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 100,
+          "constraint_type": "Soft",
+          "bbox": [
+            -25.04,
+            -13.26,
+            139.13,
+            73.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_1",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 101,
+          "constraint_type": "Soft",
+          "bbox": [
+            629.92,
+            -13.26,
+            139.13,
+            73.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TR",
+          "arrangement": "four corners",
+          "flip": true
+        },
+        {
+          "node_id": "decor_motif_2",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 102,
+          "constraint_type": "Soft",
+          "bbox": [
+            -16.2,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_3",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 103,
+          "constraint_type": "Soft",
+          "bbox": [
+            670.18,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BR",
+          "arrangement": "four corners",
+          "flip": true
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.002,
+        "P_space": 0.1584,
+        "P_legibility": 0.0053,
+        "Total_Cost": 0.1704
+      },
+      "hard_nodes": [
+        "{{Organization_Logos}}"
+      ],
+      "candidate_id": "Candidate_C",
+      "variation": {
+        "name": "Candidate_C",
+        "margin": 60.0,
+        "vgap": 24.0,
+        "arrangement": 2
+      }
+    },
+    {
+      "state_id": "State_03",
+      "label": "Hard Const. [{{Organization_Logos}}]",
+      "timestamp": "2026-09-29T01:01:17.154",
+      "event": {
+        "type": "on-drop",
+        "node_id": "{{Organization_Logos}}",
+        "before": [
+          141.36,
+          50.0,
+          461.28,
+          78.9
+        ],
+        "after": [
+          131.36,
+          50.0,
+          461.28,
+          78.9
+        ],
+        "constraint_type": "Hard",
+        "summary": "Moved {{Organization_Logos}}"
+      },
+      "nodes": [
+        {
+          "node_id": "{{Organization_Logos}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            131.36,
+            50.0,
+            461.28,
+            78.9
+          ],
+          "constraint_type": "Hard",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Organization_Header}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            74.4,
+            152.9,
+            595.2,
+            47.34
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            60.0,
+            224.24,
+            639.84,
+            263.0
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Details}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            81.84,
+            578.89,
+            580.32,
+            57.86
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            60.0,
+            715.59,
+            624.96,
+            115.72
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Role}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            60.0,
+            897.32,
+            624.96,
+            94.68
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "decor_motif_0",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 100,
+          "constraint_type": "Soft",
+          "bbox": [
+            -25.04,
+            -13.26,
+            139.13,
+            73.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_1",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 101,
+          "constraint_type": "Soft",
+          "bbox": [
+            609.78,
+            -15.6,
+            163.68,
+            86.68
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TR",
+          "arrangement": "four corners",
+          "flip": true
+        },
+        {
+          "node_id": "decor_motif_2",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 102,
+          "constraint_type": "Soft",
+          "bbox": [
+            -16.2,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_3",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 103,
+          "constraint_type": "Soft",
+          "bbox": [
+            670.18,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BR",
+          "arrangement": "four corners",
+          "flip": true
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.0042,
+        "P_space": 0.1584,
+        "P_legibility": 0.0051,
+        "Total_Cost": 0.1745
+      },
+      "hard_nodes": [
+        "{{Organization_Logos}}"
+      ],
+      "candidate_id": "Candidate_C",
+      "variation": {
+        "name": "Candidate_C",
+        "margin": 60.0,
+        "vgap": 24.0,
+        "arrangement": 2
+      }
+    },
+    {
+      "state_id": "State_04",
+      "label": "Hard Const. [{{Organization_Logos}}]",
+      "timestamp": "2026-09-29T01:01:18.704",
+      "event": {
+        "type": "on-drop",
+        "node_id": "{{Organization_Logos}}",
+        "before": [
+          131.36,
+          50.0,
+          461.28,
+          78.9
+        ],
+        "after": [
+          121.36,
+          50.0,
+          461.28,
+          78.9
+        ],
+        "constraint_type": "Hard",
+        "summary": "Moved {{Organization_Logos}}"
+      },
+      "nodes": [
+        {
+          "node_id": "{{Organization_Logos}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            121.36,
+            50.0,
+            461.28,
+            78.9
+          ],
+          "constraint_type": "Hard",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Organization_Header}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            74.4,
+            152.9,
+            595.2,
+            47.34
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            60.0,
+            224.24,
+            639.84,
+            263.0
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Details}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            81.84,
+            578.89,
+            580.32,
+            57.86
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            60.0,
+            715.59,
+            624.96,
+            115.72
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Role}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            60.0,
+            897.32,
+            624.96,
+            94.68
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "decor_motif_0",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 100,
+          "constraint_type": "Soft",
+          "bbox": [
+            -20.62,
+            -10.92,
+            114.58,
+            60.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_1",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 101,
+          "constraint_type": "Soft",
+          "bbox": [
+            609.78,
+            -15.6,
+            163.68,
+            86.68
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TR",
+          "arrangement": "four corners",
+          "flip": true
+        },
+        {
+          "node_id": "decor_motif_2",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 102,
+          "constraint_type": "Soft",
+          "bbox": [
+            -16.2,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_3",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 103,
+          "constraint_type": "Soft",
+          "bbox": [
+            670.18,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BR",
+          "arrangement": "four corners",
+          "flip": true
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.0065,
+        "P_space": 0.1584,
+        "P_legibility": 0.0051,
+        "Total_Cost": 0.179
+      },
+      "hard_nodes": [
+        "{{Organization_Logos}}"
+      ],
+      "candidate_id": "Candidate_C",
+      "variation": {
+        "name": "Candidate_C",
+        "margin": 60.0,
+        "vgap": 24.0,
+        "arrangement": 2
+      }
+    },
+    {
+      "state_id": "State_05",
+      "label": "Hard Const. [{{Organization_Logos}}]",
+      "timestamp": "2026-09-29T01:01:22.041",
+      "event": {
+        "type": "on-drop",
+        "node_id": "{{Organization_Logos}}",
+        "before": [
+          121.36,
+          50.0,
+          461.28,
+          78.9
+        ],
+        "after": [
+          131.36,
+          50.0,
+          461.28,
+          78.9
+        ],
+        "constraint_type": "Hard",
+        "summary": "Moved {{Organization_Logos}}"
+      },
+      "nodes": [
+        {
+          "node_id": "{{Organization_Logos}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            131.36,
+            50.0,
+            461.28,
+            78.9
+          ],
+          "constraint_type": "Hard",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Organization_Header}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            74.4,
+            152.9,
+            595.2,
+            47.34
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            60.0,
+            224.24,
+            639.84,
+            263.0
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Details}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            81.84,
+            578.89,
+            580.32,
+            57.86
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            60.0,
+            715.59,
+            624.96,
+            115.72
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Role}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            60.0,
+            897.32,
+            624.96,
+            94.68
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "decor_motif_0",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 100,
+          "constraint_type": "Soft",
+          "bbox": [
+            -25.04,
+            -13.26,
+            139.13,
+            73.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_1",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 101,
+          "constraint_type": "Soft",
+          "bbox": [
+            609.78,
+            -15.6,
+            163.68,
+            86.68
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TR",
+          "arrangement": "four corners",
+          "flip": true
+        },
+        {
+          "node_id": "decor_motif_2",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 102,
+          "constraint_type": "Soft",
+          "bbox": [
+            -16.2,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_3",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 103,
+          "constraint_type": "Soft",
+          "bbox": [
+            670.18,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BR",
+          "arrangement": "four corners",
+          "flip": true
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.0042,
+        "P_space": 0.1584,
+        "P_legibility": 0.0051,
+        "Total_Cost": 0.1745
+      },
+      "hard_nodes": [
+        "{{Organization_Logos}}"
+      ],
+      "candidate_id": "Candidate_C",
+      "variation": {
+        "name": "Candidate_C",
+        "margin": 60.0,
+        "vgap": 24.0,
+        "arrangement": 2
+      }
+    },
+    {
+      "state_id": "State_06",
+      "label": "Hard Const. [{{Organization_Logos}}]",
+      "timestamp": "2026-09-29T01:01:24.258",
+      "event": {
+        "type": "on-drop",
+        "node_id": "{{Organization_Logos}}",
+        "before": [
+          131.36,
+          50.0,
+          461.28,
+          78.9
+        ],
+        "after": [
+          141.36,
+          50.0,
+          461.28,
+          78.9
+        ],
+        "constraint_type": "Hard",
+        "summary": "Moved {{Organization_Logos}}"
+      },
+      "nodes": [
+        {
+          "node_id": "{{Organization_Logos}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            141.36,
+            50.0,
+            461.28,
+            78.9
+          ],
+          "constraint_type": "Hard",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Organization_Header}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            74.4,
+            152.9,
+            595.2,
+            47.34
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            60.0,
+            224.24,
+            639.84,
+            263.0
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Details}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            81.84,
+            578.89,
+            580.32,
+            57.86
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            60.0,
+            715.59,
+            624.96,
+            115.72
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Role}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            60.0,
+            897.32,
+            624.96,
+            94.68
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "decor_motif_0",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 100,
+          "constraint_type": "Soft",
+          "bbox": [
+            -25.04,
+            -13.26,
+            139.13,
+            73.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_1",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 101,
+          "constraint_type": "Soft",
+          "bbox": [
+            629.92,
+            -13.26,
+            139.13,
+            73.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TR",
+          "arrangement": "four corners",
+          "flip": true
+        },
+        {
+          "node_id": "decor_motif_2",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 102,
+          "constraint_type": "Soft",
+          "bbox": [
+            -16.2,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_3",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 103,
+          "constraint_type": "Soft",
+          "bbox": [
+            670.18,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BR",
+          "arrangement": "four corners",
+          "flip": true
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.002,
+        "P_space": 0.1584,
+        "P_legibility": 0.0053,
+        "Total_Cost": 0.1704
+      },
+      "hard_nodes": [
+        "{{Organization_Logos}}"
+      ],
+      "candidate_id": "Candidate_C",
+      "variation": {
+        "name": "Candidate_C",
+        "margin": 60.0,
+        "vgap": 24.0,
+        "arrangement": 2
+      }
+    },
+    {
+      "state_id": "State_07",
+      "label": "Typography",
+      "timestamp": "2026-09-29T01:02:14.972",
+      "event": {
+        "type": "typography",
+        "typography": {
+          "family": "Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "weight": 100,
+          "base_size": 48.0
+        },
+        "schema_validation": "passed"
+      },
+      "nodes": [
+        {
+          "node_id": "{{Organization_Logos}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            141.36,
+            50.0,
+            461.28,
+            78.9
+          ],
+          "constraint_type": "Hard",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Organization_Header}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            74.4,
+            152.9,
+            595.2,
+            47.34
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            60.0,
+            224.24,
+            639.84,
+            263.0
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Details}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            81.84,
+            578.89,
+            580.32,
+            57.86
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            60.0,
+            715.59,
+            624.96,
+            115.72
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Role}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            60.0,
+            897.32,
+            624.96,
+            94.68
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "decor_motif_0",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 100,
+          "constraint_type": "Soft",
+          "bbox": [
+            -25.04,
+            -13.26,
+            139.13,
+            73.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_1",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 101,
+          "constraint_type": "Soft",
+          "bbox": [
+            629.92,
+            -13.26,
+            139.13,
+            73.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "TR",
+          "arrangement": "four corners",
+          "flip": true
+        },
+        {
+          "node_id": "decor_motif_2",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 102,
+          "constraint_type": "Soft",
+          "bbox": [
+            -16.2,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_3",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 103,
+          "constraint_type": "Soft",
+          "bbox": [
+            670.18,
+            1012.91,
+            90.02,
+            47.67
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/486377206_1073156491512956_6862513110943131424_n_3044cb95/486377206_1073156491512956_6862513110943131424_n_3044cb95_motif_0.png",
+          "slot": "BR",
+          "arrangement": "four corners",
+          "flip": true
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.002,
+        "P_space": 0.1584,
+        "P_legibility": 0.0053,
+        "Total_Cost": 0.1704
+      },
+      "hard_nodes": [
+        "{{Organization_Logos}}"
+      ],
+      "candidate_id": "Candidate_C",
+      "variation": {
+        "name": "Candidate_C",
+        "margin": 60.0,
+        "vgap": 24.0,
+        "arrangement": 2
+      }
+    }
+  ]
+}

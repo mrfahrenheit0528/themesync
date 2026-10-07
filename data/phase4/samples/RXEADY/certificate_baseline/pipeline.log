@@ -1,0 +1,88 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: RXEADY.jpg (2048×2048 px)
+  [TemplateIngestor] Extracted palette: #6A6B33 | #DAAB3E | #E9DBCE | #B895AD
+  [TemplateIngestor] Saliency weight:   0.0253
+  ✔  0. Template Ingestion                      [1993.1 ms]
+     → Palette: #6A6B33 | #DAAB3E | #E9DBCE | #B895AD
+     → Saliency: 0.0253  | Native size: 2048×2048 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1936.8 ms]
+     → Weights: themesync_yolo_v5.pt
+     → 16 node(s) detected on the master layout
+       · auto_logo_0            conf=0.90
+       · auto_logo_1            conf=0.91
+       · auto_logo_2            conf=0.91
+       · auto_text_3            conf=0.84  ocr="CAMARINES SUR POLYTECHNIC COLLEGES  COLL"
+       · auto_text_4            conf=0.75  ocr="he Doc js in"
+       · auto_underlay_5        conf=0.76
+       · auto_text_6            conf=0.73
+       · auto_text_7            conf=0.59
+       · auto_text_8            conf=0.59
+       · auto_text_9            conf=0.56
+       · auto_text_10           conf=0.35  ocr="Your. PreseniptionsFor. a’ Strong Colleg"
+       · auto_text_11           conf=0.83  ocr="ORSEM 2026 | August 4-5 | CSPC Grou"
+       · auto_embellishment_12  conf=0.85
+       · auto_embellishment_13  conf=0.87
+       · auto_text_14           conf=0.79  ocr="» CSPC - College of Health Sciences Stud"
+       · auto_text_15           conf=0.81  ocr="chs-csc@cspc.edu.ph"
+  ✔  0c. Stylistic Marker Extraction            [834.9 ms]
+     → Background: text-free layer rebuilt from the master's border
+     → Motifs: 0  |  Title artwork: Stage 0c: title artwork
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/academic_payload.json
+  Domain         : academic_certificate
+  Canvas         : 1200 × 900 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/RXEADY.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/RXEADY/certificate_baseline/content.json
+  Condition      : baseline
+  Master structure: (none)
+  Population     : 6
+  Palette Source : real image → ['#6A6B33', '#DAAB3E', '#E9DBCE', '#B895AD']
+  Schema Check   : passed (typography, content)
+  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+     → 11 node(s) instantiated for canvas 1200×900
+     → Logo aspect ratio locked to 0.78:1 (Stage 0b crop of 3 logo(s), conf=0.91, 0.91, 0.90, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [1.1 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [1263.0 ms]
+     → 6 candidate(s) evaluated
+
+  Rank   Candidate       C_total  Variation
+  ------ -------------- --------  ----------------------------------------
+  [1]   Candidate_A      0.0026  classic centred · margin 72px · gap 18px · no motifs ◀ WINNER
+  [2]   Candidate_D      0.0026  left-aligned · margin 104px · gap 18px · no motifs
+  [3]   Candidate_E      0.0026  classic centred · margin 84px · gap 24px · no motifs
+  [4]   Candidate_C      0.0047  header banner · margin 76px · gap 16px · no motifs
+  [5]   Candidate_B      0.0731  art column · margin 44px · gap 16px · no motifs
+  [6]   Candidate_F      0.0731  art column · margin 44px · gap 22px · no motifs
+  ✔  5. Aesthetic SVG Rendering                 [204.9 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+     → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/RXEADY/certificate_baseline/ThemeSync_academic-certificate_state_chain.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          1993.1
+  0b. Semantic Layout Parsing (YOLO+OCR)         1936.8
+  0c. Stylistic Marker Extraction                 834.9
+  1. Dynamic Node Instantiation                     0.1
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       1.1
+  4. Metaheuristic Ranking                       1263.0
+  5. Aesthetic SVG Rendering                      204.9
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               6234.2
+
+  Winner   : Candidate_A — classic centred · margin 72px · gap 18px · no motifs (C_total = 0.0026)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/RXEADY/certificate_baseline/ThemeSync_academic-certificate_populated.svg
+

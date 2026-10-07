@@ -1,0 +1,221 @@
+[
+  {
+    "node_id": "auto_text_0",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 0,
+    "bbox": [
+      667.43,
+      69.8,
+      315.44,
+      136.84
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2587,
+    "ocr_text": "EK \\p"
+  },
+  {
+    "node_id": "auto_embellishment_1",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 1,
+    "bbox": [
+      35.23,
+      704.21,
+      406.92,
+      419.2
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2791
+  },
+  {
+    "node_id": "auto_embellishment_2",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 2,
+    "bbox": [
+      1433.09,
+      737.05,
+      154.13,
+      331.75
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3625
+  },
+  {
+    "node_id": "auto_embellishment_3",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 3,
+    "bbox": [
+      397.62,
+      1181.9,
+      78.14,
+      89.42
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2734
+  },
+  {
+    "node_id": "auto_embellishment_4",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 4,
+    "bbox": [
+      1546.07,
+      1240.11,
+      38.9,
+      51.81
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.342
+  },
+  {
+    "node_id": "auto_text_5",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 5,
+    "bbox": [
+      175.37,
+      1272.07,
+      1335.25,
+      374.27
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6388,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_embellishment_6",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 6,
+    "bbox": [
+      1495.7,
+      1425.73,
+      142.3,
+      231.95
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4166
+  },
+  {
+    "node_id": "auto_text_7",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 7,
+    "bbox": [
+      641.79,
+      1643.92,
+      652.59,
+      49.86
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2627,
+    "ocr_text": "A Valentine's celebration of Love fora"
+  },
+  {
+    "node_id": "auto_text_8",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 8,
+    "bbox": [
+      521.14,
+      1645.32,
+      867.44,
+      51.97
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.473,
+    "ocr_text": "rmony: A Valentine's celebration of Love for a Cause"
+  },
+  {
+    "node_id": "auto_text_9",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 9,
+    "bbox": [
+      262.21,
+      1646.41,
+      1079.47,
+      48.85
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4663,
+    "ocr_text": "jeartbeats in Harmony: A Valentine's celebration of Love for a cat"
+  },
+  {
+    "node_id": "auto_embellishment_10",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 10,
+    "bbox": [
+      1285.93,
+      1665.53,
+      346.76,
+      327.57
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6294
+  },
+  {
+    "node_id": "auto_text_11",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 11,
+    "bbox": [
+      367.07,
+      1720.32,
+      680.29,
+      45.5
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3989,
+    "ocr_text": "February 24, 2024 | 06:00 pm @ CSPC O"
+  },
+  {
+    "node_id": "auto_text_12",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 12,
+    "bbox": [
+      415.04,
+      1723.52,
+      460.06,
+      38.24
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3264,
+    "ocr_text": "bruary 24, 2024 | 06:00 pm"
+  },
+  {
+    "node_id": "auto_text_13",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 13,
+    "bbox": [
+      541.74,
+      1792.49,
+      652.95,
+      29.81
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3401,
+    "ocr_text": "NCE OF MUSICALLY PASSIONATE STUDENTS"
+  },
+  {
+    "node_id": "auto_text_14",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 14,
+    "bbox": [
+      453.52,
+      1801.05,
+      736.58,
+      103.11
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3369,
+    "ocr_text": "ALLIANCE OF MUSICALLY PASSIONAIE SIUDENTS\n.CHEMY EMMANUEL RAMOS & CHRIS JOSHUA BOTOR\nNEMUEL OLIVEROS CSPC DANCE TROUPE ROZY DY"
+  }
+]

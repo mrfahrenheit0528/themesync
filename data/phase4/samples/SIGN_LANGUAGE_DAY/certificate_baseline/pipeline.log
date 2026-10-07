@@ -1,0 +1,85 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: SIGN_LANGUAGE_DAY.jpg (1080×1080 px)
+  [TemplateIngestor] Extracted palette: #3A5D7E | #CB5E40 | #152E4D | #DFBFAA
+  [TemplateIngestor] Saliency weight:   0.0415
+  ✔  0. Template Ingestion                      [796.9 ms]
+     → Palette: #3A5D7E | #CB5E40 | #152E4D | #DFBFAA
+     → Saliency: 0.0415  | Native size: 1080×1080 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1012.8 ms]
+     → Weights: themesync_yolo_v5.pt
+     → 13 node(s) detected on the master layout
+       · auto_logo_0            conf=0.94
+       · auto_logo_1            conf=0.93
+       · auto_text_2            conf=0.90  ocr="TY UNIVERSITY OF PASAY. LEGE OF EDUCATIO"
+       · auto_text_3            conf=0.80
+       · auto_text_4            conf=0.71  ocr="INTERNATIONAL"
+       · auto_text_5            conf=0.76
+       · auto_embellishment_6   conf=0.42
+       · auto_embellishment_7   conf=0.68
+       · auto_text_8            conf=0.82  ocr="September 23, 2026"
+       · auto_embellishment_9   conf=0.83
+       · auto_text_10           conf=0.79  ocr="CUP COED Student Council"
+       · auto_embellishment_11  conf=0.86
+       · auto_text_12           conf=0.81  ocr="coedcouncil @cup.edu.ph"
+  ✔  0c. Stylistic Marker Extraction            [948.0 ms]
+     → Background: text-free layer rebuilt from the master's border
+     → Motifs: 0  |  Title artwork: Stage 0c: title artwork
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/academic_payload.json
+  Domain         : academic_certificate
+  Canvas         : 1200 × 900 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/SIGN_LANGUAGE_DAY.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/SIGN_LANGUAGE_DAY/certificate_baseline/content.json
+  Condition      : baseline
+  Master structure: (none)
+  Population     : 6
+  Palette Source : real image → ['#3A5D7E', '#CB5E40', '#152E4D', '#DFBFAA']
+  Schema Check   : passed (typography, content)
+  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+     → 11 node(s) instantiated for canvas 1200×900
+     → Logo aspect ratio locked to 0.97:1 (Stage 0b crop of 2 logo(s), conf=0.93, 0.94, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [1.1 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [1801.0 ms]
+     → 6 candidate(s) evaluated
+
+  Rank   Candidate       C_total  Variation
+  ------ -------------- --------  ----------------------------------------
+  [1]   Candidate_A      0.0009  classic centred · margin 72px · gap 18px · no motifs ◀ WINNER
+  [2]   Candidate_D      0.0009  left-aligned · margin 104px · gap 18px · no motifs
+  [3]   Candidate_E      0.0009  classic centred · margin 84px · gap 24px · no motifs
+  [4]   Candidate_C      0.0051  header banner · margin 76px · gap 16px · no motifs
+  [5]   Candidate_B      0.0763  art column · margin 44px · gap 16px · no motifs
+  [6]   Candidate_F      0.0763  art column · margin 44px · gap 22px · no motifs
+  ✔  5. Aesthetic SVG Rendering                 [324.9 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [28.7 ms]
+     → Saved: data/processed/layout_state_v1.json
+     → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/SIGN_LANGUAGE_DAY/certificate_baseline/ThemeSync_academic-certificate_state_chain.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                           796.9
+  0b. Semantic Layout Parsing (YOLO+OCR)         1012.8
+  0c. Stylistic Marker Extraction                 948.0
+  1. Dynamic Node Instantiation                     0.1
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       1.1
+  4. Metaheuristic Ranking                       1801.0
+  5. Aesthetic SVG Rendering                      324.9
+  6. FSM State Serialization                       28.7
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               4913.6
+
+  Winner   : Candidate_A — classic centred · margin 72px · gap 18px · no motifs (C_total = 0.0009)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/SIGN_LANGUAGE_DAY/certificate_baseline/ThemeSync_academic-certificate_populated.svg
+

@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 4
+names: ['embellishment', 'logo', 'text', 'underlay']
+
+roboflow:
+  workspace: guiller-angelo-hermoso
+  project: themesync-pubmat-annotation
+  version: 1
+  license: Private
+  url: https://app.roboflow.com/guiller-angelo-hermoso/themesync-pubmat-annotation/1

@@ -1,0 +1,175 @@
+[
+  {
+    "node_id": "auto_logo_0",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 0,
+    "bbox": [
+      907.58,
+      31.02,
+      90.57,
+      95.42
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8877
+  },
+  {
+    "node_id": "auto_logo_1",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 1,
+    "bbox": [
+      996.42,
+      31.47,
+      72.5,
+      92.78
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8888
+  },
+  {
+    "node_id": "auto_logo_2",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 2,
+    "bbox": [
+      1067.36,
+      31.96,
+      73.56,
+      93.23
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.87
+  },
+  {
+    "node_id": "auto_text_3",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 3,
+    "bbox": [
+      760.88,
+      129.18,
+      527.28,
+      116.54
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.9025,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_4",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 4,
+    "bbox": [
+      232.18,
+      361.55,
+      1536.43,
+      1136.48
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3374,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_5",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 5,
+    "bbox": [
+      362.6,
+      516.09,
+      1465.18,
+      1174.86
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4317,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_underlay_6",
+    "semantic_category": "underlay",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 6,
+    "bbox": [
+      540.59,
+      1327.45,
+      238.36,
+      250.48
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8018
+  },
+  {
+    "node_id": "auto_underlay_7",
+    "semantic_category": "underlay",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 7,
+    "bbox": [
+      633.26,
+      1723.98,
+      910.93,
+      107.93
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7988
+  },
+  {
+    "node_id": "auto_text_8",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 8,
+    "bbox": [
+      695.08,
+      1746.41,
+      770.35,
+      56.21
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8231,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_embellishment_9",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 9,
+    "bbox": [
+      1255.61,
+      1952.88,
+      67.65,
+      80.59
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.25
+  },
+  {
+    "node_id": "auto_embellishment_10",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 10,
+    "bbox": [
+      347.51,
+      1954.55,
+      52.73,
+      56.14
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8108
+  },
+  {
+    "node_id": "auto_text_11",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 11,
+    "bbox": [
+      413.3,
+      1960.89,
+      857.61,
+      43.65
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7277,
+    "ocr_text": ""
+  }
+]

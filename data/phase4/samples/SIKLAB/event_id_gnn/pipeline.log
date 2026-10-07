@@ -1,0 +1,84 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: SIKLAB.jpg (2048×2048 px)
+  [TemplateIngestor] Extracted palette: #130E18 | #58429E | #BCA7A0
+  [TemplateIngestor] Saliency weight:   0.0463
+  ✔  0. Template Ingestion                      [4182.3 ms]
+     → Palette: #130E18 | #58429E | #BCA7A0
+     → Saliency: 0.0463  | Native size: 2048×2048 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [953.5 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 16 node(s) detected on the master layout
+       · auto_logo_0            conf=0.76
+       · auto_logo_1            conf=0.27
+       · auto_logo_2            conf=0.92
+       · auto_logo_3            conf=0.29
+       · auto_logo_4            conf=0.84
+       · auto_logo_5            conf=0.46
+       · auto_logo_6            conf=0.72
+       · auto_logo_7            conf=0.77
+       · auto_logo_8            conf=0.68
+       · auto_logo_9            conf=0.82
+       · auto_logo_10           conf=0.32
+       · auto_embellishment_11  conf=0.65
+       · auto_text_12           conf=0.75  ocr="SIKLAB  CSPC INTRAMURALS"
+       · auto_text_13           conf=0.36  ocr="(2025"
+       · auto_underlay_14       conf=0.58
+       · auto_text_15           conf=0.52  ocr="NOVEMBER 10-14, 2025"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/SIKLAB.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/SIKLAB/event_id_gnn/content.json
+  GNN            : enabled
+  Population     : 5
+  Palette Source : real image → ['#130E18', '#58429E', '#BCA7A0']
+  ✔  1. Dynamic Node Instantiation              [0.4 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 0.95:1 (uploaded logos, Affine scaling)
+  ✔  2. GNN Spatial Inference                   [41.7 ms]
+     → Weights: loaded from themesync_gnn_v1.pth
+     → Predictions applied: True
+  ✔  3. Cassowary CSP Resolution                [0.8 ms]
+     → Hard constraints: 0 | Soft constraints: 6
+  ✔  4. Metaheuristic Candidate Ranking         [9.0 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_0_GNN_Baseline              0.3370 ◀ WINNER
+  [2]   Candidate_1_Compact_Formal            0.3394
+  [3]   Candidate_4_High_Margin_Focus         0.3394
+  [4]   Candidate_3_Dynamic_Balanced          0.3415
+  [5]   Candidate_2_Spaced_Grand              0.3440
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/SIKLAB/event_id_gnn/ThemeSync_identification-card_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [120.9 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.4 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          4182.3
+  0b. Semantic Layout Parsing (YOLO+OCR)          953.5
+  1. Dynamic Node Instantiation                     0.4
+  2. GNN Spatial Inference                         41.7
+  3. Cassowary CSP Resolution                       0.8
+  4. Metaheuristic Ranking                          9.0
+  5. Aesthetic SVG Rendering                      120.9
+  6. FSM State Serialization                        0.4
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               5308.8
+
+  Winner   : Candidate_0_GNN_Baseline (C_total = 0.3370)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/SIKLAB/event_id_gnn/ThemeSync_identification-card_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/SIKLAB/event_id_gnn/ThemeSync_identification-card_detected_master_layout.json
+

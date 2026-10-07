@@ -1,0 +1,92 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: HALUBILO_2026.png (2048×1580 px)
+  [TemplateIngestor] Extracted palette: #837B5B | #5C84D7 | #3A382D | #C4C3C6
+  [TemplateIngestor] Saliency weight:   0.0571
+  ✔  0. Template Ingestion                      [3040.6 ms]
+     → Palette: #837B5B | #5C84D7 | #3A382D | #C4C3C6
+     → Saliency: 0.0571  | Native size: 2048×1580 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1327.0 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 25 node(s) detected on the master layout
+       · auto_logo_0            conf=0.51
+       · auto_logo_1            conf=0.64
+       · auto_logo_2            conf=0.49
+       · auto_logo_3            conf=0.34
+       · auto_embellishment_4   conf=0.41
+       · auto_text_5            conf=0.30
+       · auto_embellishment_6   conf=0.25
+       · auto_underlay_7        conf=0.26
+       · auto_embellishment_8   conf=0.45
+       · auto_embellishment_9   conf=0.57
+       · auto_embellishment_10  conf=0.45
+       · auto_embellishment_11  conf=0.32
+       · auto_embellishment_12  conf=0.50
+       · auto_embellishment_13  conf=0.29
+       · auto_embellishment_14  conf=0.29
+       · auto_embellishment_15  conf=0.28
+       · auto_embellishment_16  conf=0.34
+       · auto_text_17           conf=0.77  ocr="#A alubilosase"
+       · auto_text_18           conf=0.77  ocr=") JeecscHpcchapts"
+       · auto_text_19           conf=0.59  ocr="4/7 eliibiloSwa"
+       · auto_text_20           conf=0.50  ocr="Jecs@cepr.eaaxs"
+       · auto_text_21           conf=0.34  ocr="fecs@cH=pc.c"
+       · auto_text_22           conf=0.33  ocr="Spochaptwer"
+       · auto_text_23           conf=0.31  ocr="CHpw.eScaaANor"
+       · auto_text_24           conf=0.33  ocr="{PP oclScH=SpPcecnayp tes"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/HALUBILO_2026.png
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/HALUBILO_2026/event_id_baseline/content.json
+  GNN            : disabled (baseline mode)
+  Population     : 5
+  Palette Source : real image → ['#837B5B', '#5C84D7', '#3A382D', '#C4C3C6']
+  ✔  1. Dynamic Node Instantiation              [0.3 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 0.90:1 (uploaded logos, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [0.6 ms]
+     → Hard constraints: 0 | Soft constraints: 6
+  ✔  4. Metaheuristic Candidate Ranking         [5.8 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_2_Spaced_Grand              0.4074 ◀ WINNER
+  [2]   Candidate_3_Dynamic_Balanced          0.4181
+  [3]   Candidate_0_GNN_Baseline              0.4188
+  [4]   Candidate_1_Compact_Formal            0.4276
+  [5]   Candidate_4_High_Margin_Focus         0.4535
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/HALUBILO_2026/event_id_baseline/ThemeSync_identification-card_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [60.3 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.4 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          3040.6
+  0b. Semantic Layout Parsing (YOLO+OCR)         1327.0
+  1. Dynamic Node Instantiation                     0.3
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       0.6
+  4. Metaheuristic Ranking                          5.8
+  5. Aesthetic SVG Rendering                       60.3
+  6. FSM State Serialization                        0.4
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               4434.9
+
+  Winner   : Candidate_2_Spaced_Grand (C_total = 0.4074)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/HALUBILO_2026/event_id_baseline/ThemeSync_identification-card_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/HALUBILO_2026/event_id_baseline/ThemeSync_identification-card_detected_master_layout.json
+

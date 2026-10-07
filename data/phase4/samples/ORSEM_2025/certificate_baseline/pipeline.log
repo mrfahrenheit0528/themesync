@@ -1,0 +1,81 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: ORSEM_2025.jpg (1080×1080 px)
+  [TemplateIngestor] Extracted palette: #98A1ED | #6F28B6 | #D8EDF7 | #DC46DD
+  [TemplateIngestor] Saliency weight:   0.0701
+  ✔  0. Template Ingestion                      [1842.6 ms]
+     → Palette: #98A1ED | #6F28B6 | #D8EDF7 | #DC46DD
+     → Saliency: 0.0701  | Native size: 1080×1080 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1573.3 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 14 node(s) detected on the master layout
+       · auto_logo_0            conf=0.62
+       · auto_logo_1            conf=0.69
+       · auto_underlay_2        conf=0.30
+       · auto_embellishment_3   conf=0.51
+       · auto_embellishment_4   conf=0.44
+       · auto_embellishment_5   conf=0.29
+       · auto_embellishment_6   conf=0.29
+       · auto_text_7            conf=0.36  ocr="IGNITING THE FLAME OF CSPCEAN CULTURE: J"
+       · auto_text_8            conf=0.69  ocr="JULY 31-—- AUGUST 1, 2025"
+       · auto_text_9            conf=0.37  ocr="(3OU @csrcssc  ()SsCsERVICES@csPc.eDU.PH"
+       · auto_text_10           conf=0.33  ocr="CAMARIN = STUDENT COUNCIL —— SUPRE! EME "
+       · auto_text_11           conf=0.35  ocr="CAMARINES SUR POLYTECHNIC COLLEGES — SUP"
+       · auto_text_12           conf=0.56  ocr="CAMARINES. SUR TECHNIC COLLEGES STUDENT."
+       · auto_text_13           conf=0.33  ocr="<J SSCSERVICES@CSPC.EDU.PH"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/academic_payload.json
+  Domain         : academic_certificate
+  Canvas         : 1200 × 900 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/ORSEM_2025.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/ORSEM_2025/certificate_baseline/content.json
+  GNN            : disabled (baseline mode)
+  Population     : 5
+  Palette Source : real image → ['#98A1ED', '#6F28B6', '#D8EDF7', '#DC46DD']
+  ✔  1. Dynamic Node Instantiation              [0.3 ms]
+     → 11 node(s) instantiated for canvas 1200×900
+     → Logo aspect ratio locked to 0.88:1 (uploaded logos, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [1.7 ms]
+     → Hard constraints: 0 | Soft constraints: 11
+  ✔  4. Metaheuristic Candidate Ranking         [15.2 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_1_Compact_Formal            0.3428 ◀ WINNER
+  [2]   Candidate_0_GNN_Baseline              0.3610
+  [3]   Candidate_4_High_Margin_Focus         0.3638
+  [4]   Candidate_2_Spaced_Grand              0.3774
+  [5]   Candidate_3_Dynamic_Balanced          0.3774
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/ORSEM_2025/certificate_baseline/ThemeSync_academic-certificate_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [7.5 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.7 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          1842.6
+  0b. Semantic Layout Parsing (YOLO+OCR)         1573.3
+  1. Dynamic Node Instantiation                     0.3
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       1.7
+  4. Metaheuristic Ranking                         15.2
+  5. Aesthetic SVG Rendering                        7.5
+  6. FSM State Serialization                        0.7
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               3441.4
+
+  Winner   : Candidate_1_Compact_Formal (C_total = 0.3428)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/ORSEM_2025/certificate_baseline/ThemeSync_academic-certificate_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/ORSEM_2025/certificate_baseline/ThemeSync_academic-certificate_detected_master_layout.json
+

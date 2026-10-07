@@ -1,0 +1,80 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: AQUA-ASK_2026.png (2048×2048 px)
+  [TemplateIngestor] Extracted palette: #3781CE | #6BA7F9 | #9BCFED | #064DAA
+  [TemplateIngestor] Saliency weight:   0.0202
+  ✔  0. Template Ingestion                      [3417.1 ms]
+     → Palette: #3781CE | #6BA7F9 | #9BCFED | #064DAA
+     → Saliency: 0.0202  | Native size: 2048×2048 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2090.8 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 12 node(s) detected on the master layout
+       · auto_logo_0            conf=0.66
+       · auto_logo_1            conf=0.68
+       · auto_logo_2            conf=0.30
+       · auto_logo_3            conf=0.35
+       · auto_underlay_4        conf=0.42
+       · auto_text_5            conf=0.86  ocr="CAMARINES SUR POLYTECHNIC COLLEGES"
+       · auto_text_6            conf=0.42
+       · auto_text_7            conf=0.63  ocr="AN INCOME GENERATING PROJECT OF THE CSPC"
+       · auto_text_8            conf=0.32  ocr="WATER BOTTLE FOR 715.00"
+       · auto_text_9            conf=0.26  ocr="@OOX eCSPCSSC © SSCSERVICESeCSPC.EDU.PH"
+       · auto_text_10           conf=0.71  ocr="@OX eCSPCSSC"
+       · auto_text_11           conf=0.66  ocr="SSCSERVICESeCSPC.EDU.PH"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/AQUA-ASK_2026.png
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/AQUA-ASK_2026/event_id_gnn/content.json
+  GNN            : enabled
+  Population     : 5
+  Palette Source : real image → ['#3781CE', '#6BA7F9', '#9BCFED', '#064DAA']
+  ✔  1. Dynamic Node Instantiation              [0.3 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 1.00:1 (Stage 0b crop of 2 logo(s), conf=0.68, 0.66, Affine scaling)
+  ✔  2. GNN Spatial Inference                   [111.4 ms]
+     → Weights: loaded from themesync_gnn_v1.pth
+     → Predictions applied: True
+  ✔  3. Cassowary CSP Resolution                [0.7 ms]
+     → Hard constraints: 0 | Soft constraints: 6
+  ✔  4. Metaheuristic Candidate Ranking         [6.3 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_0_GNN_Baseline              0.3099 ◀ WINNER
+  [2]   Candidate_3_Dynamic_Balanced          0.3144
+  [3]   Candidate_1_Compact_Formal            0.3151
+  [4]   Candidate_4_High_Margin_Focus         0.3151
+  [5]   Candidate_2_Spaced_Grand              0.3180
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/AQUA-ASK_2026/event_id_gnn/ThemeSync_identification-card_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [11.0 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          3417.1
+  0b. Semantic Layout Parsing (YOLO+OCR)         2090.8
+  1. Dynamic Node Instantiation                     0.3
+  2. GNN Spatial Inference                        111.4
+  3. Cassowary CSP Resolution                       0.7
+  4. Metaheuristic Ranking                          6.3
+  5. Aesthetic SVG Rendering                       11.0
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               5637.9
+
+  Winner   : Candidate_0_GNN_Baseline (C_total = 0.3099)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/AQUA-ASK_2026/event_id_gnn/ThemeSync_identification-card_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/AQUA-ASK_2026/event_id_gnn/ThemeSync_identification-card_detected_master_layout.json
+

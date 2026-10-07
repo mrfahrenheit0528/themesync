@@ -1,0 +1,92 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: CHS_BIRISTUHAN.jpg (1080×1080 px)
+  [TemplateIngestor] Extracted palette: #6F5E61 | #B490BE | #DABED4 | #9B9372
+  [TemplateIngestor] Saliency weight:   0.0941
+  ✔  0. Template Ingestion                      [820.5 ms]
+     → Palette: #6F5E61 | #B490BE | #DABED4 | #9B9372
+     → Saliency: 0.0941  | Native size: 1080×1080 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1241.0 ms]
+     → Weights: themesync_yolo_v5.pt
+     → 20 node(s) detected on the master layout
+       · auto_logo_0            conf=0.92
+       · auto_logo_1            conf=0.92
+       · auto_logo_2            conf=0.92
+       · auto_logo_3            conf=0.91
+       · auto_logo_4            conf=0.89
+       · auto_logo_5            conf=0.57
+       · auto_logo_6            conf=0.42
+       · auto_logo_7            conf=0.69
+       · auto_logo_8            conf=0.80
+       · auto_embellishment_9   conf=0.28
+       · auto_text_10           conf=0.22  ocr="Bishi a"
+       · auto_text_11           conf=0.66
+       · auto_text_12           conf=0.79  ocr="Le. THEME; Enchantix:Unveiling theWinx, "
+       · auto_text_13           conf=0.56  ocr="hantix:Unveiling the Winx, Awakening the"
+       · auto_embellishment_14  conf=0.56
+       · auto_text_15           conf=0.60
+       · auto_embellishment_16  conf=0.31
+       · auto_embellishment_17  conf=0.81
+       · auto_text_18           conf=0.55
+       · auto_text_19           conf=0.85  ocr="chs-csc@cspc.edu.ph"
+  ✔  0c. Stylistic Marker Extraction            [1085.8 ms]
+     → Background: text-free layer rebuilt from the master's border
+     → Motifs: 2  |  Title artwork: Stage 0c: title artwork
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/academic_payload.json
+  Domain         : academic_certificate
+  Canvas         : 1200 × 900 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/CHS_BIRISTUHAN.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/CHS_BIRISTUHAN/certificate_baseline/content.json
+  Condition      : baseline
+  Master structure: (none)
+  Population     : 6
+  Palette Source : real image → ['#6F5E61', '#B490BE', '#DABED4', '#9B9372']
+  Schema Check   : passed (typography, content)
+  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+     → 11 node(s) instantiated for canvas 1200×900
+     → Logo aspect ratio locked to 0.95:1 (Stage 0b crop of 5 logo(s), conf=0.91, 0.92, 0.92, 0.89, 0.92, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [1.1 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [1215.8 ms]
+     → 6 candidate(s) evaluated
+
+  Rank   Candidate       C_total  Variation
+  ------ -------------- --------  ----------------------------------------
+  [1]   Candidate_A      0.0011  classic centred · margin 72px · gap 18px · diagonal ◀ WINNER
+  [2]   Candidate_E      0.0011  classic centred · margin 84px · gap 24px · four corners
+  [3]   Candidate_C      0.0015  header banner · margin 76px · gap 16px · base pair
+  [4]   Candidate_D      0.0015  left-aligned · margin 104px · gap 18px · side columns
+  [5]   Candidate_B      0.0756  art column · margin 44px · gap 16px · crown pair
+  [6]   Candidate_F      0.0759  art column · margin 44px · gap 22px · anti-diagonal
+  ✔  5. Aesthetic SVG Rendering                 [131.8 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.4 ms]
+     → Saved: data/processed/layout_state_v1.json
+     → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/CHS_BIRISTUHAN/certificate_baseline/ThemeSync_academic-certificate_state_chain.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                           820.5
+  0b. Semantic Layout Parsing (YOLO+OCR)         1241.0
+  0c. Stylistic Marker Extraction                1085.8
+  1. Dynamic Node Instantiation                     0.1
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       1.1
+  4. Metaheuristic Ranking                       1215.8
+  5. Aesthetic SVG Rendering                      131.8
+  6. FSM State Serialization                        0.4
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               4496.5
+
+  Winner   : Candidate_A — classic centred · margin 72px · gap 18px · diagonal (C_total = 0.0011)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/CHS_BIRISTUHAN/certificate_baseline/ThemeSync_academic-certificate_populated.svg
+

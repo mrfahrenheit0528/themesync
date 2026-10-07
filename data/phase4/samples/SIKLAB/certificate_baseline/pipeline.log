@@ -1,0 +1,83 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: SIKLAB.jpg (2048×2048 px)
+  [TemplateIngestor] Extracted palette: #58429E | #BCA7A0 | #130E18
+  [TemplateIngestor] Saliency weight:   0.0463
+  ✔  0. Template Ingestion                      [2491.0 ms]
+     → Palette: #58429E | #BCA7A0 | #130E18
+     → Saliency: 0.0463  | Native size: 2048×2048 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1008.6 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 16 node(s) detected on the master layout
+       · auto_logo_0            conf=0.76
+       · auto_logo_1            conf=0.27
+       · auto_logo_2            conf=0.92
+       · auto_logo_3            conf=0.29
+       · auto_logo_4            conf=0.84
+       · auto_logo_5            conf=0.46
+       · auto_logo_6            conf=0.72
+       · auto_logo_7            conf=0.77
+       · auto_logo_8            conf=0.68
+       · auto_logo_9            conf=0.82
+       · auto_logo_10           conf=0.32
+       · auto_embellishment_11  conf=0.65
+       · auto_text_12           conf=0.75  ocr="SIKLAB  CSPC INTRAMURALS"
+       · auto_text_13           conf=0.36  ocr="(2025"
+       · auto_underlay_14       conf=0.58
+       · auto_text_15           conf=0.52  ocr="NOVEMBER 10-14, 2025"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/academic_payload.json
+  Domain         : academic_certificate
+  Canvas         : 1200 × 900 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/SIKLAB.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/SIKLAB/certificate_baseline/content.json
+  GNN            : disabled (baseline mode)
+  Population     : 5
+  Palette Source : real image → ['#58429E', '#BCA7A0', '#130E18']
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
+     → 11 node(s) instantiated for canvas 1200×900
+     → Logo aspect ratio locked to 0.95:1 (uploaded logos, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [1.2 ms]
+     → Hard constraints: 0 | Soft constraints: 11
+  ✔  4. Metaheuristic Candidate Ranking         [9.0 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_1_Compact_Formal            0.2668 ◀ WINNER
+  [2]   Candidate_0_GNN_Baseline              0.2773
+  [3]   Candidate_4_High_Margin_Focus         0.2816
+  [4]   Candidate_2_Spaced_Grand              0.2833
+  [5]   Candidate_3_Dynamic_Balanced          0.2833
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/SIKLAB/certificate_baseline/ThemeSync_academic-certificate_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [116.2 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          2491.0
+  0b. Semantic Layout Parsing (YOLO+OCR)         1008.6
+  1. Dynamic Node Instantiation                     0.2
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       1.2
+  4. Metaheuristic Ranking                          9.0
+  5. Aesthetic SVG Rendering                      116.2
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               3626.6
+
+  Winner   : Candidate_1_Compact_Formal (C_total = 0.2668)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/SIKLAB/certificate_baseline/ThemeSync_academic-certificate_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/SIKLAB/certificate_baseline/ThemeSync_academic-certificate_detected_master_layout.json
+

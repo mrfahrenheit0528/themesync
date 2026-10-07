@@ -1,0 +1,75 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: YUGTO_2025.jpg (2048×2048 px)
+  [TemplateIngestor] Extracted palette: #705D9C | #C48DC4 | #DBC9CB
+  [TemplateIngestor] Saliency weight:   0.0584
+  ✔  0. Template Ingestion                      [3857.2 ms]
+     → Palette: #705D9C | #C48DC4 | #DBC9CB
+     → Saliency: 0.0584  | Native size: 2048×2048 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1460.8 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 8 node(s) detected on the master layout
+       · auto_logo_0            conf=0.69
+       · auto_logo_1            conf=0.71
+       · auto_text_2            conf=0.90  ocr="CAMARINES SUR POLYTECHNIC COLLEGES  SUPR"
+       · auto_embellishment_3   conf=0.40
+       · auto_text_4            conf=0.81
+       · auto_text_5            conf=0.77  ocr="ENHANCING LEADERSHIP: SKILLS AND CREATIN"
+       · auto_text_6            conf=0.48  ocr="{J @csPcssc () sscseRVIcEs@csPc.eDU.PH"
+       · auto_text_7            conf=0.64  ocr="f3@ @csrcssc EJ sscserRvices@csPc.eDu.PH"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/YUGTO_2025.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/YUGTO_2025/event_id_baseline/content.json
+  GNN            : disabled (baseline mode)
+  Population     : 5
+  Palette Source : real image → ['#705D9C', '#C48DC4', '#DBC9CB']
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 0.99:1 (Stage 0b crop of 2 logo(s), conf=0.71, 0.69, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [0.5 ms]
+     → Hard constraints: 0 | Soft constraints: 6
+  ✔  4. Metaheuristic Candidate Ranking         [6.0 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_0_GNN_Baseline              0.2504 ◀ WINNER
+  [2]   Candidate_2_Spaced_Grand              0.2506
+  [3]   Candidate_3_Dynamic_Balanced          0.2613
+  [4]   Candidate_4_High_Margin_Focus         0.2836
+  [5]   Candidate_1_Compact_Formal            0.2838
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/YUGTO_2025/event_id_baseline/ThemeSync_identification-card_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [7.8 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          3857.2
+  0b. Semantic Layout Parsing (YOLO+OCR)         1460.8
+  1. Dynamic Node Instantiation                     0.2
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       0.5
+  4. Metaheuristic Ranking                          6.0
+  5. Aesthetic SVG Rendering                        7.8
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               5332.9
+
+  Winner   : Candidate_0_GNN_Baseline (C_total = 0.2504)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/YUGTO_2025/event_id_baseline/ThemeSync_identification-card_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/YUGTO_2025/event_id_baseline/ThemeSync_identification-card_detected_master_layout.json
+

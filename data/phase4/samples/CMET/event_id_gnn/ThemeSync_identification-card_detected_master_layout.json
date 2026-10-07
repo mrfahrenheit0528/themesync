@@ -1,0 +1,104 @@
+[
+  {
+    "node_id": "auto_logo_0",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 0,
+    "bbox": [
+      853.63,
+      57.6,
+      142.35,
+      135.03
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.9054
+  },
+  {
+    "node_id": "auto_logo_1",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 1,
+    "bbox": [
+      1037.64,
+      69.25,
+      97.52,
+      112.06
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6341
+  },
+  {
+    "node_id": "auto_text_2",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 2,
+    "bbox": [
+      480.15,
+      198.63,
+      1057.55,
+      116.66
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8987,
+    "ocr_text": "CMET Student Council 2026-2027\nMapua-PTC College of Maritime Education and training\nMAPUA Malayan Colleges of Laguna"
+  },
+  {
+    "node_id": "auto_text_3",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 3,
+    "bbox": [
+      381.59,
+      495.56,
+      1318.49,
+      229.52
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7942,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_4",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 4,
+    "bbox": [
+      604.65,
+      775.02,
+      871.0,
+      70.77
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8534,
+    "ocr_text": "SAIL THE SPOTLIGHT"
+  },
+  {
+    "node_id": "auto_embellishment_5",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 5,
+    "bbox": [
+      571.0,
+      921.87,
+      799.98,
+      530.26
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8528
+  },
+  {
+    "node_id": "auto_text_6",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 6,
+    "bbox": [
+      740.38,
+      1714.79,
+      518.58,
+      79.53
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8727,
+    "ocr_text": ""
+  }
+]

@@ -1,0 +1,86 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: CTC.jpg (1313×1313 px)
+  [TemplateIngestor] Extracted palette: #52596F | #C2B78C | #21233C
+  [TemplateIngestor] Saliency weight:   0.0245
+  ✔  0. Template Ingestion                      [1006.7 ms]
+     → Palette: #52596F | #C2B78C | #21233C
+     → Saliency: 0.0245  | Native size: 1313×1313 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1155.6 ms]
+     → Weights: themesync_yolo_v5.pt
+     → 14 node(s) detected on the master layout
+       · auto_logo_0            conf=0.47
+       · auto_text_1            conf=0.18  ocr="—s  Where Vision Endures"
+       · auto_text_2            conf=0.34  ocr="YEARS CEGUERA:  Where Vision Endures"
+       · auto_text_3            conf=0.82
+       · auto_embellishment_4   conf=0.88
+       · auto_text_5            conf=0.90  ocr="FEBRUARY 24, 2026, 1:00-3:00 PM CTC QUAD"
+       · auto_underlay_6        conf=0.28
+       · auto_underlay_7        conf=0.81
+       · auto_text_8            conf=0.73  ocr="Ceguera Technological Colleges, Inc."
+       · auto_embellishment_9   conf=0.82
+       · auto_embellishment_10  conf=0.81
+       · auto_embellishment_11  conf=0.79
+       · auto_text_12           conf=0.84  ocr="ceguerairiga@ gmail.com"
+       · auto_text_13           conf=0.77  ocr="(059) 299-2224"
+  ✔  0c. Stylistic Marker Extraction            [825.5 ms]
+     → Background: text-free layer rebuilt from the master's border
+     → Motifs: 0  |  Title artwork: Stage 0c: title artwork
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/CTC.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/CTC/event_id_baseline/content.json
+  Condition      : baseline
+  Master structure: (none)
+  Population     : 6
+  Palette Source : real image → ['#52596F', '#C2B78C', '#21233C']
+  Schema Check   : passed (typography, content)
+  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 1.40:1 (Stage 0b crop of 1 logo(s), conf=0.47, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [0.4 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [795.4 ms]
+     → 6 candidate(s) evaluated
+
+  Rank   Candidate       C_total  Variation
+  ------ -------------- --------  ----------------------------------------
+  [1]   Candidate_D      0.1439  left-aligned · margin 72px · gap 18px · no motifs ◀ WINNER
+  [2]   Candidate_C      0.1535  full-width band · margin 64px · gap 18px · no motifs
+  [3]   Candidate_E      0.1535  classic centred · margin 64px · gap 24px · no motifs
+  [4]   Candidate_A      0.1584  classic centred · margin 60px · gap 20px · no motifs
+  [5]   Candidate_F      0.1916  floating card · margin 40px · gap 22px · no motifs
+  [6]   Candidate_B      0.1947  floating card · margin 40px · gap 16px · no motifs
+  ✔  5. Aesthetic SVG Rendering                 [252.7 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+     → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/CTC/event_id_baseline/ThemeSync_identification-card_state_chain.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          1006.7
+  0b. Semantic Layout Parsing (YOLO+OCR)         1155.6
+  0c. Stylistic Marker Extraction                 825.5
+  1. Dynamic Node Instantiation                     0.1
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       0.4
+  4. Metaheuristic Ranking                        795.4
+  5. Aesthetic SVG Rendering                      252.7
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               4036.8
+
+  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · no motifs (C_total = 0.1439)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/CTC/event_id_baseline/ThemeSync_identification-card_populated.svg
+

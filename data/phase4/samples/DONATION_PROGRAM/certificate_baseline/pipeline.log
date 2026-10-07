@@ -1,0 +1,87 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: DONATION_PROGRAM.jpg (1448×2048 px)
+  [TemplateIngestor] Extracted palette: #DB6541 | #FDEFE0 | #BAAF98 | #5F3E3A
+  [TemplateIngestor] Saliency weight:   0.0426
+  ✔  0. Template Ingestion                      [1367.1 ms]
+     → Palette: #DB6541 | #FDEFE0 | #BAAF98 | #5F3E3A
+     → Saliency: 0.0426  | Native size: 1448×2048 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1901.3 ms]
+     → Weights: themesync_yolo_v5.pt
+     → 15 node(s) detected on the master layout
+       · auto_logo_0            conf=0.30
+       · auto_logo_1            conf=0.89
+       · auto_text_2            conf=0.67
+       · auto_text_3            conf=0.66
+       · auto_text_4            conf=0.88  ocr="MARINERS! POLYTECHNIC COLLEGES, INC. MAR"
+       · auto_text_5            conf=0.83  ocr="> ty ay 2 = y ao) we pant) wh Cy  “N@ Se"
+       · auto_text_6            conf=0.28  ocr="a ‘ > ‘ f N 2 : ao) ak ID pant) ; NOG j3"
+       · auto_underlay_7        conf=0.73
+       · auto_text_8            conf=0.91  ocr="| DONATION"
+       · auto_embellishment_9   conf=0.35
+       · auto_text_10           conf=0.41
+       · auto_text_11           conf=0.41
+       · auto_text_12           conf=0.85  ocr="Food - Medicine - Toys - etc."
+       · auto_underlay_13       conf=0.28
+       · auto_text_14           conf=0.85  ocr="From April 16-26, 2025"
+  ✔  0c. Stylistic Marker Extraction            [3800.5 ms]
+     → Background: text-free layer rebuilt from the master's border
+     → Motifs: 0  |  Title artwork: Stage 0c: title artwork
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/academic_payload.json
+  Domain         : academic_certificate
+  Canvas         : 1200 × 900 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/DONATION_PROGRAM.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/DONATION_PROGRAM/certificate_baseline/content.json
+  Condition      : baseline
+  Master structure: (none)
+  Population     : 6
+  Palette Source : real image → ['#DB6541', '#FDEFE0', '#BAAF98', '#5F3E3A']
+  Schema Check   : passed (typography, content)
+  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+     → 11 node(s) instantiated for canvas 1200×900
+     → Logo aspect ratio locked to 0.92:1 (Stage 0b crop of 1 logo(s), conf=0.89, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [1.2 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [1389.7 ms]
+     → 6 candidate(s) evaluated
+
+  Rank   Candidate       C_total  Variation
+  ------ -------------- --------  ----------------------------------------
+  [1]   Candidate_A      0.0013  classic centred · margin 72px · gap 18px · no motifs ◀ WINNER
+  [2]   Candidate_D      0.0013  left-aligned · margin 104px · gap 18px · no motifs
+  [3]   Candidate_E      0.0013  classic centred · margin 84px · gap 24px · no motifs
+  [4]   Candidate_C      0.0034  header banner · margin 76px · gap 16px · no motifs
+  [5]   Candidate_B      0.0752  art column · margin 44px · gap 16px · no motifs
+  [6]   Candidate_F      0.0752  art column · margin 44px · gap 22px · no motifs
+  ✔  5. Aesthetic SVG Rendering                 [219.0 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+     → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/DONATION_PROGRAM/certificate_baseline/ThemeSync_academic-certificate_state_chain.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          1367.1
+  0b. Semantic Layout Parsing (YOLO+OCR)         1901.3
+  0c. Stylistic Marker Extraction                3800.5
+  1. Dynamic Node Instantiation                     0.1
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       1.2
+  4. Metaheuristic Ranking                       1389.7
+  5. Aesthetic SVG Rendering                      219.0
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               8679.2
+
+  Winner   : Candidate_A — classic centred · margin 72px · gap 18px · no motifs (C_total = 0.0013)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/DONATION_PROGRAM/certificate_baseline/ThemeSync_academic-certificate_populated.svg
+

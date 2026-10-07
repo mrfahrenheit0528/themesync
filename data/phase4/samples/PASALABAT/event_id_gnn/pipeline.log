@@ -1,0 +1,84 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: PASALABAT.jpg (2048×1365 px)
+  [TemplateIngestor] Extracted palette: #F3DEB0 | #202C7E | #907C25 | #385FBC
+  [TemplateIngestor] Saliency weight:   0.0405
+  ✔  0. Template Ingestion                      [3004.0 ms]
+     → Palette: #F3DEB0 | #202C7E | #907C25 | #385FBC
+     → Saliency: 0.0405  | Native size: 2048×1365 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2010.7 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 16 node(s) detected on the master layout
+       · auto_logo_0            conf=0.43
+       · auto_logo_1            conf=0.45
+       · auto_logo_2            conf=0.39
+       · auto_text_3            conf=0.66  ocr="SUPREME STUDENT COUNCIL *"
+       · auto_embellishment_4   conf=0.28
+       · auto_text_5            conf=0.25
+       · auto_text_6            conf=0.30
+       · auto_embellishment_7   conf=0.40
+       · auto_text_8            conf=0.34
+       · auto_text_9            conf=0.31  ocr="600 @cspcssc’ sscservices@cspc.edu.ph"
+       · auto_text_10           conf=0.28  ocr="QOO e@cspcsse’"
+       · auto_text_11           conf=0.50  ocr="1} sscservices@cspc.edu.ph"
+       · auto_text_12           conf=0.31
+       · auto_text_13           conf=0.37  ocr="sscservices@cspc.ed"
+       · auto_text_14           conf=0.50
+       · auto_text_15           conf=0.64  ocr="@cspcssc"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/PASALABAT.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/PASALABAT/event_id_gnn/content.json
+  GNN            : enabled
+  Population     : 5
+  Palette Source : real image → ['#F3DEB0', '#202C7E', '#907C25', '#385FBC']
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 0.97:1 (Stage 0b crop of 2 logo(s), conf=0.43, 0.45, Affine scaling)
+  ✔  2. GNN Spatial Inference                   [56.2 ms]
+     → Weights: loaded from themesync_gnn_v1.pth
+     → Predictions applied: True
+  ✔  3. Cassowary CSP Resolution                [0.5 ms]
+     → Hard constraints: 0 | Soft constraints: 6
+  ✔  4. Metaheuristic Candidate Ranking         [5.7 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_0_GNN_Baseline              0.4038 ◀ WINNER
+  [2]   Candidate_1_Compact_Formal            0.4078
+  [3]   Candidate_4_High_Margin_Focus         0.4078
+  [4]   Candidate_3_Dynamic_Balanced          0.4083
+  [5]   Candidate_2_Spaced_Grand              0.4111
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/PASALABAT/event_id_gnn/ThemeSync_identification-card_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [5.8 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.4 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          3004.0
+  0b. Semantic Layout Parsing (YOLO+OCR)         2010.7
+  1. Dynamic Node Instantiation                     0.2
+  2. GNN Spatial Inference                         56.2
+  3. Cassowary CSP Resolution                       0.5
+  4. Metaheuristic Ranking                          5.7
+  5. Aesthetic SVG Rendering                        5.8
+  6. FSM State Serialization                        0.4
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               5083.6
+
+  Winner   : Candidate_0_GNN_Baseline (C_total = 0.4038)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/PASALABAT/event_id_gnn/ThemeSync_identification-card_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/PASALABAT/event_id_gnn/ThemeSync_identification-card_detected_master_layout.json
+

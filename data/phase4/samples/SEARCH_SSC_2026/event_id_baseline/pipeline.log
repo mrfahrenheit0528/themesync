@@ -1,0 +1,80 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: SEARCH_SSC_2026.png (2048×2048 px)
+  [TemplateIngestor] Extracted palette: #54B3AC | #DED8C9 | #4D484C
+  [TemplateIngestor] Saliency weight:   0.0933
+  ✔  0. Template Ingestion                      [3004.8 ms]
+     → Palette: #54B3AC | #DED8C9 | #4D484C
+     → Saliency: 0.0933  | Native size: 2048×2048 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1531.7 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 13 node(s) detected on the master layout
+       · auto_logo_0            conf=0.37
+       · auto_logo_1            conf=0.70
+       · auto_embellishment_2   conf=0.34
+       · auto_embellishment_3   conf=0.30
+       · auto_embellishment_4   conf=0.58
+       · auto_embellishment_5   conf=0.42
+       · auto_text_6            conf=0.29
+       · auto_embellishment_7   conf=0.40
+       · auto_text_8            conf=0.72  ocr="Ee"
+       · auto_text_9            conf=0.49
+       · auto_embellishment_10  conf=0.45
+       · auto_text_11           conf=0.78  ocr="CAMARINES SUR‘POLYTEGHNIC COLLEGES SUPRE"
+       · auto_text_12           conf=0.73  ocr="*) SSCSERVICES@CSPC.EDU.PH"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/SEARCH_SSC_2026.png
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/SEARCH_SSC_2026/event_id_baseline/content.json
+  GNN            : disabled (baseline mode)
+  Population     : 5
+  Palette Source : real image → ['#54B3AC', '#DED8C9', '#4D484C']
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 0.78:1 (uploaded logos, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [0.7 ms]
+     → Hard constraints: 0 | Soft constraints: 6
+  ✔  4. Metaheuristic Candidate Ranking         [155.7 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_2_Spaced_Grand              0.4733 ◀ WINNER
+  [2]   Candidate_1_Compact_Formal            0.4749
+  [3]   Candidate_0_GNN_Baseline              0.4761
+  [4]   Candidate_3_Dynamic_Balanced          0.4840
+  [5]   Candidate_4_High_Margin_Focus         0.5031
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/SEARCH_SSC_2026/event_id_baseline/ThemeSync_identification-card_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [28.3 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          3004.8
+  0b. Semantic Layout Parsing (YOLO+OCR)         1531.7
+  1. Dynamic Node Instantiation                     0.2
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       0.7
+  4. Metaheuristic Ranking                        155.7
+  5. Aesthetic SVG Rendering                       28.3
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               4721.7
+
+  Winner   : Candidate_2_Spaced_Grand (C_total = 0.4733)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/SEARCH_SSC_2026/event_id_baseline/ThemeSync_identification-card_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/SEARCH_SSC_2026/event_id_baseline/ThemeSync_identification-card_detected_master_layout.json
+

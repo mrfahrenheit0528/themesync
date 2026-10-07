@@ -1,0 +1,163 @@
+[
+  {
+    "node_id": "auto_logo_0",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 0,
+    "bbox": [
+      1030.23,
+      95.1,
+      187.04,
+      209.75
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.9406
+  },
+  {
+    "node_id": "auto_logo_1",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 1,
+    "bbox": [
+      472.49,
+      99.03,
+      195.39,
+      203.07
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.9237
+  },
+  {
+    "node_id": "auto_text_2",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 2,
+    "bbox": [
+      1241.84,
+      96.65,
+      341.77,
+      210.04
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7636,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_3",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 3,
+    "bbox": [
+      692.36,
+      127.64,
+      310.69,
+      133.41
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8997,
+    "ocr_text": "-\u2014 CSPC\nBROADCAST\nCENTE!\n\nNTER"
+  },
+  {
+    "node_id": "auto_text_4",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 4,
+    "bbox": [
+      310.19,
+      371.02,
+      1348.09,
+      1382.89
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6846,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_5",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 5,
+    "bbox": [
+      516.27,
+      1742.75,
+      1019.78,
+      95.81
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8486,
+    "ocr_text": "Send your letter on our official Facebook page\nCSPC Broadcast Center"
+  },
+  {
+    "node_id": "auto_text_6",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 6,
+    "bbox": [
+      486.96,
+      1874.58,
+      1096.54,
+      52.54
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7282,
+    "ocr_text": "Tune in at FMR 94.3 FM, simulcast at DZCC 87.5 FM"
+  },
+  {
+    "node_id": "auto_embellishment_7",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 7,
+    "bbox": [
+      552.65,
+      1969.54,
+      42.45,
+      45.28
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7948
+  },
+  {
+    "node_id": "auto_embellishment_8",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 8,
+    "bbox": [
+      1020.06,
+      1972.88,
+      49.95,
+      37.96
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8142
+  },
+  {
+    "node_id": "auto_text_9",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 9,
+    "bbox": [
+      599.53,
+      1973.59,
+      334.49,
+      38.58
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8048,
+    "ocr_text": "CSPC Broadcast Center"
+  },
+  {
+    "node_id": "auto_text_10",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 10,
+    "bbox": [
+      1077.05,
+      1978.13,
+      405.29,
+      34.68
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7772,
+    "ocr_text": "broadcastcenter@cspc.edu.ph"
+  }
+]

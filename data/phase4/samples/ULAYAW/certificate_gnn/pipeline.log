@@ -1,0 +1,82 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: ULAYAW.jpg (1638×2048 px)
+  [TemplateIngestor] Extracted palette: #965141 | #D8BDB7 | #371714
+  [TemplateIngestor] Saliency weight:   0.1125
+  ✔  0. Template Ingestion                      [4526.0 ms]
+     → Palette: #965141 | #D8BDB7 | #371714
+     → Saliency: 0.1125  | Native size: 1638×2048 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2168.4 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 15 node(s) detected on the master layout
+       · auto_text_0            conf=0.26  ocr="EK \p"
+       · auto_embellishment_1   conf=0.28
+       · auto_embellishment_2   conf=0.36
+       · auto_embellishment_3   conf=0.27
+       · auto_embellishment_4   conf=0.34
+       · auto_text_5            conf=0.64
+       · auto_embellishment_6   conf=0.42
+       · auto_text_7            conf=0.26  ocr="A Valentine's celebration of Love fora"
+       · auto_text_8            conf=0.47  ocr="rmony: A Valentine's celebration of Love"
+       · auto_text_9            conf=0.47  ocr="jeartbeats in Harmony: A Valentine's cel"
+       · auto_embellishment_10  conf=0.63
+       · auto_text_11           conf=0.40  ocr="February 24, 2024 | 06:00 pm @ CSPC O"
+       · auto_text_12           conf=0.33  ocr="bruary 24, 2024 | 06:00 pm"
+       · auto_text_13           conf=0.34  ocr="NCE OF MUSICALLY PASSIONATE STUDENTS"
+       · auto_text_14           conf=0.34  ocr="ALLIANCE OF MUSICALLY PASSIONAIE SIUDENT"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/academic_payload.json
+  Domain         : academic_certificate
+  Canvas         : 1200 × 900 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/ULAYAW.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/ULAYAW/certificate_gnn/content.json
+  GNN            : enabled
+  Population     : 5
+  Palette Source : real image → ['#965141', '#D8BDB7', '#371714']
+  ✔  1. Dynamic Node Instantiation              [0.3 ms]
+     → 11 node(s) instantiated for canvas 1200×900
+  ✔  2. GNN Spatial Inference                   [52.1 ms]
+     → Weights: loaded from themesync_gnn_v1.pth
+     → Predictions applied: True
+  ✔  3. Cassowary CSP Resolution                [2.1 ms]
+     → Hard constraints: 0 | Soft constraints: 11
+  ✔  4. Metaheuristic Candidate Ranking         [15.8 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_0_GNN_Baseline              0.4693 ◀ WINNER
+  [2]   Candidate_1_Compact_Formal            0.4693
+  [3]   Candidate_2_Spaced_Grand              0.4693
+  [4]   Candidate_3_Dynamic_Balanced          0.4693
+  [5]   Candidate_4_High_Margin_Focus         0.4693
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/ULAYAW/certificate_gnn/ThemeSync_academic-certificate_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [0.8 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          4526.0
+  0b. Semantic Layout Parsing (YOLO+OCR)         2168.4
+  1. Dynamic Node Instantiation                     0.3
+  2. GNN Spatial Inference                         52.1
+  3. Cassowary CSP Resolution                       2.1
+  4. Metaheuristic Ranking                         15.8
+  5. Aesthetic SVG Rendering                        0.8
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               6765.8
+
+  Winner   : Candidate_0_GNN_Baseline (C_total = 0.4693)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/ULAYAW/certificate_gnn/ThemeSync_academic-certificate_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/ULAYAW/certificate_gnn/ThemeSync_academic-certificate_detected_master_layout.json
+

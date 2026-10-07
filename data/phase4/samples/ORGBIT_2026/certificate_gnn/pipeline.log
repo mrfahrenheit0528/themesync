@@ -1,0 +1,81 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: ORGBIT_2026.png (1950×2048 px)
+  [TemplateIngestor] Extracted palette: #E9DBCF | #322F60 | #988A9B
+  [TemplateIngestor] Saliency weight:   0.0259
+  ✔  0. Template Ingestion                      [3932.7 ms]
+     → Palette: #E9DBCF | #322F60 | #988A9B
+     → Saliency: 0.0259  | Native size: 1950×2048 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [2150.1 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 13 node(s) detected on the master layout
+       · auto_logo_0            conf=0.70
+       · auto_logo_1            conf=0.50
+       · auto_logo_2            conf=0.59
+       · auto_embellishment_3   conf=0.31
+       · auto_embellishment_4   conf=0.31
+       · auto_text_5            conf=0.39  ocr="UR*POLYTECHNIC COLLEGES"
+       · auto_text_6            conf=0.81  ocr="CAMARINES SUR POLYTECHNIC COLLEGES SUPRE"
+       · auto_text_7            conf=0.33
+       · auto_text_8            conf=0.51
+       · auto_text_9            conf=0.68
+       · auto_text_10           conf=0.60
+       · auto_text_11           conf=0.65  ocr="€3© X dt @cspcssc"
+       · auto_text_12           conf=0.55  ocr="sscservices@cspc.edu,ph."
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/academic_payload.json
+  Domain         : academic_certificate
+  Canvas         : 1200 × 900 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/ORGBIT_2026.png
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/ORGBIT_2026/certificate_gnn/content.json
+  GNN            : enabled
+  Population     : 5
+  Palette Source : real image → ['#E9DBCF', '#322F60', '#988A9B']
+  ✔  1. Dynamic Node Instantiation              [0.3 ms]
+     → 11 node(s) instantiated for canvas 1200×900
+     → Logo aspect ratio locked to 0.94:1 (Stage 0b crop of 1 logo(s), conf=0.70, Affine scaling)
+  ✔  2. GNN Spatial Inference                   [72.5 ms]
+     → Weights: loaded from themesync_gnn_v1.pth
+     → Predictions applied: True
+  ✔  3. Cassowary CSP Resolution                [2.2 ms]
+     → Hard constraints: 0 | Soft constraints: 11
+  ✔  4. Metaheuristic Candidate Ranking         [17.5 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_0_GNN_Baseline              0.2689 ◀ WINNER
+  [2]   Candidate_1_Compact_Formal            0.2689
+  [3]   Candidate_2_Spaced_Grand              0.2689
+  [4]   Candidate_3_Dynamic_Balanced          0.2689
+  [5]   Candidate_4_High_Margin_Focus         0.2689
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/ORGBIT_2026/certificate_gnn/ThemeSync_academic-certificate_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [14.7 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.5 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          3932.7
+  0b. Semantic Layout Parsing (YOLO+OCR)         2150.1
+  1. Dynamic Node Instantiation                     0.3
+  2. GNN Spatial Inference                         72.5
+  3. Cassowary CSP Resolution                       2.2
+  4. Metaheuristic Ranking                         17.5
+  5. Aesthetic SVG Rendering                       14.7
+  6. FSM State Serialization                        0.5
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               6190.5
+
+  Winner   : Candidate_0_GNN_Baseline (C_total = 0.2689)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/ORGBIT_2026/certificate_gnn/ThemeSync_academic-certificate_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/ORGBIT_2026/certificate_gnn/ThemeSync_academic-certificate_detected_master_layout.json
+

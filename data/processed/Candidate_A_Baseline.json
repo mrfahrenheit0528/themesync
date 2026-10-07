@@ -1,0 +1,145 @@
+[
+    {
+        "node_id": "{{Institution_Logo}}",
+        "semantic_category": "dynamic_variable",
+        "structural_class": "image_node",
+        "spatial_hierarchy": 0,
+        "bbox": [
+            510.0,
+            40.0,
+            180.0,
+            180.0
+        ],
+        "constraint_type": "Soft"
+    },
+    {
+        "node_id": "{{Issuing_Organization}}",
+        "semantic_category": "dynamic_variable",
+        "structural_class": "text_node",
+        "spatial_hierarchy": 1,
+        "bbox": [
+            300.0,
+            229.12,
+            600.0,
+            72.0
+        ],
+        "constraint_type": "Soft"
+    },
+    {
+        "node_id": "{{Certificate_Title}}",
+        "semantic_category": "dynamic_variable",
+        "structural_class": "text_node",
+        "spatial_hierarchy": 2,
+        "bbox": [
+            240.0,
+            310.25,
+            720.0,
+            135.0
+        ],
+        "constraint_type": "Soft"
+    },
+    {
+        "node_id": "{{Presentation_Line}}",
+        "semantic_category": "dynamic_variable",
+        "structural_class": "text_node",
+        "spatial_hierarchy": 3,
+        "bbox": [
+            420.0,
+            454.38,
+            360.0,
+            45.0
+        ],
+        "constraint_type": "Soft"
+    },
+    {
+        "node_id": "{{Student_Name}}",
+        "semantic_category": "dynamic_variable",
+        "structural_class": "text_node",
+        "spatial_hierarchy": 4,
+        "bbox": [
+            300.0,
+            508.5,
+            600.0,
+            90.0
+        ],
+        "constraint_type": "Soft"
+    },
+    {
+        "node_id": "{{Citation_Body}}",
+        "semantic_category": "dynamic_variable",
+        "structural_class": "text_node",
+        "spatial_hierarchy": 5,
+        "bbox": [
+            420.0,
+            607.62,
+            360.0,
+            45.0
+        ],
+        "constraint_type": "Soft"
+    },
+    {
+        "node_id": "{{Date_Issued}}",
+        "semantic_category": "dynamic_variable",
+        "structural_class": "text_node",
+        "spatial_hierarchy": 6,
+        "bbox": [
+            420.0,
+            661.75,
+            360.0,
+            45.0
+        ],
+        "constraint_type": "Soft"
+    },
+    {
+        "node_id": "{{Certificate_ID}}",
+        "semantic_category": "dynamic_variable",
+        "structural_class": "text_node",
+        "spatial_hierarchy": 7,
+        "bbox": [
+            420.0,
+            715.88,
+            360.0,
+            45.0
+        ],
+        "constraint_type": "Soft"
+    },
+    {
+        "node_id": "{{Signature_Blocks}}_0",
+        "semantic_category": "dynamic_variable",
+        "structural_class": "repeating_group",
+        "spatial_hierarchy": 8,
+        "bbox": [
+            120.0,
+            770.0,
+            240.0,
+            90.0
+        ],
+        "constraint_type": "Soft"
+    },
+    {
+        "node_id": "{{Signature_Blocks}}_1",
+        "semantic_category": "dynamic_variable",
+        "structural_class": "repeating_group",
+        "spatial_hierarchy": 8,
+        "bbox": [
+            480.0,
+            770.0,
+            240.0,
+            90.0
+        ],
+        "constraint_type": "Soft"
+    },
+    {
+        "node_id": "{{Signature_Blocks}}_2",
+        "semantic_category": "dynamic_variable",
+        "structural_class": "repeating_group",
+        "spatial_hierarchy": 8,
+        "bbox": [
+            840.0,
+            770.0,
+            240.0,
+            90.0
+        ],
+        "constraint_type": "Soft"
+    }
+]

@@ -1,0 +1,80 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: SEARCH_SSC_2025.jpg (1080×1080 px)
+  [TemplateIngestor] Extracted palette: #2465EE | #F4CA92 | #4EB4F4 | #448042
+  [TemplateIngestor] Saliency weight:   0.0499
+  ✔  0. Template Ingestion                      [1744.8 ms]
+     → Palette: #2465EE | #F4CA92 | #4EB4F4 | #448042
+     → Saliency: 0.0499  | Native size: 1080×1080 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1449.8 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 13 node(s) detected on the master layout
+       · auto_logo_0            conf=0.84
+       · auto_logo_1            conf=0.83
+       · auto_underlay_2        conf=0.26
+       · auto_text_3            conf=0.44  ocr="SEARCH FOR"
+       · auto_text_4            conf=0.29  ocr="SEARCH FOR"
+       · auto_text_5            conf=0.65  ocr="TUDENT Coun  ASSISTANTS AMITTEE DIRECT,"
+       · auto_embellishment_6   conf=0.36
+       · auto_embellishment_7   conf=0.43
+       · auto_embellishment_8   conf=0.69
+       · auto_text_9            conf=0.28  ocr="Fi@EpEcspPcssc"
+       · auto_text_10           conf=0.68  ocr="CAMARINES SUR POLYTECHNIC COLLEGES SUP) "
+       · auto_text_11           conf=0.70  ocr="CJ@EPEcsPcssc  €) SSCSERVICES@cSPc.EDU.P"
+       · auto_text_12           conf=0.61  ocr="SSCSERVICES@CSPC.EDU.PH"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/SEARCH_SSC_2025.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/SEARCH_SSC_2025/event_id_baseline/content.json
+  GNN            : disabled (baseline mode)
+  Population     : 5
+  Palette Source : real image → ['#2465EE', '#F4CA92', '#4EB4F4', '#448042']
+  ✔  1. Dynamic Node Instantiation              [0.3 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 0.86:1 (uploaded logos, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [1.2 ms]
+     → Hard constraints: 0 | Soft constraints: 6
+  ✔  4. Metaheuristic Candidate Ranking         [11.6 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_2_Spaced_Grand              0.2801 ◀ WINNER
+  [2]   Candidate_0_GNN_Baseline              0.2808
+  [3]   Candidate_3_Dynamic_Balanced          0.2908
+  [4]   Candidate_1_Compact_Formal            0.3050
+  [5]   Candidate_4_High_Margin_Focus         0.3121
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/SEARCH_SSC_2025/event_id_baseline/ThemeSync_identification-card_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [15.0 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.8 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          1744.8
+  0b. Semantic Layout Parsing (YOLO+OCR)         1449.8
+  1. Dynamic Node Instantiation                     0.3
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       1.2
+  4. Metaheuristic Ranking                         11.6
+  5. Aesthetic SVG Rendering                       15.0
+  6. FSM State Serialization                        0.8
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               3223.4
+
+  Winner   : Candidate_2_Spaced_Grand (C_total = 0.2801)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/SEARCH_SSC_2025/event_id_baseline/ThemeSync_identification-card_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/SEARCH_SSC_2025/event_id_baseline/ThemeSync_identification-card_detected_master_layout.json
+

@@ -1,0 +1,205 @@
+[
+  {
+    "node_id": "auto_logo_0",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 0,
+    "bbox": [
+      117.98,
+      962.8,
+      55.63,
+      56.12
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.62
+  },
+  {
+    "node_id": "auto_logo_1",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 1,
+    "bbox": [
+      174.45,
+      966.46,
+      44.8,
+      51.97
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6888
+  },
+  {
+    "node_id": "auto_underlay_2",
+    "semantic_category": "underlay",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 2,
+    "bbox": [
+      12.9,
+      0.0,
+      1065.53,
+      863.35
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2974
+  },
+  {
+    "node_id": "auto_embellishment_3",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 3,
+    "bbox": [
+      142.69,
+      197.84,
+      799.4,
+      445.81
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5137
+  },
+  {
+    "node_id": "auto_embellishment_4",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 4,
+    "bbox": [
+      219.59,
+      262.89,
+      841.55,
+      378.06
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4418
+  },
+  {
+    "node_id": "auto_embellishment_5",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 5,
+    "bbox": [
+      248.44,
+      287.17,
+      596.6,
+      347.44
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2927
+  },
+  {
+    "node_id": "auto_embellishment_6",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 6,
+    "bbox": [
+      45.03,
+      288.35,
+      1030.35,
+      533.73
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2866
+  },
+  {
+    "node_id": "auto_text_7",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 7,
+    "bbox": [
+      221.05,
+      680.24,
+      598.29,
+      46.92
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3578,
+    "ocr_text": "IGNITING THE FLAME OF CSPCEAN CULTURE:\nJING NEW JOURNEYS TOWARD BRILLIANCE AND BEL<"
+  },
+  {
+    "node_id": "auto_text_8",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 8,
+    "bbox": [
+      285.26,
+      754.88,
+      463.89,
+      33.31
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6874,
+    "ocr_text": "JULY 31-\u2014- AUGUST 1, 2025"
+  },
+  {
+    "node_id": "auto_text_9",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 9,
+    "bbox": [
+      647.06,
+      959.14,
+      324.68,
+      66.98
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3748,
+    "ocr_text": "(3OU @csrcssc\n\n()SsCsERVICES@csPc.eDU.PH"
+  },
+  {
+    "node_id": "auto_text_10",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 10,
+    "bbox": [
+      56.87,
+      960.43,
+      661.85,
+      60.6
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3276,
+    "ocr_text": "CAMARIN = STUDENT COUNCIL \u2014\u2014\nSUPRE! EME STUDENT -\u00ab\n\nSUPREME STUDENT \u00a2 @jssc"
+  },
+  {
+    "node_id": "auto_text_11",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 11,
+    "bbox": [
+      182.65,
+      961.23,
+      426.27,
+      57.92
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.346,
+    "ocr_text": "CAMARINES SUR POLYTECHNIC COLLEGES \u2014\nSUPREME STUDENT COUNCIL \u2014\n\nACADEMIC YEAR 2025-2026"
+  },
+  {
+    "node_id": "auto_text_12",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 12,
+    "bbox": [
+      225.81,
+      961.29,
+      343.74,
+      49.25
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5561,
+    "ocr_text": "CAMARINES. SUR TECHNIC COLLEGES\nSTUDENT. COUNCIL"
+  },
+  {
+    "node_id": "auto_text_13",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 13,
+    "bbox": [
+      659.87,
+      995.21,
+      300.97,
+      25.77
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3276,
+    "ocr_text": "<J SSCSERVICES@CSPC.EDU.PH"
+  }
+]

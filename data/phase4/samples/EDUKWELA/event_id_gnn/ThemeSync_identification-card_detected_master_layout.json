@@ -1,0 +1,105 @@
+[
+  {
+    "node_id": "auto_logo_0",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 0,
+    "bbox": [
+      498.28,
+      166.07,
+      80.22,
+      85.25
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.339
+  },
+  {
+    "node_id": "auto_underlay_1",
+    "semantic_category": "underlay",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 1,
+    "bbox": [
+      28.39,
+      0.0,
+      1051.61,
+      931.37
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3715
+  },
+  {
+    "node_id": "auto_text_2",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 2,
+    "bbox": [
+      123.07,
+      273.03,
+      812.93,
+      350.08
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7692,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_3",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 3,
+    "bbox": [
+      281.9,
+      679.68,
+      510.4,
+      73.25
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7157,
+    "ocr_text": "CSPC TEACHER\u2019S DAY CELEBRATION\nOCTOBER 4, 2024 | CSPC AUDITORIUM"
+  },
+  {
+    "node_id": "auto_text_4",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 4,
+    "bbox": [
+      691.46,
+      872.5,
+      203.46,
+      30.77
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4618,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_5",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 5,
+    "bbox": [
+      707.14,
+      874.87,
+      170.88,
+      25.28
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5853,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_6",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 6,
+    "bbox": [
+      551.66,
+      1018.75,
+      499.27,
+      25.05
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2806,
+    "ocr_text": "EGES - SUPREME STUDENT COUNCIL"
+  }
+]

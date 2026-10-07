@@ -1,0 +1,6 @@
+path: /home/guillerangelohermoso/themesync/data/raw/master_layout_batch
+train: train/images
+val: valid/images
+
+nc: 4
+names: ['logo', 'text', 'underlay', 'embellishment']

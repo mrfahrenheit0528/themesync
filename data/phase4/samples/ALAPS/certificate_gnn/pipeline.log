@@ -1,0 +1,86 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: ALAPS.jpg (1080×1080 px)
+  [TemplateIngestor] Extracted palette: #224238 | #7A1D13 | #B14922
+  [TemplateIngestor] Saliency weight:   0.0686
+  ✔  0. Template Ingestion                      [2938.8 ms]
+     → Palette: #224238 | #7A1D13 | #B14922
+     → Saliency: 0.0686  | Native size: 1080×1080 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1834.3 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 18 node(s) detected on the master layout
+       · auto_logo_0            conf=0.87
+       · auto_logo_1            conf=0.70
+       · auto_logo_2            conf=0.61
+       · auto_embellishment_3   conf=0.33
+       · auto_embellishment_4   conf=0.32
+       · auto_embellishment_5   conf=0.41
+       · auto_text_6            conf=0.79  ocr="CAMARINES SUR POLYTECHNIC COLLEGES SUPRE"
+       · auto_embellishment_7   conf=0.27
+       · auto_embellishment_8   conf=0.47
+       · auto_embellishment_9   conf=0.53
+       · auto_text_10           conf=0.40
+       · auto_text_11           conf=0.44  ocr="ALPAS  OV IRKLING VEAREND"
+       · auto_text_12           conf=0.42  ocr="ALPAS"
+       · auto_embellishment_13  conf=0.27
+       · auto_text_14           conf=0.39  ocr="NPLRKLING YELREND"
+       · auto_text_15           conf=0.27  ocr="PIRKLING VERSE"
+       · auto_embellishment_16  conf=0.39
+       · auto_text_17           conf=0.32  ocr=") @cspcssc [MJ sscservices@cspc.edu.ph"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/academic_payload.json
+  Domain         : academic_certificate
+  Canvas         : 1200 × 900 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/ALAPS.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/ALAPS/certificate_gnn/content.json
+  GNN            : enabled
+  Population     : 5
+  Palette Source : real image → ['#224238', '#7A1D13', '#B14922']
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
+     → 11 node(s) instantiated for canvas 1200×900
+     → Logo aspect ratio locked to 0.96:1 (Stage 0b crop of 2 logo(s), conf=0.70, 0.87, Affine scaling)
+  ✔  2. GNN Spatial Inference                   [130.6 ms]
+     → Weights: loaded from themesync_gnn_v1.pth
+     → Predictions applied: True
+  ✔  3. Cassowary CSP Resolution                [1.8 ms]
+     → Hard constraints: 0 | Soft constraints: 11
+  ✔  4. Metaheuristic Candidate Ranking         [15.0 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_0_GNN_Baseline              0.4549 ◀ WINNER
+  [2]   Candidate_1_Compact_Formal            0.4549
+  [3]   Candidate_2_Spaced_Grand              0.4549
+  [4]   Candidate_3_Dynamic_Balanced          0.4549
+  [5]   Candidate_4_High_Margin_Focus         0.4549
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/ALAPS/certificate_gnn/ThemeSync_academic-certificate_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [4.3 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          2938.8
+  0b. Semantic Layout Parsing (YOLO+OCR)         1834.3
+  1. Dynamic Node Instantiation                     0.2
+  2. GNN Spatial Inference                        130.6
+  3. Cassowary CSP Resolution                       1.8
+  4. Metaheuristic Ranking                         15.0
+  5. Aesthetic SVG Rendering                        4.3
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               4925.3
+
+  Winner   : Candidate_0_GNN_Baseline (C_total = 0.4549)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/ALAPS/certificate_gnn/ThemeSync_academic-certificate_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/ALAPS/certificate_gnn/ThemeSync_academic-certificate_detected_master_layout.json
+

@@ -1,0 +1,119 @@
+[
+  {
+    "node_id": "auto_logo_0",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 0,
+    "bbox": [
+      1031.06,
+      93.9,
+      69.68,
+      77.94
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6887
+  },
+  {
+    "node_id": "auto_logo_1",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 1,
+    "bbox": [
+      954.63,
+      94.58,
+      76.34,
+      76.74
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7091
+  },
+  {
+    "node_id": "auto_text_2",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 2,
+    "bbox": [
+      757.74,
+      172.57,
+      514.36,
+      75.4
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.9001,
+    "ocr_text": "CAMARINES SUR POLYTECHNIC COLLEGES\n\nSUPREME STUDENT COUNCIL\n\nACADEMIC VEAD 2024-70) eee"
+  },
+  {
+    "node_id": "auto_embellishment_3",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 3,
+    "bbox": [
+      652.92,
+      322.09,
+      745.12,
+      828.8
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3961
+  },
+  {
+    "node_id": "auto_text_4",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 4,
+    "bbox": [
+      434.19,
+      1182.52,
+      1162.33,
+      353.55
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8127,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_5",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 5,
+    "bbox": [
+      512.0,
+      1568.01,
+      1021.3,
+      207.67
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7673,
+    "ocr_text": "ENHANCING LEADERSHIP: SKILLS AND\nCREATING COMNUWHITY INFACTS\nJandargads-i4, 2025"
+  },
+  {
+    "node_id": "auto_text_6",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 6,
+    "bbox": [
+      718.34,
+      1882.63,
+      722.02,
+      65.16
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4789,
+    "ocr_text": "{J @csPcssc () sscseRVIcEs@csPc.eDU.PH"
+  },
+  {
+    "node_id": "auto_text_7",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 7,
+    "bbox": [
+      746.14,
+      1883.79,
+      539.93,
+      60.11
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6394,
+    "ocr_text": "f3@ @csrcssc EJ sscserRvices@csPc.eDu.PH"
+  }
+]

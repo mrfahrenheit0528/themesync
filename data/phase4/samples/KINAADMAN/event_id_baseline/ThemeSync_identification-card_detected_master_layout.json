@@ -1,0 +1,325 @@
+[
+  {
+    "node_id": "auto_logo_0",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 0,
+    "bbox": [
+      1031.3,
+      51.31,
+      75.16,
+      90.67
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8374
+  },
+  {
+    "node_id": "auto_logo_1",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 1,
+    "bbox": [
+      930.86,
+      53.71,
+      92.87,
+      92.78
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.84
+  },
+  {
+    "node_id": "auto_logo_2",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 2,
+    "bbox": [
+      776.09,
+      62.94,
+      75.37,
+      77.15
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.837
+  },
+  {
+    "node_id": "auto_logo_3",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 3,
+    "bbox": [
+      858.5,
+      65.07,
+      67.16,
+      72.65
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8796
+  },
+  {
+    "node_id": "auto_logo_4",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 4,
+    "bbox": [
+      1117.1,
+      69.52,
+      60.94,
+      69.73
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8095
+  },
+  {
+    "node_id": "auto_logo_5",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 5,
+    "bbox": [
+      1183.72,
+      74.09,
+      86.65,
+      57.82
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.253
+  },
+  {
+    "node_id": "auto_embellishment_6",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 6,
+    "bbox": [
+      0.61,
+      61.09,
+      1876.54,
+      1457.52
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.254
+  },
+  {
+    "node_id": "auto_text_7",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 7,
+    "bbox": [
+      649.29,
+      147.55,
+      733.55,
+      102.91
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7395,
+    "ocr_text": "7 ECHNIC Cc GES\n\nNT COUNCIL"
+  },
+  {
+    "node_id": "auto_text_8",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 8,
+    "bbox": [
+      307.78,
+      834.6,
+      1447.03,
+      301.87
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4325,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_9",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 9,
+    "bbox": [
+      277.86,
+      1147.09,
+      1071.62,
+      50.84
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3896,
+    "ocr_text": "BRIGHT BEGINNINGS: NURTURING KNOWL"
+  },
+  {
+    "node_id": "auto_text_10",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 10,
+    "bbox": [
+      245.29,
+      1150.78,
+      1443.94,
+      50.38
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2823,
+    "ocr_text": "| BRIGHT BEGINNINGS: NURTURING KNOWL"
+  },
+  {
+    "node_id": "auto_text_11",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 11,
+    "bbox": [
+      565.18,
+      1230.2,
+      1163.54,
+      50.53
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3049,
+    "ocr_text": ".N;, AGTA-TABANGNON) GCABATUANSBUHINCAMARINES:SUR"
+  },
+  {
+    "node_id": "auto_text_12",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 12,
+    "bbox": [
+      313.97,
+      1299.4,
+      1039.84,
+      78.62
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3996,
+    "ocr_text": "[In Partnership with LANGUAGE STUDIES SOCIETY ENGINEER!\nSCIENGE SOGIETY\u00a3THE APEXES ACADEMIC SOC."
+  },
+  {
+    "node_id": "auto_text_13",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 13,
+    "bbox": [
+      734.11,
+      1302.9,
+      1018.81,
+      74.38
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4133,
+    "ocr_text": "UAGE STUDIES SOCIETYeENGINEERING MATHEMATICS and\nIGIETYATHE APEXES ACADEMIC SQ@CIETY. and"
+  },
+  {
+    "node_id": "auto_text_14",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 14,
+    "bbox": [
+      842.73,
+      1352.9,
+      590.91,
+      76.02
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2524,
+    "ocr_text": "pITME APEAES ACADENIC'SOLIELY,\nhHE MAYARI PROJECT"
+  },
+  {
+    "node_id": "auto_text_15",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 15,
+    "bbox": [
+      838.11,
+      1360.82,
+      380.89,
+      71.77
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2745,
+    "ocr_text": "Frith PAP EN SANSA E\n\nNHE MAYARI PROJECT"
+  },
+  {
+    "node_id": "auto_text_16",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 16,
+    "bbox": [
+      845.77,
+      1361.23,
+      757.13,
+      73.23
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2756,
+    "ocr_text": "pO PA PN Bee? PAN PAE ERIE NS SINR, CHP NE\n\niHE MAYARI PROJECT"
+  },
+  {
+    "node_id": "auto_text_17",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 17,
+    "bbox": [
+      902.38,
+      1505.64,
+      469.48,
+      36.42
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6266,
+    "ocr_text": "SSC EJ SSCSERVICES@CSPC.EDU.PH"
+  },
+  {
+    "node_id": "auto_text_18",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 18,
+    "bbox": [
+      721.52,
+      1506.19,
+      232.01,
+      34.29
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.609,
+    "ocr_text": "(@lj @csPcssc"
+  },
+  {
+    "node_id": "auto_text_19",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 19,
+    "bbox": [
+      963.26,
+      1506.74,
+      343.04,
+      30.2
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4759,
+    "ocr_text": "6] SSCSERVICES(@CSPC.EDL"
+  },
+  {
+    "node_id": "auto_text_20",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 20,
+    "bbox": [
+      1081.14,
+      1507.89,
+      284.11,
+      29.94
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.45,
+    "ocr_text": "2VICES(@CSPC.EDU.PH"
+  },
+  {
+    "node_id": "auto_text_21",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 21,
+    "bbox": [
+      1156.31,
+      1511.33,
+      202.31,
+      23.54
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5656,
+    "ocr_text": ""
+  }
+]

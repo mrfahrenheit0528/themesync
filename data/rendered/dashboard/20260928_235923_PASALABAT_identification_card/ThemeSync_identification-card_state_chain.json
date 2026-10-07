@@ -1,0 +1,256 @@
+{
+  "state_chain": [
+    {
+      "state_id": "State_00",
+      "label": "Baseline Init",
+      "timestamp": "2026-09-28T23:59:27.514",
+      "event": {
+        "type": "init",
+        "schema_validation": {
+          "typography": "passed",
+          "content": "passed"
+        }
+      },
+      "nodes": [
+        {
+          "node_id": "{{Organization_Logos}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            141.36,
+            152.25,
+            461.28,
+            78.9
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Organization_Header}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            74.4,
+            249.15,
+            595.2,
+            47.34
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Event_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            64.0,
+            314.49,
+            639.84,
+            263.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Event_Details}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            81.84,
+            595.49,
+            580.32,
+            57.86
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Participant_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            64.0,
+            671.35,
+            624.96,
+            115.72
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Participant_Role}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            64.0,
+            805.07,
+            624.96,
+            94.68
+          ],
+          "constraint_type": "Soft"
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.0047,
+        "P_space": 0.1584,
+        "P_legibility": 0.0,
+        "Total_Cost": 0.1678
+      },
+      "hard_nodes": [],
+      "candidate_id": null,
+      "variation": {
+        "name": "Candidate_A",
+        "margin": 64.0,
+        "vgap": 18.0,
+        "arrangement": 0
+      }
+    },
+    {
+      "state_id": "State_01",
+      "label": "GNN Relational \u00b7 Candidate_C",
+      "timestamp": "2026-09-28T23:59:27.514",
+      "event": {
+        "type": "candidate",
+        "candidate_id": "Candidate_C",
+        "rank": 1
+      },
+      "nodes": [
+        {
+          "node_id": "{{Organization_Logos}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            141.36,
+            60.0,
+            461.28,
+            78.9
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Organization_Header}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            74.4,
+            162.9,
+            595.2,
+            47.34
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            60.0,
+            252.5,
+            639.84,
+            263.0
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Details}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            81.84,
+            620.7,
+            580.32,
+            57.86
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            60.0,
+            757.6,
+            624.96,
+            115.72
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Role}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            60.0,
+            897.32,
+            624.96,
+            94.68
+          ],
+          "constraint_type": "Soft",
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "decor_motif_0",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 100,
+          "constraint_type": "Soft",
+          "bbox": [
+            -25.86,
+            -29.46,
+            143.69,
+            163.68
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/PASALABAT/PASALABAT_motif_0.png",
+          "slot": "TL",
+          "arrangement": "four corners",
+          "flip": false
+        },
+        {
+          "node_id": "decor_motif_1",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 101,
+          "constraint_type": "Soft",
+          "bbox": [
+            626.18,
+            -29.46,
+            143.69,
+            163.68
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/PASALABAT/PASALABAT_motif_0.png",
+          "slot": "TR",
+          "arrangement": "four corners",
+          "flip": true
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.002,
+        "P_space": 0.1584,
+        "P_legibility": 0.0,
+        "Total_Cost": 0.1624
+      },
+      "hard_nodes": [],
+      "candidate_id": "Candidate_C",
+      "variation": {
+        "name": "Candidate_C",
+        "margin": 60.0,
+        "vgap": 24.0,
+        "arrangement": 2
+      }
+    }
+  ]
+}

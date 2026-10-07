@@ -1,0 +1,230 @@
+{
+  "state_chain": [
+    {
+      "state_id": "State_00",
+      "label": "Baseline Init",
+      "timestamp": "2026-10-06T12:27:02.682",
+      "event": {
+        "type": "init",
+        "schema_validation": {
+          "typography": "passed",
+          "content": "passed"
+        }
+      },
+      "nodes": [
+        {
+          "node_id": "{{Organization_Logos}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            141.36,
+            147.25,
+            461.28,
+            78.9
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Organization_Header}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            74.4,
+            246.15,
+            595.2,
+            47.34
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Event_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            60.0,
+            313.49,
+            624.0,
+            263.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Event_Details}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            81.84,
+            596.49,
+            580.32,
+            57.86
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Participant_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            60.0,
+            674.35,
+            624.0,
+            115.72
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Participant_Role}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            60.0,
+            810.07,
+            624.0,
+            94.68
+          ],
+          "constraint_type": "Soft"
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.0,
+        "P_space": 0.1528,
+        "P_legibility": 0.0019,
+        "Total_Cost": 0.1556
+      },
+      "hard_nodes": [],
+      "candidate_id": null,
+      "variation": {
+        "name": "Candidate_A",
+        "archetype": "classic",
+        "margin": 60.0,
+        "vgap": 20.0,
+        "arrangement": 6
+      }
+    },
+    {
+      "state_id": "State_01",
+      "label": "GNN Relational \u00b7 Candidate_D",
+      "timestamp": "2026-10-06T12:27:02.683",
+      "event": {
+        "type": "candidate",
+        "candidate_id": "Candidate_D",
+        "rank": 1
+      },
+      "nodes": [
+        {
+          "node_id": "{{Organization_Logos}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            72.0,
+            72.0,
+            461.28,
+            78.9
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": true,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Organization_Header}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            72.0,
+            168.9,
+            595.2,
+            47.34
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": true,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            72.0,
+            394.74,
+            600.0,
+            263.0
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": true,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Event_Details}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            72.0,
+            675.74,
+            580.32,
+            57.86
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": true,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            72.0,
+            751.6,
+            600.0,
+            115.72
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Participant_Role}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            72.0,
+            885.32,
+            600.0,
+            94.68
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.0,
+        "P_space": 0.1383,
+        "P_legibility": 0.0056,
+        "Total_Cost": 0.1466
+      },
+      "hard_nodes": [],
+      "candidate_id": "Candidate_D",
+      "variation": {
+        "name": "Candidate_D",
+        "archetype": "left",
+        "margin": 72.0,
+        "vgap": 18.0,
+        "arrangement": 1
+      }
+    }
+  ]
+}

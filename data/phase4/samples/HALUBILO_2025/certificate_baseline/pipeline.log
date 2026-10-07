@@ -1,0 +1,81 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: HALUBILO_2025.jpg (1400×1080 px)
+  [TemplateIngestor] Extracted palette: #23283E | #636F80 | #E6B835 | #ADCACA
+  [TemplateIngestor] Saliency weight:   0.0847
+  ✔  0. Template Ingestion                      [2523.8 ms]
+     → Palette: #23283E | #636F80 | #E6B835 | #ADCACA
+     → Saliency: 0.0847  | Native size: 1400×1080 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [916.2 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 14 node(s) detected on the master layout
+       · auto_logo_0            conf=0.80
+       · auto_logo_1            conf=0.78
+       · auto_logo_2            conf=0.88
+       · auto_logo_3            conf=0.28
+       · auto_logo_4            conf=0.32
+       · auto_embellishment_5   conf=0.41
+       · auto_text_6            conf=0.36
+       · auto_embellishment_7   conf=0.34
+       · auto_embellishment_8   conf=0.41
+       · auto_text_9            conf=0.75  ocr=") halubilo2025"
+       · auto_text_10           conf=0.74  ocr=") Ipcs@cspc.edu.ph"
+       · auto_text_11           conf=0.61  ocr="| @jpcescspcchapter"
+       · auto_text_12           conf=0.26  ocr="Dipcscspcchapter"
+       · auto_text_13           conf=0.37  ocr="JPCSNCSpPc .e0u.H'"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/academic_payload.json
+  Domain         : academic_certificate
+  Canvas         : 1200 × 900 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/HALUBILO_2025.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/HALUBILO_2025/certificate_baseline/content.json
+  GNN            : disabled (baseline mode)
+  Population     : 5
+  Palette Source : real image → ['#23283E', '#636F80', '#E6B835', '#ADCACA']
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
+     → 11 node(s) instantiated for canvas 1200×900
+     → Logo aspect ratio locked to 0.94:1 (uploaded logos, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [1.7 ms]
+     → Hard constraints: 0 | Soft constraints: 11
+  ✔  4. Metaheuristic Candidate Ranking         [14.7 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_4_High_Margin_Focus         0.2585 ◀ WINNER
+  [2]   Candidate_0_GNN_Baseline              0.2649
+  [3]   Candidate_1_Compact_Formal            0.2746
+  [4]   Candidate_2_Spaced_Grand              0.2836
+  [5]   Candidate_3_Dynamic_Balanced          0.2836
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/HALUBILO_2025/certificate_baseline/ThemeSync_academic-certificate_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [17.1 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.5 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          2523.8
+  0b. Semantic Layout Parsing (YOLO+OCR)          916.2
+  1. Dynamic Node Instantiation                     0.2
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       1.7
+  4. Metaheuristic Ranking                         14.7
+  5. Aesthetic SVG Rendering                       17.1
+  6. FSM State Serialization                        0.5
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               3474.2
+
+  Winner   : Candidate_4_High_Margin_Focus (C_total = 0.2585)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/HALUBILO_2025/certificate_baseline/ThemeSync_academic-certificate_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/HALUBILO_2025/certificate_baseline/ThemeSync_academic-certificate_detected_master_layout.json
+

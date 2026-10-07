@@ -1,0 +1,204 @@
+[
+  {
+    "node_id": "auto_logo_0",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 0,
+    "bbox": [
+      588.02,
+      310.3,
+      75.58,
+      78.22
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7965
+  },
+  {
+    "node_id": "auto_logo_1",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 1,
+    "bbox": [
+      664.44,
+      314.0,
+      69.42,
+      71.82
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7834
+  },
+  {
+    "node_id": "auto_logo_2",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 2,
+    "bbox": [
+      738.41,
+      314.56,
+      71.61,
+      75.76
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8766
+  },
+  {
+    "node_id": "auto_logo_3",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 3,
+    "bbox": [
+      842.99,
+      1034.89,
+      34.44,
+      35.65
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2753
+  },
+  {
+    "node_id": "auto_logo_4",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 4,
+    "bbox": [
+      620.87,
+      1038.63,
+      33.93,
+      34.4
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3237
+  },
+  {
+    "node_id": "auto_embellishment_5",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 5,
+    "bbox": [
+      372.3,
+      31.25,
+      177.45,
+      328.67
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4113
+  },
+  {
+    "node_id": "auto_text_6",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 6,
+    "bbox": [
+      704.11,
+      946.17,
+      363.23,
+      47.18
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3632,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_embellishment_7",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 7,
+    "bbox": [
+      843.07,
+      1035.24,
+      34.94,
+      36.25
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3359
+  },
+  {
+    "node_id": "auto_embellishment_8",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 8,
+    "bbox": [
+      347.33,
+      1038.91,
+      32.39,
+      32.73
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4143
+  },
+  {
+    "node_id": "auto_text_9",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 9,
+    "bbox": [
+      647.51,
+      1042.2,
+      140.02,
+      22.79
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7503,
+    "ocr_text": ") halubilo2025"
+  },
+  {
+    "node_id": "auto_text_10",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 10,
+    "bbox": [
+      874.51,
+      1043.29,
+      179.73,
+      25.42
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7358,
+    "ocr_text": ") Ipcs@cspc.edu.ph"
+  },
+  {
+    "node_id": "auto_text_11",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 11,
+    "bbox": [
+      375.1,
+      1043.93,
+      200.01,
+      24.2
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6122,
+    "ocr_text": "| @jpcescspcchapter"
+  },
+  {
+    "node_id": "auto_text_12",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 12,
+    "bbox": [
+      395.8,
+      1045.98,
+      171.67,
+      19.1
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2626,
+    "ocr_text": "Dipcscspcchapter"
+  },
+  {
+    "node_id": "auto_text_13",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 13,
+    "bbox": [
+      883.41,
+      1047.48,
+      160.39,
+      18.93
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3659,
+    "ocr_text": "JPCSNCSpPc .e0u.H'"
+  }
+]

@@ -1,0 +1,820 @@
+{
+  "state_chain": [
+    {
+      "state_id": "State_00",
+      "label": "Baseline Init",
+      "timestamp": "2026-09-29T11:25:29.681",
+      "event": {
+        "type": "init",
+        "schema_validation": {
+          "typography": "passed",
+          "content": "passed"
+        }
+      },
+      "nodes": [
+        {
+          "node_id": "{{Institution_Logo}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            550.5,
+            106.72,
+            99.0,
+            97.07
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Issuing_Organization}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            180.0,
+            221.79,
+            840.0,
+            40.5
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Certificate_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            120.0,
+            280.29,
+            960.0,
+            90.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Presentation_Line}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            270.0,
+            388.29,
+            660.0,
+            31.5
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Student_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            150.0,
+            437.79,
+            900.0,
+            76.5
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Citation_Body}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            120.0,
+            532.28,
+            960.0,
+            81.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Date_Issued}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 6,
+          "bbox": [
+            390.0,
+            631.28,
+            420.0,
+            27.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Certificate_ID}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 7,
+          "bbox": [
+            390.0,
+            676.28,
+            420.0,
+            27.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Signature_Blocks}}_0",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "repeating_group",
+          "spatial_hierarchy": 8,
+          "bbox": [
+            138.0,
+            721.28,
+            264.0,
+            72.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Signature_Blocks}}_1",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "repeating_group",
+          "spatial_hierarchy": 8,
+          "bbox": [
+            468.0,
+            721.28,
+            264.0,
+            72.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Signature_Blocks}}_2",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "repeating_group",
+          "spatial_hierarchy": 8,
+          "bbox": [
+            798.0,
+            721.28,
+            264.0,
+            72.0
+          ],
+          "constraint_type": "Soft"
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.0,
+        "P_space": 0.0008,
+        "P_legibility": 0.0009,
+        "Total_Cost": 0.0022
+      },
+      "hard_nodes": [],
+      "candidate_id": null,
+      "variation": {
+        "name": "Candidate_A",
+        "archetype": "classic",
+        "margin": 72.0,
+        "vgap": 18.0,
+        "arrangement": 0
+      }
+    },
+    {
+      "state_id": "State_01",
+      "label": "GNN Relational \u00b7 Candidate_D",
+      "timestamp": "2026-09-29T11:25:29.682",
+      "event": {
+        "type": "candidate",
+        "candidate_id": "Candidate_D",
+        "rank": 1
+      },
+      "nodes": [
+        {
+          "node_id": "{{Institution_Logo}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            104.0,
+            109.43,
+            99.0,
+            97.07
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": true,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Issuing_Organization}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            104.0,
+            224.5,
+            840.0,
+            40.5
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Certificate_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            104.0,
+            283.0,
+            960.0,
+            90.0
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Presentation_Line}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            104.0,
+            391.0,
+            660.0,
+            31.5
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Student_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            104.0,
+            440.5,
+            900.0,
+            76.5
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Citation_Body}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            104.0,
+            535.0,
+            960.0,
+            81.0
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Date_Issued}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 6,
+          "bbox": [
+            104.0,
+            634.0,
+            420.0,
+            27.0
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Certificate_ID}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 7,
+          "bbox": [
+            104.0,
+            679.0,
+            420.0,
+            27.0
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Signature_Blocks}}_0",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "repeating_group",
+          "spatial_hierarchy": 8,
+          "bbox": [
+            154.0,
+            724.0,
+            264.0,
+            72.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Signature_Blocks}}_1",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "repeating_group",
+          "spatial_hierarchy": 8,
+          "bbox": [
+            468.0,
+            724.0,
+            264.0,
+            72.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Signature_Blocks}}_2",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "repeating_group",
+          "spatial_hierarchy": 8,
+          "bbox": [
+            782.0,
+            724.0,
+            264.0,
+            72.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "decor_motif_0",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 100,
+          "constraint_type": "Soft",
+          "bbox": [
+            1096.63,
+            375.75,
+            126.06,
+            148.5
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/788015704_1742140747071035_6799305858412288_n_d4142379/788015704_1742140747071035_6799305858412288_n_d4142379_motif_1.png",
+          "slot": "MR",
+          "arrangement": "side columns",
+          "flip": true
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.0,
+        "P_space": 0.0008,
+        "P_legibility": 0.0,
+        "Total_Cost": 0.0008
+      },
+      "hard_nodes": [],
+      "candidate_id": "Candidate_D",
+      "variation": {
+        "name": "Candidate_D",
+        "archetype": "left",
+        "margin": 104.0,
+        "vgap": 18.0,
+        "arrangement": 3
+      }
+    },
+    {
+      "state_id": "State_02",
+      "label": "Hard Const. [{{Institution_Logo}}]",
+      "timestamp": "2026-09-29T11:25:40.059",
+      "event": {
+        "type": "on-drop",
+        "node_id": "{{Institution_Logo}}",
+        "before": [
+          104.0,
+          109.43,
+          99.0,
+          97.07
+        ],
+        "after": [
+          550.5,
+          109.4,
+          99.0,
+          97.1
+        ],
+        "constraint_type": "Hard",
+        "summary": "Moved {{Institution_Logo}}"
+      },
+      "nodes": [
+        {
+          "node_id": "{{Institution_Logo}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            550.5,
+            109.4,
+            99.0,
+            97.1
+          ],
+          "constraint_type": "Hard",
+          "structure_anchor": true,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Issuing_Organization}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            104.0,
+            224.5,
+            840.0,
+            40.5
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Certificate_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            104.0,
+            283.0,
+            960.0,
+            90.0
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Presentation_Line}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            104.0,
+            391.0,
+            660.0,
+            31.5
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Student_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            104.0,
+            440.5,
+            900.0,
+            76.5
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Citation_Body}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            104.0,
+            535.0,
+            960.0,
+            81.0
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Date_Issued}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 6,
+          "bbox": [
+            104.0,
+            634.0,
+            420.0,
+            27.0
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Certificate_ID}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 7,
+          "bbox": [
+            104.0,
+            679.0,
+            420.0,
+            27.0
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Signature_Blocks}}_0",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "repeating_group",
+          "spatial_hierarchy": 8,
+          "bbox": [
+            154.0,
+            724.0,
+            264.0,
+            72.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Signature_Blocks}}_1",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "repeating_group",
+          "spatial_hierarchy": 8,
+          "bbox": [
+            468.0,
+            724.0,
+            264.0,
+            72.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Signature_Blocks}}_2",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "repeating_group",
+          "spatial_hierarchy": 8,
+          "bbox": [
+            782.0,
+            724.0,
+            264.0,
+            72.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "decor_motif_0",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 100,
+          "constraint_type": "Soft",
+          "bbox": [
+            1096.63,
+            375.75,
+            126.06,
+            148.5
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/788015704_1742140747071035_6799305858412288_n_d4142379/788015704_1742140747071035_6799305858412288_n_d4142379_motif_1.png",
+          "slot": "MR",
+          "arrangement": "side columns",
+          "flip": true
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.0,
+        "P_space": 0.0008,
+        "P_legibility": 0.0,
+        "Total_Cost": 0.0008
+      },
+      "hard_nodes": [
+        "{{Institution_Logo}}"
+      ],
+      "candidate_id": "Candidate_D",
+      "variation": {
+        "name": "Candidate_D",
+        "archetype": "left",
+        "margin": 104.0,
+        "vgap": 18.0,
+        "arrangement": 3
+      }
+    },
+    {
+      "state_id": "State_03",
+      "label": "Hard Const. [decor_motif_0]",
+      "timestamp": "2026-09-29T11:26:29.767",
+      "event": {
+        "type": "on-drop",
+        "node_id": "decor_motif_0",
+        "before": [
+          1096.63,
+          375.75,
+          126.06,
+          148.5
+        ],
+        "after": [
+          41.0,
+          35.2,
+          126.1,
+          148.5
+        ],
+        "constraint_type": "Hard",
+        "summary": "Moved decor_motif_0"
+      },
+      "nodes": [
+        {
+          "node_id": "{{Institution_Logo}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "image_node",
+          "spatial_hierarchy": 0,
+          "bbox": [
+            550.5,
+            109.4,
+            99.0,
+            97.1
+          ],
+          "constraint_type": "Hard",
+          "structure_anchor": true,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Issuing_Organization}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 1,
+          "bbox": [
+            104.0,
+            224.5,
+            840.0,
+            40.5
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Certificate_Title}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 2,
+          "bbox": [
+            104.0,
+            283.0,
+            960.0,
+            90.0
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Presentation_Line}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 3,
+          "bbox": [
+            104.0,
+            391.0,
+            660.0,
+            31.5
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Student_Name}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 4,
+          "bbox": [
+            104.0,
+            440.5,
+            900.0,
+            76.5
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Citation_Body}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 5,
+          "bbox": [
+            104.0,
+            535.0,
+            960.0,
+            81.0
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Date_Issued}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 6,
+          "bbox": [
+            104.0,
+            634.0,
+            420.0,
+            27.0
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Certificate_ID}}",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "text_node",
+          "spatial_hierarchy": 7,
+          "bbox": [
+            104.0,
+            679.0,
+            420.0,
+            27.0
+          ],
+          "constraint_type": "Soft",
+          "structure_anchor": false,
+          "gnn_predicted": true
+        },
+        {
+          "node_id": "{{Signature_Blocks}}_0",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "repeating_group",
+          "spatial_hierarchy": 8,
+          "bbox": [
+            154.0,
+            724.0,
+            264.0,
+            72.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Signature_Blocks}}_1",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "repeating_group",
+          "spatial_hierarchy": 8,
+          "bbox": [
+            468.0,
+            724.0,
+            264.0,
+            72.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "{{Signature_Blocks}}_2",
+          "semantic_category": "dynamic_variable",
+          "structural_class": "repeating_group",
+          "spatial_hierarchy": 8,
+          "bbox": [
+            782.0,
+            724.0,
+            264.0,
+            72.0
+          ],
+          "constraint_type": "Soft"
+        },
+        {
+          "node_id": "decor_motif_0",
+          "semantic_category": "embellishment",
+          "structural_class": "decor",
+          "spatial_hierarchy": 100,
+          "constraint_type": "Hard",
+          "bbox": [
+            41.0,
+            35.2,
+            126.1,
+            148.5
+          ],
+          "motif_path": "/home/guillerangelohermoso/themesync/data/rendered/dashboard/visual_dna/788015704_1742140747071035_6799305858412288_n_d4142379/788015704_1742140747071035_6799305858412288_n_d4142379_motif_1.png",
+          "slot": "MR",
+          "arrangement": "side columns",
+          "flip": true
+        }
+      ],
+      "fitness": {
+        "P_collision": 0.0,
+        "P_align": 0.0,
+        "P_space": 0.0008,
+        "P_legibility": 0.0001,
+        "Total_Cost": 0.001
+      },
+      "hard_nodes": [
+        "{{Institution_Logo}}",
+        "decor_motif_0"
+      ],
+      "candidate_id": "Candidate_D",
+      "variation": {
+        "name": "Candidate_D",
+        "archetype": "left",
+        "margin": 104.0,
+        "vgap": 18.0,
+        "arrangement": 3
+      }
+    }
+  ]
+}

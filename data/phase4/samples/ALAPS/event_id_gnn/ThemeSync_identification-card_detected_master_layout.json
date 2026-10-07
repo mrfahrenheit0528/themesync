@@ -1,0 +1,261 @@
+[
+  {
+    "node_id": "auto_logo_0",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 0,
+    "bbox": [
+      535.39,
+      17.3,
+      50.73,
+      52.6
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8717
+  },
+  {
+    "node_id": "auto_logo_1",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 1,
+    "bbox": [
+      489.61,
+      18.29,
+      43.49,
+      50.43
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7018
+  },
+  {
+    "node_id": "auto_logo_2",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 2,
+    "bbox": [
+      506.43,
+      1042.3,
+      25.2,
+      24.49
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6117
+  },
+  {
+    "node_id": "auto_embellishment_3",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 3,
+    "bbox": [
+      898.43,
+      0.1,
+      181.57,
+      849.76
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3292
+  },
+  {
+    "node_id": "auto_embellishment_4",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 4,
+    "bbox": [
+      0.9,
+      4.1,
+      362.07,
+      681.23
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3244
+  },
+  {
+    "node_id": "auto_embellishment_5",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 5,
+    "bbox": [
+      0.56,
+      6.48,
+      203.78,
+      744.79
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4108
+  },
+  {
+    "node_id": "auto_text_6",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 6,
+    "bbox": [
+      351.01,
+      72.88,
+      380.55,
+      42.01
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7941,
+    "ocr_text": "CAMARINES SUR POLYTECHNIC COLLEGES\nSUPREME STUDENT COUNCIL"
+  },
+  {
+    "node_id": "auto_embellishment_7",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 7,
+    "bbox": [
+      471.05,
+      170.83,
+      150.28,
+      208.49
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2658
+  },
+  {
+    "node_id": "auto_embellishment_8",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 8,
+    "bbox": [
+      188.48,
+      441.53,
+      110.3,
+      137.77
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4686
+  },
+  {
+    "node_id": "auto_embellishment_9",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 9,
+    "bbox": [
+      795.76,
+      447.66,
+      106.44,
+      131.25
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5312
+  },
+  {
+    "node_id": "auto_text_10",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 10,
+    "bbox": [
+      340.94,
+      624.45,
+      399.45,
+      70.7
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3981,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_11",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 11,
+    "bbox": [
+      318.91,
+      699.74,
+      474.57,
+      195.49
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.438,
+    "ocr_text": "ALPAS\n\nOV IRKLING VEAREND"
+  },
+  {
+    "node_id": "auto_text_12",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 12,
+    "bbox": [
+      343.97,
+      704.6,
+      386.89,
+      111.05
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4234,
+    "ocr_text": "ALPAS"
+  },
+  {
+    "node_id": "auto_embellishment_13",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 13,
+    "bbox": [
+      0.0,
+      808.7,
+      28.06,
+      85.41
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.27
+  },
+  {
+    "node_id": "auto_text_14",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 14,
+    "bbox": [
+      330.51,
+      815.37,
+      450.29,
+      67.85
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3903,
+    "ocr_text": "NPLRKLING YELREND"
+  },
+  {
+    "node_id": "auto_text_15",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 15,
+    "bbox": [
+      393.1,
+      820.52,
+      340.26,
+      65.06
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2692,
+    "ocr_text": "PIRKLING VERSE"
+  },
+  {
+    "node_id": "auto_embellishment_16",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 16,
+    "bbox": [
+      946.26,
+      822.53,
+      47.44,
+      115.11
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3871
+  },
+  {
+    "node_id": "auto_text_17",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 17,
+    "bbox": [
+      412.71,
+      1044.68,
+      308.51,
+      21.15
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3228,
+    "ocr_text": ") @cspcssc [MJ sscservices@cspc.edu.ph"
+  }
+]

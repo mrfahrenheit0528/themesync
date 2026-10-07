@@ -1,24 +1,22 @@
 .venv/
 __pycache__/
 *.pyc
-data/processed/
-data/rendered/
-# data/raw: only what a clone needs to run and retrain. Never the 18 sample
-# IDs (data/raw/ID_layouts: real people's photos) or dashboard uploads.
-data/raw/*
-!data/raw/master_layout_batch/
-data/raw/master_layout_batch/_raw_v1_backup/
-data/raw/master_layout_batch/_raw_v2_backup/
-data/raw/master_layout_batch/_raw_v3_backup/
-data/raw/master_layout_batch/_stale_export_997boxes_backup/
-!data/raw/phase4_posters/
-!data/raw/validation_sample/
+# Data: everything is tracked (so work can continue off the school server)
+# except
+#  - the CGL dataset (2.8 GB arrow + its 257 MB YOLO export; re-create with
+#    src/data_preprocessing/ingest_cgl.py / prepare_yolo_dataset.py),
+#  - the 18 sample IDs with real people's photos,
+#  - training copies whose images are symlinks to server paths (rebuild with
+#    src/data_preprocessing/prepare_master_layout_dataset.py).
+data/processed/cgl_tensor_dataset/
+data/processed/yolo_dataset/
+data/processed/yolo_master_v4/
+data/processed/yolo_master_v5/
+data/raw/ID_layouts/
 *.cache
-runs/
 *.arrow
 repomix-output.xml
 .ipynb_checkpoints/
-data/phase4/
 
 # public base weights (Ultralytics downloads them on demand) and unpromoted candidates
 yolo26n.pt

@@ -1,0 +1,4 @@
+- [Wait for thesis-draft command](feedback_wait_for_thesis_draft_command.md) — don't proactively write Ch4 prose; notes/findings are fine, drafts need explicit ask
+- [ThemeSync thesis context](project_themesync_thesis_context.md) — CSPC BSCS thesis; Final Manuscript.pdf is source of truth; start at notes/system_development_progress.md for current state
+- [Consultation format](project_adviser_consultation_format.md) — adviser AND consultant consultations both happen via Google Chat, not live meetings; prep material as standalone chat text, not an agenda/script
+- [Run means hand over](feedback_run_means_hand_over.md) — "run the dashboard" = start it, give the URL/command; no unasked test drives or debugging

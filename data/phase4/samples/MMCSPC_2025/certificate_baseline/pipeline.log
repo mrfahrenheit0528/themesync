@@ -1,0 +1,83 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: MMCSPC_2025.jpg (2048×2047 px)
+  [TemplateIngestor] Extracted palette: #0C1232 | #969FB6 | #132E79
+  [TemplateIngestor] Saliency weight:   0.0167
+  ✔  0. Template Ingestion                      [5132.2 ms]
+     → Palette: #0C1232 | #969FB6 | #132E79
+     → Saliency: 0.0167  | Native size: 2048×2047 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1336.2 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 16 node(s) detected on the master layout
+       · auto_logo_0            conf=0.84
+       · auto_logo_1            conf=0.29
+       · auto_logo_2            conf=0.64
+       · auto_logo_3            conf=0.88
+       · auto_logo_4            conf=0.70
+       · auto_logo_5            conf=0.58
+       · auto_logo_6            conf=0.32
+       · auto_logo_7            conf=0.53
+       · auto_underlay_8        conf=0.59
+       · auto_embellishment_9   conf=0.58
+       · auto_text_10           conf=0.80  ocr="MR AND MS  CBD ADIMLI Cove LLIiL nA te D"
+       · auto_embellishment_11  conf=0.31
+       · auto_text_12           conf=0.27  ocr="SEARCH FOR THE MOST PRECIOL"
+       · auto_text_13           conf=0.47  ocr="JFFICIAL SCREENING OF CANDIDATE @OGIOBER"
+       · auto_text_14           conf=0.48  ocr="GRAND PAGEANT NIGHT MOVEMBER 10, 2025"
+       · auto_embellishment_15  conf=0.32
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/academic_payload.json
+  Domain         : academic_certificate
+  Canvas         : 1200 × 900 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/MMCSPC_2025.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/MMCSPC_2025/certificate_baseline/content.json
+  GNN            : disabled (baseline mode)
+  Population     : 5
+  Palette Source : real image → ['#0C1232', '#969FB6', '#132E79']
+  ✔  1. Dynamic Node Instantiation              [0.3 ms]
+     → 11 node(s) instantiated for canvas 1200×900
+     → Logo aspect ratio locked to 1.12:1 (uploaded logos, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [2.0 ms]
+     → Hard constraints: 0 | Soft constraints: 11
+  ✔  4. Metaheuristic Candidate Ranking         [17.9 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_3_Dynamic_Balanced          0.2337 ◀ WINNER
+  [2]   Candidate_0_GNN_Baseline              0.2375
+  [3]   Candidate_4_High_Margin_Focus         0.2375
+  [4]   Candidate_2_Spaced_Grand              0.2395
+  [5]   Candidate_1_Compact_Formal            0.2439
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/MMCSPC_2025/certificate_baseline/ThemeSync_academic-certificate_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [92.4 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          5132.2
+  0b. Semantic Layout Parsing (YOLO+OCR)         1336.2
+  1. Dynamic Node Instantiation                     0.3
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       2.0
+  4. Metaheuristic Ranking                         17.9
+  5. Aesthetic SVG Rendering                       92.4
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               6581.3
+
+  Winner   : Candidate_3_Dynamic_Balanced (C_total = 0.2337)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/MMCSPC_2025/certificate_baseline/ThemeSync_academic-certificate_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/MMCSPC_2025/certificate_baseline/ThemeSync_academic-certificate_detected_master_layout.json
+

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 900" width="1200" height="900">
+<rect width="1200.0" height="900.0" fill="#D7BDB7" />
+<rect x="18.0" y="18.0" width="1164.0" height="864.0" fill="none" stroke="#371714" stroke-width="2.5" rx="3" />
+<rect x="26.0" y="26.0" width="1148.0" height="848.0" fill="none" stroke="#965041" stroke-width="1.2" rx="2" />
+<rect x="18.0" y="18.0" width="10.0" height="10.0" fill="#965041" />
+<rect x="1172.0" y="18.0" width="10.0" height="10.0" fill="#965041" />
+<rect x="18.0" y="872.0" width="10.0" height="10.0" fill="#965041" />
+<rect x="1172.0" y="872.0" width="10.0" height="10.0" fill="#965041" />
+<circle cx="600.0" cy="201.05" r="41.58" fill="#FFFFFF" stroke="#965041" stroke-width="2.5" />
+<circle cx="600.0" cy="201.05" r="37.58" fill="none" stroke="#371714" stroke-width="1" stroke-dasharray="3,3" />
+<text x="600.0" y="201.05" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="bold" font-size="6.0" fill="#371714" text-anchor="middle" dominant-baseline="central" letter-spacing="1.5">Camarines Sur Polytechnic Colleges</text>
+<text x="600.0" y="287.1" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14.4" font-weight="600" font-style="normal" letter-spacing="2.0" fill="#743D38" text-anchor="middle">CAMARINES SUR POLYTECHNIC COLLEGES</text>
+<text x="600.0" y="358.8" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="37.1" font-weight="bold" font-style="normal" letter-spacing="1.0" fill="#371714" text-anchor="middle">Certificate of Participation</text>
+<text x="600.0" y="417.8" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13.0" font-weight="normal" font-style="italic" letter-spacing="0.5" fill="#743D38" text-anchor="middle">is proudly presented to</text>
+<text x="600.0" y="479.4" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="29.2" font-weight="bold" font-style="normal" letter-spacing="0.8" fill="#371714" text-anchor="middle">Kevin Rafael Morales</text>
+<text x="600.0" y="543.5" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15.0" font-weight="normal" font-style="normal" letter-spacing="0.2" fill="#334155" text-anchor="middle">For active participation as facilitator in ULAYAW: Post-Valentine Music Fest, held on February 24, 2024 at CSPC Open</text>
+<text x="600.0" y="563.8" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15.0" font-weight="normal" font-style="normal" letter-spacing="0.2" fill="#334155" text-anchor="middle">Grounds.</text>
+<text x="600.0" y="613.1" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.0" font-weight="normal" font-style="normal" letter-spacing="0.5" fill="#743D38" text-anchor="middle">February 24, 2024</text>
+<text x="600.0" y="654.3" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.0" font-weight="normal" font-style="normal" letter-spacing="0.5" fill="#743D38" text-anchor="middle">CSPC-2024-014</text>
+<line x1="152.0" y1="711.3" x2="396.0" y2="711.3" stroke="#371714" stroke-width="1.2" opacity="0.85" />
+<text x="274.0" y="729.3" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="bold" fill="#371714" text-anchor="middle">Dr. Juan dela Cruz</text>
+<text x="274.0" y="743.3" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="normal" fill="#743D38" text-anchor="middle">College President</text>
+<line x1="478.0" y1="711.3" x2="722.0" y2="711.3" stroke="#371714" stroke-width="1.2" opacity="0.85" />
+<text x="600.0" y="729.3" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="bold" fill="#371714" text-anchor="middle">Prof. Ana Reyes</text>
+<text x="600.0" y="743.3" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="normal" fill="#743D38" text-anchor="middle">Dean, CCS</text>
+<line x1="804.0" y1="711.3" x2="1048.0" y2="711.3" stroke="#371714" stroke-width="1.2" opacity="0.85" />
+<text x="926.0" y="729.3" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="bold" fill="#371714" text-anchor="middle">Engr. Rico Santos</text>
+<text x="926.0" y="743.3" font-family="Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="normal" fill="#743D38" text-anchor="middle">Thesis Adviser</text>
+</svg>

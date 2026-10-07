@@ -55,8 +55,16 @@ pip install -r requirements.txt
   the server. If PyTorch doesn't match your GPU, install it from
   [pytorch.org](https://pytorch.org) first; the server uses torch
   2.5.1 + CUDA 12.1.
+- **Cairo:** `cairosvg`, which renders the PNG/PDF outputs, needs the
+  Cairo library. On Windows, or anywhere `import cairosvg` fails, install
+  it from conda-forge: `conda install -c conda-forge cairosvg`.
 - **Fonts:** Montserrat ships in `assets/fonts/`, so nothing has to be
   installed system-wide.
+- **Not in the repository:**
+  - the CGL dataset (only needed to retrain or re-evaluate the GNN);
+  - the symlinked training copies `data/processed/yolo_master_v4/v5`.
+    Rebuild those with
+    `python src/data_preprocessing/prepare_master_layout_dataset.py`.
 - **Tesseract OCR** is optional. Without it, detected text boxes simply
   aren't transcribed.
 

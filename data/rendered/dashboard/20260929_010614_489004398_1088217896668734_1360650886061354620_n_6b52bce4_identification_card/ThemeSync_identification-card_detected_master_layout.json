@@ -1,0 +1,289 @@
+[
+  {
+    "node_id": "auto_logo_0",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 0,
+    "bbox": [
+      592.08,
+      49.56,
+      68.98,
+      69.91
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.7492
+  },
+  {
+    "node_id": "auto_logo_1",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 1,
+    "bbox": [
+      669.76,
+      51.72,
+      71.43,
+      72.86
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8594
+  },
+  {
+    "node_id": "auto_logo_2",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 2,
+    "bbox": [
+      745.56,
+      52.71,
+      63.24,
+      69.5
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8384
+  },
+  {
+    "node_id": "auto_logo_3",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 3,
+    "bbox": [
+      963.3,
+      104.01,
+      134.55,
+      128.11
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5385
+  },
+  {
+    "node_id": "auto_logo_4",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 4,
+    "bbox": [
+      313.54,
+      203.75,
+      85.64,
+      78.91
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2703
+  },
+  {
+    "node_id": "auto_logo_5",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 5,
+    "bbox": [
+      745.27,
+      1030.66,
+      43.78,
+      40.73
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4309
+  },
+  {
+    "node_id": "auto_logo_6",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 6,
+    "bbox": [
+      357.72,
+      1037.63,
+      26.5,
+      30.79
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2526
+  },
+  {
+    "node_id": "auto_embellishment_7",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 7,
+    "bbox": [
+      965.58,
+      104.71,
+      133.92,
+      126.89
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5111
+  },
+  {
+    "node_id": "auto_text_8",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 8,
+    "bbox": [
+      511.99,
+      133.66,
+      376.67,
+      55.34
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8403,
+    "ocr_text": "CAMARINES SUR POLYTECHNIC COLLEGES\nCOLLEGE OF COMPUTER STUDIES\n\u2018COLLEGE OF COMPUTER STUDIES - STUDENT COUNCIL"
+  },
+  {
+    "node_id": "auto_embellishment_9",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 9,
+    "bbox": [
+      312.97,
+      204.18,
+      85.33,
+      77.45
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4279
+  },
+  {
+    "node_id": "auto_text_10",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 10,
+    "bbox": [
+      170.63,
+      268.47,
+      1111.63,
+      349.59
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8654,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_underlay_11",
+    "semantic_category": "underlay",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 11,
+    "bbox": [
+      9.38,
+      420.29,
+      1369.22,
+      659.71
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.2849
+  },
+  {
+    "node_id": "auto_embellishment_12",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 12,
+    "bbox": [
+      0.0,
+      431.86,
+      353.06,
+      648.14
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3871
+  },
+  {
+    "node_id": "auto_underlay_13",
+    "semantic_category": "underlay",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 13,
+    "bbox": [
+      111.67,
+      589.35,
+      1282.11,
+      489.52
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3655
+  },
+  {
+    "node_id": "auto_text_14",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 14,
+    "bbox": [
+      350.62,
+      630.31,
+      732.78,
+      190.53
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.4452,
+    "ocr_text": "\u201cFOSTERING INNOVATION\nAND COLLABORATION IN\nRESEARCH\""
+  },
+  {
+    "node_id": "auto_embellishment_15",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 15,
+    "bbox": [
+      50.52,
+      635.62,
+      295.38,
+      235.35
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3092
+  },
+  {
+    "node_id": "auto_text_16",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 16,
+    "bbox": [
+      551.01,
+      768.73,
+      290.4,
+      55.41
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3293,
+    "ocr_text": "RESEARCH\u2019"
+  },
+  {
+    "node_id": "auto_text_17",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 17,
+    "bbox": [
+      408.72,
+      1037.87,
+      258.98,
+      22.61
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5612,
+    "ocr_text": "Bt Callane of Commuter Studies:"
+  },
+  {
+    "node_id": "auto_text_18",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 18,
+    "bbox": [
+      769.46,
+      1038.42,
+      274.13,
+      30.01
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3332,
+    "ocr_text": ") cesstudentcouncil@espc.edu.ph"
+  },
+  {
+    "node_id": "auto_text_19",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 19,
+    "bbox": [
+      371.14,
+      1038.78,
+      322.87,
+      27.05
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3472,
+    "ocr_text": ") CSPC- College of Computer Studies"
+  }
+]

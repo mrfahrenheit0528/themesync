@@ -1,0 +1,83 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: SHARE_KO_LANG.jpg (2048×2048 px)
+  [TemplateIngestor] Extracted palette: #C33C34 | #E6E7E8 | #B19E99 | #64564E
+  [TemplateIngestor] Saliency weight:   0.0212
+  ✔  0. Template Ingestion                      [2213.7 ms]
+     → Palette: #C33C34 | #E6E7E8 | #B19E99 | #64564E
+     → Saliency: 0.0212  | Native size: 2048×2048 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1684.7 ms]
+     → Weights: themesync_yolo_v5.pt
+     → 11 node(s) detected on the master layout
+       · auto_logo_0            conf=0.94
+       · auto_logo_1            conf=0.92
+       · auto_text_2            conf=0.76
+       · auto_text_3            conf=0.90  ocr="-— CSPC BROADCAST CENTE!  NTER"
+       · auto_text_4            conf=0.68
+       · auto_text_5            conf=0.85  ocr="Send your letter on our official Faceboo"
+       · auto_text_6            conf=0.73  ocr="Tune in at FMR 94.3 FM, simulcast at DZC"
+       · auto_embellishment_7   conf=0.79
+       · auto_embellishment_8   conf=0.81
+       · auto_text_9            conf=0.80  ocr="CSPC Broadcast Center"
+       · auto_text_10           conf=0.78  ocr="broadcastcenter@cspc.edu.ph"
+  ✔  0c. Stylistic Marker Extraction            [356.1 ms]
+     → Background: text-free layer rebuilt from the master's border
+     → Motifs: 0  |  Title artwork: none (typed title)
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/SHARE_KO_LANG.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/SHARE_KO_LANG/event_id_baseline/content.json
+  Condition      : baseline
+  Master structure: (none)
+  Population     : 6
+  Palette Source : real image → ['#C33C34', '#E6E7E8', '#B19E99', '#64564E']
+  Schema Check   : passed (typography, content)
+  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 0.89:1 (Stage 0b crop of 2 logo(s), conf=0.92, 0.94, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [0.4 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [782.0 ms]
+     → 6 candidate(s) evaluated
+
+  Rank   Candidate       C_total  Variation
+  ------ -------------- --------  ----------------------------------------
+  [1]   Candidate_D      0.1550  left-aligned · margin 72px · gap 18px · no motifs ◀ WINNER
+  [2]   Candidate_C      0.1646  full-width band · margin 64px · gap 18px · no motifs
+  [3]   Candidate_E      0.1646  classic centred · margin 64px · gap 24px · no motifs
+  [4]   Candidate_A      0.1695  classic centred · margin 60px · gap 20px · no motifs
+  [5]   Candidate_F      0.1884  floating card · margin 40px · gap 22px · no motifs
+  [6]   Candidate_B      0.1892  floating card · margin 40px · gap 16px · no motifs
+  ✔  5. Aesthetic SVG Rendering                 [68.1 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.5 ms]
+     → Saved: data/processed/layout_state_v1.json
+     → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/SHARE_KO_LANG/event_id_baseline/ThemeSync_identification-card_state_chain.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          2213.7
+  0b. Semantic Layout Parsing (YOLO+OCR)         1684.7
+  0c. Stylistic Marker Extraction                 356.1
+  1. Dynamic Node Instantiation                     0.1
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       0.4
+  4. Metaheuristic Ranking                        782.0
+  5. Aesthetic SVG Rendering                       68.1
+  6. FSM State Serialization                        0.5
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               5105.6
+
+  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · no motifs (C_total = 0.1550)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/SHARE_KO_LANG/event_id_baseline/ThemeSync_identification-card_populated.svg
+

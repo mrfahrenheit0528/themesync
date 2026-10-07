@@ -1,0 +1,75 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: EDUKWELA.jpg (1080×1080 px)
+  [TemplateIngestor] Extracted palette: #8C58BC | #CAA9DD | #3B114F
+  [TemplateIngestor] Saliency weight:   0.0546
+  ✔  0. Template Ingestion                      [2894.2 ms]
+     → Palette: #8C58BC | #CAA9DD | #3B114F
+     → Saliency: 0.0546  | Native size: 1080×1080 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [960.7 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 7 node(s) detected on the master layout
+       · auto_logo_0            conf=0.34
+       · auto_underlay_1        conf=0.37
+       · auto_text_2            conf=0.77
+       · auto_text_3            conf=0.72  ocr="CSPC TEACHER’S DAY CELEBRATION OCTOBER 4"
+       · auto_text_4            conf=0.46
+       · auto_text_5            conf=0.59
+       · auto_text_6            conf=0.28  ocr="EGES - SUPREME STUDENT COUNCIL"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/academic_payload.json
+  Domain         : academic_certificate
+  Canvas         : 1200 × 900 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/EDUKWELA.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/EDUKWELA/certificate_gnn/content.json
+  GNN            : enabled
+  Population     : 5
+  Palette Source : real image → ['#8C58BC', '#CAA9DD', '#3B114F']
+  ✔  1. Dynamic Node Instantiation              [0.4 ms]
+     → 11 node(s) instantiated for canvas 1200×900
+     → Logo aspect ratio locked to 0.94:1 (Stage 0b crop of 1 logo(s), conf=0.34, Affine scaling)
+  ✔  2. GNN Spatial Inference                   [50.7 ms]
+     → Weights: loaded from themesync_gnn_v1.pth
+     → Predictions applied: True
+  ✔  3. Cassowary CSP Resolution                [3.1 ms]
+     → Hard constraints: 0 | Soft constraints: 11
+  ✔  4. Metaheuristic Candidate Ranking         [24.3 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_0_GNN_Baseline              0.3345 ◀ WINNER
+  [2]   Candidate_1_Compact_Formal            0.3345
+  [3]   Candidate_2_Spaced_Grand              0.3345
+  [4]   Candidate_3_Dynamic_Balanced          0.3345
+  [5]   Candidate_4_High_Margin_Focus         0.3345
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/EDUKWELA/certificate_gnn/ThemeSync_academic-certificate_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [12.2 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.6 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          2894.2
+  0b. Semantic Layout Parsing (YOLO+OCR)          960.7
+  1. Dynamic Node Instantiation                     0.4
+  2. GNN Spatial Inference                         50.7
+  3. Cassowary CSP Resolution                       3.1
+  4. Metaheuristic Ranking                         24.3
+  5. Aesthetic SVG Rendering                       12.2
+  6. FSM State Serialization                        0.6
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               3946.2
+
+  Winner   : Candidate_0_GNN_Baseline (C_total = 0.3345)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/EDUKWELA/certificate_gnn/ThemeSync_academic-certificate_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/EDUKWELA/certificate_gnn/ThemeSync_academic-certificate_detected_master_layout.json
+

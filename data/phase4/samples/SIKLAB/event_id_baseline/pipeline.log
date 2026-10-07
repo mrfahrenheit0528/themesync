@@ -1,0 +1,83 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: SIKLAB.jpg (2048×2048 px)
+  [TemplateIngestor] Extracted palette: #130E18 | #BCA7A0 | #58429E
+  [TemplateIngestor] Saliency weight:   0.0463
+  ✔  0. Template Ingestion                      [3561.3 ms]
+     → Palette: #130E18 | #BCA7A0 | #58429E
+     → Saliency: 0.0463  | Native size: 2048×2048 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1235.9 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 16 node(s) detected on the master layout
+       · auto_logo_0            conf=0.76
+       · auto_logo_1            conf=0.27
+       · auto_logo_2            conf=0.92
+       · auto_logo_3            conf=0.29
+       · auto_logo_4            conf=0.84
+       · auto_logo_5            conf=0.46
+       · auto_logo_6            conf=0.72
+       · auto_logo_7            conf=0.77
+       · auto_logo_8            conf=0.68
+       · auto_logo_9            conf=0.82
+       · auto_logo_10           conf=0.32
+       · auto_embellishment_11  conf=0.65
+       · auto_text_12           conf=0.75  ocr="SIKLAB  CSPC INTRAMURALS"
+       · auto_text_13           conf=0.36  ocr="(2025"
+       · auto_underlay_14       conf=0.58
+       · auto_text_15           conf=0.52  ocr="NOVEMBER 10-14, 2025"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/SIKLAB.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/SIKLAB/event_id_baseline/content.json
+  GNN            : disabled (baseline mode)
+  Population     : 5
+  Palette Source : real image → ['#130E18', '#BCA7A0', '#58429E']
+  ✔  1. Dynamic Node Instantiation              [0.3 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 0.95:1 (uploaded logos, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [0.7 ms]
+     → Hard constraints: 0 | Soft constraints: 6
+  ✔  4. Metaheuristic Candidate Ranking         [6.8 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_2_Spaced_Grand              0.3134 ◀ WINNER
+  [2]   Candidate_0_GNN_Baseline              0.3182
+  [3]   Candidate_3_Dynamic_Balanced          0.3241
+  [4]   Candidate_1_Compact_Formal            0.3422
+  [5]   Candidate_4_High_Margin_Focus         0.3490
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/SIKLAB/event_id_baseline/ThemeSync_identification-card_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [130.0 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          3561.3
+  0b. Semantic Layout Parsing (YOLO+OCR)         1235.9
+  1. Dynamic Node Instantiation                     0.3
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       0.7
+  4. Metaheuristic Ranking                          6.8
+  5. Aesthetic SVG Rendering                      130.0
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               4935.4
+
+  Winner   : Candidate_2_Spaced_Grand (C_total = 0.3134)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/SIKLAB/event_id_baseline/ThemeSync_identification-card_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/SIKLAB/event_id_baseline/ThemeSync_identification-card_detected_master_layout.json
+

@@ -1,0 +1,192 @@
+[
+  {
+    "node_id": "auto_logo_0",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 0,
+    "bbox": [
+      923.41,
+      75.18,
+      100.34,
+      106.63
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6976
+  },
+  {
+    "node_id": "auto_logo_1",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 1,
+    "bbox": [
+      389.31,
+      1298.35,
+      145.38,
+      89.28
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5006
+  },
+  {
+    "node_id": "auto_logo_2",
+    "semantic_category": "logo",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 2,
+    "bbox": [
+      923.51,
+      1926.99,
+      51.01,
+      53.03
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5927
+  },
+  {
+    "node_id": "auto_embellishment_3",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 3,
+    "bbox": [
+      195.53,
+      0.0,
+      1728.08,
+      1707.24
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3131
+  },
+  {
+    "node_id": "auto_embellishment_4",
+    "semantic_category": "embellishment",
+    "structural_class": "image_node",
+    "spatial_hierarchy": 4,
+    "bbox": [
+      193.86,
+      43.91,
+      1594.74,
+      1167.74
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3065
+  },
+  {
+    "node_id": "auto_text_5",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 5,
+    "bbox": [
+      465.53,
+      120.26,
+      996.62,
+      1197.67
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3926,
+    "ocr_text": "UR*POLYTECHNIC COLLEGES"
+  },
+  {
+    "node_id": "auto_text_6",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 6,
+    "bbox": [
+      743.17,
+      181.73,
+      463.52,
+      63.62
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.8059,
+    "ocr_text": "CAMARINES SUR POLYTECHNIC COLLEGES\nSUPREME STUDENT COUNCIL"
+  },
+  {
+    "node_id": "auto_text_7",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 7,
+    "bbox": [
+      500.74,
+      371.01,
+      947.43,
+      430.01
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.3323,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_8",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 8,
+    "bbox": [
+      477.8,
+      446.57,
+      978.15,
+      809.55
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5107,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_9",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 9,
+    "bbox": [
+      474.4,
+      751.08,
+      986.16,
+      504.53
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6835,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_10",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 10,
+    "bbox": [
+      193.79,
+      1255.15,
+      1392.7,
+      231.79
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5979,
+    "ocr_text": ""
+  },
+  {
+    "node_id": "auto_text_11",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 11,
+    "bbox": [
+      507.37,
+      1924.13,
+      385.85,
+      58.95
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.6527,
+    "ocr_text": "\u20ac3\u00a9 X dt @cspcssc"
+  },
+  {
+    "node_id": "auto_text_12",
+    "semantic_category": "text",
+    "structural_class": "text_node",
+    "spatial_hierarchy": 12,
+    "bbox": [
+      974.83,
+      1924.84,
+      473.58,
+      52.85
+    ],
+    "constraint_type": "Soft",
+    "detection_confidence": 0.5509,
+    "ocr_text": "sscservices@cspc.edu,ph."
+  }
+]

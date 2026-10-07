@@ -1,0 +1,88 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: GUESS_THE_TEACHER.jpg (1080×1080 px)
+  [TemplateIngestor] Extracted palette: #806047 | #C49774 | #F7E8CB
+  [TemplateIngestor] Saliency weight:   0.0796
+  ✔  0. Template Ingestion                      [797.3 ms]
+     → Palette: #806047 | #C49774 | #F7E8CB
+     → Saliency: 0.0796  | Native size: 1080×1080 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [1495.9 ms]
+     → Weights: themesync_yolo_v5.pt
+     → 16 node(s) detected on the master layout
+       · auto_logo_0            conf=0.84
+       · auto_logo_1            conf=0.93
+       · auto_logo_2            conf=0.84
+       · auto_logo_3            conf=0.26
+       · auto_embellishment_4   conf=0.39
+       · auto_text_5            conf=0.88  ocr="DR. Emilio B. Espinosa Sr. Memorial Stat"
+       · auto_text_6            conf=0.87
+       · auto_text_7            conf=0.90
+       · auto_text_8            conf=0.79  ocr=""any question?""
+       · auto_text_9            conf=0.85  ocr="lain answer  Hey"
+       · auto_text_10           conf=0.90  ocr=""explain ge answel"
+       · auto_text_11           conf=0.75  ocr="™/4 maam?""
+       · auto_text_12           conf=0.81  ocr="“any other hand?""
+       · auto_text_13           conf=0.84  ocr="“class, |cant mest youre"
+       · auto_text_14           conf=0.80  ocr=""Okay class, lets move on”"
+       · auto_text_15           conf=0.79
+  ✔  0c. Stylistic Marker Extraction            [1333.0 ms]
+     → Background: text-free layer rebuilt from the master's border
+     → Motifs: 0  |  Title artwork: Stage 0c: title artwork
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/GUESS_THE_TEACHER.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/GUESS_THE_TEACHER/event_id_baseline/content.json
+  Condition      : baseline
+  Master structure: (none)
+  Population     : 6
+  Palette Source : real image → ['#806047', '#C49774', '#F7E8CB']
+  Schema Check   : passed (typography, content)
+  ✔  1. Dynamic Node Instantiation              [0.1 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 0.96:1 (Stage 0b crop of 2 logo(s), conf=0.84, 0.93, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [0.4 ms]
+  ✔  4. Metaheuristic Candidate Ranking         [794.9 ms]
+     → 6 candidate(s) evaluated
+
+  Rank   Candidate       C_total  Variation
+  ------ -------------- --------  ----------------------------------------
+  [1]   Candidate_D      0.1605  left-aligned · margin 72px · gap 18px · no motifs ◀ WINNER
+  [2]   Candidate_C      0.1702  full-width band · margin 64px · gap 18px · no motifs
+  [3]   Candidate_E      0.1702  classic centred · margin 64px · gap 24px · no motifs
+  [4]   Candidate_A      0.1750  classic centred · margin 60px · gap 20px · no motifs
+  [5]   Candidate_F      0.1863  floating card · margin 40px · gap 22px · no motifs
+  [6]   Candidate_B      0.1884  floating card · margin 40px · gap 16px · no motifs
+  ✔  5. Aesthetic SVG Rendering                 [127.5 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+     → State chain: /home/guillerangelohermoso/themesync/data/phase4/samples/GUESS_THE_TEACHER/event_id_baseline/ThemeSync_identification-card_state_chain.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                           797.3
+  0b. Semantic Layout Parsing (YOLO+OCR)         1495.9
+  0c. Stylistic Marker Extraction                1333.0
+  1. Dynamic Node Instantiation                     0.1
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       0.4
+  4. Metaheuristic Ranking                        794.9
+  5. Aesthetic SVG Rendering                      127.5
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               4549.5
+
+  Winner   : Candidate_D — left-aligned · margin 72px · gap 18px · no motifs (C_total = 0.1605)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/GUESS_THE_TEACHER/event_id_baseline/ThemeSync_identification-card_populated.svg
+

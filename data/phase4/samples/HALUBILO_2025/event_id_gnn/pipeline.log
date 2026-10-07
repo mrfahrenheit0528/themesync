@@ -1,0 +1,82 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: HALUBILO_2025.jpg (1400×1080 px)
+  [TemplateIngestor] Extracted palette: #C5C8A7 | #24293F | #667384
+  [TemplateIngestor] Saliency weight:   0.0847
+  ✔  0. Template Ingestion                      [2787.2 ms]
+     → Palette: #C5C8A7 | #24293F | #667384
+     → Saliency: 0.0847  | Native size: 1400×1080 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [849.4 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 14 node(s) detected on the master layout
+       · auto_logo_0            conf=0.80
+       · auto_logo_1            conf=0.78
+       · auto_logo_2            conf=0.88
+       · auto_logo_3            conf=0.28
+       · auto_logo_4            conf=0.32
+       · auto_embellishment_5   conf=0.41
+       · auto_text_6            conf=0.36
+       · auto_embellishment_7   conf=0.34
+       · auto_embellishment_8   conf=0.41
+       · auto_text_9            conf=0.75  ocr=") halubilo2025"
+       · auto_text_10           conf=0.74  ocr=") Ipcs@cspc.edu.ph"
+       · auto_text_11           conf=0.61  ocr="| @jpcescspcchapter"
+       · auto_text_12           conf=0.26  ocr="Dipcscspcchapter"
+       · auto_text_13           conf=0.37  ocr="JPCSNCSpPc .e0u.H'"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/HALUBILO_2025.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/HALUBILO_2025/event_id_gnn/content.json
+  GNN            : enabled
+  Population     : 5
+  Palette Source : real image → ['#C5C8A7', '#24293F', '#667384']
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 0.94:1 (uploaded logos, Affine scaling)
+  ✔  2. GNN Spatial Inference                   [93.7 ms]
+     → Weights: loaded from themesync_gnn_v1.pth
+     → Predictions applied: True
+  ✔  3. Cassowary CSP Resolution                [0.6 ms]
+     → Hard constraints: 0 | Soft constraints: 6
+  ✔  4. Metaheuristic Candidate Ranking         [6.6 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_0_GNN_Baseline              0.4028 ◀ WINNER
+  [2]   Candidate_3_Dynamic_Balanced          0.4072
+  [3]   Candidate_1_Compact_Formal            0.4077
+  [4]   Candidate_4_High_Margin_Focus         0.4077
+  [5]   Candidate_2_Spaced_Grand              0.4104
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/HALUBILO_2025/event_id_gnn/ThemeSync_identification-card_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [15.7 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          2787.2
+  0b. Semantic Layout Parsing (YOLO+OCR)          849.4
+  1. Dynamic Node Instantiation                     0.2
+  2. GNN Spatial Inference                         93.7
+  3. Cassowary CSP Resolution                       0.6
+  4. Metaheuristic Ranking                          6.6
+  5. Aesthetic SVG Rendering                       15.7
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               3753.6
+
+  Winner   : Candidate_0_GNN_Baseline (C_total = 0.4028)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/HALUBILO_2025/event_id_gnn/ThemeSync_identification-card_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/HALUBILO_2025/event_id_gnn/ThemeSync_identification-card_detected_master_layout.json
+

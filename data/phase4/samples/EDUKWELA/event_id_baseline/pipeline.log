@@ -1,0 +1,74 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: EDUKWELA.jpg (1080×1080 px)
+  [TemplateIngestor] Extracted palette: #CAA9DD | #3B114F | #8C58BC
+  [TemplateIngestor] Saliency weight:   0.0546
+  ✔  0. Template Ingestion                      [2765.6 ms]
+     → Palette: #CAA9DD | #3B114F | #8C58BC
+     → Saliency: 0.0546  | Native size: 1080×1080 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [988.8 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 7 node(s) detected on the master layout
+       · auto_logo_0            conf=0.34
+       · auto_underlay_1        conf=0.37
+       · auto_text_2            conf=0.77
+       · auto_text_3            conf=0.72  ocr="CSPC TEACHER’S DAY CELEBRATION OCTOBER 4"
+       · auto_text_4            conf=0.46
+       · auto_text_5            conf=0.59
+       · auto_text_6            conf=0.28  ocr="EGES - SUPREME STUDENT COUNCIL"
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/EDUKWELA.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/EDUKWELA/event_id_baseline/content.json
+  GNN            : disabled (baseline mode)
+  Population     : 5
+  Palette Source : real image → ['#CAA9DD', '#3B114F', '#8C58BC']
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 0.94:1 (Stage 0b crop of 1 logo(s), conf=0.34, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [0.4 ms]
+     → Hard constraints: 0 | Soft constraints: 6
+  ✔  4. Metaheuristic Candidate Ranking         [3.9 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_2_Spaced_Grand              0.3635 ◀ WINNER
+  [2]   Candidate_3_Dynamic_Balanced          0.3742
+  [3]   Candidate_0_GNN_Baseline              0.3823
+  [4]   Candidate_1_Compact_Formal            0.4018
+  [5]   Candidate_4_High_Margin_Focus         0.4162
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/EDUKWELA/event_id_baseline/ThemeSync_identification-card_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [8.6 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.3 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          2765.6
+  0b. Semantic Layout Parsing (YOLO+OCR)          988.8
+  1. Dynamic Node Instantiation                     0.2
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       0.4
+  4. Metaheuristic Ranking                          3.9
+  5. Aesthetic SVG Rendering                        8.6
+  6. FSM State Serialization                        0.3
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               3767.7
+
+  Winner   : Candidate_2_Spaced_Grand (C_total = 0.3635)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/EDUKWELA/event_id_baseline/ThemeSync_identification-card_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/EDUKWELA/event_id_baseline/ThemeSync_identification-card_detected_master_layout.json
+

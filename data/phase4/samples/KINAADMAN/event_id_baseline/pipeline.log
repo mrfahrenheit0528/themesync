@@ -1,0 +1,89 @@
+
+==================================================================
+  ThemeSync — Design Orchestration Pipeline
+==================================================================
+  [TemplateIngestor] Image loaded: KINAADMAN.jpg (2048×1600 px)
+  [TemplateIngestor] Extracted palette: #5E6641 | #D8E9E8 | #CEB965 | #486DA5 | #83B3CC
+  [TemplateIngestor] Saliency weight:   0.0375
+  ✔  0. Template Ingestion                      [3355.2 ms]
+     → Palette: #5E6641 | #D8E9E8 | #CEB965 | #486DA5 | #83B3CC
+     → Saliency: 0.0375  | Native size: 2048×1600 px
+  ✔  0b. Semantic Layout Parsing (YOLO+OCR)     [3067.5 ms]
+     → Weights: themesync_yolo_v3.pt
+     → 22 node(s) detected on the master layout
+       · auto_logo_0            conf=0.84
+       · auto_logo_1            conf=0.84
+       · auto_logo_2            conf=0.84
+       · auto_logo_3            conf=0.88
+       · auto_logo_4            conf=0.81
+       · auto_logo_5            conf=0.25
+       · auto_embellishment_6   conf=0.25
+       · auto_text_7            conf=0.74  ocr="7 ECHNIC Cc GES  NT COUNCIL"
+       · auto_text_8            conf=0.43
+       · auto_text_9            conf=0.39  ocr="BRIGHT BEGINNINGS: NURTURING KNOWL"
+       · auto_text_10           conf=0.28  ocr="| BRIGHT BEGINNINGS: NURTURING KNOWL"
+       · auto_text_11           conf=0.30  ocr=".N;, AGTA-TABANGNON) GCABATUANSBUHINCAMA"
+       · auto_text_12           conf=0.40  ocr="[In Partnership with LANGUAGE STUDIES SO"
+       · auto_text_13           conf=0.41  ocr="UAGE STUDIES SOCIETYeENGINEERING MATHEMA"
+       · auto_text_14           conf=0.25  ocr="pITME APEAES ACADENIC'SOLIELY, hHE MAYAR"
+       · auto_text_15           conf=0.27  ocr="Frith PAP EN SANSA E  NHE MAYARI PROJECT"
+       · auto_text_16           conf=0.28  ocr="pO PA PN Bee? PAN PAE ERIE NS SINR, CHP "
+       · auto_text_17           conf=0.63  ocr="SSC EJ SSCSERVICES@CSPC.EDU.PH"
+       · auto_text_18           conf=0.61  ocr="(@lj @csPcssc"
+       · auto_text_19           conf=0.48  ocr="6] SSCSERVICES(@CSPC.EDL"
+       · auto_text_20           conf=0.45  ocr="2VICES(@CSPC.EDU.PH"
+       · auto_text_21           conf=0.57
+
+  Payload        : /home/guillerangelohermoso/themesync/data/raw/id_payload.json
+  Domain         : identification_card
+  Canvas         : 744 × 1052 px
+  Device         : cuda
+  Template Image : /home/guillerangelohermoso/themesync/data/raw/phase4_posters/KINAADMAN.jpg
+  Content Data   : /home/guillerangelohermoso/themesync/data/phase4/samples/KINAADMAN/event_id_baseline/content.json
+  GNN            : disabled (baseline mode)
+  Population     : 5
+  Palette Source : real image → ['#5E6641', '#D8E9E8', '#CEB965', '#486DA5', '#83B3CC']
+  ✔  1. Dynamic Node Instantiation              [0.2 ms]
+     → 6 node(s) instantiated for canvas 744×1052
+     → Logo aspect ratio locked to 0.94:1 (uploaded logos, Affine scaling)
+
+  ⊘  GNN Inference skipped (baseline mode)
+  ✔  3. Cassowary CSP Resolution                [0.5 ms]
+     → Hard constraints: 0 | Soft constraints: 6
+  ✔  4. Metaheuristic Candidate Ranking         [6.5 ms]
+     → 5 candidate(s) evaluated
+
+  Rank   Candidate                            C_total
+  ------ ----------------------------------- --------
+  [1]   Candidate_2_Spaced_Grand              0.3907 ◀ WINNER
+  [2]   Candidate_0_GNN_Baseline              0.3921
+  [3]   Candidate_3_Dynamic_Balanced          0.4014
+  [4]   Candidate_4_High_Margin_Focus         0.4301
+  [5]   Candidate_1_Compact_Formal            0.4412
+ -> Fully Populated Rendering Complete: /home/guillerangelohermoso/themesync/data/phase4/samples/KINAADMAN/event_id_baseline/ThemeSync_identification-card_populated.svg
+  ✔  5. Aesthetic SVG Rendering                 [28.3 ms]
+State version v1 successfully serialized to data/processed/layout_state_v1.json
+  ✔  6. FSM State Serialization                 [0.5 ms]
+     → Saved: data/processed/layout_state_v1.json
+
+==================================================================
+  Pipeline Complete — Timing Summary
+==================================================================
+
+  Stage                                       Time (ms)
+  ------------------------------------------ ----------
+  0. Template Ingestion                          3355.2
+  0b. Semantic Layout Parsing (YOLO+OCR)         3067.5
+  1. Dynamic Node Instantiation                     0.2
+  2. GNN Spatial Inference                          0.0  (skipped)
+  3. Cassowary CSP Resolution                       0.5
+  4. Metaheuristic Ranking                          6.5
+  5. Aesthetic SVG Rendering                       28.3
+  6. FSM State Serialization                        0.5
+  ────────────────────────────────────────── ──────────
+  TOTAL END-TO-END                               6458.8
+
+  Winner   : Candidate_2_Spaced_Grand (C_total = 0.3907)
+  Output   : /home/guillerangelohermoso/themesync/data/phase4/samples/KINAADMAN/event_id_baseline/ThemeSync_identification-card_populated.svg
+  Detected master-layout nodes : /home/guillerangelohermoso/themesync/data/phase4/samples/KINAADMAN/event_id_baseline/ThemeSync_identification-card_detected_master_layout.json
+
