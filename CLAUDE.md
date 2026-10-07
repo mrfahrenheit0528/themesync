@@ -62,9 +62,12 @@ Read first: `notes/system_development_progress.md`, then the tail of
   - The rated layouts come from the code at commit `8422282`. Changes to
     layout generation after it mean the MOS no longer rates the current
     system; say so in Chapter 4, or keep such changes out.
-- **Waiting on:** the consultant's written recommendations (the user will
-  share them), then the expert scores (the first expert's arrived
-  2026-10-07). Import the scores with
+- **Consultant's remarks** (received 2026-10-07) and their status are in
+  `notes/system_development_progress.md`: mark the two dashboard steps and
+  disable the other one; separate evaluation from the steps; improve the
+  dataset (done with v5).
+- **Waiting on:** the expert scores. The user will upload all four at
+  once (the first expert's arrived 2026-10-07). Import them with
   `mos_collector.py --import_scores … --key data/phase4/phase4_key.csv`.
 
 ## Working rules (from the user)

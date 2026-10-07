@@ -10,10 +10,16 @@ as work continues.
 ## Overall: ~88% complete (updated 2026-09-29, second pass)
 
 **Consultant's assessment (2026-09-29, after a live demo of the dashboard
-and system): 70%.** Her figure counts for more than this file's internal
-estimate below, which weighs only how much of Chapter 3's system runs.
-The difference hasn't been broken down yet: record what she said is
-missing here.
+and system): "at least 70%".** Her figure counts for more than this
+file's internal estimate below, which weighs only how much of Chapter 3's
+system runs. Her remarks, as the user relayed them on 2026-10-07 (given
+before the dataset was improved), with the status of each:
+
+| Remark | Status (2026-10-07) |
+|---|---|
+| The dashboard must reflect the steps (Perceptual Ingestion, Active Orchestration); disable the other steps so the user knows which step they're on. | **Partly done.** Since 2026-10-06 the two steps are separate pages (the demo showed both on one page). Nothing marks the current step or disables the other one; the sidebar opens any page. |
+| Fix the evaluation part and isolate it from the two steps. | **Partly done.** At the demo, scores and latency sat on the ingestion page. Phase 4 now has its own page, but it shares the sidebar with the two steps. The Phase 3 metrics are CLI-only, and F1 doesn't follow p.56 (revision item 3.24). |
+| Improve the dataset and avoid background noise. | **Done with YOLO v5** (200 re-annotated images, 2026-10-06). On 32 validation images that neither v4 nor v5 trained on: precision 0.58 → 0.84 (embellishment 0.48 → 0.78, underlay 0.48 → 0.83), mAP50 0.486 → 0.728. Boxes covering over half a poster (background taken as an element) are dropped from training (notes §3.30). |
 
 This is a weighted estimate, not a literal average of the table below. The
 backend/algorithmic core (Phases 1-3) is the bulk of the manuscript's
