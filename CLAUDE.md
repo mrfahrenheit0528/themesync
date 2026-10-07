@@ -58,8 +58,10 @@ Read first: `notes/system_development_progress.md`, then the tail of
     - Each expert's scores go into the `scores_<name>.csv` in their packet
       folder; its rows follow that packet's page order.
   - The group went ahead without the TA: four experts and the blind no-GNN
-    baseline. Revision-list items 1.3, 3.7 and 3.8 are still marked
-    "blocked on TA"; update them once the user confirms.
+    baseline (revision-list items 1.3, 3.7 and 3.8 updated).
+  - The rated layouts come from the code at commit `8422282`. Changes to
+    layout generation after it mean the MOS no longer rates the current
+    system; say so in Chapter 4, or keep such changes out.
 - **Waiting on:** the consultant's written recommendations (the user will
   share them), then the expert scores (the first expert's arrived
   2026-10-07). Import the scores with

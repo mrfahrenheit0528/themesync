@@ -8,7 +8,9 @@ This is a **to-do list, not draft prose.** Wording drafts get written only
 when asked for explicitly.
 
 - Page numbers are the manuscript's printed page numbers.
-- Checked against the PDF text on 2026-09-28.
+- Checked against the PDF text on 2026-09-28. Chapter 3 was re-read
+  against the code on 2026-10-07, which added items 3.24–3.27. The PDF
+  itself is unchanged since May, so no item has been applied yet.
 
 **Legend:**
 - 🔴 **Must fix.** Wrong, contradicts the code, or a missing citation the
@@ -56,8 +58,8 @@ constraint/whitespace is missing.
   artist)."
 - The MOS definition says "the layout expert."
 
-**Blocked on:** the TA's answer to "1 expert vs. 3–5" (see Ch3 item 3.7).
-If she approves 3–5, pluralize both places.
+**Decided (2026-10-07):** the group went ahead with four experts (see Ch3
+item 3.7). Pluralize both places.
 
 ---
 
@@ -231,8 +233,9 @@ Likert scale."
 
 Citing them for one expert contradicts them.
 
-**Blocked on the TA.** If she approves:
-- Pluralize the evaluator to 3–5 professional designers.
+**Decided (2026-10-07):** the group went ahead without the TA's answer;
+packets went to **four experts**. To write in:
+- Pluralize the evaluator to four professional designers.
 - Keep the qualification criterion ("documented industry experience").
 - Cite Nielsen & Molich 1990 and the CGL-GAN/RADM protocol.
 - Add inter-rater agreement to the statistical treatment (item 3.9).
@@ -280,8 +283,9 @@ layouts" and "a randomized sample." No size, no source, no comparison
 condition.
 
 **What the group decided (notes §3.20), to write into Chapter 3:**
-- 15 unseen master layouts (event pubmats not used in YOLO training) × 2
-  formats × 2 conditions = 60 layouts.
+- 16 unseen master layouts (event pubmats not used in YOLO training) × 2
+  formats × 2 conditions = 64 layouts, rated by four experts (15 and 60
+  in the first design).
 - **New: a blind no-GNN baseline condition.** The same posters and
   content, with the GNN turned off, are mixed into the packet unlabelled.
   This lets Phase 4 compare GNN-guided and baseline outputs as rated by a
@@ -570,6 +574,80 @@ implies the lowest C_total is the output.
 the master's composition picks the layout type and the fitness function
 ranks within and across types.
 
+### 3.24 🔴 The F1 score doesn't count what p.56 defines (p.56, "Structural Accuracy Rate")
+
+**Now:**
+- **TP:** a node placed with zero collision penalty that respects the hard
+  constraints.
+- **FP:** a node that overlaps a locked node or protrudes beyond the
+  viewport.
+- **FN:** a mandated node that is missing.
+
+**Code** (`evaluate.py`, `calculate_constraint_f1`):
+- A hard node is a TP if it stays within 5 px, else an FP.
+- **Every soft node is a TP** ("Cassowary always attempts satisfaction").
+- Collisions and out-of-canvas boxes are never checked per node.
+  P_collision after the edits is reported separately.
+
+So the reported F1 of 1.0 measures hard-constraint retention only.
+
+**Fix (code, not the manuscript):** score each node as p.56 defines. The
+generated layouts don't change.
+
+### 3.25 🔴 The fitness weights were never calibrated (p.43, Formula 3.11; Phase 3, p.52)
+
+**Now:**
+- α–δ are "empirically calibrated during Phase 3 testing" (p.43).
+- The penalty weights are "iteratively calibrated" until the scores align
+  with the constraints and design rules (p.52).
+
+**Code:** fixed by hand at α = 50, β = 2, γ = 1, δ = 1.5
+(`optimization_engine.py`). No calibration run or record exists in the
+notes.
+
+**Fix, either:**
+- run and record a calibration, e.g. how the ranking on the Phase 3
+  battery changes as each weight varies; or
+- reword to say the weights were set by hand with α largest, and report
+  it as a limitation.
+
+Changing the deployed weights changes which candidate becomes the output,
+so the Phase 4 set would no longer reflect the system. Run it as an
+analysis.
+
+### 3.26 🟡 The Spatial Hierarchy Index is a reading order, not a size rank (p.48; Appendix B)
+
+**Now:**
+- p.48: the index "instructs the Cassowary constraint solver to allocate
+  the largest baseline geometric tensors to primary nodes (e.g., ensuring
+  a student's name receives a larger bounding box than a course
+  subtitle)."
+- Appendix B: Student_Name = 1, Course_Title = 2, Signature_Blocks = 3.
+
+**Code:**
+- The index is each element's slot in reading order: 0 (logo row) to 8
+  (signatures) on the certificate, 0 to 5 on the event ID.
+- `dynamic_instantiation.py` gives each slot a fixed baseline size, and the
+  layout stacks in index order.
+- On the certificate, the title gets the largest box and the name the
+  third largest. The name is index 4. The real payloads have no
+  Course_Title.
+
+**Fix:**
+- Reword p.48: the index sets each element's role and reading order, and
+  each role has a fixed baseline size (title and name the largest).
+- Replace Appendix B's sample with the real `academic_payload.json`.
+
+Notes §3.10 called Appendix B a match. The field names match; the index's
+meaning doesn't.
+
+### 3.27 🟡 Two counting slips (p.50; p.59)
+
+- p.50: "executed in three distinct developmental phases". The procedure
+  has four.
+- p.59: "grounded in four fundamental computer science theories". Five are
+  described (HCI theory, for Phase 4, is the fifth).
+
 ---
 
 ## Chapter 4: Results (don't draft until asked)
@@ -667,9 +745,11 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
 
 ## Order of work
 
-1. **Can do now, no TA decision needed:** 1.1, 1.2, 3.1, 3.2, 3.3, 3.5,
-   3.6, 3.7b (tell the TA about 3.7b), 3.13–3.16, 3.18–3.21, 3.23.
+1. **Can do now, no TA decision needed:** 1.1, 1.2, 1.3, 3.1, 3.2, 3.3,
+   3.5, 3.6, 3.7, 3.7b (tell the TA about 3.7b), 3.13–3.16, 3.18–3.21,
+   3.23, 3.26, 3.27.
    - These answer the TSA directly.
    - 3.2 needs the image source/permission details from the group.
-2. **After the consultant weighs in:** 3.4, 3.8, 3.9.
-3. **After the TA answers:** 1.3, 3.7, 3.10, 3.11, 3.12.
+2. **Code first, then the text:** 3.24 (F1), 3.25 (weight calibration).
+3. **After the consultant weighs in:** 3.4, 3.8, 3.9.
+4. **After the TA answers:** 3.10, 3.11, 3.12.
