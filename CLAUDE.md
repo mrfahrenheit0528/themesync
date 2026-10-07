@@ -49,17 +49,20 @@ Read first: `notes/system_development_progress.md`, then the tail of
     - blank dates on DEAR_SENDER, LUCKY_TERA and SHARE_KO_LANG.
   - Manifest overrides: `title_artwork` = no for CMET, SIGN_LANGUAGE_DAY and
     ANTI_HAZING_LAW; `motifs` = no for ANTI_HAZING_LAW.
-  - **The set in `data/phase4/` (key from 2026-10-06 18:32, plus packets for
-    Eisen Rose D. Galvante, Mark Joseph C. Orias and Mark Kenneth C.
-    Ellorde) predates the layout-type and motif fixes. It must be
-    regenerated before sending:** Phase 4 page → Generate (16 posters,
-    replaces the key and moves old packets aside), then one packet per
-    expert.
-  - The group went ahead without the TA: three experts and the blind no-GNN
+  - **Packets went out on 2026-10-07** to four experts, all built from that
+    day's key (14:43, after the fixes): Eisen Rose D. Galvante, Kyz Denise
+    Aquino, Mark Joseph Orias and Mark Kenneth C. Ellorde.
+    - Eisen's packet is `packets/Eisen_Rose_D_Galvente/` (misspelled
+      folder; the correctly spelled duplicate was never sent and was
+      deleted). Import it with `--evaluator "Eisen Rose D. Galvante"`.
+    - Each expert's scores go into the `scores_<name>.csv` in their packet
+      folder; its rows follow that packet's page order.
+  - The group went ahead without the TA: four experts and the blind no-GNN
     baseline. Revision-list items 1.3, 3.7 and 3.8 are still marked
     "blocked on TA"; update them once the user confirms.
 - **Waiting on:** the consultant's written recommendations (the user will
-  share them), then the expert scores. Import the scores with
+  share them), then the expert scores (the first expert's arrived
+  2026-10-07). Import the scores with
   `mos_collector.py --import_scores … --key data/phase4/phase4_key.csv`.
 
 ## Working rules (from the user)
