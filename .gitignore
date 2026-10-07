@@ -13,6 +13,11 @@ data/processed/yolo_dataset/
 data/processed/yolo_master_v4/
 data/processed/yolo_master_v5/
 data/raw/ID_layouts/
+# Regenerable run output (rewritten by every pipeline run, dashboard session
+# and Phase 3 battery); a snapshot is in the 2026-10-07 commit.
+data/rendered/
+data/processed/Candidate_*.json
+data/processed/layout_state_v1*.json
 *.cache
 *.arrow
 repomix-output.xml

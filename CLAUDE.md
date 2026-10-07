@@ -67,7 +67,13 @@ Read first: `notes/system_development_progress.md`, then the tail of
 - **No thesis prose unless asked.** Notes, findings, evidence tables and
   revision lists are welcome; chapter drafts (Chapter 4, etc.) wait for an
   explicit request.
-- **Commit only when asked.** Push needs the user's GitHub token.
+- **Commit and push after each set of changes** (user, 2026-10-07), so
+  work survives the school server going down.
+  - The server's push uses the user's token, cached for a day
+    (`credential.helper cache`). If the push asks for a password, tell the
+    user to push.
+  - Regenerable output (`data/rendered/`, `data/processed/Candidate_*.json`)
+    is git-ignored, so commits stay small.
 - **"Run the dashboard" means start it and hand over the URL.** No
   unrequested test drives or debugging; mention anything broken in one
   line and offer.
@@ -119,7 +125,12 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
 - **Train detectors to `*_candidate.pt`.** The pipeline adopts
   `themesync_yolo_vN.pt` as soon as it exists; compare first with
   `src/evaluation/yolo_compare.py`.
+- **The school server's `/home` disk fills up** (shared by all users). On
+  2026-10-07 it hit 0 bytes free and the dashboard failed to save state
+  ("No space left on device"). Check `df -h /home`; the user's caches were
+  cleared (pip, conda, the raw CGL download in `~/.cache/huggingface`).
 - **Not in git:**
+  - generated output (`data/rendered/` etc.); regenerate it;
   - the CGL dataset (`data/processed/cgl_tensor_dataset`, 2.8 GB). Only
     GNN training and `gnn_heldout_eval.py` need it;
   - the symlinked training copies `data/processed/yolo_master_v4/v5`.
