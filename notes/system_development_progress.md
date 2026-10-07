@@ -17,8 +17,8 @@ before the dataset was improved), with the status of each:
 
 | Remark | Status (2026-10-07) |
 |---|---|
-| The dashboard must reflect the steps (Perceptual Ingestion, Active Orchestration); disable the other steps so the user knows which step they're on. | **Partly done.** Since 2026-10-06 the two steps are separate pages (the demo showed both on one page). Nothing marks the current step or disables the other one; the sidebar opens any page. |
-| Fix the evaluation part and isolate it from the two steps. | **Partly done.** At the demo, scores and latency sat on the ingestion page. Phase 4 now has its own page, but it shares the sidebar with the two steps. The Phase 3 metrics are CLI-only, and F1 doesn't follow p.56 (revision item 3.24). |
+| The dashboard must reflect the steps (Perceptual Ingestion, Active Orchestration); disable the other steps so the user knows which step they're on. | **Done (2026-10-07, notes §3.32).** A step bar marks the current step; only it is enabled in the sidebar; buttons move on or back. |
+| Fix the evaluation part and isolate it from the two steps. She meant a report on the **user's layout**, not the Phase 4 packet tool (user, 2026-10-07). | **Done (2026-10-07, notes §3.32).** Step 3, Evaluation Report, scores the finished layout against Chapter 3's metrics; F1 now follows p.56. Phase 4 sits apart under "Research tools". |
 | Improve the dataset and avoid background noise. | **Done with YOLO v5** (200 re-annotated images, 2026-10-06). On 32 validation images that neither v4 nor v5 trained on: precision 0.58 → 0.84 (embellishment 0.48 → 0.78, underlay 0.48 → 0.83), mAP50 0.486 → 0.728. Boxes covering over half a poster (background taken as an element) are dropped from training (notes §3.30). |
 
 This is a weighted estimate, not a literal average of the table below. The

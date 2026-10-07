@@ -37,8 +37,11 @@ Read first: `notes/system_development_progress.md`, then the tail of
     (`structure_mapping.master_composition` / `archetype_for`): left-aligned
     text, a large artwork beside the text, text on a panel, or a footer
     band. Formula 3.11 still scores every candidate.
-- **Dashboard:** Figure 2, Figure 3 and the Phase 4 page. Figure 3's canvas
-  is edited in place (`src/dashboard/canvas_editor.*`).
+- **Dashboard:** three steps, one at a time (the consultant's remark):
+  Step 1 Figure 2 → Step 2 Figure 3 → Step 3 Evaluation Report on the
+  user's layout (`views/report.py`, `src/evaluation/layout_report.py`,
+  notes §3.32). Phase 4 sits apart under "Research tools". Figure 3's
+  canvas is edited in place (`src/dashboard/canvas_editor.*`).
 - **Phase 4:**
   - 16 unseen posters are in `data/raw/phase4_posters/` with
     `manifest.csv`, which Claude drafted from the posters. Unconfirmed
@@ -63,9 +66,8 @@ Read first: `notes/system_development_progress.md`, then the tail of
     layout generation after it mean the MOS no longer rates the current
     system; say so in Chapter 4, or keep such changes out.
 - **Consultant's remarks** (received 2026-10-07) and their status are in
-  `notes/system_development_progress.md`: mark the two dashboard steps and
-  disable the other one; separate evaluation from the steps; improve the
-  dataset (done with v5).
+  `notes/system_development_progress.md`. All three are done: the steps
+  (§3.32), a report on the user's layout (§3.32), the dataset (v5).
 - **Waiting on:** the expert scores. The user will upload all four at
   once (the first expert's arrived 2026-10-07). Import them with
   `mos_collector.py --import_scores … --key data/phase4/phase4_key.csv`.

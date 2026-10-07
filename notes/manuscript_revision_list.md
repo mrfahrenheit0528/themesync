@@ -594,6 +594,11 @@ So the reported F1 of 1.0 measures hard-constraint retention only.
 **Fix (code, not the manuscript):** score each node as p.56 defines. The
 generated layouts don't change.
 
+**Done in code (2026-10-07, notes §3.32):** `layout_report.structural_accuracy`;
+`evaluate.py` uses it. F1 is still 1.0 on its run. Chapter 3 needs no
+change; Chapter 4 should say F1 counts collisions and out-of-canvas
+elements per element.
+
 ### 3.25 🔴 The fitness weights were never calibrated (p.43, Formula 3.11; Phase 3, p.52)
 
 **Now:**
@@ -647,6 +652,35 @@ meaning doesn't.
   has four.
 - p.59: "grounded in four fundamental computer science theories". Five are
   described (HCI theory, for Phase 4, is the fifth).
+
+### 3.28 🟡 The dashboard is now three steps, with an Evaluation Report (pp.50–54)
+
+**Now:** Chapter 3 describes two screens: Figure 2 (Phase 1) and Figure 3
+(Phases 2–3).
+
+**Code (2026-10-07, notes §3.32, the consultant's remarks):**
+- The dashboard runs as Step 1 (Figure 2) → Step 2 (Figure 3) → Step 3,
+  an **Evaluation Report** on the finished layout. Only the current step
+  is enabled.
+- Step 3 shows Formula 3.11 next to the recommendation, the p.56 F1 per
+  element, the manual edits kept through each re-solve, stage and
+  per-edit latency, the K-Means elbow and the schema validations.
+
+**Add:** a sentence after Figure 3's description, or a Figure 3b
+screenshot, saying the workflow ends with this report.
+
+### 3.29 🟡 "Strict time thresholds" are never stated (pp.55–56, "Algorithmic Latency")
+
+**Now:** latency must be "within the strict time thresholds required for
+real-time Human-in-the-Loop (HITL) interface responsiveness". No threshold
+is given.
+
+**Measured (2026-10-07):** one canvas edit takes about 160 ms end to end
+(re-solve, re-score, re-render, save); Cassowary alone takes about 0.4 ms.
+
+**Fix:** name the threshold and cite it, e.g. the 0.1 s / 1 s response-time
+limits (Nielsen, *Usability Engineering*, 1993). Confirm the source with
+the TSA.
 
 ---
 
@@ -747,9 +781,10 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
 
 1. **Can do now, no TA decision needed:** 1.1, 1.2, 1.3, 3.1, 3.2, 3.3,
    3.5, 3.6, 3.7, 3.7b (tell the TA about 3.7b), 3.13–3.16, 3.18–3.21,
-   3.23, 3.26, 3.27.
+   3.23, 3.26–3.29.
    - These answer the TSA directly.
    - 3.2 needs the image source/permission details from the group.
-2. **Code first, then the text:** 3.24 (F1), 3.25 (weight calibration).
+2. **Code first, then the text:** 3.25 (weight calibration). 3.24 (F1) is
+   done in code.
 3. **After the consultant weighs in:** 3.4, 3.8, 3.9.
 4. **After the TA answers:** 3.10, 3.11, 3.12.

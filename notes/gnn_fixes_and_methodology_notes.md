@@ -2373,3 +2373,56 @@ posters × 2 formats × 3 conditions; it supersedes 20261006_144208):
 - **GNN vs. mapping only:** the same fitness on 29 of 32 runs; the GNN
   moves the unmapped elements on 14 of 32 (≤ 7.5% of the height).
 - **Tests:** all 11 pass.
+
+### 3.32 A three-step dashboard and a report on the user's layout (2026-10-07)
+
+**Why:** the consultant's remarks from the 2026-09-29 demo, relayed by the
+user on 2026-10-07: show the workflow's steps and disable the others; give
+evaluation its own place, apart from the two steps. "Evaluation" meant a
+report on the **user's layout**, not the Phase 4 packet generator.
+
+**Dashboard:**
+- `app.py` hides Streamlit's page list; `components.sidebar()` lists Step 1
+  Perceptual Ingestion, Step 2 Active Orchestration and Step 3 Evaluation
+  Report with only the current step enabled, then "Research tools"
+  (Phase 4).
+- `components.enter_step()` sends a step opened out of turn to the current
+  one; `step_bar()` marks done ✓ / current / greyed. Steps 2–3 need a
+  layout. Step 2 → 3 with "Evaluate this layout", 3 → 2 with "Back to
+  editing", and back to Step 1 only after confirming (it closes the
+  layout).
+
+**Step 3 (`views/report.py`, computed by `src/evaluation/layout_report.py`):**
+- Formula 3.11 term by term for the user's canvas next to the
+  recommendation, and its rank among the candidates.
+- **F1 as p.56 defines it** (revision item 3.24), per element:
+  - TP: placed with no overlap, inside the canvas; a Hard element still
+    where the designer put it.
+  - FP: an algorithm-placed element overlapping another or leaving the
+    canvas, or a Hard element the solver moved.
+  - FN: a payload element missing.
+  - A Hard element's own placement is the designer's call: noted, not
+    counted.
+  - The old F1 counted every Soft node as a TP and checked only the Hard
+    ones. `evaluate.py` now uses the new one: still 1.0 on its run.
+    Crowding the canvas can produce FPs: dropping the citation onto the
+    name made the solver overlap the logo and the issuing organization
+    (F1 0.90, P_collision 0.0026).
+- Manual edits kept through every re-solve of the chain (restore, undo and
+  redo bring back an earlier state's edits).
+- Latency: the pipeline's stages, and each event's total and solver time.
+  The session now records them (`_timed_event`, `latency_ms` in each
+  move/resize/lock event). One edit ≈ 160 ms end to end; Cassowary ≈ 0.4 ms.
+- Visual DNA: the elbow's WCSS per k (now kept by `VisionExtractor`) and
+  the schema validations.
+
+**Also:** `StateChain.save` writes to a temp file and swaps it in. The
+disk filled twice on 2026-10-07; the first time it left a truncated state
+chain.
+
+**Generated layouts are unchanged:** the Phase 4 set still matches
+`8422282`.
+
+**Checks:** both test files pass (12 tests, new
+`test_structural_accuracy_p56`). The step locking was run headless with
+Streamlit's AppTest; the step bar was checked in a light and a dark theme.
