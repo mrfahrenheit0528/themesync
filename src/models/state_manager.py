@@ -187,9 +187,19 @@ class StateChain:
         return json.dumps({"state_chain": self.states}, indent=2)
 
     def save(self, path: str) -> str:
+        """Writes the chain to a temporary file, then swaps it in: a failed
+        write (a full disk, 2026-10-07) leaves the previous chain intact
+        instead of a truncated file."""
         os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
-        with open(path, "w") as f:
-            f.write(self.to_json())
+        tmp = f"{path}.tmp"
+        try:
+            with open(tmp, "w") as f:
+                f.write(self.to_json())
+            os.replace(tmp, path)
+        except OSError:
+            if os.path.exists(tmp):
+                os.remove(tmp)
+            raise
         return path
 
     @classmethod

@@ -11,6 +11,7 @@ Assertions:
   - Hard constraints are preserved exactly (within 1 px tolerance)
   - Canvas text edits are schema-validated, and undo/redo bring back the
     words as well as the layout, as new states (append-only chain)
+  - The structural accuracy F1 scores each element as p.56 defines it
 
 Run with:
   python tests/test_certificate_pipeline.py
@@ -20,7 +21,7 @@ import sys
 import os
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-for _sub in ("models", "solvers", "renderers", "data_preprocessing"):
+for _sub in ("models", "solvers", "renderers", "data_preprocessing", "evaluation"):
     _p = os.path.join(_ROOT, "src", _sub)
     if _p not in sys.path:
         sys.path.insert(0, _p)
@@ -206,6 +207,30 @@ def test_ranking_is_sorted():
 # Runner
 # ---------------------------------------------------------------------------
 
+def test_structural_accuracy_p56():
+    """p.56's F1, element by element: an algorithm-placed element over
+    another or past the canvas edge is an FP, a missing payload element an
+    FN, a Hard element the solver moved an FP; where the designer put a
+    Hard element is noted, not counted."""
+    from layout_report import structural_accuracy
+
+    nodes = [
+        {"node_id": "a", "bbox": [10, 10, 100, 50], "constraint_type": "Soft"},
+        {"node_id": "b", "bbox": [60, 30, 100, 50], "constraint_type": "Soft"},     # over a
+        {"node_id": "c", "bbox": [1150, 300, 100, 40], "constraint_type": "Soft"},  # past the edge
+        {"node_id": "d", "bbox": [1150, 500, 100, 40], "constraint_type": "Hard"},  # the designer's call
+        {"node_id": "e", "bbox": [400, 700, 100, 40], "constraint_type": "Hard"},   # moved by the solver
+        {"node_id": "f", "bbox": [400, 600, 100, 40], "constraint_type": "Soft"},
+    ]
+    manual = {"d": [1150, 500, 100, 40], "e": [400, 650, 100, 40]}
+    r = structural_accuracy(nodes, CANVAS_W, CANVAS_H, list("abcdefg"), manual)
+    got = {row["node_id"]: row["result"] for row in r["nodes"]}
+    assert got == {"a": "FP", "b": "FP", "c": "FP", "d": "TP", "e": "FP", "f": "TP", "g": "FN"}, got
+    assert r["nodes"][3]["notes"] == ["protrudes beyond the canvas"], r["nodes"][3]
+    assert (r["tp"], r["fp"], r["fn"]) == (2, 4, 1)
+    print("  ✔  test_structural_accuracy_p56 passed (overlap, off-canvas, moved Hard node, missing node)")
+
+
 if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("  ThemeSync — Certificate Pipeline Tests")
@@ -219,6 +244,7 @@ if __name__ == "__main__":
         test_hard_constraints_preserved,
         test_text_edit_undo_redo,
         test_ranking_is_sorted,
+        test_structural_accuracy_p56,
     ]
     for test_fn in tests:
         try:

@@ -7,11 +7,14 @@ OrchestrationSession the dashboard uses:
 
   - Latency         : wall-clock time per pipeline stage (ms)
   - IoU             : GNN-predicted boxes vs. where the CSP finally put them
-  - Constraint F1   : non-destructive retention of manual refinements
-                      (p.54): three designer events are simulated — a move
-                      (on-drop), a resize (on-resize-complete) and a lock —
-                      and every Hard node must still sit exactly where the
-                      designer left it after the solver re-flows the rest
+  - Constraint F1   : structural accuracy as p.56 defines it, after three
+                      simulated designer events — a move (on-drop), a resize
+                      (on-resize-complete) and a lock. Every payload node is
+                      a TP (no collision, inside the canvas, a Hard one where
+                      the designer left it), an FP or an FN (missing);
+                      layout_report.structural_accuracy. The Hard nodes kept
+                      exactly through every re-solve are reported with it
+                      (non-destructive retention, p.54).
   - F_layout        : Heuristic fitness function (Formula 3.11), its terms
   - Baseline delta  : GNN-guided vs. no-GNN baseline
 
@@ -42,6 +45,7 @@ if _SRC not in sys.path:
     sys.path.insert(0, _SRC)
 
 import pipeline  # noqa: E402
+from layout_report import manual_boxes, retention_check, structural_accuracy  # noqa: E402
 
 SEPARATOR = "=" * 66
 
@@ -67,62 +71,6 @@ def calculate_iou(box1: list, box2: list) -> float:
     union = w1 * h1 + w2 * h2 - inter
 
     return inter / union if union > 0 else 0.0
-
-
-def calculate_constraint_f1(
-    pre_csp_nodes: list, post_csp_nodes: list, tolerance: float = 5.0
-) -> dict:
-    """
-    Computes constraint satisfaction F1-score.
-
-    Hard constraints: node's bbox must be exactly preserved (within tolerance px).
-    Soft constraints: partial credit if the CSP moved the node within a search radius.
-
-    Returns
-    -------
-    dict with keys: precision, recall, f1, hard_preserved, total_hard
-    """
-    pre_map  = {n["node_id"]: n for n in pre_csp_nodes}
-    post_map = {n["node_id"]: n for n in post_csp_nodes}
-
-    tp = fp = fn = 0
-    hard_preserved = 0
-    total_hard = 0
-
-    for node_id, pre_node in pre_map.items():
-        post_node = post_map.get(node_id)
-        if post_node is None:
-            fn += 1
-            continue
-
-        is_hard = pre_node.get("constraint_type") == "Hard"
-        dx = abs(pre_node["bbox"][0] - post_node["bbox"][0])
-        dy = abs(pre_node["bbox"][1] - post_node["bbox"][1])
-        preserved = dx <= tolerance and dy <= tolerance
-
-        if is_hard:
-            total_hard += 1
-            if preserved:
-                hard_preserved += 1
-                tp += 1
-            else:
-                fp += 1
-        else:
-            # Soft constraint: reward if the solver placed it reasonably
-            tp += 1  # Cassowary always attempts satisfaction
-
-    precision = tp / (tp + fp) if (tp + fp) > 0 else 1.0
-    recall    = tp / (tp + fn) if (tp + fn) > 0 else 1.0
-    f1        = (2 * precision * recall / (precision + recall)
-                 if (precision + recall) > 0 else 0.0)
-
-    return {
-        "precision":      round(precision, 4),
-        "recall":         round(recall, 4),
-        "f1":             round(f1, 4),
-        "hard_preserved": hard_preserved,
-        "total_hard":     total_hard,
-    }
 
 
 # ---------------------------------------------------------------------------
@@ -172,13 +120,19 @@ def _run_once(payload_path: str, use_gnn: bool, template_image: str = None,
     iou_scores = [calculate_iou(n["bbox"], resolved[n["node_id"]]) for n in predicted if n["node_id"] in resolved]
     mean_iou = round(sum(iou_scores) / len(iou_scores), 4) if iou_scores else None
 
-    # Constraint F1: retention of manual refinements through re-solves
+    # Constraint F1 (p.56) after the simulated edits, and their retention
     with contextlib.redirect_stdout(io.StringIO()):
         edits = _simulated_edits(session)
     final = session.chain.current
-    f1_result = calculate_constraint_f1(
-        [{"node_id": nid, "bbox": bbox, "constraint_type": "Hard"} for nid, bbox in edits],
-        final["nodes"], tolerance=1.0)
+    history = manual_boxes(session.chain.states)
+    f1_result = structural_accuracy(final["nodes"], session.canvas_w, session.canvas_h,
+                                    [n["node_id"] for n in session.base_nodes], history[-1])
+    retention = retention_check(session.chain.states, history)
+    f1_result["total_hard"] = len(edits)
+    f1_result["hard_preserved"] = sum(r["result"] == "TP" for r in f1_result["nodes"]
+                                      if r["node_id"] in dict(edits))
+    f1_result["edits_kept_through_resolves"] = (f"{retention['edits_checked'] - len(retention['violations'])}"
+                                                f"/{retention['edits_checked']}")
     f1_result["events"] = [s["event"]["summary"] for s in session.chain.states if s["event"].get("summary")]
     f1_result["collision_after_edits"] = final["fitness"]["P_collision"]
 

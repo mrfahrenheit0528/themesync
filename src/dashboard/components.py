@@ -3,8 +3,9 @@ ThemeSync — shared dashboard components
 =========================================
 Pieces the dashboard pages share: the path bootstrap, one cached YOLO
 detector for the whole app, cut-outs and thumbnails, the numbered-box poster
-view used by every logo/motif picker, and SVG → PNG previews rendered with
-the same Cairo + bundled-font path as the printed outputs.
+view used by every logo/motif picker, SVG → PNG previews rendered with the
+same Cairo + bundled-font path as the printed outputs, and the three-step
+workflow (the step bar, the sidebar, and moving between steps).
 """
 
 import hashlib
@@ -149,3 +150,93 @@ def reader(path: str):
         with open(path, "rb") as f:
             return f.read()
     return read
+
+
+# ---------------------------------------------------------------------------
+# The workflow: one step at a time (the consultant's remark, 2026-09-29)
+# ---------------------------------------------------------------------------
+
+STEPS = [  # (number, page, title, icon)
+    (1, "views/ingestion.py", "Perceptual Ingestion", "🧬"),
+    (2, "views/orchestration.py", "Active Orchestration", "🧩"),
+    (3, "views/report.py", "Evaluation Report", "📋"),
+]
+RESEARCH_PAGES = [("views/phase4.py", "Phase 4 Evaluation Set", "🗂️")]
+
+_STEP_CSS = """<style>
+.ts-steps {display:flex; align-items:center; gap:.6rem; margin:.2rem 0 1.1rem;}
+.ts-step {display:flex; align-items:center; gap:.55rem; padding:.45rem .9rem .45rem .5rem;
+          border-radius:999px; border:1.5px solid rgba(128,128,128,.35);}
+.ts-num {width:1.7rem; height:1.7rem; border-radius:50%; display:inline-flex; align-items:center;
+         justify-content:center; font-weight:700; font-size:.9rem; background:rgba(128,128,128,.22);}
+.ts-label {display:flex; flex-direction:column; line-height:1.15; font-size:.95rem;}
+.ts-label small {font-size:.72rem; opacity:.75; text-transform:uppercase; letter-spacing:.04em;}
+.ts-line {flex:1; height:2px; min-width:1rem; background:rgba(128,128,128,.35);}
+.ts-active {border-color:#ff4b4b; background:rgba(255,75,75,.08);}
+.ts-active .ts-num {background:#ff4b4b; color:#fff;}
+.ts-active .ts-label {font-weight:700;}
+.ts-done .ts-num {background:#21a35a; color:#fff;}
+.ts-todo {opacity:.45;}
+</style>"""
+
+
+def current_step() -> int:
+    """The step the user is on. Steps 2 and 3 need an orchestrated layout,
+    so without one it is Step 1."""
+    step = st.session_state.get("step", 1)
+    if step > 1 and st.session_state.get("orch") is None:
+        step = 1
+    st.session_state["step"] = step
+    return step
+
+
+def go_to_step(step: int) -> None:
+    st.session_state["step"] = step
+    st.switch_page(STEPS[step - 1][1])
+
+
+def step_bar(active: int) -> None:
+    """The three steps across the top: done ✓, the current one highlighted,
+    the rest greyed out."""
+    cells = []
+    for n, _, title, _ in STEPS:
+        state = "done" if n < active else "active" if n == active else "todo"
+        mark = "✓" if state == "done" else str(n)
+        cells.append(f'<div class="ts-step ts-{state}"><span class="ts-num">{mark}</span>'
+                     f'<span class="ts-label"><small>Step {n}</small>{title}</span></div>')
+    st.markdown(_STEP_CSS + '<div class="ts-steps">' + '<div class="ts-line"></div>'.join(cells) + "</div>",
+                unsafe_allow_html=True)
+
+
+def enter_step(step: int) -> None:
+    """Top of a step's page: a step opened out of turn (an old link, the
+    address bar) goes to the current step instead; then the step bar."""
+    now = current_step()
+    if now != step:
+        st.switch_page(STEPS[now - 1][1])
+    step_bar(step)
+
+
+def sidebar() -> None:
+    """The workflow's steps, only the current one enabled, then the
+    research tools, which sit outside the workflow."""
+    now = current_step()
+    with st.sidebar:
+        st.markdown("**Workflow**")
+        for n, page, title, icon in STEPS:
+            st.page_link(page, label=f"Step {n} · {title}", icon=icon, disabled=n != now)
+        st.caption("One step at a time. The buttons on each page move you on or back.")
+        st.markdown("**Research tools**")
+        for page, title, icon in RESEARCH_PAGES:
+            st.page_link(page, label=title, icon=icon)
+
+
+def back_to_step_one(key: str) -> None:
+    """A confirmed way back to Step 1: it closes the layout being edited."""
+    session = st.session_state.get("orch")
+    with st.popover("↺ Back to Step 1", width="stretch"):
+        st.markdown("Going back closes this layout. Its files stay saved"
+                    + (f" in `{os.path.relpath(session.output_dir, ROOT)}`" if session else "")
+                    + "; initializing again starts a new layout.")
+        if st.button("Yes, go back to Step 1", key=key, type="primary"):
+            go_to_step(1)

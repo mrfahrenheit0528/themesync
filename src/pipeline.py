@@ -46,6 +46,7 @@ Usage:
 
 import argparse
 import copy
+import functools
 import json
 import os
 import sys
@@ -550,6 +551,32 @@ def _hex_to_rgb(hexcode: str) -> tuple:
     return tuple(int(hexcode[i:i + 2], 16) for i in (1, 3, 5))
 
 
+STAGE_LABELS = {
+    "template_ingestion": "0. Template Ingestion",
+    "layout_parsing":     "0b. Semantic Layout Parsing (YOLO+OCR)",
+    "stylistic_markers":  "0c. Stylistic Marker Extraction",
+    "instantiation":      "1. Dynamic Node Instantiation",
+    "gnn_inference":      "2. GNN Spatial Inference",
+    "csp_resolution":     "3. Cassowary CSP Resolution",
+    "ranking":            "4. Metaheuristic Ranking",
+    "rendering":          "5. Aesthetic SVG Rendering",
+    "serialization":      "6. FSM State Serialization",
+}
+
+
+def _timed_event(method):
+    """Records a designer event's wall-clock time (re-solve, re-score,
+    re-render, state save) in session.event_ms under the new state's id,
+    for the latency metric (Chapter 3, p.55)."""
+    @functools.wraps(method)
+    def timed(self, *args, **kwargs):
+        t0 = time.perf_counter()
+        state = method(self, *args, **kwargs)
+        self.event_ms[state["state_id"]] = round((time.perf_counter() - t0) * 1000, 1)
+        return state
+    return timed
+
+
 class OrchestrationSession:
     """
     One master layout projected onto one target format, held open for
@@ -619,6 +646,7 @@ class OrchestrationSession:
         self._initial_content = copy.deepcopy(self.content_data)
         self._initial_typography = dict(self.typography)
         self._undo, self._redo = [], []   # state indices (undo / redo)
+        self.event_ms = {}                # state id → that event's latency (ms)
         self.rendered_path = os.path.join(output_dir, f"ThemeSync_{self.stem}_populated.svg")
         self.chain_path = os.path.join(output_dir, f"ThemeSync_{self.stem}_state_chain.json")
 
@@ -841,6 +869,7 @@ class OrchestrationSession:
                                  self.style_kit["motifs"], variation.get("arrangement", 0))
         return content + decor
 
+    @_timed_event
     def apply_event(self, event_type: str, node_id: str, bbox: list = None, hard: bool = None) -> dict:
         """
         One terminal designer event (Chapter 3, p.42):
@@ -866,25 +895,30 @@ class OrchestrationSession:
             target["constraint_type"] = "Hard"
 
         variation = current.get("variation") or dict(variations_for(self.domain)[0])
+        t0 = time.perf_counter()
         if target.get("structural_class") == "decor":
             resolved = nodes          # motifs sit outside the solver
         else:
             resolved = self._resolve(nodes, variation)
+        t1 = time.perf_counter()
         verb = {"on-drop": "Moved", "on-resize-complete": "Resized",
                 "lock-toggle": "Locked" if hard else "Released"}[event_type]
         hard_note = "Hard Const." if target["constraint_type"] == "Hard" else "Soft"
         fitness = self._fitness(resolved, variation)
+        latency = {"solve": round((t1 - t0) * 1000, 1), "score": round((time.perf_counter() - t1) * 1000, 1)}
         self._mark()
         state = self.chain.append(
             f"{hard_note} [{node_id}]",
             {"type": event_type, "node_id": node_id, "before": before, "after": list(target["bbox"]),
-             "constraint_type": target["constraint_type"], "summary": f"{verb} {node_id}"},
+             "constraint_type": target["constraint_type"], "summary": f"{verb} {node_id}",
+             "latency_ms": latency},
             resolved, fitness=fitness,
             candidate_id=current.get("candidate_id"), variation=variation)
         self.render(resolved, self.rendered_path, variation)
         self.chain.save(self.chain_path)
         return state
 
+    @_timed_event
     def edit_text(self, node_id: str, text: str) -> dict:
         """
         A text edit on the canvas (double-click → type → Enter): the content
@@ -916,6 +950,7 @@ class OrchestrationSession:
         self.chain.save(self.chain_path)
         return state
 
+    @_timed_event
     def select_candidate(self, candidate_id: str) -> dict:
         """Makes a ranked candidate the active canvas (Recommendation Engine)."""
         cand = next(c for c in self.candidates if c["candidate_id"] == candidate_id)
@@ -929,6 +964,7 @@ class OrchestrationSession:
         self.chain.save(self.chain_path)
         return state
 
+    @_timed_event
     def restore_state(self, index: int, _label: str = None, _event: dict = None) -> dict:
         """Brings back an earlier canvas — its layout, words and typography —
         as a new state; the chain keeps everything in between."""
@@ -980,6 +1016,7 @@ class OrchestrationSession:
     def can_redo(self) -> bool:
         return bool(self._redo)
 
+    @_timed_event
     def undo(self) -> dict:
         """The canvas as it was before the last edit, appended as a new
         state (like Restore — the chain is never rewritten)."""
@@ -990,6 +1027,7 @@ class OrchestrationSession:
         sid = self.chain.states[index]["state_id"]
         return self.restore_state(index, _label=f"Undo → {sid}", _event={"type": "undo", "restored": sid})
 
+    @_timed_event
     def redo(self) -> dict:
         """Re-applies the last undone edit (as a new state)."""
         if not self._redo:
@@ -1020,6 +1058,7 @@ class OrchestrationSession:
         return {k: p["maxLength"] for k, p in content_schema(self.payload_meta)["properties"].items()
                 if "maxLength" in p}
 
+    @_timed_event
     def set_typography(self, typography: dict) -> dict:
         """Re-validates and applies new administrative typography (the
         layout is unchanged; the canvas re-renders)."""
@@ -1047,18 +1086,7 @@ class OrchestrationSession:
         _print_header("Pipeline Complete — Timing Summary")
         print(f"\n  {'Stage':<42} {'Time (ms)':>10}")
         print(f"  {'-'*42} {'-'*10}")
-        labels = {
-            "template_ingestion": "0. Template Ingestion",
-            "layout_parsing":     "0b. Semantic Layout Parsing (YOLO+OCR)",
-            "stylistic_markers":  "0c. Stylistic Marker Extraction",
-            "instantiation":      "1. Dynamic Node Instantiation",
-            "gnn_inference":      "2. GNN Spatial Inference",
-            "csp_resolution":     "3. Cassowary CSP Resolution",
-            "ranking":            "4. Metaheuristic Ranking",
-            "rendering":          "5. Aesthetic SVG Rendering",
-            "serialization":      "6. FSM State Serialization",
-        }
-        for key, label in labels.items():
+        for key, label in STAGE_LABELS.items():
             t = self.timings.get(key, 0.0)
             skipped = "  (skipped)" if t == 0.0 else ""
             print(f"  {label:<42} {t*1000:>10.1f}{skipped}")

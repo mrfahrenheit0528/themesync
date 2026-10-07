@@ -9,13 +9,13 @@
         "template_ingestion_ms": 0.0,
         "layout_parsing_ms": 0.0,
         "stylistic_markers_ms": 0.0,
-        "instantiation_ms": 0.16,
-        "gnn_inference_ms": 786.5,
-        "csp_resolution_ms": 1.17,
-        "ranking_ms": 226.26,
-        "rendering_ms": 0.97,
-        "serialization_ms": 0.31,
-        "total_ms": 1015.37
+        "instantiation_ms": 0.18,
+        "gnn_inference_ms": 382.57,
+        "csp_resolution_ms": 1.36,
+        "ranking_ms": 12.81,
+        "rendering_ms": 0.87,
+        "serialization_ms": 0.26,
+        "total_ms": 398.04
       },
       "mean_iou": 0.2559,
       "per_node_iou": [
@@ -29,11 +29,105 @@
         0.0
       ],
       "constraint_f1": {
+        "tp": 11,
+        "fp": 0,
+        "fn": 0,
         "precision": 1.0,
         "recall": 1.0,
         "f1": 1.0,
-        "hard_preserved": 3,
+        "nodes": [
+          {
+            "node_id": "{{Institution_Logo}}",
+            "name": "Institution Logo",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Issuing_Organization}}",
+            "name": "Issuing Organization",
+            "placed_by": "designer",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Certificate_Title}}",
+            "name": "Certificate Title",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Presentation_Line}}",
+            "name": "Presentation Line",
+            "placed_by": "designer",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Student_Name}}",
+            "name": "Student Name",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Citation_Body}}",
+            "name": "Citation Body",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Date_Issued}}",
+            "name": "Date Issued",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Certificate_ID}}",
+            "name": "Certificate ID",
+            "placed_by": "designer",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Signature_Blocks}}_0",
+            "name": "Signature Blocks 0",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Signature_Blocks}}_1",
+            "name": "Signature Blocks 1",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Signature_Blocks}}_2",
+            "name": "Signature Blocks 2",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          }
+        ],
         "total_hard": 3,
+        "hard_preserved": 3,
+        "edits_kept_through_resolves": "6/6",
         "events": [
           "Moved {{Issuing_Organization}}",
           "Resized {{Presentation_Line}}",
@@ -59,22 +153,116 @@
         "template_ingestion_ms": 0.0,
         "layout_parsing_ms": 0.0,
         "stylistic_markers_ms": 0.0,
-        "instantiation_ms": 0.25,
+        "instantiation_ms": 0.12,
         "gnn_inference_ms": 0.0,
-        "csp_resolution_ms": 2.95,
-        "ranking_ms": 396.16,
-        "rendering_ms": 73.56,
-        "serialization_ms": 0.96,
-        "total_ms": 473.88
+        "csp_resolution_ms": 1.29,
+        "ranking_ms": 10.32,
+        "rendering_ms": 46.64,
+        "serialization_ms": 0.32,
+        "total_ms": 58.69
       },
       "mean_iou": null,
       "per_node_iou": [],
       "constraint_f1": {
+        "tp": 11,
+        "fp": 0,
+        "fn": 0,
         "precision": 1.0,
         "recall": 1.0,
         "f1": 1.0,
-        "hard_preserved": 3,
+        "nodes": [
+          {
+            "node_id": "{{Institution_Logo}}",
+            "name": "Institution Logo",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Issuing_Organization}}",
+            "name": "Issuing Organization",
+            "placed_by": "designer",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Certificate_Title}}",
+            "name": "Certificate Title",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Presentation_Line}}",
+            "name": "Presentation Line",
+            "placed_by": "designer",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Student_Name}}",
+            "name": "Student Name",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Citation_Body}}",
+            "name": "Citation Body",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Date_Issued}}",
+            "name": "Date Issued",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Certificate_ID}}",
+            "name": "Certificate ID",
+            "placed_by": "designer",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Signature_Blocks}}_0",
+            "name": "Signature Blocks 0",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Signature_Blocks}}_1",
+            "name": "Signature Blocks 1",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          },
+          {
+            "node_id": "{{Signature_Blocks}}_2",
+            "name": "Signature Blocks 2",
+            "placed_by": "algorithm",
+            "result": "TP",
+            "reasons": [],
+            "notes": []
+          }
+        ],
         "total_hard": 3,
+        "hard_preserved": 3,
+        "edits_kept_through_resolves": "6/6",
         "events": [
           "Moved {{Issuing_Organization}}",
           "Resized {{Presentation_Line}}",

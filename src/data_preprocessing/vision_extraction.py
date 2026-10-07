@@ -8,6 +8,7 @@ class VisionExtractor:
         Initializes the GPU-accelerated K-Means and CPU-bound SIFT feature extraction modules.
         """
         self.n_colors = n_colors
+        self.elbow = None   # the last Elbow Method run: {"k", "ks", "wcss"}
         self.sift = cv2.SIFT_create()
         # Automatically target the first available RTX A5000
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -42,7 +43,8 @@ class VisionExtractor:
             safe_centroids[:, 0] = kmeans.cluster_centers_.flatten()
             safe_centroids[:, 1] = 128.0 
             safe_centroids[:, 2] = 128.0
-            
+            self.elbow = None   # grayscale: fixed k, no elbow
+
             return safe_centroids.tolist()
             
         else:
@@ -111,6 +113,7 @@ class VisionExtractor:
         wcss_vals = [runs[k][1] for k in ks]
 
         best_k = self._find_elbow(ks, wcss_vals)
+        self.elbow = {"k": best_k, "ks": ks, "wcss": [round(float(v), 1) for v in wcss_vals]}
         return runs[best_k][0]
 
     @staticmethod

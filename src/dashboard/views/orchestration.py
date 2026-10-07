@@ -22,6 +22,9 @@ Every edit is one discrete, terminal event (a drop, a finished resize, a
 text edit, Apply, a nudge, a lock toggle): the session re-solves the layout
 with the adjusted node as a Hard constraint and appends a state; nothing
 earlier in the chain changes.
+
+This is Step 2 of the dashboard's workflow: "Evaluate this layout" moves
+on to Step 3's report, and "Back to Step 1" (confirmed) closes the layout.
 """
 
 import json
@@ -53,14 +56,17 @@ def _metrics_line(m: dict) -> str:
             f"legibility {m['P_legibility']:.4f}")
 
 
-session = st.session_state.get("orch")
 st.title("ThemeSync")
-st.caption("Phase 2 & 3 · Active Orchestration & Heuristic Scoring (Figure 3)")
-if session is None:
-    st.info("No orchestration yet — extract the Visual DNA and press **Initialize Orchestration** "
-            "on the Perceptual Ingestion page first.")
-    st.page_link("views/ingestion.py", label="Go to Perceptual Ingestion (Fig. 2)", icon="🧬")
-    st.stop()
+ui.enter_step(2)   # without a layout, this goes back to Step 1
+session = st.session_state["orch"]
+st.caption("Phase 2 & 3 · Active Orchestration & Heuristic Scoring (Figure 3). Refine the layout on "
+           "the canvas, then evaluate it.")
+back_col, _, next_col = st.columns([1.1, 3, 1.4])
+with back_col:
+    ui.back_to_step_one("back_from_2")
+if next_col.button("Evaluate this layout →", type="primary", width="stretch",
+                   help="Step 3: the layout's report against Chapter 3's evaluation metrics."):
+    ui.go_to_step(3)
 
 state = session.chain.current
 nodes = state["nodes"]

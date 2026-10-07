@@ -17,7 +17,11 @@ parts and the target set-up:
   Target initialization
     Target format, its structural fields, the content payload (validated
     against the format's schema), GNN-guided or baseline, and "Initialize
-    Orchestration", which runs Stages 1-6 and opens the Figure 3 workspace.
+    Orchestration", which runs Stages 1-6 and moves on to Step 2, the
+    Figure 3 workspace.
+
+This is Step 1 of the dashboard's workflow; Steps 2 and 3 stay disabled
+until a layout is initialized.
 """
 
 import glob
@@ -115,7 +119,9 @@ def _swatch(hexcode: str, label: str) -> None:
 # ---------------------------------------------------------------------------
 
 st.title("ThemeSync")
-st.caption("Phase 1 · Perceptual Ingestion & Feature Extraction — Master Template Dashboard (Figure 2)")
+ui.enter_step(1)
+st.caption("Phase 1 · Perceptual Ingestion & Feature Extraction — Master Template Dashboard (Figure 2). "
+           "Upload a master layout, review its Visual DNA, then set up the target format.")
 
 col_left, col_right = st.columns([1.3, 1], gap="large")
 dna = None
@@ -338,6 +344,9 @@ with col_right:
     ready = dna is not None and not problems
     if dna is None:
         st.caption("Extract Visual DNA on the left before initializing orchestration.")
+    elif st.session_state.get("orch") is not None:
+        st.caption("Initializing starts a new layout; the one you were editing stays saved in its "
+                   "session folder.")
 
     if st.button("▶ Initialize Orchestration", type="primary", disabled=not ready):
         out_dir = os.path.join(ui.SESSIONS_DIR, f"{time.strftime('%Y%m%d_%H%M%S')}_{dna['stem']}_{domain}")
@@ -354,4 +363,4 @@ with col_right:
         else:
             st.session_state["orch"] = session
             st.session_state["orch_master"] = master_path
-            st.switch_page("views/orchestration.py")
+            ui.go_to_step(2)

@@ -75,6 +75,8 @@ class TemplateIngestor:
                                 per-region visual-noise density (Formula 3.15)
             image_wh         : tuple (width, height) in pixels
             palette_hex      : list of hex colour strings (for display/logging)
+            elbow            : {"k", "ks", "wcss"} — the Elbow Method run that
+                                picked k (pp.42-43), or None for grayscale
 
         Raises
         ------
@@ -113,6 +115,7 @@ class TemplateIngestor:
             "saliency_map":    saliency_map,
             "image_wh":        (w, h),
             "palette_hex":     palette_hex,
+            "elbow":           self._extractor.elbow,
         }
 
     # ------------------------------------------------------------------
