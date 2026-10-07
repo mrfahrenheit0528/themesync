@@ -137,8 +137,10 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
   `src/evaluation/yolo_compare.py`.
 - **The school server's `/home` disk fills up** (shared by all users). On
   2026-10-07 it hit 0 bytes free and the dashboard failed to save state
-  ("No space left on device"). Check `df -h /home`; the user's caches were
-  cleared (pip, conda, the raw CGL download in `~/.cache/huggingface`).
+  ("No space left on device"), and again that evening. Check `df -h /home`.
+  Already cleared: pip and conda caches, the raw CGL download in
+  `~/.cache/huggingface`, and (at the user's request) `~/Hermoso` (old
+  coursework) and `~/nltk_data`.
 - **Not in git:**
   - generated output (`data/rendered/` etc.); regenerate it;
   - the CGL dataset (`data/processed/cgl_tensor_dataset`, 2.8 GB). Only
