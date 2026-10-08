@@ -131,3 +131,52 @@ experts' scores (item 3.9).
 | Future tense left over | M11 |
 | "introduced by introduced by", "Emperical", "placement A sample" | M12 |
 | ANTI_HAZING_LAW's rated pages; with/without analysis | 3.9 |
+
+---
+
+## D. Numbers for the manuscript (as they arrive)
+
+### D1. The detector's mean IoU (p.62; item 3.4) — 2026-10-09
+
+`src/evaluation/yolo_iou.py` → `results/yolo_iou.json`; notes §3.41.
+
+**Setup:**
+- **What's measured:** the deployed detector (YOLOv8s, `themesync_yolo_v5.pt`,
+  at 1024 px) on the master-layout dataset's 40 held-out validation images.
+- **Operating point:** the system's own (confidence ≥ 0.25, or ≥ 0.15 for
+  title-sized text).
+- **Ground truth:** the validation labels as training saw them (polygons
+  as their enclosing boxes; boxes over half the image dropped). 607 boxes.
+
+**The matching rule:**
+- **Pairing:** in each image and for each class, every ground-truth box
+  is paired with at most one detection, and vice versa. The pairing chosen
+  maximises the total IoU (the Hungarian algorithm).
+- **Strict mean IoU:** the average over every ground-truth box. A box with
+  no overlapping detection counts as 0.
+- **Found:** a pair with IoU ≥ 0.5, the usual threshold (as in mAP50).
+  - Recall = found ÷ ground-truth boxes; precision = found ÷ detections.
+  - The mean IoU is taken over those pairs.
+
+| class | boxes | strict mean IoU | found (recall) | precision | mean IoU of found |
+|---|---|---|---|---|---|
+| logo | 140 | 0.844 | 0.957 | 0.957 | 0.882 |
+| text | 260 | 0.679 | 0.796 | 0.695 | 0.818 |
+| underlay | 41 | 0.548 | 0.634 | 0.605 | 0.850 |
+| embellishment | 166 | 0.445 | 0.530 | 0.633 | 0.809 |
+| **all** | **607** | **0.644** | **0.750** | **0.734** | **0.837** |
+
+**For the text:**
+- **Which number:** the development chat suggests reporting the strict
+  mean IoU (0.644) as "the mean IoU", since it counts every element. Add
+  that found elements average 0.837, with 75% found at IoU ≥ 0.5.
+- **The duplicate:** one of the 40 images (HIRAYA) duplicates a training
+  image. Without it (39 images), the figures are strict 0.640, found 74.4%,
+  mean IoU of found 0.837, so the 40-image figure stands. Mention it once,
+  as a footnote, if at all.
+- **mAP50** on the same 40 images is 0.746 (Ultralytics' validator, all
+  confidences), if Chapter 4 wants the one-sentence comparison the
+  revision list mentions.
+- **Machine:** measured on the Windows checkout (RTX 3060) with the
+  server's library versions. A server run may differ in the last decimal.
+

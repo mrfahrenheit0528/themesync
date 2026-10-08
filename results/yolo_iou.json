@@ -1,0 +1,402 @@
+{
+  "generated": "2026-10-09T03:58:46",
+  "weights": "themesync_yolo_v5.pt",
+  "settings": {
+    "image_size": 1024,
+    "confidence": 0.25,
+    "title_text_confidence": 0.15,
+    "title_min_area": 0.05,
+    "ground_truth": "validation labels; polygons -> enclosing boxes; boxes over half the image dropped",
+    "pairing": "per image and class, one-to-one, maximising the total IoU (Hungarian algorithm)",
+    "strict_mean_iou": "mean over every ground-truth box; a box with no overlapping detection counts 0",
+    "found": "a pair with IoU >= 0.5; recall = found / ground-truth boxes, precision = found / detections, found_mean_iou = mean IoU of those pairs"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.5.1+cu121",
+    "ultralytics": "8.4.121",
+    "device": "NVIDIA GeForce RTX 3060"
+  },
+  "validation_images": 40,
+  "duplicates_of_training_images": [
+    "HIRAYA_png.rf.d87612b7b8f82b707eb55cd4f56d0180.jpg"
+  ],
+  "results": {
+    "all 40 validation images": {
+      "logo": {
+        "ground_truth_boxes": 140,
+        "detections": 140,
+        "strict_mean_iou": 0.8439,
+        "found": 134,
+        "recall": 0.9571,
+        "precision": 0.9571,
+        "found_mean_iou": 0.8816
+      },
+      "text": {
+        "ground_truth_boxes": 260,
+        "detections": 298,
+        "strict_mean_iou": 0.6791,
+        "found": 207,
+        "recall": 0.7962,
+        "precision": 0.6946,
+        "found_mean_iou": 0.8183
+      },
+      "underlay": {
+        "ground_truth_boxes": 41,
+        "detections": 43,
+        "strict_mean_iou": 0.5485,
+        "found": 26,
+        "recall": 0.6341,
+        "precision": 0.6047,
+        "found_mean_iou": 0.8504
+      },
+      "embellishment": {
+        "ground_truth_boxes": 166,
+        "detections": 139,
+        "strict_mean_iou": 0.4452,
+        "found": 88,
+        "recall": 0.5301,
+        "precision": 0.6331,
+        "found_mean_iou": 0.8093
+      },
+      "all": {
+        "ground_truth_boxes": 607,
+        "detections": 620,
+        "strict_mean_iou": 0.6443,
+        "found": 455,
+        "recall": 0.7496,
+        "precision": 0.7339,
+        "found_mean_iou": 0.8371
+      }
+    },
+    "39 without training duplicates": {
+      "logo": {
+        "ground_truth_boxes": 139,
+        "detections": 139,
+        "strict_mean_iou": 0.8432,
+        "found": 133,
+        "recall": 0.9568,
+        "precision": 0.9568,
+        "found_mean_iou": 0.8812
+      },
+      "text": {
+        "ground_truth_boxes": 252,
+        "detections": 289,
+        "strict_mean_iou": 0.6735,
+        "found": 199,
+        "recall": 0.7897,
+        "precision": 0.6886,
+        "found_mean_iou": 0.8169
+      },
+      "underlay": {
+        "ground_truth_boxes": 39,
+        "detections": 41,
+        "strict_mean_iou": 0.5283,
+        "found": 24,
+        "recall": 0.6154,
+        "precision": 0.5854,
+        "found_mean_iou": 0.8427
+      },
+      "embellishment": {
+        "ground_truth_boxes": 164,
+        "detections": 137,
+        "strict_mean_iou": 0.4417,
+        "found": 86,
+        "recall": 0.5244,
+        "precision": 0.6277,
+        "found_mean_iou": 0.8111
+      },
+      "all": {
+        "ground_truth_boxes": 594,
+        "detections": 606,
+        "strict_mean_iou": 0.6397,
+        "found": 442,
+        "recall": 0.7441,
+        "precision": 0.7294,
+        "found_mean_iou": 0.8365
+      }
+    }
+  },
+  "per_image": [
+    {
+      "image": "19TH_PASOA_png.rf.5f62872b0a7da5ddc8be638c69bb44be.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 12,
+      "detections": 13,
+      "strict_mean_iou": 0.7913
+    },
+    {
+      "image": "AGAPAY_jpg.rf.1cb0734335df04a09cdedbfb0ec35b0d.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 16,
+      "detections": 19,
+      "strict_mean_iou": 0.7257
+    },
+    {
+      "image": "BANYUHAY_jpg.rf.cff7a91935353d962992cacab3a1e633.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 11,
+      "detections": 7,
+      "strict_mean_iou": 0.4072
+    },
+    {
+      "image": "BATO_BATO_PICK_jpg.rf.a55875d339fe0438b9715a4f6f05b408.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 10,
+      "detections": 9,
+      "strict_mean_iou": 0.5006
+    },
+    {
+      "image": "BERMONTHS_NA_CUPIANS_png.rf.6fcd72f8b6643287a52cb84e84142c33.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 13,
+      "detections": 14,
+      "strict_mean_iou": 0.6057
+    },
+    {
+      "image": "BUBBLEKADA_png.rf.8d0d226a402e188c38df249d662c0a61.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 44,
+      "detections": 45,
+      "strict_mean_iou": 0.8163
+    },
+    {
+      "image": "BUWAN_NG_WIKA_png.rf.700f81a71b70ee431efecc3574f61fb5.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 9,
+      "detections": 8,
+      "strict_mean_iou": 0.6704
+    },
+    {
+      "image": "BYNIGHT_jpg.rf.e5d94768774320c2f615af1c02616efd.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 18,
+      "detections": 16,
+      "strict_mean_iou": 0.3326
+    },
+    {
+      "image": "CAMPUS_CONSTRUCT_jpg.rf.bf31241a1c2b1277cf583abba7fb01ec.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 19,
+      "detections": 17,
+      "strict_mean_iou": 0.4342
+    },
+    {
+      "image": "CEA-S_ONEPIECE_jpg.rf.d990d907104d84e3179de550e4c9e540.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 15,
+      "detections": 14,
+      "strict_mean_iou": 0.5062
+    },
+    {
+      "image": "CEAVENGERS_jpg.rf.5993bc4709cfcf75be4bb9f6e0a09be5.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 16,
+      "detections": 18,
+      "strict_mean_iou": 0.7935
+    },
+    {
+      "image": "CEQUEST_jpg.rf.b2d7ccf0c88c015044f75761a7062f59.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 8,
+      "detections": 11,
+      "strict_mean_iou": 0.7059
+    },
+    {
+      "image": "CONVERSE_jpg.rf.92c2aedea1bb1c3ff5127fb4eb0d0bf3.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 16,
+      "detections": 16,
+      "strict_mean_iou": 0.5879
+    },
+    {
+      "image": "DEPLOYMENTS_jpg.rf.368d227c3cff6e4fd8eeae4ef9644cf6.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 11,
+      "detections": 12,
+      "strict_mean_iou": 0.8367
+    },
+    {
+      "image": "FIRST_WEEK_RAGE_jpg.rf.30f57fa81120eace31caa3c0c7ac31f3.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 10,
+      "detections": 21,
+      "strict_mean_iou": 0.7326
+    },
+    {
+      "image": "FRESHMEN_CONNECT_2024_jpg.rf.294a57bdadc75f10e33dfe15aef04bf0.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 23,
+      "detections": 20,
+      "strict_mean_iou": 0.6287
+    },
+    {
+      "image": "FRESHMEN_CONNECT_jpg.rf.04a138c954f6d9a71f5b04c90cb50e87.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 24,
+      "detections": 12,
+      "strict_mean_iou": 0.2867
+    },
+    {
+      "image": "GAWAD_GILAS_png.rf.f4fb137eaaa1ecea8e5082283ea355da.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 8,
+      "detections": 8,
+      "strict_mean_iou": 0.7758
+    },
+    {
+      "image": "HIRAYA_png.rf.d87612b7b8f82b707eb55cd4f56d0180.jpg",
+      "duplicates_training_image": "HIRAYA_jpg.rf.8c622d25e34172356d822d0d4f16aa42.jpg",
+      "ground_truth_boxes": 13,
+      "detections": 14,
+      "strict_mean_iou": 0.8554
+    },
+    {
+      "image": "LIKHANG_MASAYA_jpg.rf.2b87213f12f57fec979926ea8ae767d2.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 13,
+      "detections": 9,
+      "strict_mean_iou": 0.1469
+    },
+    {
+      "image": "LIMATA_jpg.rf.2149054ddf8905ec497a39cd0826fbf9.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 13,
+      "detections": 18,
+      "strict_mean_iou": 0.8527
+    },
+    {
+      "image": "MIDNIGHT_SUN_jpg.rf.106c1c48ebe7a1433efb9b987ec96cc2.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 27,
+      "detections": 24,
+      "strict_mean_iou": 0.4728
+    },
+    {
+      "image": "OLA_DAY_jpg.rf.73444f689c9f70e1b119d88589469130.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 19,
+      "detections": 22,
+      "strict_mean_iou": 0.9122
+    },
+    {
+      "image": "ORIENTATION_png.rf.5aac5771e911f18583d4639d8fe7a0e1.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 17,
+      "detections": 14,
+      "strict_mean_iou": 0.5404
+    },
+    {
+      "image": "ORSEM_2026_jpg.rf.c4469386bd3ae3514633444a1e84988f.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 10,
+      "detections": 13,
+      "strict_mean_iou": 0.8038
+    },
+    {
+      "image": "PALACASANjpg_jpg.rf.a016ed2de610f2c609e733724b0f8a58.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 12,
+      "detections": 14,
+      "strict_mean_iou": 0.5363
+    },
+    {
+      "image": "PARTY_2026_webp.rf.4a280910d4814b652aa879478e6ba4a0.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 8,
+      "detections": 11,
+      "strict_mean_iou": 0.7922
+    },
+    {
+      "image": "PISTA_SA_NAYON_webp.rf.d9f4e2c1137f77628189a068596b26b4.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 19,
+      "detections": 21,
+      "strict_mean_iou": 0.8965
+    },
+    {
+      "image": "PLEB_jpg.rf.fb144c387b2ec8227e126595b0f891b2.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 16,
+      "detections": 13,
+      "strict_mean_iou": 0.5647
+    },
+    {
+      "image": "PRE_SERVICE_TEACHERS_jpg.rf.c3f40fd5524d25abf4ba2503b82ab266.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 19,
+      "detections": 23,
+      "strict_mean_iou": 0.8056
+    },
+    {
+      "image": "PUP_IDOL_jpg.rf.cac499604640edbe3aba15d42d8879ee.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 7,
+      "detections": 9,
+      "strict_mean_iou": 0.6127
+    },
+    {
+      "image": "READY_SET_RESPOND_jpg.rf.ec84c1e3bdf322b9679ab2bc8e81f530.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 20,
+      "detections": 20,
+      "strict_mean_iou": 0.6435
+    },
+    {
+      "image": "REFRAMING2025_jpg.rf.9a128c2d6cd42bb83feec4dbb66ad1e8.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 14,
+      "detections": 18,
+      "strict_mean_iou": 0.7517
+    },
+    {
+      "image": "REFRAMING_jpg.rf.a4e2df41e21b9d3427cf454f1a577646.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 12,
+      "detections": 16,
+      "strict_mean_iou": 0.8177
+    },
+    {
+      "image": "ROBOCLASH_2026_png.rf.28946657a532fe9ecdf3167e3fc79a53.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 15,
+      "detections": 18,
+      "strict_mean_iou": 0.6885
+    },
+    {
+      "image": "SILAYAN_WORKSHOP_jpg.rf.4c004db8d18bfc8d83997d61d44f3af6.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 16,
+      "detections": 9,
+      "strict_mean_iou": 0.463
+    },
+    {
+      "image": "STAY_ALERT_png.rf.64b97f9ddb33868e1d9f74a0c9dbbe83.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 12,
+      "detections": 9,
+      "strict_mean_iou": 0.5463
+    },
+    {
+      "image": "TECHQUAKE_jpg.rf.ef2cc765c805381028a255396bc82ac8.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 14,
+      "detections": 17,
+      "strict_mean_iou": 0.799
+    },
+    {
+      "image": "TECHXPLOSION_jpg.rf.c7bb5c86b469729cdce238f570191c87.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 16,
+      "detections": 15,
+      "strict_mean_iou": 0.5289
+    },
+    {
+      "image": "TOURISM_MONTH_png.rf.1ed3979d9909db58157dd7ec7e2243f7.jpg",
+      "duplicates_training_image": null,
+      "ground_truth_boxes": 12,
+      "detections": 13,
+      "strict_mean_iou": 0.8338
+    }
+  ]
+}
