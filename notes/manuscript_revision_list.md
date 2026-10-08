@@ -10,12 +10,17 @@ group's Prism revision, in the past tense; its LaTeX source is in
 - Page numbers are Manu 0910.1's printed page numbers, which equal its PDF
   page numbers. Versions of this list before 2026-10-09 used the May PDF's
   (`manuscript/Manu 1905.pdf`, formerly `Final Manuscript.pdf`).
-- Old items keep their numbers. Items found on 2026-10-09 are M1–M26.
+- Old items keep their numbers. Items found on 2026-10-09 are M1–M27.
   M22–M26 come from the development chat's check
   (`notes/dev_findings_for_manuscript.md`, section A), confirmed against
   the code here.
 - Make the fixes in Prism. `manuscript/LaTeX/` is an export, and edits there
   would be lost at the next one.
+- **Paste-ready text: `manuscript/manu0910_fixes.md`** (2026-10-09). It has
+  121 find-and-replace fixes covering M1, M2, M4–M16, M18–M25, M27 and
+  parts of 3.9 and 3.22. All of them applied to the export compile without
+  errors. Six placeholders need the group's facts. M3, M17 and M26 wait,
+  as noted in that file.
 - Write every addition in the past tense.
 
 **Legend:**
@@ -43,7 +48,7 @@ group's Prism revision, in the past tense; its LaTeX source is in
   (M6), 3.23's default (M5), and 3.26 is half applied (M7, M8).
 - **Not applied:** 3.9 (waits on the consultant), 3.10–3.12 (wait on the
   TA), and the optional 3.7c, 3.17, 3.22. 3.24 and 3.25 needed no change.
-- **New:** 26 items (M1–M26; M22–M26 from the development chat, all 🟡).
+- **New:** 27 items (M1–M27; M22–M26 from the development chat, all 🟡).
   The 🔴 ones:
   - two paragraphs run off the page (M1);
   - two paragraphs printed twice (M2);
@@ -57,7 +62,9 @@ group's Prism revision, in the past tense; its LaTeX source is in
   - three reference entries the TSA asked about (CGL-GAN, RADM,
     O'Donovan) with the wrong authors and DOIs, and P.800 not cited in
     Chapter 3 (M9);
-  - "will belong" inside Formula 3.10 (M10).
+  - "will belong" inside Formula 3.10 (M10);
+  - Chapter 2 saying, in the past tense, that ThemeSync computes Xu et
+    al.'s R_shm (M27).
 
 ---
 
@@ -315,6 +322,21 @@ lack them:
 
 ### M15 🟡 Other reference problems (check each on its DOI or arXiv page)
 
+**The cause of Chapter 2's wrong years:** three `\citeyear{…}` calls point
+at the wrong bib key. "Lee, Jin, and Tseng [\citeyear{Garcia2023}]" prints
+Garcia's 2023, Graph4GUI's `\citeyear{Du2020DepthLab}` prints 2020, and
+Zheng et al.'s `\citeyear{Xu2020LayoutLM}` prints 2020. Because the NDN entry
+was never cited, NDN is also missing from the Notes.
+
+**Checked on the web, 2026-10-09:**
+- **Confirmed:** Graph4GUI's, LayoutFormer++'s and NDN's authors;
+  Kleppmann's title; Badros et al. (Cassowary, DOI
+  10.1145/504704.504705); LayoutDiffusion (ICCV 2023, 7226–7236).
+- **Couldn't find:** the packaging-design paper (DOI
+  10.1038/s41598-025-20046-1) and the LLM constraint-model paper (DOI
+  10.3390/app15126518). If those DOIs don't open, the sources have to be
+  replaced, not just corrected.
+
 **Wrong authors or titles:**
 - **Graph4GUI (`Jiang2024Graph4GUI`):** the authors are Yue Jiang,
   Changkong Zhou, Vikas Garg and Antti Oulasvirta (CHI '24, arXiv
@@ -457,6 +479,8 @@ e-commerce posters, not documents.
   candidate, and the output follows the master's layout type (p.58).
 - **p.53:** "Identification Cards and Academic Certificates": make it
   "event identification cards", like p.55 and p.61 (item 3.7b).
+- **p.58:** "$C_{total}$" is the code's name for the fitness score; Formula
+  3.11 calls it $F_{layout}$. Use one name.
 
 ### M19 🟡 R_target is fixed, not taken from the master (p.47, Formula 3.14)
 
@@ -557,6 +581,21 @@ measurements so far fall on either side of the first one:
 Chapter 4"), say that the solver meets 0.1 s and a full edit meets 1.0 s,
 or that both meet 0.1 s if the development chat gets the edit under it.
 Don't add numbers before then.
+
+### M27 🔴 Chapter 2 says ThemeSync computes R_shm (pp.24–25)
+
+**Now:** "the framework will algorithmically quantify layout occlusion by
+computing the perceptual difference in the background's saliency map
+before and after the application of text masks. By establishing a rigid
+spatial clash metric ($R_{shm}$), the system will mathematically evaluate
+the aesthetic score…". Converted to the past tense, this claims a result.
+
+**Code:** no R_shm. The Legibility Penalty (Formula 3.15) measures the mean
+saliency under each text box, on each candidate's own composed background
+(`optimization_engine.calculate_legibility_penalty`).
+
+**Fix:** credit R_shm to Xu et al. and say what ThemeSync measures (fix #24
+in `manuscript/manu0910_fixes.md`). Found while drafting the fixes.
 
 ---
 
@@ -792,9 +831,9 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
 
 ## Order of work
 
-1. **Now, in Prism:** M1, M2, M10 (the PDF is broken or garbled there),
-   then M3–M9 (accuracy), then M11–M25. M26 waits for the latency
-   benchmark.
+1. **Now, in Prism:** apply `manuscript/manu0910_fixes.md` after filling its
+   six placeholders. M3 and M26 wait for the development chat's numbers,
+   and M17 for screenshots.
    - M9 and M15 answer the TSA's citation concerns directly.
    - M16 needs facts from the group: who annotated, how the boxes were
      cross-checked, and what the 15-image review found.

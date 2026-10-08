@@ -133,7 +133,8 @@ Read first: `notes/system_development_progress.md`, then the tail of
   `notes/system_development_progress.md`. All three are done: the steps
   (§3.32), a report on the user's layout (§3.32), the dataset (v5).
 - **Manuscript:** the revised Manu 0910.1 (2026-10-09) is in
-  `manuscript/`. Its open fixes are M1–M26 in the revision list. Among the
+  `manuscript/`. Its open fixes are M1–M27 in the revision list, and
+  `manuscript/manu0910_fixes.md` has them as paste-ready text. Among the
   🔴: two paragraphs run off the page (unescaped `_`), a stress test
   described as done (none exists), a Phase 4 baseline described as "GNN
   deactivated" (it also drops the structure mapping), and wrong reference
@@ -156,7 +157,7 @@ Read first: `notes/system_development_progress.md`, then the tail of
   explicit request.
 - **`notes/manuscript_revision_list.md` tracks the manuscript against the
   code.** It was re-checked against Manu 0910.1 on 2026-10-09: 26 earlier
-  items applied, 26 new (M1–M26, including §3.35's open findings and the
+  items applied, 27 new (M1–M27, including §3.35's open findings and the
   development chat's M22–M26). When the group uploads a newer export,
   re-check it the same way, against the PDF and the code.
 - **Two chats share this repo:** this one for the manuscript, another for
