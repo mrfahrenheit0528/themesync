@@ -62,7 +62,9 @@ Read first: `notes/system_development_progress.md`, then the tail of
         modal; an upload icon replaces the poster), with K-Means and
         SIFT/SURF beneath;
     - right: logos + stylistic markers in one card (tick a tile to use
-      it), typography in one row, the content payload in two columns;
+      it; markers in one row), sized to its contents up to 42% of the
+      column; typography in one row; the content payload in two columns,
+      taking the rest;
     - **Target Initialization** is a fixed overlay opened from the top
       bar. It moves nothing, and **Initialize** is at its foot (only
       there).

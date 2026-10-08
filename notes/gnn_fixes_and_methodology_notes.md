@@ -2796,3 +2796,18 @@ exit code 139 (a segfault).
   - Initialize from the panel → Step 2 → Evaluate → Step 3 runs without
     errors.
   - Steps 2–3 are unchanged.
+
+**Follow-up, same day (user's remarks on the running page):**
+- **The logos and markers card took too much room.** It now sizes to its
+  contents, up to 42% of the column, and its tiles scroll beyond that.
+  Typography sizes to its contents too, and the content payload takes the
+  rest. On a 1780×880 window the fields' visible area grew from 196 px to
+  304 px (from 134 px to 192 px at 1366×768).
+- **The stylistic markers are in one row:** background, title artwork,
+  then motifs. All tiles are 60 px (motifs had been 48 px).
+- **The picked tiles' coral ring was clipped.** The ring is drawn outside
+  the tile, and the tile area scrolls with no padding. It now has 6 px
+  of inner padding, offset so the tiles still line up with the title.
+- The card's two buttons stay aligned at its foot.
+- Checked in Edge on YLD (four logos) at 1780×880 and ANTI_HAZING_LAW
+  (with a motif) at 1366×768: no page scroll. Initialize → Step 2 runs.

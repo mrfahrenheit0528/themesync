@@ -361,17 +361,18 @@ with markers_col, st.container(key="assets_markers"):
         if not dna:
             _placeholder("The text-free background, title artwork and motifs appear here after extraction.")
         else:
-            with Image.open(kit["background"]) as bg:
-                st.markdown(ui.thumbs([{"image": bg.convert("RGB"), "kind": "photo",
-                                        "caption": "Text-free background"}], size=60), unsafe_allow_html=True)
+            # One row: the background, the title artwork, the motifs
             with st.container(horizontal=True, key="marker_tiles", gap="small"):
+                with Image.open(kit["background"]) as bg, st.container(key="tile_background", width="content",
+                                                                        gap=None):
+                    st.markdown(ui.thumbs([{"image": bg.convert("RGB"), "kind": "photo",
+                                            "caption": "Text-free background"}], size=60), unsafe_allow_html=True)
                 if kit["wordmark"]:
                     with Image.open(kit["wordmark"]["path"]) as wm:
                         use_wordmark = _tile(wm.copy(), f"wordmark_{dna['stem']}", "Title artwork", True)
                 for i, m in enumerate(kit["motifs"]):
                     with Image.open(m["path"]) as im:
-                        if _tile(im.copy(), f"motif_{dna['stem']}_{i}", f"M{i + 1} · {m['confidence']:.2f}",
-                                 True, size=48):
+                        if _tile(im.copy(), f"motif_{dna['stem']}_{i}", f"M{i + 1} · {m['confidence']:.2f}", True):
                             motif_paths.append(m["path"])
         marker_note = st.empty()
     with st.container(key="markers_btn"):

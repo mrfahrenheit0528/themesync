@@ -324,15 +324,19 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
    screen (a card whose content runs longer scrolls inside itself), and
    the target panel as an overlay that moves nothing. Heights are set from
    one variable, so the parts always add up to the window. */
-:root {--ts-avail: max(560px, calc(100vh - 110px)); --ts-assets: calc(var(--ts-avail) * .45);
-  --ts-type: 130px; --ts-content: calc(var(--ts-avail) - var(--ts-assets) - var(--ts-type) - 1.5rem);}
-.st-key-card_master, .st-key-right_stack, .st-key-card_assets, .st-key-card_type,
-.st-key-card_content {flex: none !important;}
+:root {--ts-avail: max(560px, calc(100vh - 110px)); --ts-assets-max: calc(var(--ts-avail) * .42);}
+.st-key-card_master, .st-key-right_stack, .st-key-card_assets, .st-key-card_type {flex: none !important;}
 .st-key-card_master, .st-key-right_stack {height: var(--ts-avail) !important;}
 .st-key-right_stack {gap: .75rem !important; flex-wrap: nowrap;}
-.st-key-card_assets {height: var(--ts-assets) !important;}
-.st-key-card_type {height: var(--ts-type) !important;}
-.st-key-card_content {height: var(--ts-content) !important;}
+/* On the right, the logos/markers card and the typography take what they
+   need (the first up to a cap, its tiles scrolling beyond it); the content
+   payload takes the rest of the column. */
+.st-key-card_assets {max-height: var(--ts-assets-max);}
+.st-key-right_stack > [data-testid="stLayoutWrapper"]:has(> .st-key-card_content) {flex: 1 1 0 !important;
+  min-height: 180px;}
+.st-key-card_content {flex: 1 1 auto !important; height: 100%; min-height: 0;}
+.st-key-card_content > [data-testid="stLayoutWrapper"]:has(> .st-key-content_fields) {flex: 1 1 0 !important;
+  min-height: 0;}
 .st-key-card_master, .st-key-card_assets, .st-key-card_type, .st-key-card_content {overflow: hidden;
   flex-wrap: nowrap; gap: .6rem;}
 .st-key-card_master > *, .st-key-card_assets > *, .st-key-card_content > * {flex-shrink: 0;}
@@ -378,8 +382,19 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
 /* Logos and stylistic markers: pickable tiles above the card's buttons */
 .st-key-logo_grid, .st-key-marker_grid, .st-key-content_fields, .st-key-logo_tiles, .st-key-marker_tiles,
 [class*="st-key-tile_"] {flex: none !important;}
-.st-key-logo_grid, .st-key-marker_grid {height: calc(var(--ts-assets) - 128px); overflow-y: auto;
-  overflow-x: hidden; scrollbar-width: thin; gap: .45rem; align-content: flex-start;}
+/* 6px of padding inside the scrolling tile area keeps the picked ring
+   (drawn outside the tile) from being clipped; the negative margin keeps
+   the tiles aligned with the title */
+.st-key-logo_grid, .st-key-marker_grid {max-height: calc(var(--ts-assets-max) - 118px); overflow-y: auto;
+  overflow-x: hidden; scrollbar-width: thin; gap: .45rem; align-content: flex-start;
+  padding: 6px 6px 2px; margin: -6px -6px 0;}
+/* The two halves' buttons line up along the card's foot */
+.st-key-card_assets [data-testid="stHorizontalBlock"] {align-items: stretch;}
+.st-key-card_assets [data-testid="stColumn"] > [data-testid="stVerticalBlock"],
+.st-key-card_assets [data-testid="stColumn"] > [data-testid="stVerticalBlock"] > [data-testid="stLayoutWrapper"],
+.st-key-assets_logos, .st-key-assets_markers {height: 100%;}
+.st-key-assets_logos > [data-testid="stLayoutWrapper"]:has(> .st-key-logos_btn),
+.st-key-assets_markers > [data-testid="stLayoutWrapper"]:has(> .st-key-markers_btn) {margin-top: auto;}
 .st-key-logo_tiles, .st-key-marker_tiles {gap: .6rem .7rem !important;}
 [class*="st-key-tile_"] {align-items: center; gap: .15rem !important;}
 [class*="st-key-tile_"] .ts-thumbs {margin: 0;}
@@ -392,7 +407,7 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
 /* Typography in one row; the content payload in two columns */
 .st-key-card_type [data-testid="stWidgetLabel"] p, .st-key-card_content [data-testid="stWidgetLabel"] p {
   font-size: .76rem; color: #3c4250;}
-.st-key-content_fields {height: calc(var(--ts-content) - 74px); overflow-y: auto; scrollbar-width: thin;
+.st-key-content_fields {height: 100%; overflow-y: auto; scrollbar-width: thin;
   padding-right: .3rem; gap: .35rem;}
 /* Streamlit pulls the element after a markdown block up by 1rem (its
    paragraphs' margin); the page's HTML blocks have none, so it overlapped */
