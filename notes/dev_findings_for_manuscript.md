@@ -98,8 +98,7 @@ results before then.
 
 1. **Mean IoU on the 40 validation images** (p.62). This is in "Code
    before Chapter 4".
-2. **The stress test** (p.55; M3). The development chat will build it
-   unless the group drops the claim. Tell it if you do.
+2. **The stress test** (p.55; M3). Done: numbers in D2.
 3. **The latency benchmark** (p.62; A5 above): solver and full-edit
    timings over many edits, against 0.1 s and 1.0 s.
 4. **F1 over the 64 rated layouts in the results files** ("Code before
@@ -180,3 +179,70 @@ experts' scores (item 3.9).
 - **Machine:** measured on the Windows checkout (RTX 3060) with the
   server's library versions. A server run may differ in the last decimal.
 
+### D2. The stress test (p.55; M3) — 2026-10-09
+
+`src/evaluation/stress_test.py` → `results/stress_test.json`; notes §3.42.
+It ran on this Windows checkout. No Phase 4 file or pipeline code changed.
+
+**Setup:**
+- **Theme and formats:** the synthetic theme (no master layout), GNN on,
+  on both formats: the 4:3 certificate and the A6 event ID.
+- **Content:**
+  - every text field at 25/50/75/100% of its `max_characters`, as real
+    words and as one unbroken token;
+  - each field alone at its max;
+  - each field at max + 1;
+  - the certificate's signature blocks, 1 to 10 (the payload declares 3).
+- **Measures:**
+  - F1 as p.56 defines it;
+  - the reading order (spatial hierarchy top to bottom);
+  - text fit: each rendered line measured with the font's real glyph
+    widths, against its box;
+  - the smallest font size in points at print size: the event ID at A6;
+    the certificate at US Letter landscape (an assumption; the manuscript
+    gives no size, and on A4 every figure is 6% larger).
+
+**Results:**
+
+| | certificate | event ID |
+|---|---|---|
+| every field at its max, real words | all text fits | the organisation header overflows |
+| first failure, real words | none | organisation header from 49 of 90 characters |
+| first failure, one unbroken token | citation from 98 of 150 characters (spills ≤ 15 px into the margin) | event details from 51 of 80 |
+| max + 1 characters | rejected, all 7 fields | rejected, all 5 fields |
+| reading order | held in every run | held in every run |
+| F1 | 1.0 in every length run | 1.0 in every run |
+| signature blocks | clean up to 5; from 6 the blocks overlap (F1 0.92); from 7 names spill onto neighbours | — |
+| smallest text | 7.8 pt (signature titles) | 6.5 pt (organisation header) |
+
+**For the text:**
+- **What holds:**
+  - The solver kept every box apart, on the canvas and in hierarchy order
+    at every length (F1 1.0).
+  - The schema rejected every over-length field.
+  - On the certificate, all text still fit its box at every maximum with
+    real words. The longest names shrank from 31 to 13.5 pt.
+- **What doesn't:**
+  - **The event ID's organisation header** wraps at a fixed 60
+    characters and doesn't shrink to the box width. A line over 48
+    characters runs out of its box; from about 56 characters, off the
+    canvas.
+  - **Signature blocks:** there is no "maximum instantiation limit" in the
+    system. Nothing caps the count, and signature text has no
+    `max_characters`. The certificate holds 5 blocks cleanly; from 6 they
+    overlap.
+- **So, as written, p.55's "without violating predefined bounding box
+  limits or overwriting surrounding structural nodes" is too strong.** Two
+  honest options:
+  - **report it as found:** it held for the certificate; the event ID's
+    header overflowed past 48 characters per line; the layout held up to
+    5 signature blocks;
+  - **or wait for a fix:** the development chat can fix the header (and
+    cap the signature count) after Phase 4 scoring ends, then re-run.
+    That changes the renderer the experts' layouts came from, so the
+    notes would record that the rated layouts predate the fix.
+- **F1 alone doesn't show this:** F1 scores boxes, not the text inside
+  them, so every length failure above still has F1 1.0. If Chapter 4
+  reports the stress test, it needs the text-fit measure beside F1.
+- **"student names":** p.55's example field is the certificate's
+  recipient name, which passed at its 60-character maximum.

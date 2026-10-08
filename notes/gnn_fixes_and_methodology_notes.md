@@ -2987,3 +2987,120 @@ precision 0.729, mean IoU of found 0.837. The duplicate barely moves it.
   server may differ in the last decimal (GPU rounding, §3.36's parity
   check).
 
+
+### 3.42 The stress test of the synthetic templates (2026-10-09; p.55, M3)
+
+**Why:** p.55 of Manu 0910.1 says synthetic payloads "containing extreme
+spatial variables—such as unusually long string values for student names or
+maximum instantiation limits for repeating groups (e.g., signature blocks)"
+validated "the solver's capacity to … dynamically resize text elements
+without violating predefined bounding box limits or overwriting surrounding
+structural nodes". No such test existed. The manuscript chat's requirements
+are in `notes/manuscript_findings_for_dev.md`.
+
+**Script:** `src/evaluation/stress_test.py` → `results/stress_test.json`;
+the renders go to `data/rendered/stress_test/` (git-ignored; `--png` adds a
+PNG per run). It only reads the system:
+- Payload variants with more signature blocks are written into each run's
+  own folder, never into `data/raw/`.
+- Nothing under `data/phase4/`, `data/raw/` or the pipeline changes.
+  After the run, `git status` showed only the script and the results file.
+
+**Setup:**
+- **Theme:** synthetic (no master layout), GNN v3 on, default typography
+  (Montserrat 700, base 48 px), through the dashboard's
+  `OrchestrationSession`. The output is the top-ranked candidate.
+- **Content, per format:**
+  - the sample content (reference);
+  - every text field at 25, 50, 75 and 100% of its `max_characters`, as
+    real words and as one unbroken token;
+  - each field alone at its max, both ways;
+  - for a field that fails alone at its max, the shortest failing length,
+    found by bisection;
+  - each field at max + 1, checked against the content schema;
+  - the certificate's signature blocks, 1 to 10 (the payload declares 3).
+- **Measures, on the output:**
+  - **F1** as p.56 defines it (`layout_report.structural_accuracy`), plus
+    how many of the six candidates have no FP or FN;
+  - **reading order:** stacked elements keep the `spatial_hierarchy` order
+    top to bottom, and the signature blocks sit below them;
+  - **text fit:** every rendered line is measured in the SVG with the
+    bundled Montserrat's glyph advances and ink bounds (fontTools). The
+    wider of two faces counts: the one Cairo prints with (it only has normal
+    and bold, so weight 600 prints Bold) and the one the browser shows.
+    Ink more than 2 px outside the node's box is an overflow. The box
+    includes the shape drawn for the text (the event ID's name pill and role
+    band, which may run edge to edge). An overflow that lands on another
+    element's box overwrites it;
+  - **the smallest font size,** in px and in points at print size:
+    - the event ID at A6, 105 mm wide (p.55);
+    - the certificate at 279.4 mm, US Letter ("short bond") landscape,
+      which a 4:3 page fits. The manuscript gives no certificate size; on
+      A4 (297 mm) every pt figure is 6% larger.
+
+**Results:** 33 certificate runs (24 pass) and 19 event-ID runs (12 pass),
+plus the bisection runs.
+
+| | certificate | event ID |
+|---|---|---|
+| reference (sample content) | passes | passes |
+| every field at its max, real words | **passes** | fails: Organization_Header |
+| first failure, real words | none | Organization_Header from **49 of 90** characters |
+| first failure, unbroken token | Issuing_Organization at 59 of 60; Citation_Body from 98 of 150 | Organization_Header from 47; Event_Details from 51 of 80 |
+| max + 1 characters | all 7 fields rejected | all 5 fields rejected |
+| reading order | held in every run | held in every run |
+| F1 | 1.0 in every length run | 1.0 in every run |
+| signature blocks | clean up to **5**; at 6, F1 0.92 | — |
+
+**What breaks first:**
+1. **The event ID's Organization_Header (renderer).** It wraps at a fixed
+   60 characters (`_wrap_text_lines(…, max_chars=60)`) and sizes itself only
+   by the box height, never the width. Its box ends at x = 667 on the
+   744 px canvas. A line of 48 characters of real words fits (ink to 663);
+   at 49 it runs 9 px out of the box, at 56 by 95 px, past the canvas edge,
+   and from 67 to the 90-character max by 143 px (the first 60-character
+   line). The sample header passes only because it breaks the line by hand
+   (`\n`). Nothing is overwritten (nothing sits beside the header), but the
+   text is cut at the canvas edge.
+2. **Signature blocks (layout and renderer).** The row holds 5 blocks
+   cleanly. Clean candidates by count: 6/6 at 1–3, 5/6 at 4, 4/6 at 5, and
+   **0/6 from 6**, so from 6 the output itself has overlapping blocks
+   (F1 0.92 at 6). From 7, names spill out of their blocks onto their
+   neighbours (up to 59 px out of the block at 10). Two gaps in the schema
+   let this happen:
+   - nothing caps `instantiation_count`, so there is no "maximum
+     instantiation limit" to enforce;
+   - signature text has no `max_characters`, and the name is set at a fixed
+     size with no width fit.
+3. **Unbroken tokens (renderer, minor).** Citation_Body (from 98
+   characters), Event_Details (from 51) and Issuing_Organization (at 59)
+   wrap or size by an estimated glyph width that underestimates
+   Montserrat. The spill is 3–48 px into the margin; nothing is overwritten
+   and nothing leaves the canvas. No real citation is one 98-character
+   word.
+
+**Text that shrinks** (reference → smallest reached; in pt at print size):
+- **Certificate:** Student_Name 31.3 → 13.5 pt (60 characters), title 34.8
+  → 23.2 pt. The other fields keep their size and wrap.
+- **Event ID:** Event_Title 29.9 → 7.1 pt (40-character unbroken token;
+  11.6 pt as words), Participant_Name 25.9 → 8.2 pt, role 18.9 → 9.8 pt.
+- **The smallest text** is set by the type scale, not by stress: the
+  certificate's signature titles at 7.8 pt, and the event ID's
+  Organization_Header at 6.5 pt, already in the reference. Nothing goes
+  under 6 pt.
+
+**What it means for p.55's claim:**
+- **The solver part holds.** In every length run the boxes stay apart, on
+  the canvas and in hierarchy order (F1 1.0), and the schema rejects
+  over-length input.
+- **"without violating predefined bounding box limits" holds for the
+  certificate at every max with real words.** It does not hold for the
+  event ID's header past about 48 characters, or for more than 5 signature
+  blocks.
+- **F1 can't see this.** It scores the boxes, not the ink, so every length
+  failure above has F1 1.0. The text-fit measure is what finds them.
+
+**Not changed:** the failures are findings, not tuned away. The renderer is
+what the rated Phase 4 layouts were drawn with, and the experts are still
+scoring. Whether any rated event ID had a header line long enough to spill
+can be checked read-only from the saved state chains (task #4).
