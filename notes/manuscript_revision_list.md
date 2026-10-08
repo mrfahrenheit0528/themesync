@@ -12,6 +12,11 @@ when asked for explicitly.
   against the code on 2026-10-07, which added items 3.24–3.29, and every
   item's page numbers were re-checked against the PDF (six were off). The
   PDF itself is unchanged since May, so no item has been applied yet.
+- **The working manuscript is now in Prism** (user, 2026-10-08), and the
+  group has converted it to the **past tense**. Quotes here come from the
+  May PDF's future tense ("will be calibrated" is now "were calibrated"),
+  and page numbers may have shifted. Search the revised text for the key
+  phrase, not the exact sentence. Write every addition in the past tense.
 
 **Legend:**
 - 🔴 **Must fix.** Wrong, contradicts the code, or a missing citation the
@@ -114,11 +119,10 @@ annotated dataset is not mentioned anywhere in the manuscript.
 - The TSA asked what backs the dataset.
 
 **Where and how (user's question, 2026-10-08):** in Chapter 3, under
-Research Instruments, in the chapter's tense (future, like the rest of
-Chapter 3 for now). Say what the dataset *is* in the present tense ("The
-dataset consists of…"), which reads correctly whether Chapter 3 stays
-future or is later converted to past. Its results (v4 → v5, mean IoU)
-belong in Chapter 4.
+Research Instruments, in the past tense like the rest of the revised
+manuscript. What the dataset *is* can stay in the present tense ("The
+dataset consists of…"). Its results (v4 → v5, mean IoU) belong in
+Chapter 4.
 
 **Add a subsection covering:**
 - **Purpose:** the Stage 0b YOLOv8 model trained only on CGL-Dataset V2

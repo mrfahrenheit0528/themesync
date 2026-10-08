@@ -9,6 +9,11 @@ supposed to do. Search it with `pdftotext -layout "Final Manuscript.pdf" out.txt
 - Chapter 3 (Methodology) starts at p.35.
 - The 4-phase Research Procedure is pp.50–58.
 - Figures 2 and 3 (the dashboard prototypes) are on pp.51 and 53.
+- **The repo's PDF is the May 2026 version, in the future tense.** The
+  group revises the manuscript in Prism and has converted it to the past
+  tense (2026-10-08). Its content still rules, but its wording and page
+  numbers may differ from the PDF. Advise past tense for every addition,
+  and ask for an export of the revised version before quoting it exactly.
 
 Before claiming the code "matches the manuscript", re-read the PDF and the
 code; notes go stale.

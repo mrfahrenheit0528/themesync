@@ -1,6 +1,7 @@
 # Consultation Guide: Statistical Treatment
 
-**ThemeSync** · statistics consultation · 9 October 2026
+**ThemeSync** · statistics consultation · 9 October 2026 · page numbers
+refer to the May 2026 manuscript
 
 <div class="lead" markdown="1">
 
