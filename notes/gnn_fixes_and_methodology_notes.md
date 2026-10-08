@@ -2811,3 +2811,70 @@ exit code 139 (a segfault).
 - The card's two buttons stay aligned at its foot.
 - Checked in Edge on YLD (four logos) at 1780×880 and ANTI_HAZING_LAW
   (with a motif) at 1366×768: no page scroll. Initialize → Step 2 runs.
+
+### 3.38 Step 2 laid out like a design tool, on one screen (2026-10-09)
+
+**The user's request, on the running Active Orchestration page:**
+1. The right panel's editing controls (Selected Node, X/Y/W/H inputs,
+   Constraint Status, nudges, Apply) are unnecessary: the canvas is edited
+   directly.
+2. Move the canvas header's controls (undo, redo, the selected element,
+   Lock) into the right panel.
+3. Put the State Timeline in a dialog opened by a **Timeline** button in
+   the top bar.
+4. Move the canvas footer into the right panel as a collapsible section.
+5. Show the Recommendation Engine as small thumbnails at the bottom (like
+   Canva's pages or PowerPoint's slides), with the details only in a
+   dialog when one is clicked.
+
+**Built (`views/orchestration.py`, `canvas_editor.*`, `components.py`;
+UI only):**
+- **Right panel:**
+  - **Selected element:** undo and redo, the element's name with its
+    Soft/Hard chip, its X/Y/W/H, **Edit text** and **Lock/Release**.
+  - **Typography:** the summary and the schema-validated editor.
+  - **Canvas details** (collapsed): the state, the size, Formula 3.11's
+    terms, the shortcuts and the master layout.
+  - X/Y/W/H stays visible with the selected element, as a readout. p.54
+    has the Constraint Editor display the selected node's coordinates,
+    and it costs one line.
+- **Panel actions:** Undo, Redo and Lock call the session directly (the
+  same methods the canvas's events reach). Edit text sends a one-off
+  command (`canvas_editor.request_edit`), and the canvas opens its inline
+  editor. Selection already reached Python through the canvas's `select`
+  event.
+- **The canvas component:**
+  - Its toolbar is hidden, not removed: its buttons serve the keyboard
+    shortcuts (Ctrl+Z, L…).
+  - The footer is gone. Its message line floats at the canvas's foot,
+    and the X/Y/W/H readout shows on the canvas only while a node moves.
+  - The page's height is budgeted through `--ts-canvas-h`.
+- **The recommendation strip:**
+  - Thumbnails 80 px high in rank order: the rank number, ★ on the
+    recommended one, and a coral border on the canvas's own candidate.
+  - Each whole thumbnail is a transparent button. It opens a dialog with
+    the preview, the label, C_total, the four penalties and **Use this
+    design**.
+- **Timeline:** a top-bar button opens the dialog: the states (newest
+  first), each with a restore button, the chain download, and the latest
+  event's JSON.
+- **Top bar:** below 1500 px wide, Timeline, Step 1 and Download show
+  icons only (their tooltips name them).
+- **Checked in Edge:**
+  - The certificate at 1780×880 and the event ID at 1366×768: no page
+    scroll.
+  - Canvas selection → the panel follows. Edit text opens the inline
+    editor. Lock → Hard, then Undo → Soft. Timeline and candidate dialogs
+    open. No exceptions.
+
+**Manuscript point, for when the revision list reopens:** p.53–54
+describe Figure 3's right side as two tabs.
+- The "Constraint Editor" shows X/Y/W/H and the typography, with Soft/Hard
+  and the JSON timeline below.
+- The "Recommendation Engine" ranks the variations.
+
+The substance is all on the page: the coordinates, typography, Soft/Hard,
+the timeline (now a dialog) and the ranked variations (now a strip with
+details). The arrangement differs, so a Figure 3 screenshot (revision item
+3.17) would need p.54's wording to match. The mockup can also stay.
+

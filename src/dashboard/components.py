@@ -458,11 +458,64 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
 .bn-node i {font-style: normal; color: #8a919c; font-variant-numeric: tabular-nums;}
 .bn-ocr {font-size: .74rem; color: #6b7280; padding: 0 .1rem .2rem;}
 
-/* Step 2: the grey workspace around the page, and the white side panel */
-.st-key-ts_workspace {background: #e8eaee; border-radius: 16px; padding: 14px 18px 12px;}
+/* Step 2 (Active Orchestration), on one screen (user's request, 2026-10-09,
+   notes §3.38): the canvas on a grey workspace with the Recommendation
+   Engine's strip beneath it, the white side panel on the right. The canvas
+   component sizes its page from --ts-canvas-h. */
+.st-key-ts_workspace {background: #e8eaee; border-radius: 16px; padding: 14px 18px;
+  height: calc(100vh - 252px); min-height: 380px; justify-content: center; flex: none !important;
+  --ts-canvas-h: max(352px, calc(100vh - 282px));}
 .st-key-ts_panel {background: #fff; border: 1px solid #e4e7ec; border-radius: 16px;
-  padding: .25rem 1rem 1rem; box-shadow: 0 1px 3px rgba(16, 24, 40, .06);}
-.st-key-ts_panel button[role="tab"] p {font-weight: 650;}
+  padding: .4rem 1rem 1rem; box-shadow: 0 1px 3px rgba(16, 24, 40, .06);
+  height: calc(100vh - 110px); min-height: 520px; overflow-y: auto; scrollbar-width: thin;
+  flex: none !important; flex-wrap: nowrap; gap: .55rem;}
+.st-key-ts_panel > * {flex-shrink: 0;}
+.st-key-sel_head {flex-wrap: nowrap !important; align-items: center;}
+.st-key-sel_head button {min-height: 2.1rem; padding: .15rem .5rem;}
+.st-key-sel_head > :last-child {flex: 1 1 auto; min-width: 0;}
+.ts-selname {display: flex; align-items: center; flex-wrap: wrap; gap: .35rem .5rem; padding-left: .35rem;
+  border-left: 1px solid #e3e5e8; font-size: .92rem;}
+.ts-selname b {color: #13294b;}
+.ts-muted {color: #8a919c; font-size: .84rem;}
+.ts-chip {border-radius: 999px; padding: .05rem .55rem; font-size: .72rem; font-weight: 650;
+  border: 1px solid transparent;}
+.ts-chip.soft {color: #1d3f6e; background: rgba(29, 63, 110, .08); border-color: rgba(29, 63, 110, .3);}
+.ts-chip.hard {color: #92400e; background: rgba(245, 158, 11, .14); border-color: rgba(245, 158, 11, .55);}
+.ts-unit {font-size: .74rem; color: #8a919c;}
+/* The Recommendation Engine: small thumbnails in a strip, like a slide
+   sorter; the whole thumbnail is the button that opens its details */
+.st-key-reco_strip {height: 112px; background: #fff; border: 1px solid #e4e7ec; border-radius: 14px;
+  padding: 10px 14px; flex-wrap: nowrap !important; overflow-x: auto; overflow-y: hidden; gap: .75rem !important;
+  scrollbar-width: thin; margin-top: .1rem;}
+.ts-strip-label {font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: #5b6370; line-height: 1.3; padding-right: .75rem; border-right: 1px solid #eef0f3; white-space: nowrap;}
+.ts-strip-label small {display: block; text-transform: none; letter-spacing: 0; font-weight: 500;
+  color: #8a919c; font-size: .7rem;}
+[class*="st-key-cand_"] {position: relative; flex: none !important;}
+.ts-cand {position: relative; height: 80px; border-radius: 8px; overflow: hidden; background: #fff;
+  border: 2px solid transparent; box-shadow: 0 1px 4px rgba(16, 24, 40, .2);
+  transition: transform .12s, box-shadow .12s;}
+.ts-cand img {height: 100%; width: auto; display: block;}
+.ts-cand b {position: absolute; left: 4px; bottom: 4px; min-width: 18px; height: 18px; padding: 0 5px;
+  border-radius: 999px; background: rgba(19, 41, 75, .88); color: #fff; font-size: 11px;
+  display: flex; align-items: center; justify-content: center;}
+.ts-cand.rec::after {content: "★"; position: absolute; top: 2px; right: 5px; color: #f59e0b; font-size: 14px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .45);}
+[class*="st-key-cand_on_"] .ts-cand {border-color: #cf4836; box-shadow: 0 0 0 2px rgba(207, 72, 54, .22);}
+[class*="st-key-cand_"]:hover .ts-cand {transform: translateY(-2px); box-shadow: 0 6px 14px rgba(16, 24, 40, .24);}
+[class*="st-key-cand_"] > [data-testid="stElementContainer"]:has([data-testid="stButton"]) {position: absolute;
+  inset: 0; z-index: 2; margin: 0;}
+[class*="st-key-cand_"] [data-testid="stButton"], [class*="st-key-cand_"] [data-testid="stButton"] div,
+[class*="st-key-cand_"] [data-testid="stButton"] button {width: 100%; height: 100%; min-height: 0;}
+[class*="st-key-cand_"] [data-testid="stButton"] button {opacity: 0; cursor: pointer;}
+/* On narrower windows Step 2's top-bar buttons show their icons only
+   (their tooltips name them); Evaluate keeps its label */
+@media (max-width: 1500px) {
+  .st-key-s2_actions button:not([data-testid="stBaseButton-primary"]) [data-testid="stMarkdownContainer"] {
+    display: none;}
+}
+:is(.st-key-reco_strip, .st-key-ts_panel) [data-testid="stMarkdownContainer"]:has(> div[class^="ts-"]) {
+  margin-bottom: 0 !important;}
 .ts-section {font-size: .7rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
   color: #5b6370; margin: .55rem 0 .1rem;}
 .ts-status {display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; font-size: .8rem; color: #3c4250;}
@@ -476,9 +529,6 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
   border-radius: 999px; background: #e8eef7; color: #1d3f6e; margin-right: .2rem;}
 .ts-badge.rec {background: #e2f8f4; color: #08766a;}
 .ts-badge.on {background: #cf4836; color: #fff;}
-[class*="st-key-cand_"] {transition: box-shadow .15s, border-color .15s;}
-[class*="st-key-cand_"]:hover {border-color: #e79a8f !important; box-shadow: 0 2px 12px rgba(207, 72, 54, .14);}
-[class*="st-key-cand_on_"] {border: 2px solid #cf4836 !important;}
 </style>"""
 
 

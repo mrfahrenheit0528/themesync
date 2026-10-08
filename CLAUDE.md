@@ -22,7 +22,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.37).
+§3.38).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
@@ -50,8 +50,21 @@ Read first: `notes/system_development_progress.md`, then the tail of
   - **Laid out like Canva, in ThemeSync's own colours** (§3.34): a navy
     bar and a coral accent, not Canva's gradient or purple (user's
     request). See `.streamlit/config.toml` (start Streamlit from the repo
-    root) and `EDITOR_CSS` in `components.py`. Keep p.53–54's arrangement:
-    canvas centre, the two tabs on the right.
+    root) and `EDITOR_CSS` in `components.py`.
+  - **Step 2 is laid out like a design tool on one screen** (user's request,
+    2026-10-09, §3.38), no longer as p.53–54's two tabs:
+    - the canvas centre, with the Recommendation Engine as a strip of
+      thumbnails beneath it; a click opens a candidate's details;
+    - the right panel holds the selected element (undo, redo, name and
+      Soft/Hard, X/Y/W/H, Edit text, Lock), the typography, and a
+      collapsed "Canvas details";
+    - the top bar's **Timeline** opens the State Timeline as a dialog.
+    - The canvas component's own toolbar and footer are hidden
+      (`canvas_editor.css`): their buttons remain for the keyboard
+      shortcuts, and the panel's Edit text reaches the canvas through
+      `canvas_editor.request_edit`.
+    - The canvas renders in a shadow DOM: test it with Playwright locators,
+      not `document.querySelector`.
   - The top bar is pinned, with Streamlit's » and ⋮ inside it. Step 3 is
     a bento grid of `card_*` containers: preview left, cards right.
   - **Step 1 follows the user's mockups A1–A3** (2026-10-09, §3.37) and

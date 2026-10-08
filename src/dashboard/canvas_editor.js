@@ -67,6 +67,7 @@ class CanvasEditor {
     this.groups = new Map();
     this.sel = null;
     this.remoteSel = undefined;   // the selection Python last sent
+    this.lastCommand = null;      // nonce of the last command from Python
     this.hover = null;
     this.drag = null;
     this.nudge = null;
@@ -151,6 +152,15 @@ class CanvasEditor {
     else if (fresh) this.showMessage("", "");
     this.updateToolbar();
     this.redrawOverlay();
+    // A command from the right-hand panel, run once (e.g. Edit text)
+    const cmd = data.command;
+    if (cmd && cmd.nonce !== this.lastCommand) {
+      this.lastCommand = cmd.nonce;
+      if (cmd.type === "edit" && this.nodes.has(cmd.node_id)) {
+        this.select(cmd.node_id);
+        setTimeout(() => this.openEditor(cmd.node_id), 0);
+      }
+    }
   }
 
   mount(data) {
@@ -643,6 +653,8 @@ class CanvasEditor {
     o.replaceChildren();
 
     const d = this.drag && this.drag.moved ? this.drag : null;
+    // The X/Y/W/H readout shows on the canvas only while a node moves
+    this.root.classList.toggle("ts-dragging", !!d || !!this.nudge);
     if ((d && d.mode === "move") || this.nudge) {
       // Formula 3.13's structural grid, and the lines the box snapped to
       for (const gx of this.data.grid || []) o.appendChild(svgEl("line", { x1: gx, y1: 0, x2: gx, y2: H, class: "ts-grid" }));

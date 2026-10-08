@@ -3,13 +3,20 @@ ThemeSync — Active Canvas editor (Figure 3's central canvas)
 =============================================================
 The active canvas edited in place, like a design tool:
 
-  click              select a node (the Constraint Editor follows)
+  click              select a node (the right-hand panel follows)
   drag               move it                          → on-drop
   handles            resize it (Shift keeps the ratio) → on-resize-complete
   double-click       edit its words (Enter saves)     → text-edit
   arrow keys         nudge 1 px (Shift: 10 px), sent as one on-drop
   L                  lock where it is / release       → lock-toggle
   Ctrl+Z, Ctrl+Shift+Z   undo, redo
+
+The canvas is the page itself: the selected node's controls (undo, redo,
+edit text, lock) live in Step 2's right-hand panel (views/orchestration.py),
+which sends "edit" here as a command (request_edit) and applies the rest
+through the session. The toolbar markup stays, hidden, for the keyboard
+shortcuts; the live X/Y/W/H readout shows on the canvas while dragging, and
+messages float at its foot.
 
 Chapter 3, p.42: the solver runs only on discrete terminal events. While the
 pointer moves, the browser only previews (the node's SVG group is translated
@@ -45,6 +52,7 @@ _FONTS_SENT = "_canvas_fonts_sent"
 _ACK = "_canvas_ack"               # nonce of the last event handled
 _ERROR = "_canvas_error"
 _WARN = "_canvas_warning"
+_COMMAND = "_canvas_command"       # a one-off command for the browser (e.g. open the text editor)
 
 HTML = """
 <div class="ts-root" tabindex="0" aria-label="Active canvas editor">
@@ -62,15 +70,9 @@ HTML = """
     <div class="ts-host"></div>
     <textarea class="ts-editor" spellcheck="true" aria-label="Edit text"></textarea>
     <div class="ts-count"></div>
-    <div class="ts-busy"><span>Re-solving the layout&hellip;</span></div>
-  </div>
-  <div class="ts-foot">
     <span class="ts-readout"></span>
-    <span class="ts-msg"></span>
-    <span class="ts-hint">Drag to move &middot; handles resize (Shift keeps proportions) &middot;
-      double-click text to edit &middot; arrows nudge 1 px (Shift: 10 px) &middot; L locks / releases
-      &middot; Tab cycles &middot; Ctrl+Z / Ctrl+Shift+Z undo / redo &middot; hold Alt to move without
-      snapping</span>
+    <div class="ts-msg"></div>
+    <div class="ts-busy"><span>Re-solving the layout&hellip;</span></div>
   </div>
 </div>
 """
@@ -265,6 +267,12 @@ def _on_event(session, key: str, friendly) -> None:
                                    "or release it with L.")
 
 
+def request_edit(node_id: str) -> None:
+    """Asks the canvas to open its text editor on `node_id` on the next run
+    (the right-hand panel's Edit text)."""
+    st.session_state[_COMMAND] = {"type": "edit", "node_id": node_id, "nonce": os.urandom(6).hex()}
+
+
 def active_canvas(session, friendly, key: str = KEY) -> None:
     """Draws the editable active canvas of `session`. friendly(node) → the
     node's display name."""
@@ -290,5 +298,6 @@ def active_canvas(session, friendly, key: str = KEY) -> None:
         "ack": st.session_state.get(_ACK),
         "error": st.session_state.pop(_ERROR, None),
         "warning": st.session_state.pop(_WARN, None),
+        "command": st.session_state.pop(_COMMAND, None),
     }
     _component()(key=key, data=data, on_event_change=lambda: _on_event(session, key, friendly))

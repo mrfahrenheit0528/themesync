@@ -226,13 +226,21 @@ The workflow has three steps, shown in the top bar; one is open at a time.
 5. Open **Target Initialization** (top right), pick the format, and click
    **Initialize** at the bottom of the panel.
 
-**2. Active Orchestration (Figure 3).**
+**2. Active Orchestration (Figure 3).** Laid out like a design tool, on one
+screen:
+
+| where | what |
+|---|---|
+| centre | the canvas, edited in place (below) |
+| bottom | the **recommendations**: the six ranked candidates as small thumbnails; click one for its details and **Use this design** |
+| right | the **selected element**: undo, redo, its name and Soft/Hard status, X/Y/W/H, **Edit text**, **Lock**; then the typography and, collapsed, the canvas details |
+| top bar | **Timeline** (every state; any can be restored), Step 1, Download, Evaluate |
 
 The canvas is editable:
 
 | do this | to |
 |---|---|
-| click | select an element (the Constraint Editor on the right follows) |
+| click | select an element (the panel on the right follows) |
 | drag | move it |
 | drag a corner or edge handle | resize it (hold Shift to keep its proportions) |
 | double-click text | retype it (Enter saves, Shift+Enter adds a new line, Esc cancels) |
@@ -244,10 +252,7 @@ The canvas is editable:
 - **Hard elements:** anything you move or resize becomes *Hard*: the
   solver keeps it exactly where you put it and re-arranges the rest.
 - **Snapping:** hold Alt while dragging to turn it off.
-- **Recommendation Engine tab:** the six ranked candidates; any of them
-  can become the canvas.
-- **State Timeline:** every change; any earlier state can be restored.
-- **Downloads:** SVG, PNG and PDF, under the canvas.
+- **Downloads:** SVG, PNG and PDF, from **Download** in the top bar.
 
 **3. Phase 4 Evaluation Set.** Builds the expert rating packet (see
 section 4).
