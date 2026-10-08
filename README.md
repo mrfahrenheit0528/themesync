@@ -42,8 +42,96 @@ environment active.
 The system uses the newest one present automatically. If you cloned the
 repo and they're missing, copy them from the server.
 
+### Setting up on Windows (your own computer)
+
+The steps make a virtual environment in the repo folder, `.venv/` (git
+ignores it). They were tested on 2026-10-08 on Windows 11, with Python
+3.12 and the GPU build of PyTorch (RTX 3060). All 12 tests pass, and 20
+Phase 4 pages regenerated there match the server's choices.
+
+**1. Install these once:**
+
+| what | where | note |
+|---|---|---|
+| Python 3.12 (64-bit) | [python.org](https://www.python.org/downloads/windows/) | tick **Add python.exe to PATH** |
+| Git | [git-scm.com](https://git-scm.com/download/win) | |
+| Tesseract OCR | [UB Mannheim's installer](https://github.com/UB-Mannheim/tesseract/wiki) | add `C:\Program Files\Tesseract-OCR` to your **PATH** |
+
+Tesseract's folder also provides the **Cairo** library (`libcairo-2.dll`),
+which `cairosvg` needs to make the PNG/PDF outputs. With that folder on
+your PATH, nothing else is needed. Check both in a new PowerShell window:
+
+```powershell
+tesseract --version
+where.exe libcairo-2.dll
+```
+
+**2. Create the environment** (PowerShell, in the repo folder):
+
+```powershell
+cd "F:\GitHub Repo\themesync\themesync"    # wherever you cloned it
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+```
+
+If PowerShell refuses to run `Activate.ps1` ("running scripts is disabled
+on this system"), allow it once for your account and try again:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+**3. Install PyTorch, then everything else.** Pick one line for PyTorch:
+
+```powershell
+# NVIDIA GPU (the server's build: torch 2.5.1 + CUDA 12.1, about 2.5 GB)
+pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu121
+
+# no NVIDIA GPU (CPU only; the dashboard runs fine, training is slow)
+pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cpu
+```
+
+```powershell
+pip install -r requirements.txt
+```
+
+`requirements.txt` pins the same torch version, so this step keeps the
+build you chose. Check that everything loads:
+
+```powershell
+python -c "import torch, torch_geometric, ultralytics, streamlit, cairosvg; print(torch.__version__, torch.cuda.is_available())"
+```
+
+**4. Turn on Python's UTF-8 mode, once:**
+
+```powershell
+setx PYTHONUTF8 1
+```
+
+Then **close and reopen** PowerShell. The pipeline writes logs and files
+with characters such as ✔ and →. Without UTF-8 mode, Windows Python writes
+text files in its old code page and stops with a `UnicodeEncodeError`.
+For one session only, use `$env:PYTHONUTF8 = "1"` instead.
+
+**5. Run the tests:**
+
+```powershell
+python tests/test_certificate_pipeline.py
+python tests/test_id_pipeline.py
+```
+
+Then start the dashboard (section 2).
+
+**Results of record still come from the server.** A Windows run makes the
+same choices: on 20 regenerated Phase 4 pages, the same winning candidate
+and C_total. A few GNN-placed boxes land a few pixels apart (at most
+13 px), and rendered text can look slightly lighter. Use your own computer
+for development and demos. Run the Phase 3 battery and anything for
+Chapter 4 on the server.
+
 <details>
-<summary>Setting up on a different machine</summary>
+<summary>Setting up on Linux or macOS (conda)</summary>
 
 ```bash
 conda create -n themesync_env python=3.10
@@ -51,13 +139,12 @@ conda activate themesync_env
 pip install -r requirements.txt
 ```
 
-- **PyTorch:** `requirements.txt` was written on a different machine from
-  the server. If PyTorch doesn't match your GPU, install it from
-  [pytorch.org](https://pytorch.org) first; the server uses torch
-  2.5.1 + CUDA 12.1.
+- **PyTorch:** `requirements.txt` pins the server's version, torch 2.5.1.
+  For a GPU build, install torch and torchvision first, as in step 3 of
+  the Windows setup; the server uses CUDA 12.1.
 - **Cairo:** `cairosvg`, which renders the PNG/PDF outputs, needs the
-  Cairo library. On Windows, or anywhere `import cairosvg` fails, install
-  it from conda-forge: `conda install -c conda-forge cairosvg`.
+  Cairo library. If `import cairosvg` fails, install it from conda-forge:
+  `conda install -c conda-forge cairosvg`.
 - **Fonts:** Montserrat ships in `assets/fonts/`, so nothing has to be
   installed system-wide.
 - **Not in the repository:**
@@ -74,12 +161,29 @@ pip install -r requirements.txt
 
 ## 2. Run the dashboard
 
+Start it from the **repo folder**. That's where Streamlit finds the theme
+in `.streamlit/config.toml`.
+
+On the server:
+
 ```bash
+streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8501
+```
+
+On Windows (PowerShell), after the setup above:
+
+```powershell
+cd "F:\GitHub Repo\themesync\themesync"    # wherever you cloned it
+.\.venv\Scripts\Activate.ps1
 streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8501
 ```
 
 Then open **http://localhost:8501** in your browser. Stop it with
 **Ctrl+C**.
+
+- **If the first run asks for an email address,** press Enter to skip it.
+- **A `UnicodeEncodeError` on Windows** means UTF-8 mode isn't on: do step
+  4 of the Windows setup, then reopen PowerShell.
 
 - **In VS Code (Remote-SSH)**, the port is usually forwarded for you. If
   the page doesn't load, open the **Ports** tab in the bottom panel,

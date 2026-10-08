@@ -138,8 +138,8 @@ are done. Remaining:
 ## Cross-cutting gaps (affect multiple phases)
 
 - **The dashboard is built:** three steps plus the Phase 4 research tool
-  (`streamlit run src/dashboard/app.py` from the repo root, in the
-  `themesync_env` conda environment, which only the school server has).
+  (`streamlit run src/dashboard/app.py` from the repo root, in
+  `themesync_env` on the server, or in `.venv` on Windows per the README).
   Restart the dashboard after pulling code changes: Streamlit doesn't
   hot-reload helper modules.
 - **The dashboard is exposed by default.** `streamlit run` binds every

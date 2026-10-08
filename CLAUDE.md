@@ -152,11 +152,19 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
   process gives errors like "module 'phase4_packet' has no attribute …".
 - **Tests:** `python tests/test_certificate_pipeline.py`,
   `python tests/test_id_pipeline.py` (12 tests).
-- **Only the school server has `themesync_env`.** The user's Windows
-  checkout has no conda. Its system Python lacks torch_geometric,
-  ultralytics, streamlit and cairosvg (and the Cairo library), so it can't
-  run the tests, the pipeline or the dashboard. Review code and
-  `results/*.json` there, and run things on the server.
+- **The user's Windows checkout has its own `.venv`** (2026-10-08; README
+  "Setting up on Windows").
+  - It has Python 3.12, torch 2.5.1+cu121 on an RTX 3060, and
+    `requirements.txt`. Cairo comes from Tesseract's folder on PATH.
+  - Run with `PYTHONUTF8=1`: 48 text `open()` calls in `src/` rely on
+    the default encoding, and Windows' cp1252 can't write the pipeline
+    log's ✔.
+  - The 12 tests pass there, and the dashboard runs.
+  - 20 regenerated Phase 4 pages matched the server's winners and
+    C_total. A few GNN-placed boxes differed by up to 13 px, a GPU-level
+    rounding difference.
+  - Results of record (the Phase 3 battery, Chapter 4, Phase 4) still
+    come from the server.
 - **Results:** `experiment_runner.py` (the Phase 3 battery),
   `gnn_heldout_eval.py`, `evaluate.py`, then re-execute
   `notebooks/results_analysis.ipynb`. `weight_calibration.py` is the
@@ -165,10 +173,15 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
 
 ## Gotchas
 
-- **`requirements.txt` is UTF-16.** pip reads it fine. The server's
-  environment differs (torch 2.5.1 + CUDA 12.1).
-- **cairosvg needs the Cairo library.** On Windows or a fresh machine,
-  install it from conda-forge: `conda install -c conda-forge cairosvg`.
+- **`requirements.txt` is UTF-8 now** (it was UTF-16 until 2026-10-08).
+  - It pins the server's torch 2.5.1 / torchvision 0.20.1 and torch's
+    sympy 1.13.1, so a CUDA build installed first is kept.
+  - torchaudio was dropped: nothing imports it.
+  - The other pins come from a different machine. The server's Python is
+    3.10.20, with ultralytics 8.4.121.
+- **cairosvg needs the Cairo library.** On Windows, UB Mannheim's
+  Tesseract ships `libcairo-2.dll`: put its folder on PATH. Elsewhere,
+  use conda-forge: `conda install -c conda-forge cairosvg`.
 - **Roboflow exports mix polygon and box rows,** and Ultralytics silently
   drops those files. Always run
   `src/data_preprocessing/prepare_master_layout_dataset.py` and
