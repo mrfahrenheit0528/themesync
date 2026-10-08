@@ -71,6 +71,10 @@ Read first: `notes/system_development_progress.md`, then the tail of
 - **Consultant's remarks** (received 2026-10-07) and their status are in
   `notes/system_development_progress.md`. All three are done: the steps
   (§3.32), a report on the user's layout (§3.32), the dataset (v5).
+- **Waiting on the consultant's answers** from the 2026-10-09 statistics
+  consultation (the answer sheet in `notes/consultation_guidelines.pdf`).
+  If the user hasn't sent them, remind them. They decide item 3.9 and the
+  Phase 4 analysis script; don't pick the tests before they arrive.
 - **Waiting on:** the expert scores. The user will upload all four at
   once (the first expert's arrived 2026-10-07). Import them with
   `mos_collector.py --import_scores … --key data/phase4/phase4_key.csv`.
