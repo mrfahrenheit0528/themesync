@@ -150,41 +150,54 @@ annotated dataset is not mentioned anywhere in the manuscript.
 detection and Tesseract OCR…" There is no training-data statement for
 YOLOv8, while the GNN's is stated ("trained using the CGL-Dataset").
 
-**Add one sentence** stating what the deployed detector is (updated
-2026-09-29, notes §3.25): YOLOv8s initialised from COCO weights and trained
+**Add one sentence** stating what the deployed detector is (v5, updated
+2026-10-08, notes §3.30): YOLOv8s initialised from COCO weights and trained
 at 1024 px on the master-layout dataset from item 3.2.
 
 - **Don't write "pretrained on CGL-Dataset V2".** That was v1–v3.
   - CGL pretraining didn't transfer to real posters (top confidence
     0.03–0.11, §3.5).
-  - The deployed v4 doesn't use it.
+  - The deployed v5 doesn't use it.
   - CGL-Dataset V2 remains the **GNN's** training corpus.
-- **Optionally:** the v3 → v4 gain on the same validation labels (mAP50
-  0.363 → 0.454; logo 0.620 → 0.818) is a Chapter 4 result, not Chapter 3.
+- **Optionally:** the v4 → v5 gain (mAP50 0.486 → 0.728 on 32 validation
+  images neither trained on) is a Chapter 4 result, not Chapter 3.
 
 **Consider also:** Figure 2's "Affine scaling" readout is now real. The
 detected logo's aspect ratio locks the certificate/ID logo's proportions
 (§3.11). No text change is needed unless you want to describe it.
 
-### 3.4 🟡 IoU evaluation set is out of date (pp.55–56, "Intersection over Union")
+### 3.4 🟡 Name the dataset IoU is measured on (p.55, "Intersection over Union")
 
-**Now:** IoU is measured between YOLOv8 predictions and "the ground-truth
-annotations established in the baseline dataset," i.e. CGL-Dataset.
+**Now:** IoU, confined to Phase 1, compares YOLOv8's predicted boxes with
+"the ground-truth annotations established in the baseline dataset." The
+manuscript calls CGL-Dataset "the baseline training dataset" (p.40) and
+says it "establishes the baseline spatial intelligence" (p.48), so a
+reader takes p.55's "baseline dataset" to be CGL-Dataset.
 
-**Problem:**
-- The model the system uses (v3) is evaluated on the master-layout
-  dataset's held-out validation split. That's the number that shows it
-  works on real uploads.
-- Results are reported as mAP50 / mAP50-95, which are IoU-thresholded.
-  The manuscript's metric is a raw IoU score.
+**System:**
+- The deployed detector, v5 (`themesync_yolo_v5.pt`), was trained only on
+  the group's master-layout dataset (item 3.2): 160 training images, 40
+  held out for validation. It never saw CGL-Dataset (item 3.3).
+- Its accuracy is reported so far as mAP50: 0.728 on the 32 validation
+  images v4 never saw either (notes §3.30). No IoU has been computed.
+
+**Decision (user, 2026-10-08):** keep IoU as p.55 defines it.
 
 **Fix:**
-- Name both evaluation sets: CGL-Dataset V2 test, and the master-layout
-  validation split.
-- State that detection accuracy is reported as mAP at IoU ≥ 0.5 (and
-  0.5:0.95), the standard for YOLO, with IoU as the matching criterion.
-- Alternatively, compute a mean IoU of matched detections to match the
-  current wording. **Code gap:** no mean-IoU script exists for YOLO yet.
+- **Manuscript, one phrase:** replace "the baseline dataset" with the
+  master-layout dataset's held-out validation split (40 images). The rest
+  of p.55 stays.
+- **Code (not written yet):** a script that runs v5 on the 40 validation
+  images, pairs each predicted box with its ground-truth box of the same
+  class, and averages overlap ÷ union, per class and overall. It doesn't
+  change the system.
+- **Chapter 4:** report the mean IoU. mAP50 can follow in one sentence:
+  mean IoU covers only the elements YOLO found, while mAP also counts the
+  ones it missed. Chapter 3 needn't mention mAP.
+
+Measuring on CGL-Dataset instead would leave p.55 untouched, but v5 never
+trained on it, and its posters aren't the event posters the system takes
+in. The number wouldn't describe the deployed detector.
 
 ### 3.5 🔴 MOS parameters have no citation (p.57)
 
@@ -314,7 +327,7 @@ MOS, but no statistical tools (§3.10 audit, 2026-09-15).
   consultant can pick.
 - GNN-guided vs. baseline fitness comparison: the test used on
   `experiment_log.json`.
-- Detection: mAP50 / mAP50-95.
+- Detection: mean IoU (item 3.4).
 - GNN vs. baseline MOS (item 3.8): a paired comparison per poster and
   format, e.g. a Wilcoxon signed-rank test (ordinal data, paired
   samples). Confirm the choice with the consultant.
@@ -709,6 +722,7 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
     trained on, mAP50 0.728 vs. v4's 0.486; embellishment 0.609 vs. 0.263;
     underlay 0.643 vs. 0.138. The dataset is now **200** images
     (160 train / 40 validation); item 3.2 is updated.
+  - **Mean IoU** on the 40 validation images: not computed yet (item 3.4).
 - **Data-quality catch:** a mixed-format export would have silently
   dropped about 23% of images (§3.12).
 - **GNN v1 → v2 (notes §3.22):** the first GNN predicted from inputs it
@@ -781,11 +795,11 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
 ## Order of work
 
 1. **Can do now, no TA decision needed:** 1.1, 1.2, 1.3, 3.1, 3.2, 3.3,
-   3.5, 3.6, 3.7, 3.7b (tell the TA about 3.7b), 3.13–3.16, 3.18–3.21,
-   3.23, 3.26–3.29.
+   3.5, 3.6, 3.7, 3.7b (tell the TA about 3.7b), 3.8, 3.13–3.16,
+   3.18–3.21, 3.23, 3.26–3.29.
    - These answer the TSA directly.
    - 3.2 needs the image source/permission details from the group.
-2. **Code first, then the text:** 3.25 (weight calibration). 3.24 (F1) is
-   done in code.
-3. **After the consultant weighs in:** 3.4, 3.8, 3.9.
+2. **Code first, then the text:** 3.4 (mean-IoU script), 3.25 (weight
+   calibration). 3.24 (F1) is done in code.
+3. **After the consultant weighs in:** 3.9.
 4. **After the TA answers:** 3.10, 3.11, 3.12.

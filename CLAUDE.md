@@ -62,9 +62,12 @@ Read first: `notes/system_development_progress.md`, then the tail of
       folder; its rows follow that packet's page order.
   - The group went ahead without the TA: four experts and the blind no-GNN
     baseline (revision-list items 1.3, 3.7 and 3.8 updated).
-  - The rated layouts come from the code at commit `8422282`. Changes to
-    layout generation after it mean the MOS no longer rates the current
-    system; say so in Chapter 4, or keep such changes out.
+  - The rated layouts come from the code at commit `8422282`. **The
+    experts won't re-score** (no time; user, 2026-10-08), so keep layout
+    generation and the fitness weights (α–δ) as they are. A change there
+    would mean the MOS rates a system that no longer exists. Run anything
+    that would change them (e.g. the weight calibration, item 3.25) as an
+    analysis only.
 - **Consultant's remarks** (received 2026-10-07) and their status are in
   `notes/system_development_progress.md`. All three are done: the steps
   (§3.32), a report on the user's layout (§3.32), the dataset (v5).
@@ -74,6 +77,9 @@ Read first: `notes/system_development_progress.md`, then the tail of
 
 ## Working rules (from the user)
 
+- **The manuscript is the primary basis** (user, 2026-10-08). Bring the
+  system to what it says. Change the manuscript only where that makes the
+  system better, and then as little as possible.
 - **No thesis prose unless asked.** Notes, findings, evidence tables and
   revision lists are welcome; chapter drafts (Chapter 4, etc.) wait for an
   explicit request.
