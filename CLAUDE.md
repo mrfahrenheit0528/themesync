@@ -4,21 +4,25 @@ CSPC BSCS thesis: *ThemeSync: A Graph-Based Design Orchestration Framework with
 Real-Time Constraint Satisfaction and Stateful Refinement*. Group lead:
 Guiller Angelo Hermoso, with Rona Mae Quite and Michelle Tercero.
 
-**`Final Manuscript.pdf` is the source of truth** for what the system is
-supposed to do. Search it with `pdftotext -layout "Final Manuscript.pdf" out.txt`.
-- Chapter 3 (Methodology) starts at p.35.
-- The 4-phase Research Procedure is pp.50–58.
-- Figures 2 and 3 (the dashboard prototypes) are on pp.51 and 53.
-- **The repo's PDF is the May 2026 version, in the future tense.** The
-  group revises the manuscript in Prism and has converted it to the past
-  tense (2026-10-08). Its content still rules, but its wording and page
-  numbers may differ from the PDF. Advise past tense for every addition,
-  and ask for an export of the revised version before quoting it exactly.
+**`manuscript/Manu 0910.1.pdf` is the source of truth** for what the
+system is supposed to do. It is the group's Prism revision (2026-10-09), in
+the past tense, and its LaTeX export is in `manuscript/LaTeX/`. Search it
+with `pdftotext -layout "manuscript/Manu 0910.1.pdf" out.txt`.
+- Chapter 3 (Methodology) starts at p.37.
+- The 4-phase Research Procedure is pp.55–61.
+- Figures 2 and 3 (the dashboard prototypes) are on pp.56 and 59.
+- The May PDF (future tense, formerly `Final Manuscript.pdf`) is
+  `manuscript/Manu 1905.pdf`. Page numbers elsewhere in this file and in
+  notes dated before 2026-10-09 are the May PDF's.
+- The group edits in Prism. Fixes go there, not into `manuscript/LaTeX/`.
+  Write every addition in the past tense.
+- `manuscript/RSC paged.pdf` is the panel's recommendation sheet from the
+  May defense, with the group's actions.
 
 Before claiming the code "matches the manuscript", re-read the PDF and the
 code; notes go stale.
 
-## Where things stand (2026-10-08)
+## Where things stand (2026-10-09)
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
@@ -128,6 +132,12 @@ Read first: `notes/system_development_progress.md`, then the tail of
 - **Consultant's remarks** (received 2026-10-07) and their status are in
   `notes/system_development_progress.md`. All three are done: the steps
   (§3.32), a report on the user's layout (§3.32), the dataset (v5).
+- **Manuscript:** the revised Manu 0910.1 (2026-10-09) is in
+  `manuscript/`. Its open fixes are M1–M21 in the revision list. Among the
+  🔴: two paragraphs run off the page (unescaped `_`), a stress test
+  described as done (none exists), a Phase 4 baseline described as "GNN
+  deactivated" (it also drops the structure mapping), and wrong reference
+  entries for CGL-GAN, RADM and O'Donovan.
 - **Waiting on the consultant's answers** from the 2026-10-09 statistics
   consultation (the answer sheet in `notes/consultation_guidelines.pdf`).
   If the user hasn't sent them, remind them. They decide item 3.9 and the
@@ -144,10 +154,11 @@ Read first: `notes/system_development_progress.md`, then the tail of
 - **No thesis prose unless asked.** Notes, findings, evidence tables and
   revision lists are welcome; chapter drafts (Chapter 4, etc.) wait for an
   explicit request.
-- **Don't update `notes/manuscript_revision_list.md` until the revised
-  manuscript is in the repo** (user, 2026-10-08). The group will upload
-  the Prism version. Until then, record new findings in the notes
-  (§3.35 holds five).
+- **`notes/manuscript_revision_list.md` tracks the manuscript against the
+  code.** It was re-checked against Manu 0910.1 on 2026-10-09: 26 earlier
+  items applied, 21 new (M1–M21, including §3.35's open findings). When the
+  group uploads a newer export, re-check it the same way, against the
+  PDF and the code.
 - **Commit and push after each set of changes** (user, 2026-10-07), so
   work survives the school server going down.
   - The server's push uses the user's token, cached for a day

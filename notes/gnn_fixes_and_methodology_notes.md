@@ -2898,3 +2898,29 @@ cards on the right, and only the right side scrollable.
   place with the report scrolled to its end, and it's centred. No
   exceptions.
 
+
+### 3.40 The revised manuscript (Manu 0910.1) checked against the code (2026-10-09)
+
+The group's Prism revision is in `manuscript/` (PDF and LaTeX export). The
+May PDF moved there as `Manu 1905.pdf` (byte-identical to the old
+`Final Manuscript.pdf`). The revision list is re-checked against it, page
+numbers and all.
+- **Applied:** 26 of the list's 35 items. Still open: 3.9 (consultant),
+  3.10–3.12 (TA) and three optional ones.
+- **New:** M1–M21 in `manuscript_revision_list.md`, which now also carries
+  §3.35's open findings. Checked in the code:
+  - **The Phase 4 baseline drops the structure mapping too**
+    (`use_gnn=False` → `use_structure=False`), so it's a naive stack. Only
+    the layout type, palette, background and motifs follow the master. The
+    MOS compares "mapping + GNN" with "neither" (M4).
+  - **Without a master, the lowest C_total wins.** Classic centred is the
+    fallback only when a master shows no cue (`archetype_for`). p.58 says
+    otherwise (M5).
+  - **p.43's "gap error 0.075 vs. 0.081"** is the exact-anchor table's
+    vertical-centre error, and its 0.036 vs. 0.050 is the GNN improving
+    on the structure start (M6).
+  - **The CGL-GAN, RADM and O'Donovan bib entries** don't match
+    `mos_parameter_grounding.md` §6 (M9). Graph4GUI's and LayoutFormer++'s
+    authors and Kleppmann's title were checked on the web (M15).
+  - **The stress test of p.55** is now in the past tense, and it still
+    doesn't exist (M3, §3.35 finding 1).
