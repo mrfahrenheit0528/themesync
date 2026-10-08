@@ -7,7 +7,7 @@ consultation. Re-run this assessment (re-check code + `results/` + this file)
 before citing the percentage anywhere final like Chapter 4 — it will go stale
 as work continues.
 
-## Overall: ~88% complete (updated 2026-09-29, second pass)
+## Overall: ~88% by this file's weighting (2026-09-29, not re-weighed since)
 
 **Consultant's assessment (2026-09-29, after a live demo of the dashboard
 and system): "at least 70%".** Her figure counts for more than this
@@ -25,10 +25,16 @@ This is a weighted estimate, not a literal average of the table below. The
 backend/algorithmic core (Phases 1-3) is the bulk of the manuscript's
 technical contribution, and it is done and *executed*, not just coded.
 
-As of 2026-09-29:
-- **Both interface prototypes are built:** Figures 2 and 3
-  (`src/dashboard/`, notes §3.24). Figure 3's canvas is edited in place:
-  select, drag, resize, retype, lock, undo/redo (§3.28).
+As of 2026-10-08:
+- **The dashboard runs as three steps** (§3.32), styled like Canva in
+  ThemeSync's own colours (§3.34):
+  - Step 1 is Figure 2 and Step 2 is Figure 3 (`src/dashboard/`,
+    notes §3.24). Figure 3's canvas is edited in place: select, drag,
+    resize, retype, lock, undo/redo (§3.28).
+  - Step 3 is an Evaluation Report on the user's layout, with F1 as p.56
+    defines it.
+- **The fitness weights are calibrated** (§3.33): p.52's loop kept the
+  deployed weights.
 - **Detector:** YOLO **v5** is deployed (2026-10-06, §3.30), trained on the
   group's 200-image re-annotation. On 32 images neither model trained on:
   mAP50 0.728 vs. v4's 0.486; embellishment recall 0.51 vs. 0.21.
@@ -38,8 +44,11 @@ As of 2026-09-29:
 - **Colour clustering is seeded** (§3.29). Earlier results carry palette
   noise.
 
-The remaining gap is the human expert MOS validation (Phase 4). Its packet
-has to be regenerated with the current system first.
+The remaining gap is Phase 4's data. The packets went out to four experts
+on 2026-10-07; the ratings, their import and the analysis remain. The
+statistical treatment waits on the consultant's answers from the
+2026-10-09 consultation. Five smaller gaps found on 2026-10-08 are in
+notes §3.35.
 
 ---
 
@@ -51,9 +60,9 @@ has to be regenerated with the current system first.
 |---|---|---|
 | K-Means LAB color extraction | Dominant color centroids via K-Means | **Done** — `vision_extraction.py`, `template_ingestor.py` |
 | SIFT/SURF stylistic markers | "K-Means and SIFT/SURF algorithms" | **Partial** — only SIFT is actually invoked in code; SURF is named in the manuscript but not implemented. Flagged in `adviser_consultation_checklist.md` section C as a wording-vs-code discrepancy to resolve with adviser |
-| Semantic Layout Parsing (YOLOv8 + Tesseract OCR) | Object bounding-box detection + text extraction, converting raster pixels into structured nodes | **Done; v4 deployed 2026-09-29 (notes §3.25).** `layout_extractor.py` runs `themesync_yolo_v4.pt`: YOLOv8s from COCO weights at 1024 px, trained on the 124-image batch with its over-half-poster boxes removed. Validation mAP50 0.454 (v3: 0.363); logo 0.818, text 0.682, underlay 0.115, embellishment 0.201. The automatic logo row is right on 15 of 15 unseen posters. **Pending (group):** re-annotation per `annotation_guidelines.md` v2, then v5 with the same recipe (`finetune_yolo_master_layout.py`; `--check_only` validates the export first). History: §3.6–3.8, 3.12, 3.25 |
+| Semantic Layout Parsing (YOLOv8 + Tesseract OCR) | Object bounding-box detection + text extraction, converting raster pixels into structured nodes | **Done; v5 deployed 2026-10-06 (notes §3.30).** `layout_extractor.py` runs `themesync_yolo_v5.pt`: YOLOv8s from COCO weights at 1024 px (v4's recipe), trained on the group's 200-image re-annotation (160 train / 40 validation), polygons converted and over-half-poster boxes dropped. On 32 validation images neither v4 nor v5 trained on: mAP50 0.728 (v4: 0.486); logo 0.977, text 0.684, underlay 0.643, embellishment 0.609. Tesseract reads each text box; the OCR text is shown, not used as content (the content comes from the user's payload, p.51). **Pending:** the mean IoU p.55 asks for (revision item 3.4; no script yet). History: §3.6–3.8, 3.12, 3.25, 3.30 |
 | GNN construction + training on CGL-Dataset | GNN maps extracted visual elements into a formal graph, learns hierarchical node-edge dependencies and spatial reasoning baselines | **Done; v3 deployed 2026-09-29 (notes §3.22, §3.26).** v1 was worse than no model (order kept 47%). v2 learned designers' positions from a naive stack. **v3** starts from the master's mapped structure (`structure_mapping.py`, Table 1's `bbox [x, y]` → initial encoding), trained from naive and distorted-structure starts. Held-out (2,900 CGL layouts): position error 0.036 vs. 0.050 for the structure start alone. Its output is registered to the master's anchors, and the anchors hold at `ANCHOR` strength in Cassowary. With exact anchors, the anchored elements are kept and the unmapped ones are placed 8% better than interpolation (`results/gnn_heldout_eval.json`). `themesync_gnn_v3.pth` is the default |
-| Stylistic marker extraction (Stage 0c) | "Scale-invariant stylistic markers" (p.51); saliency of the "inpainted background layer" (p.38, Figure 1(b)) | **Done (2026-09-28, notes §3.23)** — `stylistic_markers.py`: text-free background rebuilt from the master's border, motifs (YOLO detections cut out, ranked by SIFT keypoint density; `illustration` detections preferred once v5 exists, §3.25), title artwork (title groups, cut out when they separate cleanly). Title artwork found on 13 of 15 unseen posters, motifs on 8 (after the motif-quality filters) |
+| Stylistic marker extraction (Stage 0c) | "Scale-invariant stylistic markers" (p.51); saliency of the "inpainted background layer" (p.37, Figure 1(b)) | **Done (2026-09-28, notes §3.23, §3.31)** — `stylistic_markers.py`: text-free background rebuilt from the master's border, motifs (YOLO detections cut out, ranked by SIFT keypoint density; lettering skipped, §3.31), title artwork (title groups, cut out when they separate cleanly). In the automatic Phase 3 battery on the 16 Phase 4 posters (run 20261006_195534): title artwork in 14 of 16 outputs per format, motifs in 3. The packet's per-poster overrides are a separate, human choice (§3.31, §3.35) |
 | Perceptual Ingestion & Initialization Dashboard (Figure 2) | Interactive UI: master template preview, "Visual DNA" panel (K-Means centroids, SIFT/SURF keypoints, relational node graph, user-injected typography), target-format dropdown, "Initialize Orchestration" button | **Built; rebuilt 2026-09-29 (notes §3.24)** — `src/dashboard/views/ingestion.py`. Everything in the mockup, plus the Stage 0c markers (with ticks and uploads), the logo picker, and an editable content payload. Font family, weight and base size now all drive the renderer's type scale, and typography and content are JSON-Schema-validated before Initialize is allowed. Initialize opens the Figure 3 workspace |
 
 **Phase 1 estimate: ~95%** — done and verified; SURF remains named but not implemented (revision list 3.10).
@@ -64,8 +73,8 @@ has to be regenerated with the current system first.
 |---|---|---|
 | Dynamic Node Instantiation | Ingest user's structural schema (JSON payload), assign Baseline Geometric Tensors per Spatial Hierarchy Index | **Done** — `dynamic_instantiation.py` (`NodeInstantiator`) |
 | Cassowary Algorithm constraint solver | Primary linear arithmetic constraint solver; bounding boxes adapt to varying aspect ratios without overlap | **Done** — `cassowary_engine.py` (`ConstraintSolverEngine`) |
-| Bi-directional State Machine | Serializes project state to JSON; captures manual HITL interventions as hardened constraints, preventing destructive overwrite on automated updates | **Done (2026-09-29)** — `StateChain` (append-only JSON chain, Formula 3.9) + `OrchestrationSession.apply_event` (on-drop / on-resize-complete / lock-toggle re-solve with the adjusted node Hard, Formula 3.10). Retention is measured: moves, resizes and locks are kept exactly through re-solves, no overlap (`evaluate.py`, `test_hard_constraints_preserved`) |
-| Pre-orchestration schema validation (p.44) | Typography and payload validated against a rigid schema; a violation rejects the initialization | **Done (2026-09-29)** — `schema_validation.py`, JSON Schema (Draft 2020-12): weight ∈ {100…900}, base size 8 px to 15% of the viewport; each content variable present, within `max_characters` |
+| Bi-directional State Machine | Serializes project state to JSON; captures manual HITL interventions as hardened constraints, preventing destructive overwrite on automated updates | **Done (2026-09-29)** — `StateChain` (append-only JSON chain, Formula 3.9) + `OrchestrationSession.apply_event` (on-drop / on-resize-complete / lock-toggle re-solve with the adjusted node Hard, Formula 3.10). Retention is measured: moves, resizes and locks are kept exactly through re-solves, no overlap (`evaluate.py`, `test_hard_constraints_preserved`; every re-solve of a session's chain is checked by `layout_report.retention_check`, §3.32) |
+| Pre-orchestration schema validation (p.43) | Typography and payload validated against a rigid schema; a violation rejects the initialization | **Done (2026-09-29)** — `schema_validation.py`, JSON Schema (Draft 2020-12): weight ∈ {100…900}, base size 8 px to 15% of the viewport; each content variable present, within `max_characters` |
 | Constraint Editor UI (Figure 3, right panel) | Interactive tab exposing per-node X/Y/W/H, font, and Soft/Hard constraint toggle, plus a visual JSON state timeline | **Built (2026-09-29)** — `src/dashboard/views/orchestration.py`: node selection, X/Y/W/H, font, Soft/Hard, nudges, Apply; State Timeline (JSON Sync) with Restore and download |
 | Active canvas (Figure 3, centre) | The design adapted to the target format, where the designer's manual overrides happen (pp.53–54); terminal events only (p.42) | **Built (2026-09-29, notes §3.28)** — `src/dashboard/canvas_editor.*`: click to select (the Constraint Editor follows), drag, resize handles, double-click to retype (schema-validated), arrow nudges, L to lock, Ctrl+Z / Ctrl+Shift+Z (undo/redo append states), snapping to Formula 3.13's grid. The browser only previews; each gesture sends one event. Tested in headless Firefox |
 
@@ -78,7 +87,7 @@ has to be regenerated with the current system first.
 | Parallel state-space exploration / candidate generation | Generate multiple layout candidates per run | **Done** — `candidate_generator.py`: six candidates, each a layout archetype (classic, left-aligned, art column, banner, floating card, full-width band) with its own margin, rhythm and motif arrangement (incl. a "hero" motif). Each is solved by Cassowary and scored on its own composed background, with Formulas 3.13–3.14 taken over its own content area (notes §3.27) |
 | Heuristic Fitness Function (Formulas 3.11-3.15) | F_layout = α·P_collision + β·P_align + γ·P_whitespace + δ·P_legibility, with legibility cross-referenced against the SIFT/SURF saliency map | **Done** — `optimization_engine.py` (`HeuristicEvaluator`) implements all four penalty terms plus the combined `C_total` score. Weights calibrated 2026-10-08 (`weight_calibration.py`, notes §3.33): p.52's loop kept the deployed weights; halving or doubling any weight changes at most 1 of the 64 rated layouts |
 | Aesthetic Rendering Pipeline | Projects K-Means color clusters + extracted typography onto generated bounding boxes as a final SVG | **Done** — `aesthetic_renderer.py` + `decor.py`: text-free master background, certificate panel with the title artwork as a watermark, motifs, title artwork on the event ID, WCAG-checked text colours, type scale on the user's base size (2026-09-28) |
-| IoU, Latency, F1/Structural Accuracy metrics | Quantify extraction accuracy (Phase 1), algorithmic latency, and constraint-satisfaction F1 | **Done and actually executed** — `evaluate.py` and `experiment_runner.py` implement and compute all three; `results/evaluation_results.json` and `results/experiment_log.json` contain real, already-generated output, not placeholder code |
+| IoU, Latency, F1/Structural Accuracy metrics | Quantify extraction accuracy (Phase 1), algorithmic latency, and constraint-satisfaction F1 | **Two of three done.** **F1** follows p.56 per element (`layout_report.structural_accuracy`, §3.32): 1.0 on `evaluate.py`'s run, and no FP or FN on any of the 64 rated layouts (§3.33). **Latency**: each stage, and each canvas edit (≈ 160 ms end to end; Cassowary ≈ 0.4 ms, §3.32). **IoU** as p.55 defines it (YOLO on the validation split) has no script yet (item 3.4). Open (§3.35): F1 isn't yet in the battery's results, a GNN-to-solver "Mean IoU" is still reported, and the stress test of pp.49–50 doesn't exist |
 | Recommendation Engine UI (Figure 3, "Candidate A/B/C" thumbnails) | Tab showing ranked candidate previews for the designer to choose from | **Built (2026-09-29)** — every ranked candidate with its thumbnail and all four penalties; "Use this candidate" makes it the active canvas (a state in the chain) |
 
 **Phase 3 estimate: ~92%** — implemented, run on real posters, UI built. The CNN aesthetic evaluator is still not wired into ranking (revision list 3.11).
@@ -96,7 +105,9 @@ conditions (GNN, mapping only, baseline) with YOLO v5: 96 full runs
   - event IDs: on 15 of 16 (structure error 0.045 vs. 0.117);
   - certificates: on 14 of 16 (0.056 vs. 0.089).
 - **Formula 3.11 doesn't see it.**
-  - Certificates tie on 15 of 16.
+  - Certificates: the GNN's C_total equals the baseline's on 10 of 16, is
+    lower (better) on 4 and higher on 2 (means 0.0125 vs. 0.0126). The "15 of 16" tie was the earlier
+    run 20261006_144208.
   - On IDs the baseline is slightly better (0.1583 vs. 0.1633), through
     legibility.
 - **GNN vs. mapping only:** the same anchors; the GNN moves the unmapped
@@ -108,37 +119,37 @@ conditions (GNN, mapping only, baseline) with YOLO v5: 96 full runs
 | Component | Manuscript requirement | Status |
 |---|---|---|
 | MOS collection tool | 5-point Likert scale, 3 named dimensions (Visual Hierarchy Preservation, Brand & Typographic Consistency, Constraint & Whitespace Harmony), each scored via Table 2's descriptive rubric, on a randomized sample of outputs | **Built and matches the manuscript (fixed 2026-09-26).** `mos_collector.py` now uses the 3 named parameters verbatim, shows Table 2's full score/rating/description scale to the evaluator (start of session + `?` at any prompt), and presents layouts in a seeded random order (`--sample_size`, `--seed`). Previously implemented a different 4-dimension rubric — found in the 2026-09-15 audit (§3.10), fixed in §3.13 of `gnn_fixes_and_methodology_notes.md`. |
-| Actual expert evaluation data | A designated domain expert (professional layout artist/graphic designer) rates a randomized subset of generated outputs | **Not done — 0%.** No MOS results file exists anywhere in `data/processed/` or `results/`. This requires recruiting and running an actual outside expert, which hasn't happened yet |
+| Actual expert evaluation data | A designated domain expert (professional layout artist/graphic designer) rates a randomized subset of generated outputs | **Packets out, ratings pending.** Sent 2026-10-07 to four experts: Eisen Rose D. Galvante, Kyz Denise Aquino, Mark Joseph Orias and Mark Kenneth C. Ellorde. The four `scores_*.csv` in the repo are still blank; the user uploads all four together |
+| Rating set and packet | Outputs compared against the original master layout (p.54) | **Built and sent (2026-10-07).** `phase4_packet.py`: 16 unseen posters × 2 formats × GNN / no-GNN baseline = 64 layouts, blind codes, a private key (2026-10-07 14:43), a packet and score sheet per expert (§3.20). The layouts come from the code at `8422282` (§3.32). ANTI_HAZING_LAW's four pages carry the "CLOSED" stamp and a damaged title cut (§3.35). The dashboard page "Phase 4 Evaluation Set" does the same without editing CSVs (§3.21) |
 
-| Rating set and packet | Outputs compared against the original master layout (p.54) | **Built (2026-09-28).** `phase4_packet.py`: 15 unseen posters × 2 formats × GNN / no-GNN baseline, blind codes, private key, printable packet and score sheet per expert (§3.20). Dashboard page "Phase 4 Evaluation Set" does the same without editing CSVs: event text, logo pick from Stage 0b detections, preview, generate, packets (§3.21). The 15 posters are collected and their details drafted. |
-
-**Phase 4 estimate: ~30%.** The instrument, the rating set, and the packet tooling are ready. No real evaluation data has been collected yet. Remaining:
-- the TA's approval of the blind baseline condition, and of 1 vs 3–5 experts;
-- the group confirming each poster's details and logos;
-- **the set is now 16 new posters** (2026-10-06; manifest drafted, a few
-  guesses for the group to confirm, notes §3.30);
-- **regenerating the set with the current system:** the key and the
-  packet for Mark Joseph Orias (2026-09-28, 23:08–23:09) were built before
-  GNN v2/v3, the poster-derived look, the archetypes and the seeded palette
-  (§3.29). They must not be printed; the Phase 4 page moves them aside when
-  the set is regenerated;
-- a colour test print, the expert session, and the import.
+**Phase 4 status (2026-10-08):** the instrument, the set and the packets
+are done. Remaining:
+- the four experts' scores, imported with `mos_collector.py
+  --import_scores … --key data/phase4/phase4_key.csv`;
+- the analysis, after the consultant's answers from the 2026-10-09
+  consultation (revision item 3.9), including whether to report it with
+  and without ANTI_HAZING_LAW (§3.35);
+- confirming the manifest's guesses: ANTI_HAZING_LAW's university, CMET's
+  year, "DEBESMSCAT", and the three blank dates. They are already printed
+  on the rated pages, so this is for the record, not a change.
 
 ---
 
 ## Cross-cutting gaps (affect multiple phases)
 
-- **Both dashboards are built** (`streamlit run src/dashboard/app.py`,
-  in the `themesync_env` conda environment). Restart the dashboard after
-  pulling code changes: Streamlit doesn't hot-reload helper modules.
+- **The dashboard is built:** three steps plus the Phase 4 research tool
+  (`streamlit run src/dashboard/app.py` from the repo root, in the
+  `themesync_env` conda environment, which only the school server has).
+  Restart the dashboard after pulling code changes: Streamlit doesn't
+  hot-reload helper modules.
 - **The dashboard is exposed by default.** `streamlit run` binds every
   interface, and on the school server it printed the machine's public
   address. Consider `--server.address 127.0.0.1` plus an SSH tunnel; it
   has no login and holds students' names (notes §3.28).
-- **Underlay and embellishment detection remain weak** (v4 mAP50 0.115 and
-  0.201; recall 0.10 and 0.18). The re-annotation (guidelines v2) targets
-  embellishment/illustration. Already tracked in
-  `adviser_consultation_checklist.md` section A.
+- **Underlay and embellishment detection improved with v5** (mAP50 0.643
+  and 0.609, recall 0.52 and 0.51; v4: recall 0.10 and 0.21), on 32
+  validation images neither model trained on (§3.30). They remain below
+  logo (0.977) and text (0.684).
 - **`aesthetic_cnn.py` is not wired into the live ranking pipeline** — it's a
   standalone, heuristically-distilled model (no real MOS labels yet), trains
   and evaluates independently of `pipeline.py`/`optimization_engine.py`.
@@ -155,12 +166,13 @@ This file is the detailed evidence; `adviser_consultation_checklist.md` is
 the short, meeting-ready version. The two new findings from this assessment
 worth raising with the adviser that weren't already tracked:
 
-1. Timeline/logistics for recruiting the Phase 4 domain expert, since MOS
-   collection can't start until that person is identified — this is the
-   only phase with genuinely zero real data behind it.
+1. Recruiting the Phase 4 experts: **done** (four experts, packets out
+   2026-10-07).
 2. Whether the Phase 3 result (the fitness function can't separate the
    Stage 2 conditions on certificates; the structure error can) is
-   reported as is, with the MOS as the deciding measure.
+   reported as is, with the MOS as the deciding measure. The weight
+   calibration (§3.33) found the same: Formula 3.11 barely separates the
+   candidates.
 
 ---
 

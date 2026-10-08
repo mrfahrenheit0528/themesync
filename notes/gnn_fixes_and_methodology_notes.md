@@ -2569,3 +2569,106 @@ are unaffected.
   - the ⋮ menu, », Download and Evaluate all respond;
   - Steps 2–3 and the Phase 4 page show no exceptions.
   - Both test files pass.
+
+### 3.35 Re-check from the Windows checkout: what the rated set carries, and five open findings (2026-10-08)
+
+A review of the code against the May PDF and the notes, from the user's
+Windows checkout at `e0b6a80`. That machine can't run the code (no
+`themesync_env`), so nothing here was re-run. The evidence is the
+committed samples, logs and `results/*.json`.
+
+**ANTI_HAZING_LAW was rated with the defects §3.31 meant to remove.**
+- **What was rated:** the four pipeline logs in
+  `data/phase4/samples/ANTI_HAZING_LAW/` read "Motifs: 1 | Title artwork:
+  Stage 0c: title artwork". The rendered pages confirm it:
+  - the "CLOSED" stamp as a decoration, in four corners on the event ID
+    and two on the certificate;
+  - the title cut with the statue's scales across "GENDER", on the event
+    ID, and as the certificate's watermark.
+
+  All four packets have these pages, in both conditions.
+- **When:** commit `7e7252e` (2026-10-07 17:06, with the 14:43 key)
+  changed the manifest row from `…,,no,no` to `…,,,`. CMET and
+  SIGN_LANGUAGE_DAY kept their `no`. CLAUDE.md said the overrides held
+  until this check.
+- **Likely cause, not confirmed:** the Phase 4 page's two checkboxes
+  (`views/phase4.py`, keys `{stem}_title_art` and `{stem}_motifs`) are
+  keyed Streamlit widgets. Once a session has created them, Streamlit
+  keeps their session value and ignores `value=` from the manifest. §3.31
+  wrote the overrides on 2026-10-06. A session that had already shown
+  ANTI_HAZING_LAW with both ticked would write the blanks back on "Save"
+  or "Save and preview".
+- **Decision:** the experts won't re-score, so leave the manifest as it
+  is. It now records what was rated, and `weight_calibration.py`
+  regenerates the 64 rated runs from it (64 of 64 match the key).
+  Restoring `no` would make every re-run differ from the rated set.
+- **For the analysis:** both conditions of the poster carry the same
+  defects, so its GNN-vs-baseline pairs stay comparable. Its absolute
+  scores may drop, brand and typographic consistency most of all. Ask the
+  consultant whether to report the analysis with and without
+  ANTI_HAZING_LAW. Choose no test before the answers arrive (item 3.9).
+- **The checkbox bug is not fixed.** The Phase 4 page shouldn't
+  regenerate the set any more. Before it's used again, make it reload the
+  two checkboxes from the manifest whenever the manifest changes.
+
+**Five open findings.** Each becomes a revision item once the revised
+manuscript is in the repo (user, 2026-10-08: the revision list waits until
+then). Page numbers are the May PDF's.
+1. **No stress test (pp.49–50).**
+   - **Manuscript:** synthetic payloads with "unusually long string values"
+     and "maximum instantiation limits for repeating groups (e.g.,
+     signature blocks)", to show that text resizes without overflowing or
+     overwriting its neighbours.
+   - **Code:** no such test. The only long-text test checks that the schema
+     rejects an over-long name, and `Signature_Blocks` is fixed at
+     `instantiation_count: 3`.
+   - **Why it matters for F1:** none of the 384 candidates in §3.33
+     overlaps or leaves the canvas, so ordinary content always scores F1
+     1.0. A stress run is where F1 can show the solver's limits; §3.32
+     only produced FPs by crowding the canvas by hand.
+   - It can run as an analysis. The rated layouts don't change.
+2. **R_target is fixed (Formula 3.14, p.44).**
+   - **Manuscript:** the target whitespace ratio is "established by the
+     master template's visual DNA".
+   - **Code:** 0.65 for every master (`optimization_engine.py:16`).
+   - **Why it matters:** whitespace is one of the two terms that decide
+     the output (§3.33).
+   - **Fix:** the deployed value can't change now. Either reword p.44, or
+     test a master-derived R_target as an analysis, as §3.33 did for the
+     weights: how many of the 64 outputs would change.
+3. **Normalisations the formulas don't show (Formulas 3.12, 3.13, 3.15,
+   p.44).**
+   - 3.12's overlap is divided by the canvas area.
+   - 3.13's distances are divided by the canvas width and averaged over
+     the nodes.
+   - 3.15 is averaged over the text nodes, not summed. The docstring of
+     `calculate_legibility_penalty` gives the reason.
+
+   Revision item 3.20 covers only 3.13's grid and 3.14's area.
+4. **A "Mean IoU" that p.55 rules out.**
+   - **Code:** `evaluate.py` (lines 9, 121, 206) and `experiment_runner.py`
+     (lines 139–168) report the IoU between the GNN's output and the final
+     layout. The notebook's F1 table shows it as `mean_iou`. The values are
+     0.16 on certificates and 0.45 on event IDs (run 20261006_195534).
+   - **Manuscript:** p.55 says IoU "will not be utilized to evaluate the
+     final dynamically generated layouts".
+   - **Fix:** it measures how far the solver moves the GNN's output.
+     Rename it (e.g. "GNN–solver overlap"), or leave it out of the
+     notebook.
+   - The p.55 IoU itself (YOLO v5 on the 40 validation images, item 3.4)
+     still has no script.
+5. **F1 isn't reported over the rated set.**
+   - **Now:** the notebook's F1 comes from `evaluate.py`, one synthetic
+     layout per condition.
+   - **Already available:** §3.33 ran p.56's check
+     (`layout_report.structural_accuracy`) on every candidate of the 64
+     rated runs. No FP and no FN, so F1 is 1.0 on all 64 rated layouts,
+     the stronger figure for Chapter 4.
+   - **Fix:** adding F1 to `experiment_runner.py` would put it in the
+     results files directly.
+
+**Also updated:**
+- CLAUDE.md: the ANTI_HAZING_LAW override, 12 tests, the Windows
+  checkout, and the revision-list rule.
+- `system_development_progress.md`: stale since 2026-09-29 to 10-06 in
+  places (v4 deployed, the 15-of-16 tie, Phase 4 at 0%).

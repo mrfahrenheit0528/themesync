@@ -18,11 +18,11 @@ supposed to do. Search it with `pdftotext -layout "Final Manuscript.pdf" out.txt
 Before claiming the code "matches the manuscript", re-read the PDF and the
 code; notes go stale.
 
-## Where things stand (2026-10-07)
+## Where things stand (2026-10-08)
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.31).
+§3.35).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
@@ -63,10 +63,17 @@ Read first: `notes/system_development_progress.md`, then the tail of
     - CMET's year;
     - "DEBESMSCAT" as the acronym for GUESS_THE_TEACHER;
     - blank dates on DEAR_SENDER, LUCKY_TERA and SHARE_KO_LANG.
-  - Manifest overrides: `title_artwork` = no for CMET, SIGN_LANGUAGE_DAY and
-    ANTI_HAZING_LAW; `motifs` = no for ANTI_HAZING_LAW.
+  - Manifest overrides: `title_artwork` = no for CMET and
+    SIGN_LANGUAGE_DAY.
+    - **ANTI_HAZING_LAW's overrides were lost before the rated set was
+      generated** (notes §3.35). Its four rated pages carry the "CLOSED"
+      stamp as a decoration and the title cut with the statue across
+      "GENDER".
+    - **Leave its row blank.** The manifest now records what was rated,
+      and `weight_calibration.py` regenerates the rated runs from it.
   - **Packets went out on 2026-10-07** to four experts, all built from that
-    day's key (14:43, after the fixes): Eisen Rose D. Galvante, Kyz Denise
+    day's key (14:43, after the layout-type and motif fixes, except
+    ANTI_HAZING_LAW's overrides): Eisen Rose D. Galvante, Kyz Denise
     Aquino, Mark Joseph Orias and Mark Kenneth C. Ellorde.
     - Eisen's packet is `packets/Eisen_Rose_D_Galvente/` (misspelled
       folder; the correctly spelled duplicate was never sent and was
@@ -100,6 +107,10 @@ Read first: `notes/system_development_progress.md`, then the tail of
 - **No thesis prose unless asked.** Notes, findings, evidence tables and
   revision lists are welcome; chapter drafts (Chapter 4, etc.) wait for an
   explicit request.
+- **Don't update `notes/manuscript_revision_list.md` until the revised
+  manuscript is in the repo** (user, 2026-10-08). The group will upload
+  the Prism version. Until then, record new findings in the notes
+  (§3.35 holds five).
 - **Commit and push after each set of changes** (user, 2026-10-07), so
   work survives the school server going down.
   - The server's push uses the user's token, cached for a day
@@ -140,7 +151,12 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
   helper modules (`pipeline.py`, `phase4_packet.py`, …), and a stale
   process gives errors like "module 'phase4_packet' has no attribute …".
 - **Tests:** `python tests/test_certificate_pipeline.py`,
-  `python tests/test_id_pipeline.py` (11 tests).
+  `python tests/test_id_pipeline.py` (12 tests).
+- **Only the school server has `themesync_env`.** The user's Windows
+  checkout has no conda. Its system Python lacks torch_geometric,
+  ultralytics, streamlit and cairosvg (and the Cairo library), so it can't
+  run the tests, the pipeline or the dashboard. Review code and
+  `results/*.json` there, and run things on the server.
 - **Results:** `experiment_runner.py` (the Phase 3 battery),
   `gnn_heldout_eval.py`, `evaluate.py`, then re-execute
   `notebooks/results_analysis.ipynb`. `weight_calibration.py` is the
