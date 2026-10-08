@@ -1,0 +1,23 @@
+# ThemeSync dashboard theme: a Canva-like editor look (purple accent, light
+# workspace, rounded controls). Streamlit reads this when the dashboard is
+# started from the repository root:
+#   streamlit run src/dashboard/app.py
+# The layout styling itself is in src/dashboard/components.py (CANVA_CSS).
+
+[theme]
+base = "light"
+primaryColor = "#8b3dff"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f4f5f7"
+textColor = "#0e1318"
+linkColor = "#7d2ae8"
+borderColor = "#e0e2e7"
+showWidgetBorder = true
+baseRadius = "0.5rem"
+buttonRadius = "0.5rem"
+headingFontWeights = [700, 650, 600]
+showSidebarBorder = true
+
+[theme.sidebar]
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f4f5f7"

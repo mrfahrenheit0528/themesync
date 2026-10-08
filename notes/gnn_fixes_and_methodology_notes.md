@@ -2481,3 +2481,52 @@ weights were set by p.43's priority rule and then confirmed by this
 calibration, and give the robustness figure. It was run on 2026-10-08,
 after the Phase 4 layouts were generated and before any rating was
 analysed. Don't write that it came before the packets.
+
+### 3.34 The dashboard looks like Canva (2026-10-08)
+
+**Why:** the user asked for a Canva-like interface, "most especially the
+orchestration part" (Step 2).
+
+**Kept to the manuscript:** the user chose to keep Figure 3's arrangement
+over Canva's own left-hand panels. p.53–54 puts the canvas in the centre
+and "the right-hand interface" in two tabs, Constraint Editor and
+Recommendation Engine; the redesign keeps exactly that.
+
+**What changed (UI only):**
+- **Theme:** `.streamlit/config.toml` (purple `#8b3dff`, light, rounded).
+  Streamlit reads it when started from the repo root. The layout styling
+  is `CANVA_CSS` in `components.py`, applied on every page by `ui.theme()`.
+- **Top bar on every step:** a teal-to-purple gradient bar with the brand
+  and the design's name (`ui.design_name`), the three step pills (done ✓ /
+  current / greyed, the consultant's remark), and the page's actions.
+  Step 2: Step 1 (confirmed), Download (SVG/PNG/PDF), Evaluate. Step 3:
+  Edit, Step 1, Report (JSON).
+- **Step 2:**
+  - The canvas sits as a white page on a grey workspace, under a floating
+    toolbar with icons (undo, redo, edit text, lock/release).
+  - A status bar below gives the state, size and Formula 3.11's terms,
+    with the master layout in a popover.
+  - The right panel holds the two tabs: the Constraint Editor (X/Y/W/H in
+    a 2 × 2 grid, Soft/Hard as a segmented control, icon nudges, Apply,
+    typography, a scrolling State Timeline) and the Recommendation Engine
+    (candidates as a two-column template grid with rank, Recommended and
+    Active badges, C_total and the four penalties).
+  - Event messages are toasts: they take no space, so the canvas never
+    shifts or remounts (the reason for the old fixed message slot, §3.28).
+- **Selection** colours are purple (Hard stays amber); the snapping guides
+  are pink.
+- **The sidebar starts collapsed,** as Canva has none; the step pills
+  replace it, and it still opens (Phase 4 is there).
+
+**Unchanged:** the pipeline, the session's events and layout generation.
+The canvas script changed in one place: the Lock button sets its label
+and an icon state instead of replacing its content. The Phase 4 layouts
+are unaffected.
+
+**Checks:**
+- Steps 1–3 were rendered in headless Firefox through a temporary harness
+  (deleted).
+- Selecting an element and the toolbar's Lock worked: Hard chip, "Release
+  (Soft)", State_02 added.
+- No exceptions on the page.
+- Both test files pass.

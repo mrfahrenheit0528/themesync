@@ -493,6 +493,11 @@ labels:
 Screenshots on a CSPC poster would show the real system. Keep the mockups
 if the committee prefers the figures as designed.
 
+**Look changed (2026-10-08, notes §3.34):** the dashboard is now styled
+like Canva, but Figure 3's arrangement is kept: a central canvas, with the
+Constraint Editor and Recommendation Engine tabs on the right (p.53–54),
+so the text needs no change. Take any screenshot from the new look.
+
 ### 3.18 🟡 Phase 3 inputs: synthetic templates *and* real posters (p.52)
 
 **Now:** Phase 3 "will be subjected to the synthetic administrative

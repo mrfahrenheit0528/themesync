@@ -49,13 +49,14 @@ _WARN = "_canvas_warning"
 HTML = """
 <div class="ts-root" tabindex="0" aria-label="Active canvas editor">
   <div class="ts-toolbar">
+    <button class="ts-btn ts-iconbtn" data-act="undo" title="Undo (Ctrl+Z)" aria-label="Undo"><svg class="ts-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg></button>
+    <button class="ts-btn ts-iconbtn" data-act="redo" title="Redo (Ctrl+Shift+Z)" aria-label="Redo"><svg class="ts-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"/></svg></button>
+    <span class="ts-divider"></span>
     <span class="ts-sel"></span>
     <span class="ts-chip"></span>
     <span class="ts-spacer"></span>
-    <button class="ts-btn" data-act="undo" title="Undo (Ctrl+Z)">&#8630; Undo</button>
-    <button class="ts-btn" data-act="redo" title="Redo (Ctrl+Shift+Z)">&#8631; Redo</button>
-    <button class="ts-btn" data-act="lock">Lock (Hard)</button>
-    <button class="ts-btn" data-act="edit">Edit text</button>
+    <button class="ts-btn" data-act="edit"><svg class="ts-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg><span class="ts-lbl">Edit text</span></button>
+    <button class="ts-btn" data-act="lock"><svg class="ts-ico ico-lock" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg><svg class="ts-ico ico-unlock" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"/></svg><span class="ts-lbl">Lock (Hard)</span></button>
   </div>
   <div class="ts-stage">
     <div class="ts-host"></div>

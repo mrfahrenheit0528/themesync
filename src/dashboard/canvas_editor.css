@@ -1,8 +1,10 @@
-/* ThemeSync — Active Canvas editor (see canvas_editor.py). */
+/* ThemeSync — Active Canvas editor (see canvas_editor.py). Styled like a
+   design tool (Canva): a floating white toolbar, the page with a shadow on
+   the grey workspace around it (views/orchestration.py), purple selection. */
 
 .ts-root {
   outline: none;
-  color: var(--st-text-color, #31333f);
+  color: #0e1318;
   font-family: var(--st-font, "Source Sans Pro", sans-serif);
   font-size: 13px;
   line-height: 1.4;
@@ -12,58 +14,76 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 6px;
-  min-height: 34px;
-  margin-bottom: 6px;
+  gap: 4px;
+  min-height: 40px;
+  margin: 0 0 14px;
+  padding: 4px 8px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(16, 24, 40, 0.12), 0 0 0 1px rgba(16, 24, 40, 0.05);
 }
-.ts-sel { font-weight: 600; }
+.ts-divider { width: 1px; height: 22px; margin: 0 6px; background: #e3e5e8; }
+.ts-sel { font-weight: 650; margin-right: 4px; }
 .ts-chip {
   border-radius: 999px;
   padding: 1px 9px;
   font-size: 12px;
+  font-weight: 600;
   border: 1px solid transparent;
 }
 .ts-chip:empty { display: none; }
-.ts-chip.soft { background: rgba(56, 142, 255, 0.12); border-color: rgba(56, 142, 255, 0.45); }
-.ts-chip.hard { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.6); }
+.ts-chip.soft { color: #5b2ad6; background: rgba(139, 61, 255, 0.09); border-color: rgba(139, 61, 255, 0.35); }
+.ts-chip.hard { color: #92400e; background: rgba(245, 158, 11, 0.14); border-color: rgba(245, 158, 11, 0.55); }
 .ts-spacer { flex: 1; }
 .ts-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font: inherit;
+  font-weight: 550;
   color: inherit;
-  background: var(--st-secondary-background-color, #f0f2f6);
-  border: 1px solid rgba(128, 128, 128, 0.35);
-  border-radius: 6px;
-  padding: 3px 10px;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  padding: 6px 10px;
   cursor: pointer;
 }
-.ts-btn:hover:not(:disabled) { border-color: var(--st-primary-color, #ff4b4b); }
-.ts-btn:disabled { opacity: 0.4; cursor: default; }
+.ts-iconbtn { padding: 6px 7px; }
+.ts-btn:hover:not(:disabled) { background: #f1f2f5; }
+.ts-btn:focus-visible { outline: 2px solid #8b3dff; outline-offset: 1px; }
+.ts-btn:disabled { opacity: 0.35; cursor: default; }
+.ts-ico { width: 18px; height: 18px; fill: currentColor; flex: none; }
+.ts-btn .ico-unlock { display: none; }
+.ts-btn.is-hard .ico-lock { display: none; }
+.ts-btn.is-hard .ico-unlock { display: inline; }
+.ts-btn.is-hard { color: #92400e; }
 
 .ts-stage {
   position: relative;
-  /* the whole design fits: full width, or 76% of the window's height for
+  /* the whole design fits: full width, or 72% of the window's height for
      portrait formats (--ts-ar = width / height, set from the data) */
-  width: min(100%, calc(76vh * var(--ts-ar, 1)));
+  width: min(100%, calc(72vh * var(--ts-ar, 1)));
   margin: 0 auto;
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
-  border-radius: 4px;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 2px 14px rgba(15, 20, 30, 0.16), 0 0 0 1px rgba(15, 20, 30, 0.04);
 }
-.ts-root:focus-visible .ts-stage { box-shadow: 0 0 0 2px var(--st-primary-color, #ff4b4b); }
+.ts-root:focus-visible .ts-stage { box-shadow: 0 0 0 2px #8b3dff, 0 2px 14px rgba(15, 20, 30, 0.16); }
 .ts-host { line-height: 0; }
 .ts-svg { display: block; width: 100%; height: auto; }
 .ts-svg [data-node-id] { cursor: move; }
 
 /* overlay (drawn in canvas units; strokes stay 1-2 screen px) */
 .ts-overlay * { vector-effect: non-scaling-stroke; }
-.ts-hover { fill: none; stroke: #38bdf8; stroke-width: 1.5; stroke-dasharray: 5 3; pointer-events: none; }
-.ts-selbox { fill: none; stroke: #ff4081; stroke-width: 2; pointer-events: none; }
+.ts-hover { fill: none; stroke: #a77bff; stroke-width: 1.5; stroke-dasharray: 5 3; pointer-events: none; }
+.ts-selbox { fill: none; stroke: #8b3dff; stroke-width: 2; pointer-events: none; }
 .ts-selbox.hard { stroke: #f59e0b; }
-.ts-handle { fill: #fff; stroke: #ff4081; stroke-width: 1.5; }
-.ts-grid { stroke: #ff4081; stroke-opacity: 0.28; stroke-width: 1; stroke-dasharray: 2 4; pointer-events: none; }
-.ts-guide { stroke: #d946ef; stroke-width: 1.5; pointer-events: none; }
+.ts-handle { fill: #fff; stroke: #8b3dff; stroke-width: 1.5; }
+.ts-grid { stroke: #8b3dff; stroke-opacity: 0.25; stroke-width: 1; stroke-dasharray: 2 4; pointer-events: none; }
+.ts-guide { stroke: #ff3ea5; stroke-width: 1.5; pointer-events: none; }
 .ts-lock circle { fill: #f59e0b; stroke: #fff; stroke-width: 1.5; }
 .ts-lock rect { fill: #fff; }
 .ts-lock path { fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; }
@@ -80,9 +100,9 @@
   font: 15px/1.35 "Montserrat", sans-serif;
   color: #111;
   background: rgba(255, 255, 255, 0.97);
-  border: 2px solid #ff4081;
-  border-radius: 4px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  border: 2px solid #8b3dff;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   outline: none;
 }
 .ts-count {
@@ -92,7 +112,7 @@
   padding: 1px 6px;
   font-size: 11px;
   color: #fff;
-  background: #ff4081;
+  background: #8b3dff;
   border-radius: 0 0 4px 4px;
 }
 .ts-count.over { background: #dc2626; }
@@ -112,19 +132,27 @@
   padding: 6px 14px;
   border-radius: 999px;
   color: #fff;
-  background: rgba(17, 24, 39, 0.85);
+  background: rgba(76, 31, 194, 0.9);
   font-size: 13px;
 }
 
 .ts-foot {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 14px;
-  margin-top: 6px;
+  align-items: center;
+  gap: 6px 12px;
+  margin-top: 12px;
   font-size: 12px;
-  opacity: 0.85;
+  color: #3c4250;
 }
-.ts-readout { font-variant-numeric: tabular-nums; }
-.ts-msg.error { color: #dc2626; opacity: 1; font-weight: 600; white-space: pre-line; }
-.ts-msg.warn { color: #b45309; opacity: 1; font-weight: 600; }
-.ts-hint { width: 100%; opacity: 0.75; }
+.ts-readout {
+  font-variant-numeric: tabular-nums;
+  background: #fff;
+  border: 1px solid #dcdfe5;
+  border-radius: 999px;
+  padding: 1px 9px;
+}
+.ts-readout:empty { display: none; }
+.ts-msg.error { color: #dc2626; font-weight: 600; white-space: pre-line; }
+.ts-msg.warn { color: #b45309; font-weight: 600; }
+.ts-hint { width: 100%; color: #6b7280; font-size: 11.5px; }

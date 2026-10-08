@@ -613,7 +613,8 @@ class CanvasEditor {
     this.chipEl.className = "ts-chip" + (node ? (node.hard ? " hard" : " soft") : "");
     const b = this.buttons;
     b.lock.disabled = !node || !!this.pending;
-    b.lock.textContent = node && node.hard ? "Release (Soft)" : "Lock (Hard)";
+    (b.lock.querySelector(".ts-lbl") || b.lock).textContent = node && node.hard ? "Release (Soft)" : "Lock (Hard)";
+    b.lock.classList.toggle("is-hard", !!(node && node.hard));
     b.lock.title = node && node.hard
       ? "Hand this element back to the algorithm (L)"
       : "Pin this element exactly where it is (L)";

@@ -28,7 +28,8 @@ import streamlit as st
 
 import components as ui
 
-st.set_page_config(page_title="ThemeSync", layout="wide")
+st.set_page_config(page_title="ThemeSync", layout="wide", initial_sidebar_state="collapsed")
+ui.theme()
 
 pages = [st.Page(page, title=f"Step {n} · {title}", icon=icon, default=n == 1)
          for n, page, title, icon in ui.STEPS]

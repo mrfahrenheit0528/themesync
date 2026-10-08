@@ -43,9 +43,9 @@ def _swatches(hexes: list) -> None:
                 + "&nbsp;" + " · ".join(f"`{h}`" for h in hexes), unsafe_allow_html=True)
 
 
-st.title("ThemeSync")
-ui.enter_step(3)   # without a layout, this goes back to Step 1
-session = st.session_state["orch"]
+session = st.session_state.get("orch")
+actions = ui.enter_step(3, ui.design_name(session))
+session = st.session_state["orch"]   # without a layout, enter_step went back to Step 1
 report = build_report(session)
 layout, fit = report["layout"], report["fitness"]
 acc, kept, lat, dna = (report["structural_accuracy"], report["retention"], report["latency"],
@@ -53,14 +53,16 @@ acc, kept, lat, dna = (report["structural_accuracy"], report["retention"], repor
 
 st.caption("Evaluation Report · the finished layout scored against Chapter 3's evaluation metrics "
            "(pp. 55-58). Go back to keep editing; the report follows every change.")
-edit_col, back_col, _, json_col = st.columns([1.3, 1.1, 2, 1.3])
-if edit_col.button("← Back to editing", width="stretch", help="Step 2, with the canvas as you left it."):
-    ui.go_to_step(2)
-with back_col:
-    ui.back_to_step_one("back_from_3")
-json_col.download_button("⬇ Report (JSON)", data=json.dumps(report, indent=2, default=str),
-                         file_name=f"ThemeSync_{session.stem}_report.json", mime="application/json",
-                         width="stretch")
+with actions:
+    edit_col, back_col, json_col = st.columns([1.2, 1, 1.15], gap="small")
+    if edit_col.button("Edit", icon=":material/arrow_back:", type="primary", width="stretch",
+                       help="Back to Step 2, with the canvas as you left it."):
+        ui.go_to_step(2)
+    with back_col:
+        ui.back_to_step_one("back_from_3")
+    json_col.download_button("Report", data=json.dumps(report, indent=2, default=str),
+                             icon=":material/download:", file_name=f"ThemeSync_{session.stem}_report.json",
+                             mime="application/json", width="stretch", help="The report as JSON.")
 
 # ---------------------------------------------------------------------------
 # Headline numbers

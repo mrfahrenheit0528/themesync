@@ -118,8 +118,7 @@ def _swatch(hexcode: str, label: str) -> None:
 # Page
 # ---------------------------------------------------------------------------
 
-st.title("ThemeSync")
-ui.enter_step(1)
+ui.enter_step(1, "New design · start from a master layout")
 st.caption("Phase 1 · Perceptual Ingestion & Feature Extraction — Master Template Dashboard (Figure 2). "
            "Upload a master layout, review its Visual DNA, then set up the target format.")
 

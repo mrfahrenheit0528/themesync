@@ -5,10 +5,12 @@ Pieces the dashboard pages share: the path bootstrap, one cached YOLO
 detector for the whole app, cut-outs and thumbnails, the numbered-box poster
 view used by every logo/motif picker, SVG → PNG previews rendered with the
 same Cairo + bundled-font path as the printed outputs, and the three-step
-workflow (the step bar, the sidebar, and moving between steps).
+workflow (the top bar with its steps, the sidebar, and moving between
+steps), and the Canva-like styling every page shares.
 """
 
 import hashlib
+import html
 import os
 import re
 import sys
@@ -163,21 +165,79 @@ STEPS = [  # (number, page, title, icon)
 ]
 RESEARCH_PAGES = [("views/phase4.py", "Phase 4 Evaluation Set", "🗂️")]
 
-_STEP_CSS = """<style>
-.ts-steps {display:flex; align-items:center; gap:.6rem; margin:.2rem 0 1.1rem;}
-.ts-step {display:flex; align-items:center; gap:.55rem; padding:.45rem .9rem .45rem .5rem;
-          border-radius:999px; border:1.5px solid rgba(128,128,128,.35);}
-.ts-num {width:1.7rem; height:1.7rem; border-radius:50%; display:inline-flex; align-items:center;
-         justify-content:center; font-weight:700; font-size:.9rem; background:rgba(128,128,128,.22);}
-.ts-label {display:flex; flex-direction:column; line-height:1.15; font-size:.95rem;}
-.ts-label small {font-size:.72rem; opacity:.75; text-transform:uppercase; letter-spacing:.04em;}
-.ts-line {flex:1; height:2px; min-width:1rem; background:rgba(128,128,128,.35);}
-.ts-active {border-color:#ff4b4b; background:rgba(255,75,75,.08);}
-.ts-active .ts-num {background:#ff4b4b; color:#fff;}
-.ts-active .ts-label {font-weight:700;}
-.ts-done .ts-num {background:#21a35a; color:#fff;}
-.ts-todo {opacity:.45;}
+# The look: a Canva-like editor (the user's request, 2026-10-08). Colours
+# and radii come from .streamlit/config.toml; this adds the layout pieces:
+# the gradient bar, the grey workspace, the white side panel, the cards.
+CANVA_CSS = """<style>
+[data-testid="stAppDeployButton"] {display: none;}
+[data-testid="stHeader"] {background: transparent;}
+[data-testid="stMainBlockContainer"] {padding-top: 3.2rem; padding-bottom: 2.5rem;}
+h1, h2, h3 {letter-spacing: -0.01em;}
+
+/* the bar across the top of every step */
+.st-key-ts_topbar {background: linear-gradient(90deg, #00c4cc 0%, #5a5cf0 55%, #7d2ae8 100%);
+  border-radius: 12px; padding: .5rem .85rem; margin-bottom: .35rem;
+  box-shadow: 0 2px 12px rgba(90, 50, 220, .18);}
+.st-key-ts_topbar [data-testid="stMarkdownContainer"] p {margin: 0;}
+.st-key-ts_topbar [data-testid="stHorizontalBlock"] {min-height: 2.9rem;}
+.st-key-ts_topbar [data-testid="stElementContainer"] {overflow: visible;}
+.st-key-ts_topbar button {background: rgba(255, 255, 255, .16) !important; color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, .38) !important; font-weight: 600;}
+.st-key-ts_topbar button:hover {background: rgba(255, 255, 255, .28) !important;}
+.st-key-ts_topbar button p, .st-key-ts_topbar button span {color: inherit !important;}
+.st-key-ts_topbar [data-testid="stBaseButton-primary"] {background: #fff !important;
+  color: #5b2ad6 !important; border-color: #fff !important;}
+.st-key-ts_topbar [data-testid="stBaseButton-primary"]:hover {background: #f3edff !important;}
+.ts-brand {display: flex; align-items: center; gap: .6rem; color: #fff;}
+.ts-logo {width: 2.1rem; height: 2.1rem; flex: none; border-radius: 10px; display: inline-flex;
+  align-items: center; justify-content: center; font-weight: 800; font-size: 1.05rem;
+  background: rgba(255, 255, 255, .22); border: 1px solid rgba(255, 255, 255, .35);}
+.ts-brand b {font-size: 1.1rem; display: block; line-height: 1.15;}
+.ts-brand > span:last-child {min-width: 0;}
+.ts-brand small {display: block; font-size: .74rem; opacity: .9; line-height: 1.2; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;}
+.ts-steps {display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .35rem;}
+.ts-step {display: flex; align-items: center; gap: .4rem; padding: .24rem .75rem .24rem .26rem;
+  border-radius: 999px; color: #fff; background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .28); white-space: nowrap;}
+.ts-num {width: 1.45rem; height: 1.45rem; border-radius: 50%; display: inline-flex; align-items: center;
+  justify-content: center; font-weight: 700; font-size: .8rem; background: rgba(255, 255, 255, .25);}
+.ts-label {display: flex; flex-direction: column; line-height: 1.1; font-size: .86rem;}
+.ts-label small {font-size: .6rem; opacity: .85; text-transform: uppercase; letter-spacing: .06em;}
+.ts-line {width: 1.2rem; height: 2px; border-radius: 2px; background: rgba(255, 255, 255, .45);}
+.ts-active {background: #fff; color: #4c1fc2; border-color: #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, .14);}
+.ts-active .ts-num {background: #8b3dff; color: #fff;}
+.ts-active .ts-label {font-weight: 700;}
+.ts-done .ts-num {background: #fff; color: #0f9d74;}
+.ts-todo {opacity: .55;}
+
+/* Step 2: the grey workspace around the page, and the white side panel */
+.st-key-ts_workspace {background: #ebecf0; border-radius: 12px; padding: 14px 18px 12px;}
+.st-key-ts_panel {background: #fff; border: 1px solid #e3e5e8; border-radius: 12px;
+  padding: .25rem 1rem 1rem; box-shadow: 0 1px 3px rgba(16, 24, 40, .06);}
+.st-key-ts_panel button[role="tab"] p {font-weight: 650;}
+.ts-section {font-size: .7rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+  color: #5b6370; margin: .55rem 0 .1rem;}
+.ts-status {display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; font-size: .8rem; color: #3c4250;}
+.ts-pill {background: #fff; border: 1px solid #dcdfe5; border-radius: 999px; padding: .1rem .6rem;
+  white-space: nowrap;}
+.ts-pill.total {background: #f1e9ff; border-color: #d9c6ff; color: #4c1fc2; font-weight: 600;}
+.ts-row {display: flex; align-items: baseline; gap: .45rem; font-size: .86rem; line-height: 1.3;}
+.ts-row code {font-size: .78rem; background: #f1e9ff; color: #4c1fc2; padding: .02rem .35rem; border-radius: 6px;}
+.ts-row.now {font-weight: 650;}
+.ts-badge {display: inline-block; font-size: .7rem; font-weight: 700; padding: .04rem .5rem;
+  border-radius: 999px; background: #f1e9ff; color: #5b2ad6; margin-right: .2rem;}
+.ts-badge.rec {background: #e2f8f4; color: #08766a;}
+.ts-badge.on {background: #8b3dff; color: #fff;}
+[class*="st-key-cand_"] {transition: box-shadow .15s, border-color .15s;}
+[class*="st-key-cand_"]:hover {border-color: #b48cff !important; box-shadow: 0 2px 12px rgba(139, 61, 255, .16);}
+[class*="st-key-cand_on_"] {border: 2px solid #8b3dff !important;}
 </style>"""
+
+
+def theme() -> None:
+    """The Canva-like look, on every page (app.py calls it first)."""
+    st.html(CANVA_CSS)
 
 
 def current_step() -> int:
@@ -195,26 +255,50 @@ def go_to_step(step: int) -> None:
     st.switch_page(STEPS[step - 1][1])
 
 
-def step_bar(active: int) -> None:
-    """The three steps across the top: done ✓, the current one highlighted,
-    the rest greyed out."""
+def _step_pills(active: int) -> str:
+    """The three steps: done ✓, the current one highlighted, the rest greyed
+    out (the consultant's remark)."""
     cells = []
     for n, _, title, _ in STEPS:
         state = "done" if n < active else "active" if n == active else "todo"
         mark = "✓" if state == "done" else str(n)
-        cells.append(f'<div class="ts-step ts-{state}"><span class="ts-num">{mark}</span>'
-                     f'<span class="ts-label"><small>Step {n}</small>{title}</span></div>')
-    st.markdown(_STEP_CSS + '<div class="ts-steps">' + '<div class="ts-line"></div>'.join(cells) + "</div>",
-                unsafe_allow_html=True)
+        cells.append(f'<div class="ts-step ts-{state}" title="Step {n} · {title}">'
+                     f'<span class="ts-num">{mark}</span><span class="ts-label">{title}</span></div>')
+    return '<div class="ts-steps">' + '<div class="ts-line"></div>'.join(cells) + "</div>"
 
 
-def enter_step(step: int) -> None:
+def top_bar(active: int, subtitle: str = ""):
+    """The bar across the top of a step, like a design tool's header: the
+    brand and the design being edited, the three steps, and an empty
+    column that the page fills with its actions (returned)."""
+    with st.container(key="ts_topbar"):
+        brand, steps, actions = st.columns([1.25, 2.7, 2.05], vertical_alignment="center", gap="small")
+        brand.markdown(f'<div class="ts-brand"><span class="ts-logo">T</span><span><b>ThemeSync</b>'
+                       + (f'<small title="{html.escape(subtitle)}">{html.escape(subtitle)}</small>' if subtitle else "")
+                       + "</span></div>", unsafe_allow_html=True)
+        steps.markdown(_step_pills(active), unsafe_allow_html=True)
+    return actions
+
+
+def design_name(session) -> str:
+    """The design being edited, for the top bar: its format, the master
+    poster it takes its theme from (upload hash dropped), and the mode."""
+    if session is None:
+        return ""
+    poster = os.path.splitext(os.path.basename(session.template_image or ""))[0]
+    poster = re.sub(r"_[0-9a-f]{8}$", "", poster) or "no master"
+    return (f"{session.domain.replace('_', ' ').title()} · {poster} · "
+            f"{'GNN-guided' if session.use_gnn else 'no-GNN baseline'}")
+
+
+def enter_step(step: int, subtitle: str = ""):
     """Top of a step's page: a step opened out of turn (an old link, the
-    address bar) goes to the current step instead; then the step bar."""
+    address bar) goes to the current step instead; then the top bar.
+    Returns the bar's actions column."""
     now = current_step()
     if now != step:
         st.switch_page(STEPS[now - 1][1])
-    step_bar(step)
+    return top_bar(step, subtitle)
 
 
 def sidebar() -> None:
@@ -231,10 +315,10 @@ def sidebar() -> None:
             st.page_link(page, label=title, icon=icon)
 
 
-def back_to_step_one(key: str) -> None:
+def back_to_step_one(key: str, label: str = "Step 1") -> None:
     """A confirmed way back to Step 1: it closes the layout being edited."""
     session = st.session_state.get("orch")
-    with st.popover("↺ Back to Step 1", width="stretch"):
+    with st.popover(label, icon=":material/undo:", width="stretch", help="Back to Step 1"):
         st.markdown("Going back closes this layout. Its files stay saved"
                     + (f" in `{os.path.relpath(session.output_dir, ROOT)}`" if session else "")
                     + "; initializing again starts a new layout.")
