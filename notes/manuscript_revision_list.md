@@ -113,6 +113,13 @@ annotated dataset is not mentioned anywhere in the manuscript.
 - It was sent for expert validation.
 - The TSA asked what backs the dataset.
 
+**Where and how (user's question, 2026-10-08):** in Chapter 3, under
+Research Instruments, in the chapter's tense (future, like the rest of
+Chapter 3 for now). Say what the dataset *is* in the present tense ("The
+dataset consists of…"), which reads correctly whether Chapter 3 stays
+future or is later converted to past. Its results (v4 → v5, mean IoU)
+belong in Chapter 4.
+
 **Add a subsection covering:**
 - **Purpose:** the Stage 0b YOLOv8 model trained only on CGL-Dataset V2
   didn't transfer to real master layouts (top confidence 0.03–0.11 on real
@@ -138,9 +145,9 @@ annotated dataset is not mentioned anywhere in the manuscript.
 - **How it's used:** it trains the deployed detector.
   - v2 (65 images) and v3 (124) continued fine-tuning the CGL-pretrained
     YOLOv8n.
-  - The deployed **v4** is YOLOv8s from COCO weights, trained at 1024 px on
-    the 124 images, with the 60 over-half-poster boxes removed (notes
-    §3.25).
+  - **v4** (deployed 2026-09-29 to 10-06) was YOLOv8s from COCO weights,
+    trained at 1024 px on the 124 images, with the 60 over-half-poster
+    boxes removed (notes §3.25).
   - The deployed **v5** is the same recipe on the 200-image
     re-annotation (notes §3.30). It kept CGL's 4 classes, so no extension
     of the taxonomy needs describing.
