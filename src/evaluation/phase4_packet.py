@@ -531,8 +531,8 @@ def cmd_packet(args) -> None:
     page_px = (round(297 / 25.4 * dpi), round(210 / 25.4 * dpi))
     pdfs = []
     for i, svg in enumerate(svgs, start=1):
-        png = rasterize.cairosvg.svg2png(bytestring=svg.encode("utf-8"),
-                                         output_width=page_px[0], output_height=page_px[1])
+        png = rasterize.on_cairo_thread(rasterize.cairosvg.svg2png, bytestring=svg.encode("utf-8"),
+                                        output_width=page_px[0], output_height=page_px[1])
         pdf = os.path.join(pages_dir, f"page_{i:03d}.pdf")
         with Image.open(io.BytesIO(png)) as page:
             page.convert("RGB").save(pdf, "PDF", resolution=dpi, quality=90)

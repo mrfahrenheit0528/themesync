@@ -22,7 +22,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.35).
+§3.36).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
@@ -52,9 +52,19 @@ Read first: `notes/system_development_progress.md`, then the tail of
     request). See `.streamlit/config.toml` (start Streamlit from the repo
     root) and `EDITOR_CSS` in `components.py`. Keep p.53–54's arrangement:
     canvas centre, the two tabs on the right.
-  - The top bar is pinned, with Streamlit's » and ⋮ inside it. Steps 1
-    and 3 are bento grids of `card_*` containers: master/preview on the
-    left (kept in view), cards on the right (p.51's "right-hand panel").
+  - The top bar is pinned, with Streamlit's » and ⋮ inside it. Step 3 is
+    a bento grid of `card_*` containers: preview left, cards right.
+  - **Step 1 fits one screen, with no page scroll** (user's layout,
+    2026-10-08, §3.36):
+    - top row: logos, stylistic markers, typography, content payload;
+    - bottom row: master template, K-Means + SIFT/SURF, node graph;
+    - right: a retractable Target panel, toggled from the top bar, where
+      **Initialize** now sits.
+    - Row heights come from `--ts-h1/--ts-h2` in `EDITOR_CSS`; a card
+      scrolls inside itself. Check 1780×880 and 1366×768 after changes.
+    - It departs from p.51's "central viewport" plus "right-hand panel".
+  - **Thumbnails go through `ui.thumbs`** (an HTML grid with gaps), not a
+    list in `st.image`, which draws them edge to edge.
 - **Phase 4:**
   - 16 unseen posters are in `data/raw/phase4_posters/` with
     `manifest.csv`, which Claude drafted from the posters. Unconfirmed
@@ -179,6 +189,11 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
   - torchaudio was dropped: nothing imports it.
   - The other pins come from a different machine. The server's Python is
     3.10.20, with ultralytics 8.4.121.
+- **Cairo runs on one thread** (`rasterize.on_cairo_thread`).
+  - On Windows, Tesseract's Cairo DLL segfaults when a second thread
+    renders, and Streamlit runs every rerun on a new thread. The dashboard
+    died on Step 3 (§3.36).
+  - Any new cairosvg call must go through `rasterize`.
 - **cairosvg needs the Cairo library.** On Windows, UB Mannheim's
   Tesseract ships `libcairo-2.dll`: put its folder on PATH. Elsewhere,
   use conda-forge: `conda install -c conda-forge cairosvg`.

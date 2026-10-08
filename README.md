@@ -45,9 +45,9 @@ repo and they're missing, copy them from the server.
 ### Setting up on Windows (your own computer)
 
 The steps make a virtual environment in the repo folder, `.venv/` (git
-ignores it). They were tested on 2026-10-08 on Windows 11, with Python
-3.12 and the GPU build of PyTorch (RTX 3060). All 12 tests pass, and 20
-Phase 4 pages regenerated there match the server's choices.
+ignores it). They were tested on Windows 11 with Python 3.12 on
+2026-10-08: all 12 tests pass, and the Phase 4 layouts regenerate with
+the server's choices.
 
 **1. Install these once:**
 
@@ -203,17 +203,25 @@ Then open **http://localhost:8501** in your browser. Stop it with
 
 ### Using it
 
-The sidebar has three pages.
+The workflow has three steps, shown in the top bar; one is open at a time.
 
-**1. Perceptual Ingestion (Figure 2).**
-1. Upload a poster.
+**1. Perceptual Ingestion (Figure 2).** The page fits one screen:
+
+| where | what |
+|---|---|
+| top row | Organisation Logos · Stylistic Markers · Administrative Typography · Content Payload |
+| bottom row | the Master Template · K-Means colours and SIFT/SURF keypoints · the Relational Node Graph |
+| right | the **Target** panel; hide or show it with the **Target** button in the top bar |
+
+1. Upload a poster in the **Master Template** card (bottom left).
 2. Click **Extract Visual DNA**. The first time takes a few seconds while
    the models load.
-3. Review what it found: palette, detections, background, motifs, title
-   artwork and logos.
-4. Set the typography, pick the **target format**, and edit the content
-   fields.
-5. Click **Initialize Orchestration**.
+3. Review what it found: logos (picked ones have a coral ring), the
+   background, title artwork and motifs, the palette and the detections.
+   **View full size** opens the poster large.
+4. Set the typography, edit the content fields, and pick the target
+   format in the Target panel.
+5. Click **Initialize** (top right).
 
 **2. Active Orchestration (Figure 3).**
 

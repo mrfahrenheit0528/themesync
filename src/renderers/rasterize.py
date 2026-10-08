@@ -29,6 +29,7 @@ Usage:
 import hashlib
 import os
 import tempfile
+from concurrent.futures import ThreadPoolExecutor
 from xml.sax.saxutils import escape
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -61,16 +62,29 @@ if os.path.isdir(FONT_DIR) and "themesync_fonts_" not in os.environ.get("FONTCON
 
 import cairosvg  # noqa: E402 — must come after FONTCONFIG_FILE is set
 
+# Every Cairo call runs on this one long-lived thread. On Windows, the Cairo
+# DLL that Tesseract ships segfaults when a second thread renders after the
+# first, and Streamlit runs each rerun of a page on a new thread, so the
+# dashboard crashed on its second render (notes §3.36). One worker thread
+# also keeps concurrent dashboard sessions from rendering at the same time.
+# The output is unchanged; only the calling thread differs.
+_CAIRO = ThreadPoolExecutor(max_workers=1, thread_name_prefix="cairo")
+
+
+def on_cairo_thread(fn, *args, **kwargs):
+    """Runs a cairosvg call on the Cairo thread and returns its result."""
+    return _CAIRO.submit(fn, *args, **kwargs).result()
+
 
 def svg_to_png(svg_path: str, png_path: str = None, scale: float = 1.0) -> str:
     """Rasterizes an SVG to PNG (same stem by default); returns the PNG path."""
     png_path = png_path or os.path.splitext(svg_path)[0] + ".png"
-    cairosvg.svg2png(url=svg_path, write_to=png_path, scale=scale)
+    on_cairo_thread(cairosvg.svg2png, url=svg_path, write_to=png_path, scale=scale)
     return png_path
 
 
 def svg_to_pdf(svg_path: str, pdf_path: str = None) -> str:
     """Converts an SVG to a vector PDF (same stem by default); returns the path."""
     pdf_path = pdf_path or os.path.splitext(svg_path)[0] + ".pdf"
-    cairosvg.svg2pdf(url=svg_path, write_to=pdf_path)
+    on_cairo_thread(cairosvg.svg2pdf, url=svg_path, write_to=pdf_path)
     return pdf_path

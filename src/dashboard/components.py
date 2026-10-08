@@ -9,8 +9,10 @@ workflow (the top bar with its steps, the sidebar, and moving between
 steps), and the editor styling every page shares.
 """
 
+import base64
 import hashlib
 import html
+import io
 import os
 import re
 import sys
@@ -31,7 +33,7 @@ if SRC not in sys.path:
 import rasterize                                   # noqa: E402 — first: Cairo gets the bundled fonts
 import pipeline                                    # noqa: E402
 from layout_extractor import LayoutExtractor       # noqa: E402
-from stylistic_markers import cut_out              # noqa: E402
+from stylistic_markers import cover, cut_out       # noqa: E402
 
 LABEL_FONT = os.path.join(ROOT, "assets", "fonts", "montserrat", "Montserrat-Bold.ttf")
 UPLOAD_DIR = os.path.join(ROOT, "data", "raw", "dashboard_uploads")
@@ -87,6 +89,51 @@ def tile(img: Image.Image, size: int = 120) -> Image.Image:
     out = Image.new("RGBA", (size, size), (128, 128, 140, 255))
     out.alpha_composite(im, ((size - im.width) // 2, (size - im.height) // 2))
     return out.convert("RGB")
+
+
+def data_uri(img: Image.Image, fmt: str = "PNG") -> str:
+    """An image as a data: URI, for pictures drawn in HTML (thumbnails)."""
+    buf = io.BytesIO()
+    if fmt == "JPEG":
+        img.convert("RGB").save(buf, "JPEG", quality=85, optimize=True)
+    else:
+        img.save(buf, "PNG", optimize=True)
+    return f"data:image/{fmt.lower()};base64," + base64.b64encode(buf.getvalue()).decode()
+
+
+def thumbs(items: list, size: int = 72) -> str:
+    """
+    Thumbnails as an HTML grid with gaps between them (st.image draws a
+    list of images edge to edge). Each item is a dict:
+      image    a PIL image
+      caption  the text under it
+      state    "on" (picked: a coral ring) or "off" (dimmed); optional
+      kind     "mark": a cut-out shown whole on a checkerboard, so white
+               and transparent parts show (logos, title artwork, motifs);
+               "photo": cropped to fill a wide tile (the background)
+    Returns the HTML for st.markdown(..., unsafe_allow_html=True).
+    """
+    cells = []
+    for item in items:
+        kind = item.get("kind", "mark")
+        if kind == "photo":
+            uri = data_uri(cover(item["image"].convert("RGB"), int(size * 3.2), size * 2), "JPEG")
+        else:
+            im = item["image"].convert("RGBA")
+            im.thumbnail((size * 2, size * 2))
+            uri = data_uri(im)
+        cells.append(f'<figure class="ts-thumb {kind} {item.get("state") or ""}"><div class="ts-frame">'
+                     f'<img src="{uri}" alt=""></div><figcaption>{html.escape(item.get("caption", ""))}'
+                     f"</figcaption></figure>")
+    return f'<div class="ts-thumbs" style="--s:{size}px">' + "".join(cells) + "</div>"
+
+
+def card_title(icon: str, title: str, meta: str = "") -> None:
+    """A card's heading: a tinted Material icon, the title, and an optional
+    note on the right (a count, the pipeline stage)."""
+    st.markdown(f":material/{icon}: **{html.escape(title)}**"
+                + (f' <span class="ts-meta">{html.escape(meta)}</span>' if meta else ""),
+                unsafe_allow_html=True)
 
 
 def logo_detections(poster_path: str, nodes: list) -> list:
@@ -172,7 +219,7 @@ RESEARCH_PAGES = [("views/phase4.py", "Phase 4 Evaluation Set", "🗂️")]
 EDITOR_CSS = """<style>
 [data-testid="stAppDeployButton"], [data-testid="stDecoration"] {display: none;}
 [data-testid="stMain"] {background: #f4f5f8;}
-[data-testid="stMainBlockContainer"] {padding: 0 1.75rem 2.5rem !important; max-width: 100%;}
+[data-testid="stMainBlockContainer"] {padding: 0 1.75rem 1rem !important; max-width: 100%;}
 h1, h2, h3 {letter-spacing: -0.01em;}
 
 /* The bar across the top of every step, pinned while the page scrolls.
@@ -201,6 +248,7 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .st-key-ts_topbar {pad
 .st-key-ts_topbar [data-testid="stBaseButton-primary"] {background: #fff !important;
   color: #13294b !important; border-color: #fff !important;}
 .st-key-ts_topbar [data-testid="stBaseButton-primary"]:hover {background: #eef2f8 !important;}
+.st-key-ts_topbar button:disabled {opacity: .5; cursor: not-allowed;}
 .ts-brand {display: flex; align-items: center; gap: .6rem; color: #fff;}
 .ts-logo {width: 2.1rem; height: 2.1rem; flex: none; border-radius: 10px; display: inline-flex;
   align-items: center; justify-content: center; font-weight: 800; font-size: 1.05rem;
@@ -238,24 +286,89 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
   padding: 14px 16px 12px !important; box-shadow: 0 1px 2px rgba(16, 24, 40, .05);}
 [class*="st-key-card_m_"] [data-testid="stMetricValue"] {font-size: 2rem; font-weight: 650; color: #13294b;}
 [class*="st-key-bento_"] [data-testid="stColumn"] > [data-testid="stVerticalBlock"],
-[data-testid="stColumn"]:has(.st-key-card_master) > [data-testid="stVerticalBlock"],
 [data-testid="stColumn"]:has(.st-key-card_preview) > [data-testid="stVerticalBlock"] {height: 100%;}
 [class*="st-key-bento_"] [data-testid="stColumn"] > [data-testid="stVerticalBlock"]
   > [data-testid="stLayoutWrapper"]:has(> [class*="st-key-card_"]) {height: 100%;}
 [class*="st-key-bento_"] [data-testid="stColumn"] [class*="st-key-card_"] {height: 100%;}
-[data-testid="stLayoutWrapper"]:has(> .st-key-card_master),
 [data-testid="stLayoutWrapper"]:has(> .st-key-card_preview) {position: sticky; top: 76px;}
-.st-key-card_master {min-height: calc(100vh - 100px);}
-.st-key-card_master img {max-height: 64vh; object-fit: contain;}
 [class*="st-key-bento_"] {gap: .7rem;}
+
+/* Card headings (ui.card_title): a tinted icon, the title, a note on the right */
+[class*="st-key-card_"] p:has(> [data-testid="stIconMaterial"]:first-child) {display: flex; align-items: center;
+  gap: .5rem; margin: 0; font-size: .97rem; color: #13294b;}
+[class*="st-key-card_"] p > [data-testid="stIconMaterial"]:first-child {color: #cf4836; background: #fdecea;
+  border-radius: 8px; padding: 4px; font-size: 1.05rem;}
+.ts-meta {margin-left: auto; font-size: .68rem; font-weight: 650; color: #5b6370; background: #f1f3f6;
+  border-radius: 999px; padding: .12rem .55rem; white-space: nowrap; letter-spacing: .02em;}
+
+/* Thumbnails (ui.thumbs): a grid with gaps, rounded tiles, captions */
+.ts-thumbs {display: flex; flex-wrap: wrap; gap: 10px; margin: .1rem 0 .4rem;}
+.ts-thumb {margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px;}
+.ts-frame {position: relative; width: var(--s); height: var(--s); border-radius: 12px; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; border: 1px solid #dfe3ea;
+  background: repeating-conic-gradient(#8b919d 0 25%, #9ba1ac 0 50%) 50% / 12px 12px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, .08); transition: box-shadow .15s, opacity .15s;}
+.ts-frame img {max-width: 86%; max-height: 86%; object-fit: contain;}
+.ts-thumb.photo .ts-frame {width: calc(var(--s) * 1.6);}
+.ts-thumb.photo .ts-frame img {width: 100%; height: 100%; max-width: none; max-height: none; object-fit: cover;}
+.ts-thumb figcaption {font-size: .7rem; color: #5b6370; line-height: 1.1; max-width: calc(var(--s) * 1.6);
+  text-align: center;}
+.ts-thumb.on .ts-frame {box-shadow: 0 0 0 2px #fff, 0 0 0 4px #cf4836;}
+.ts-thumb.on .ts-frame::after {content: "✓"; position: absolute; top: 4px; right: 4px; width: 18px; height: 18px;
+  border-radius: 50%; background: #cf4836; color: #fff; font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;}
+.ts-thumb.off .ts-frame {opacity: .4;}
+
+/* Step 1 (Perceptual Ingestion) fits one screen: two rows of cards whose
+   heights share the window, and the target panel on the right. A card
+   whose content runs longer scrolls inside itself. */
+:root {--ts-avail: max(600px, calc(100vh - 158px)); --ts-h1: calc(var(--ts-avail) * .55);
+  --ts-h2: calc(var(--ts-avail) * .45);}
+.st-key-ts_work {gap: .45rem;}
+.st-key-bento_top, .st-key-bento_bottom {gap: .6rem;}
+.st-key-bento_top [data-testid="stColumn"] > [data-testid="stVerticalBlock"],
+.st-key-bento_bottom [data-testid="stColumn"] > [data-testid="stVerticalBlock"] {gap: .6rem;}
+.st-key-bento_top [class*="st-key-card_"], .st-key-bento_bottom [class*="st-key-card_"] {flex: none !important;}
+.st-key-bento_top [class*="st-key-card_"] {height: var(--ts-h1) !important;}
+.st-key-bento_bottom [class*="st-key-card_"] {height: var(--ts-h2) !important;}
+.st-key-bento_bottom .st-key-card_colours, .st-key-bento_bottom .st-key-card_sift {
+  height: calc((var(--ts-h2) - .6rem) / 2) !important;}
+.st-key-bento_top [class*="st-key-card_"], .st-key-bento_bottom [class*="st-key-card_"] {overflow-y: auto;
+  overflow-x: hidden; flex-wrap: nowrap; gap: .55rem; scrollbar-width: thin;}
+.st-key-bento_top [class*="st-key-card_"] > *, .st-key-bento_bottom [class*="st-key-card_"] > * {flex-shrink: 0;}
+.st-key-content_fields, .st-key-node_list {flex: 1 1 auto !important; min-height: 0; overflow-y: auto;
+  scrollbar-width: thin; padding-right: .35rem;}
+.st-key-content_fields {gap: .35rem;}
+.st-key-card_content [data-testid="stWidgetLabel"] p {font-size: .78rem; color: #3c4250;}
+.st-key-content_head, .st-key-drawer_head {align-items: center; flex-wrap: nowrap !important;}
+/* The master template: a thumbnail beside its controls */
+.ts-poster {display: flex; align-items: center; justify-content: center; height: calc(var(--ts-h2) - 74px);
+  border-radius: 12px; background: #eef0f4; overflow: hidden;}
+.ts-poster img {max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(16, 24, 40, .18);}
+.ts-poster.empty {border: 2px dashed #e6a59c; background: #fdf6f5; color: #a8322a; font-size: .84rem;
+  text-align: center; padding: 1rem; flex-direction: column; gap: .35rem;}
+.ts-poster.empty b {font-size: 1.6rem; line-height: 1;}
+.st-key-card_master [data-testid="stFileUploaderDropzone"] {padding: .6rem .75rem;}
+.ts-legend {display: flex; flex-wrap: wrap; gap: .25rem .6rem; font-size: .7rem; color: #5b6370;}
+.ts-legend i {display: inline-block; width: .6rem; height: .6rem; border-radius: 2px; margin-right: .25rem;}
+/* The target panel (retractable, from the top bar) */
+.st-key-ts_drawer {background: #fff; border: 1px solid #e4e7ec; border-radius: 16px; padding: 14px 16px 12px;
+  box-shadow: 0 4px 18px rgba(16, 24, 40, .08); height: calc(var(--ts-avail) + 2.85rem);
+  flex: none !important; overflow-y: auto; scrollbar-width: thin; gap: .7rem;}
+.st-key-ts_drawer [data-testid="stRadio"] label p {font-weight: 600;}
+.ts-drawer-note {font-size: .78rem; color: #5b6370; border-top: 1px solid #eef0f3; padding-top: .55rem;}
 .st-key-bento_tiles {margin-bottom: .2rem;}
 .bn-group {display: flex; align-items: center; gap: .45rem; font-size: .7rem; font-weight: 700;
   letter-spacing: .08em; text-transform: uppercase; color: #5b6370; margin: .25rem 0 -.1rem;}
 .bn-group::before {content: ""; width: .5rem; height: .5rem; border-radius: 2px; background: #cf4836;}
-.bn-empty {color: #8a919c; font-size: .86rem; padding: .35rem 0 .2rem;}
+.bn-empty {color: #8a919c; font-size: .84rem; padding: .7rem .8rem; border: 1px dashed #d6dae1;
+  border-radius: 12px; background: #fafbfc; line-height: 1.35;}
 .bn-swatches {display: flex; gap: .55rem;}
 .bn-swatch {flex: 1; display: flex; flex-direction: column; gap: .15rem; min-width: 0;}
 .bn-swatch span {height: 46px; border-radius: 10px; border: 1px solid rgba(0, 0, 0, .12);}
+.st-key-card_colours .bn-swatch span {height: 34px;}
+.st-key-card_colours .bn-swatches {margin-bottom: .25rem;}
 .bn-swatch small {font-size: .7rem; color: #5b6370;}
 .bn-swatch code {font-size: .74rem; padding: 0; background: none; color: #0e1318;}
 .bn-stats {display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem;}

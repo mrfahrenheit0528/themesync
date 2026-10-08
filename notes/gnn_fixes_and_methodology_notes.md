@@ -2672,3 +2672,76 @@ then). Page numbers are the May PDF's.
   checkout, and the revision-list rule.
 - `system_development_progress.md`: stale since 2026-09-29 to 10-06 in
   places (v4 deployed, the 15-of-16 tie, Phase 4 at 0%).
+
+### 3.36 Step 1 rearranged to fit one screen; Cairo kept on one thread (2026-10-08)
+
+**The user's request** (from a screenshot of Step 1 on their Windows
+machine):
+- a more appealing interface;
+- fix the elements stuck together: the logo tiles, and the text-free
+  background beside the title artwork;
+- put the important sections at the very top: organisation logos,
+  stylistic markers, administrative typography, content payload;
+- put the target format in a retractable space on the right;
+- put the K-Means and SIFT/SURF sections with the master template, in
+  the lowest section;
+- fit everything on the screen without scrolling.
+
+**What changed (UI only; `views/ingestion.py`, `components.py`):**
+- **Top row:** Organisation Logos, Stylistic Markers, Administrative
+  Typography, Content Payload.
+- **Bottom row:**
+  - the master template: a thumbnail beside upload, Extract Visual DNA,
+    the Stage 0b toggle and **View full size** (a dialog);
+  - K-Means and SIFT/SURF, stacked;
+  - the Relational Node Graph, which the user didn't place. It sits with
+    the other autonomous diagnostics.
+- **Right:** the Target panel (format, structural fields, GNN or baseline,
+  schema validation).
+  - The top bar's **Target** button hides or shows it, as does the
+    panel's own close button.
+  - The target choice and the GNN setting are kept while it's closed.
+- **Initialize moved to the top bar,** beside the Target button (as
+  Evaluate is on Step 2), so it stays in reach with the panel closed. A
+  disabled top-bar button now looks disabled.
+- **Fits one screen:**
+  - the two rows share the window height (`--ts-h1` / `--ts-h2`);
+  - a card whose content runs longer scrolls inside itself (the content
+    fields, the node list).
+  - Checked in Edge: the page doesn't scroll at 1780×880 (the user's
+    window), 1366×768 or 1920×1080, empty or extracted.
+- **Thumbnails:**
+  - `ui.thumbs` draws logos, background, title artwork and motifs as an
+    HTML grid with gaps, rounded tiles and a checkerboard behind
+    cut-outs. `st.image` with a list had drawn them edge to edge.
+  - Picked logos and motifs get a coral ring and a check; unpicked ones
+    are dimmed.
+- Card headings got a tinted icon and a note on the right (count, stage),
+  and empty cards say what will appear.
+- Unchanged: extraction, the picks, schema validation, Initialize's
+  session, Steps 2–3. The full flow ran in Edge: extract → Initialize →
+  Step 2 → Evaluate → Step 3 → Edit.
+
+**Manuscript point, for when the revision list reopens:** p.51 describes
+Figure 2 as a "central viewport" showing the master template and a
+"right-hand panel" with the diagnostics and input controls.
+- Step 1 now puts the master in the bottom row, with the inputs on top
+  and only the target on the right.
+- If Figure 2 is replaced with a screenshot (revision item 3.17), p.51's
+  description needs a matching sentence. The mockup can also stay as it
+  is.
+
+**A Windows crash found on the way:** the dashboard died on Step 3 with
+exit code 139 (a segfault).
+- **Reproduced outside Streamlit:** with the Cairo DLL from Tesseract's
+  folder, the first `svg2png` works and the next one on another thread
+  segfaults. It happens one at a time or concurrently. Streamlit runs each
+  rerun on a new thread, so Step 3's preview (a second render) crashed the
+  server.
+- **Fix:** `rasterize.py` runs every Cairo call on one long-lived worker
+  thread (`on_cairo_thread`). `phase4_packet`'s one direct `svg2png`
+  goes through it too.
+  - Re-tested: 12 renders from new and concurrent threads; the full
+    dashboard flow; both test files (12 tests).
+  - Rendered output is the same. On the server, renders are now
+    serialized, which also keeps two sessions from rendering at once.
