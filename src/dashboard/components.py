@@ -6,7 +6,7 @@ detector for the whole app, cut-outs and thumbnails, the numbered-box poster
 view used by every logo/motif picker, SVG → PNG previews rendered with the
 same Cairo + bundled-font path as the printed outputs, and the three-step
 workflow (the top bar with its steps, the sidebar, and moving between
-steps), and the Canva-like styling every page shares.
+steps), and the editor styling every page shares.
 """
 
 import hashlib
@@ -165,19 +165,20 @@ STEPS = [  # (number, page, title, icon)
 ]
 RESEARCH_PAGES = [("views/phase4.py", "Phase 4 Evaluation Set", "🗂️")]
 
-# The look: a Canva-like editor (the user's request, 2026-10-08). Colours
-# and radii come from .streamlit/config.toml; this adds the layout pieces:
-# the gradient bar, the grey workspace, the white side panel, the cards.
-CANVA_CSS = """<style>
+# The look: laid out like a design tool such as Canva (the user's request,
+# 2026-10-08), in ThemeSync's own colours: a navy bar and a coral accent.
+# Colours and radii come from .streamlit/config.toml; this adds the layout
+# pieces: the top bar, the grey workspace, the white side panel, the cards.
+EDITOR_CSS = """<style>
 [data-testid="stAppDeployButton"] {display: none;}
 [data-testid="stHeader"] {background: transparent;}
 [data-testid="stMainBlockContainer"] {padding-top: 3.2rem; padding-bottom: 2.5rem;}
 h1, h2, h3 {letter-spacing: -0.01em;}
 
 /* the bar across the top of every step */
-.st-key-ts_topbar {background: linear-gradient(90deg, #00c4cc 0%, #5a5cf0 55%, #7d2ae8 100%);
+.st-key-ts_topbar {background: linear-gradient(90deg, #13294b 0%, #1d3f6e 55%, #2a5a8c 100%);
   border-radius: 12px; padding: .5rem .85rem; margin-bottom: .35rem;
-  box-shadow: 0 2px 12px rgba(90, 50, 220, .18);}
+  box-shadow: 0 2px 12px rgba(19, 41, 75, .22);}
 .st-key-ts_topbar [data-testid="stMarkdownContainer"] p {margin: 0;}
 .st-key-ts_topbar [data-testid="stHorizontalBlock"] {min-height: 2.9rem;}
 .st-key-ts_topbar [data-testid="stElementContainer"] {overflow: visible;}
@@ -186,8 +187,8 @@ h1, h2, h3 {letter-spacing: -0.01em;}
 .st-key-ts_topbar button:hover {background: rgba(255, 255, 255, .28) !important;}
 .st-key-ts_topbar button p, .st-key-ts_topbar button span {color: inherit !important;}
 .st-key-ts_topbar [data-testid="stBaseButton-primary"] {background: #fff !important;
-  color: #5b2ad6 !important; border-color: #fff !important;}
-.st-key-ts_topbar [data-testid="stBaseButton-primary"]:hover {background: #f3edff !important;}
+  color: #13294b !important; border-color: #fff !important;}
+.st-key-ts_topbar [data-testid="stBaseButton-primary"]:hover {background: #eef2f8 !important;}
 .ts-brand {display: flex; align-items: center; gap: .6rem; color: #fff;}
 .ts-logo {width: 2.1rem; height: 2.1rem; flex: none; border-radius: 10px; display: inline-flex;
   align-items: center; justify-content: center; font-weight: 800; font-size: 1.05rem;
@@ -205,8 +206,8 @@ h1, h2, h3 {letter-spacing: -0.01em;}
 .ts-label {display: flex; flex-direction: column; line-height: 1.1; font-size: .86rem;}
 .ts-label small {font-size: .6rem; opacity: .85; text-transform: uppercase; letter-spacing: .06em;}
 .ts-line {width: 1.2rem; height: 2px; border-radius: 2px; background: rgba(255, 255, 255, .45);}
-.ts-active {background: #fff; color: #4c1fc2; border-color: #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, .14);}
-.ts-active .ts-num {background: #8b3dff; color: #fff;}
+.ts-active {background: #fff; color: #13294b; border-color: #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, .14);}
+.ts-active .ts-num {background: #cf4836; color: #fff;}
 .ts-active .ts-label {font-weight: 700;}
 .ts-done .ts-num {background: #fff; color: #0f9d74;}
 .ts-todo {opacity: .55;}
@@ -221,23 +222,23 @@ h1, h2, h3 {letter-spacing: -0.01em;}
 .ts-status {display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; font-size: .8rem; color: #3c4250;}
 .ts-pill {background: #fff; border: 1px solid #dcdfe5; border-radius: 999px; padding: .1rem .6rem;
   white-space: nowrap;}
-.ts-pill.total {background: #f1e9ff; border-color: #d9c6ff; color: #4c1fc2; font-weight: 600;}
+.ts-pill.total {background: #fdecea; border-color: #f4c3bc; color: #a8322a; font-weight: 600;}
 .ts-row {display: flex; align-items: baseline; gap: .45rem; font-size: .86rem; line-height: 1.3;}
-.ts-row code {font-size: .78rem; background: #f1e9ff; color: #4c1fc2; padding: .02rem .35rem; border-radius: 6px;}
+.ts-row code {font-size: .78rem; background: #e8eef7; color: #1d3f6e; padding: .02rem .35rem; border-radius: 6px;}
 .ts-row.now {font-weight: 650;}
 .ts-badge {display: inline-block; font-size: .7rem; font-weight: 700; padding: .04rem .5rem;
-  border-radius: 999px; background: #f1e9ff; color: #5b2ad6; margin-right: .2rem;}
+  border-radius: 999px; background: #e8eef7; color: #1d3f6e; margin-right: .2rem;}
 .ts-badge.rec {background: #e2f8f4; color: #08766a;}
-.ts-badge.on {background: #8b3dff; color: #fff;}
+.ts-badge.on {background: #cf4836; color: #fff;}
 [class*="st-key-cand_"] {transition: box-shadow .15s, border-color .15s;}
-[class*="st-key-cand_"]:hover {border-color: #b48cff !important; box-shadow: 0 2px 12px rgba(139, 61, 255, .16);}
-[class*="st-key-cand_on_"] {border: 2px solid #8b3dff !important;}
+[class*="st-key-cand_"]:hover {border-color: #e79a8f !important; box-shadow: 0 2px 12px rgba(207, 72, 54, .14);}
+[class*="st-key-cand_on_"] {border: 2px solid #cf4836 !important;}
 </style>"""
 
 
 def theme() -> None:
-    """The Canva-like look, on every page (app.py calls it first)."""
-    st.html(CANVA_CSS)
+    """The editor look, on every page (app.py calls it first)."""
+    st.html(EDITOR_CSS)
 
 
 def current_step() -> int:

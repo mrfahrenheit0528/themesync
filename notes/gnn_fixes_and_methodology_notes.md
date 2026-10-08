@@ -2493,10 +2493,15 @@ and "the right-hand interface" in two tabs, Constraint Editor and
 Recommendation Engine; the redesign keeps exactly that.
 
 **What changed (UI only):**
-- **Theme:** `.streamlit/config.toml` (purple `#8b3dff`, light, rounded).
-  Streamlit reads it when started from the repo root. The layout styling
-  is `CANVA_CSS` in `components.py`, applied on every page by `ui.theme()`.
-- **Top bar on every step:** a teal-to-purple gradient bar with the brand
+- **Theme:** `.streamlit/config.toml` (coral `#cf4836` accent, light,
+  rounded). Streamlit reads it when started from the repo root. The layout
+  styling is `EDITOR_CSS` in `components.py`, applied on every page by
+  `ui.theme()`.
+- **Colours are ThemeSync's own, not Canva's** (user, same day: "don't
+  copy the gradient"). The bar goes from navy to steel blue (`#13294b` →
+  `#2a5a8c`) and the accent is coral. White text on coral is 4.5:1, so it
+  passes WCAG AA.
+- **Top bar on every step:** a navy gradient bar with the brand
   and the design's name (`ui.design_name`), the three step pills (done ✓ /
   current / greyed, the consultant's remark), and the page's actions.
   Step 2: Step 1 (confirmed), Download (SVG/PNG/PDF), Evaluate. Step 3:
@@ -2513,8 +2518,8 @@ Recommendation Engine; the redesign keeps exactly that.
     Active badges, C_total and the four penalties).
   - Event messages are toasts: they take no space, so the canvas never
     shifts or remounts (the reason for the old fixed message slot, §3.28).
-- **Selection** colours are purple (Hard stays amber); the snapping guides
-  are pink.
+- **Selection** is coral and Soft chips are navy (Hard stays amber); the
+  snapping guides are sky blue.
 - **The sidebar starts collapsed,** as Canva has none; the step pills
   replace it, and it still opens (Phase 4 is there).
 

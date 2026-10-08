@@ -47,9 +47,11 @@ Read first: `notes/system_development_progress.md`, then the tail of
   user's layout (`views/report.py`, `src/evaluation/layout_report.py`,
   notes §3.32). Phase 4 sits apart under "Research tools". Figure 3's
   canvas is edited in place (`src/dashboard/canvas_editor.*`).
-  - **Canva-like look** (§3.34): `.streamlit/config.toml` (start Streamlit
-    from the repo root) and `CANVA_CSS` in `components.py`. Keep p.53–54's
-    arrangement: canvas centre, the two tabs on the right.
+  - **Laid out like Canva, in ThemeSync's own colours** (§3.34): a navy
+    bar and a coral accent, not Canva's gradient or purple (user's
+    request). See `.streamlit/config.toml` (start Streamlit from the repo
+    root) and `EDITOR_CSS` in `components.py`. Keep p.53–54's arrangement:
+    canvas centre, the two tabs on the right.
 - **Phase 4:**
   - 16 unseen posters are in `data/raw/phase4_posters/` with
     `manifest.csv`, which Claude drafted from the posters. Unconfirmed

@@ -2,9 +2,10 @@
 ThemeSync — Active Orchestration & Heuristic Scoring Workspace (Figure 3)
 ==========================================================================
 Chapter 3, pp. 53-54. The central canvas shows the design adapted to the
-target format; the right-hand interface has two tabs. It looks like a
-design tool (Canva): a gradient top bar with the page's actions, the page
-on a grey workspace with a status bar, and a white side panel.
+target format; the right-hand interface has two tabs. It is laid out like
+a design tool such as Canva, in ThemeSync's own colours: a navy top bar
+with the page's actions, the page on a grey workspace with a status bar,
+and a white side panel.
 
   Constraint Editor
     The selected node's spatial parameters (X, Y, W, H) and schema-validated

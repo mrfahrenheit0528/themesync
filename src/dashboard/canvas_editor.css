@@ -1,6 +1,7 @@
-/* ThemeSync — Active Canvas editor (see canvas_editor.py). Styled like a
-   design tool (Canva): a floating white toolbar, the page with a shadow on
-   the grey workspace around it (views/orchestration.py), purple selection. */
+/* ThemeSync — Active Canvas editor (see canvas_editor.py). Laid out like a
+   design tool: a floating white toolbar, the page with a shadow on the grey
+   workspace around it (views/orchestration.py). ThemeSync's colours: coral
+   selection, navy for Soft, amber for Hard, sky-blue snapping guides. */
 
 .ts-root {
   outline: none;
@@ -32,7 +33,7 @@
   border: 1px solid transparent;
 }
 .ts-chip:empty { display: none; }
-.ts-chip.soft { color: #5b2ad6; background: rgba(139, 61, 255, 0.09); border-color: rgba(139, 61, 255, 0.35); }
+.ts-chip.soft { color: #1d3f6e; background: rgba(29, 63, 110, 0.08); border-color: rgba(29, 63, 110, 0.3); }
 .ts-chip.hard { color: #92400e; background: rgba(245, 158, 11, 0.14); border-color: rgba(245, 158, 11, 0.55); }
 .ts-spacer { flex: 1; }
 .ts-btn {
@@ -50,7 +51,7 @@
 }
 .ts-iconbtn { padding: 6px 7px; }
 .ts-btn:hover:not(:disabled) { background: #f1f2f5; }
-.ts-btn:focus-visible { outline: 2px solid #8b3dff; outline-offset: 1px; }
+.ts-btn:focus-visible { outline: 2px solid #cf4836; outline-offset: 1px; }
 .ts-btn:disabled { opacity: 0.35; cursor: default; }
 .ts-ico { width: 18px; height: 18px; fill: currentColor; flex: none; }
 .ts-btn .ico-unlock { display: none; }
@@ -71,19 +72,19 @@
   background: #fff;
   box-shadow: 0 2px 14px rgba(15, 20, 30, 0.16), 0 0 0 1px rgba(15, 20, 30, 0.04);
 }
-.ts-root:focus-visible .ts-stage { box-shadow: 0 0 0 2px #8b3dff, 0 2px 14px rgba(15, 20, 30, 0.16); }
+.ts-root:focus-visible .ts-stage { box-shadow: 0 0 0 2px #cf4836, 0 2px 14px rgba(15, 20, 30, 0.16); }
 .ts-host { line-height: 0; }
 .ts-svg { display: block; width: 100%; height: auto; }
 .ts-svg [data-node-id] { cursor: move; }
 
 /* overlay (drawn in canvas units; strokes stay 1-2 screen px) */
 .ts-overlay * { vector-effect: non-scaling-stroke; }
-.ts-hover { fill: none; stroke: #a77bff; stroke-width: 1.5; stroke-dasharray: 5 3; pointer-events: none; }
-.ts-selbox { fill: none; stroke: #8b3dff; stroke-width: 2; pointer-events: none; }
+.ts-hover { fill: none; stroke: #e8806f; stroke-width: 1.5; stroke-dasharray: 5 3; pointer-events: none; }
+.ts-selbox { fill: none; stroke: #cf4836; stroke-width: 2; pointer-events: none; }
 .ts-selbox.hard { stroke: #f59e0b; }
-.ts-handle { fill: #fff; stroke: #8b3dff; stroke-width: 1.5; }
-.ts-grid { stroke: #8b3dff; stroke-opacity: 0.25; stroke-width: 1; stroke-dasharray: 2 4; pointer-events: none; }
-.ts-guide { stroke: #ff3ea5; stroke-width: 1.5; pointer-events: none; }
+.ts-handle { fill: #fff; stroke: #cf4836; stroke-width: 1.5; }
+.ts-grid { stroke: #2a5a8c; stroke-opacity: 0.3; stroke-width: 1; stroke-dasharray: 2 4; pointer-events: none; }
+.ts-guide { stroke: #0ea5e9; stroke-width: 1.5; pointer-events: none; }
 .ts-lock circle { fill: #f59e0b; stroke: #fff; stroke-width: 1.5; }
 .ts-lock rect { fill: #fff; }
 .ts-lock path { fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; }
@@ -100,7 +101,7 @@
   font: 15px/1.35 "Montserrat", sans-serif;
   color: #111;
   background: rgba(255, 255, 255, 0.97);
-  border: 2px solid #8b3dff;
+  border: 2px solid #cf4836;
   border-radius: 6px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   outline: none;
@@ -112,7 +113,7 @@
   padding: 1px 6px;
   font-size: 11px;
   color: #fff;
-  background: #8b3dff;
+  background: #cf4836;
   border-radius: 0 0 4px 4px;
 }
 .ts-count.over { background: #dc2626; }
@@ -132,7 +133,7 @@
   padding: 6px 14px;
   border-radius: 999px;
   color: #fff;
-  background: rgba(76, 31, 194, 0.9);
+  background: rgba(19, 41, 75, 0.9);
   font-size: 13px;
 }
 
