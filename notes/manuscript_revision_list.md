@@ -10,7 +10,10 @@ group's Prism revision, in the past tense; its LaTeX source is in
 - Page numbers are Manu 0910.1's printed page numbers, which equal its PDF
   page numbers. Versions of this list before 2026-10-09 used the May PDF's
   (`manuscript/Manu 1905.pdf`, formerly `Final Manuscript.pdf`).
-- Old items keep their numbers. Items found on 2026-10-09 are M1–M21.
+- Old items keep their numbers. Items found on 2026-10-09 are M1–M26.
+  M22–M26 come from the development chat's check
+  (`notes/dev_findings_for_manuscript.md`, section A), confirmed against
+  the code here.
 - Make the fixes in Prism. `manuscript/LaTeX/` is an export, and edits there
   would be lost at the next one.
 - Write every addition in the past tense.
@@ -40,7 +43,8 @@ group's Prism revision, in the past tense; its LaTeX source is in
   (M6), 3.23's default (M5), and 3.26 is half applied (M7, M8).
 - **Not applied:** 3.9 (waits on the consultant), 3.10–3.12 (wait on the
   TA), and the optional 3.7c, 3.17, 3.22. 3.24 and 3.25 needed no change.
-- **New:** 21 items (M1–M21). The 🔴 ones:
+- **New:** 26 items (M1–M26; M22–M26 from the development chat, all 🟡).
+  The 🔴 ones:
   - two paragraphs run off the page (M1);
   - two paragraphs printed twice (M2);
   - a stress test described as done that doesn't exist (M3);
@@ -485,6 +489,75 @@ Notes §3.35, finding 3:
 - `\approvaldate{January 1, 2000}` and the abstract are template
   placeholders. They're commented out of this build.
 
+### M22 🟡 "Incrementally" overstates how Cassowary is used (p.40)
+
+**Now:** "The solver uses a dual-simplex method to maintain these
+relationships established in Formula 3 incrementally, allowing the layout
+to re-calculate in milliseconds whenever a single variable… is adjusted."
+
+**Code:** every solve builds a new solver (`cassowary_engine.py` l.47,
+`kiwi.Solver()`; `pipeline.solver_for`) and solves the whole layout. One
+re-solve takes about 0.4 ms (notes §3.32).
+
+**Fix:** e.g. "re-solved the whole layout on every terminal event, in
+under a millisecond". Cassowary is still the algorithm (kiwisolver
+implements it). Its citation is M15.
+
+### M23 🟡 Table 1 reuses symbols that already mean something else (p.54)
+
+- **Typography:** `administrative_typography (font_family, weight)` is
+  mapped to **S_i**. But s_i is the SIFT descriptor in Formula 3.6, and S_i
+  is a K-Means cluster in Formula 3.1.
+- **Saliency:** `extracted_saliency_weight` → **p_i(legibility)**, while
+  Formula 3.15 writes the saliency as S(p) and the penalty as
+  P_legibility.
+- **Also in Table 1's source:** `\texttt{extracted\_ color\_centroids}`,
+  `extracted\_ saliency…` and `spatial\_ hierarchy` print a stray space
+  after the underscore.
+
+**Fix:** distinct symbols, e.g. T for typography, and the formulas' own
+symbols for saliency.
+
+### M24 🟡 Figure 2's description names two things the panel doesn't show (pp.56–57)
+
+This adds to M17, which covers the arrangement.
+
+- **"the structural hierarchy parsed by the GNN":** the node graph on
+  Step 1 (the ⓘ dialog) is Stage 0b's parse, by YOLOv8 + Tesseract. The
+  GNN runs only at Initialize.
+- **"boolean feature detection via SIFT/SURF":** the SIFT card shows the
+  saliency weight, "Logo: Yes/No" and the image size. Only the logo flag
+  is boolean, and it comes from YOLO's logo class.
+
+**Fix:** "the elements parsed by the layout detector"; "SIFT keypoint
+saliency and whether a logo was detected".
+
+### M25 🟡 OCR isn't what fills the nodes with words (p.56)
+
+**Now:** Tesseract OCR for text extraction, "converting the flattened
+raster pixels into structured, editable nodes".
+
+**Code:** the OCR text labels the parsed nodes in the node graph
+(`layout_extractor.py` l.132; `views/ingestion.py` l.105). The layout's
+words come from the user's validated content payload. That is also what
+p.46's argument against OCR "typographic hallucinations" supports.
+
+**Fix (optional):** "OCR labelled the parsed text nodes; their content
+came from the validated payload."
+
+### M26 🟡 Which latency meets which limit (p.62)
+
+Item 3.29 is applied: the 0.1 s and 1.0 s thresholds are cited. The
+measurements so far fall on either side of the first one:
+- **one Cassowary re-solve:** about 0.4 ms, within 0.1 s;
+- **one whole canvas edit** (re-solve, re-score, re-render, save the
+  state chain): about 160 ms, over 0.1 s but within 1.0 s (notes §3.32).
+
+**Fix:** once the development chat's benchmark is in ("Code before
+Chapter 4"), say that the solver meets 0.1 s and a full edit meets 1.0 s,
+or that both meet 0.1 s if the development chat gets the edit under it.
+Don't add numbers before then.
+
 ---
 
 ## Earlier items: status in Manu 0910.1
@@ -593,12 +666,19 @@ interaction efficacy" and "usability validation" at the same time.
 
 ## Code before Chapter 4
 
-None of these changes the rated layouts.
+The development chat is building these, in this order, and will report
+the numbers (`notes/dev_findings_for_manuscript.md`, section B). Their
+manuscript passages stay as written until then. None of them changes the
+rated layouts.
 - **Mean IoU (item 3.4):** p.62 now commits to it, and no script exists.
   It would run v5 on the 40 validation images, pair each predicted box
   with the ground-truth box of the same class, and average
   overlap ÷ union per class and overall.
-- **Stress test (M3):** only if p.55 keeps the claim.
+- **Stress test (M3):** p.55 keeps the claim. The manuscript is the basis,
+  so the development chat builds the test, and p.55 is then worded to
+  match what it ran.
+- **Latency benchmark (M26):** solver and full-edit timings over many
+  edits, against 0.1 s and 1.0 s.
 - **The GNN–solver "Mean IoU"** (notes §3.35, finding 4):
   - `evaluate.py` and `experiment_runner.py` report an IoU between the
     GNN's output and the final layout, which p.62 rules out.
@@ -606,6 +686,9 @@ None of these changes the rated layouts.
 - **F1 over the rated set** (notes §3.35, finding 5):
   - Add `layout_report.structural_accuracy` to `experiment_runner.py`, so
     F1 1.0 on all 64 rated layouts is in the results files.
+- **The K-Means elbow chart** (p.60's Evaluation Report): Step 3 shows a
+  WCSS table per k today. The development chat adds the chart, so p.60
+  stands.
 
 ---
 
@@ -710,13 +793,15 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
 ## Order of work
 
 1. **Now, in Prism:** M1, M2, M10 (the PDF is broken or garbled there),
-   then M3–M9 (accuracy), then M11–M21.
+   then M3–M9 (accuracy), then M11–M25. M26 waits for the latency
+   benchmark.
    - M9 and M15 answer the TSA's citation concerns directly.
    - M16 needs facts from the group: who annotated, how the boxes were
      cross-checked, and what the 15-image review found.
    - M17 waits until the dashboard settles, if screenshots are wanted.
-2. **Code, as analyses (the rated layouts don't change):** the mean-IoU
-   script (3.4), and the stress test if p.55 keeps it (M3). See "Code
+2. **Code (the development chat), as analyses that leave the rated layouts
+   unchanged:** mean IoU (3.4), the stress test (M3), the latency
+   benchmark (M26), F1 over the rated set, the elbow chart. See "Code
    before Chapter 4".
 3. **After the consultant answers:** 3.9.
 4. **After the TA answers:** 3.10, 3.11, 3.12.

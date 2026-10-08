@@ -133,7 +133,7 @@ Read first: `notes/system_development_progress.md`, then the tail of
   `notes/system_development_progress.md`. All three are done: the steps
   (§3.32), a report on the user's layout (§3.32), the dataset (v5).
 - **Manuscript:** the revised Manu 0910.1 (2026-10-09) is in
-  `manuscript/`. Its open fixes are M1–M21 in the revision list. Among the
+  `manuscript/`. Its open fixes are M1–M26 in the revision list. Among the
   🔴: two paragraphs run off the page (unescaped `_`), a stress test
   described as done (none exists), a Phase 4 baseline described as "GNN
   deactivated" (it also drops the structure mapping), and wrong reference
@@ -156,9 +156,14 @@ Read first: `notes/system_development_progress.md`, then the tail of
   explicit request.
 - **`notes/manuscript_revision_list.md` tracks the manuscript against the
   code.** It was re-checked against Manu 0910.1 on 2026-10-09: 26 earlier
-  items applied, 21 new (M1–M21, including §3.35's open findings). When the
-  group uploads a newer export, re-check it the same way, against the
-  PDF and the code.
+  items applied, 26 new (M1–M26, including §3.35's open findings and the
+  development chat's M22–M26). When the group uploads a newer export,
+  re-check it the same way, against the PDF and the code.
+- **Two chats share this repo:** this one for the manuscript, another for
+  the system. The development chat writes
+  `notes/dev_findings_for_manuscript.md`; the manuscript chat writes
+  `notes/manuscript_findings_for_dev.md`. Each reads the other's file
+  before starting.
 - **Commit and push after each set of changes** (user, 2026-10-07), so
   work survives the school server going down.
   - The server's push uses the user's token, cached for a day
