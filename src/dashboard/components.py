@@ -170,21 +170,33 @@ RESEARCH_PAGES = [("views/phase4.py", "Phase 4 Evaluation Set", "🗂️")]
 # Colours and radii come from .streamlit/config.toml; this adds the layout
 # pieces: the top bar, the grey workspace, the white side panel, the cards.
 EDITOR_CSS = """<style>
-[data-testid="stAppDeployButton"] {display: none;}
-[data-testid="stHeader"] {background: transparent;}
-[data-testid="stMainBlockContainer"] {padding-top: 3.2rem; padding-bottom: 2.5rem;}
+[data-testid="stAppDeployButton"], [data-testid="stDecoration"] {display: none;}
+[data-testid="stMain"] {background: #f4f5f8;}
+[data-testid="stMainBlockContainer"] {padding: 0 1.75rem 2.5rem !important; max-width: 100%;}
 h1, h2, h3 {letter-spacing: -0.01em;}
 
-/* the bar across the top of every step */
+/* The bar across the top of every step, pinned while the page scrolls.
+   Streamlit's own header (the sidebar's » and the ⋮ menu) floats over it:
+   transparent, letting clicks through except on its buttons, drawn white. */
+[data-testid="stHeader"], [data-testid="stHeader"] div {background: transparent; pointer-events: none !important;}
+[data-testid="stHeader"] button, [data-testid="stHeader"] a,
+[data-testid="stHeader"] [role="button"] {pointer-events: auto !important;}
+[data-testid="stExpandSidebarButton"], [data-testid="stExpandSidebarButton"] *,
+[data-testid="stMainMenuButton"], [data-testid="stMainMenuButton"] *,
+[data-testid="stStatusWidget"], [data-testid="stStatusWidget"] * {color: #fff !important;}
+[data-testid="stExpandSidebarButton"]:hover, [data-testid="stMainMenuButton"]:hover {
+  background: rgba(255, 255, 255, .16) !important;}
+[data-testid="stLayoutWrapper"]:has(> .st-key-ts_topbar) {position: sticky; top: 0; z-index: 1000;
+  margin: 0 -1.75rem 1rem; width: calc(100% + 3.5rem) !important; max-width: none;}
 .st-key-ts_topbar {background: linear-gradient(90deg, #13294b 0%, #1d3f6e 55%, #2a5a8c 100%);
-  border-radius: 12px; padding: .5rem .85rem; margin-bottom: .35rem;
-  box-shadow: 0 2px 12px rgba(19, 41, 75, .22);}
+  min-height: 60px; padding: 0 3.6rem 0 3.4rem; justify-content: center;
+  box-shadow: 0 2px 12px rgba(19, 41, 75, .28);}
+body:has([data-testid="stSidebar"][aria-expanded="true"]) .st-key-ts_topbar {padding-left: 1.4rem;}
 .st-key-ts_topbar [data-testid="stMarkdownContainer"] p {margin: 0;}
-.st-key-ts_topbar [data-testid="stHorizontalBlock"] {min-height: 2.9rem;}
 .st-key-ts_topbar [data-testid="stElementContainer"] {overflow: visible;}
-.st-key-ts_topbar button {background: rgba(255, 255, 255, .16) !important; color: #fff !important;
-  border: 1px solid rgba(255, 255, 255, .38) !important; font-weight: 600;}
-.st-key-ts_topbar button:hover {background: rgba(255, 255, 255, .28) !important;}
+.st-key-ts_topbar button {background: rgba(255, 255, 255, .14) !important; color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, .34) !important; font-weight: 600; min-height: 2.25rem;}
+.st-key-ts_topbar button:hover {background: rgba(255, 255, 255, .26) !important;}
 .st-key-ts_topbar button p, .st-key-ts_topbar button span {color: inherit !important;}
 .st-key-ts_topbar [data-testid="stBaseButton-primary"] {background: #fff !important;
   color: #13294b !important; border-color: #fff !important;}
@@ -197,7 +209,7 @@ h1, h2, h3 {letter-spacing: -0.01em;}
 .ts-brand > span:last-child {min-width: 0;}
 .ts-brand small {display: block; font-size: .74rem; opacity: .9; line-height: 1.2; white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis;}
-.ts-steps {display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .35rem;}
+.ts-steps {display: flex; align-items: center; justify-content: center; flex-wrap: nowrap; gap: .35rem;}
 .ts-step {display: flex; align-items: center; gap: .4rem; padding: .24rem .75rem .24rem .26rem;
   border-radius: 999px; color: #fff; background: rgba(255, 255, 255, .12);
   border: 1px solid rgba(255, 255, 255, .28); white-space: nowrap;}
@@ -211,10 +223,62 @@ h1, h2, h3 {letter-spacing: -0.01em;}
 .ts-active .ts-label {font-weight: 700;}
 .ts-done .ts-num {background: #fff; color: #0f9d74;}
 .ts-todo {opacity: .55;}
+/* When the sidebar is open, or the window is narrow, the steps other than
+   the current one show only their number (their name is the tooltip). */
+body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-active) .ts-label {display: none;}
+body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-active) {padding-right: .26rem;}
+@media (max-width: 1380px) {
+  .ts-step:not(.ts-active) .ts-label {display: none;}
+  .ts-step:not(.ts-active) {padding-right: .26rem;}
+}
+
+/* Bento cards: any container keyed card_*, white on the grey page. In a
+   .st-key-bento_grid row the cards share the row's height. */
+[class*="st-key-card_"] {background: #fff; border: 1px solid #e4e7ec !important; border-radius: 16px !important;
+  padding: 14px 16px 12px !important; box-shadow: 0 1px 2px rgba(16, 24, 40, .05);}
+[class*="st-key-card_m_"] [data-testid="stMetricValue"] {font-size: 2rem; font-weight: 650; color: #13294b;}
+[class*="st-key-bento_"] [data-testid="stColumn"] > [data-testid="stVerticalBlock"],
+[data-testid="stColumn"]:has(.st-key-card_master) > [data-testid="stVerticalBlock"],
+[data-testid="stColumn"]:has(.st-key-card_preview) > [data-testid="stVerticalBlock"] {height: 100%;}
+[class*="st-key-bento_"] [data-testid="stColumn"] > [data-testid="stVerticalBlock"]
+  > [data-testid="stLayoutWrapper"]:has(> [class*="st-key-card_"]) {height: 100%;}
+[class*="st-key-bento_"] [data-testid="stColumn"] [class*="st-key-card_"] {height: 100%;}
+[data-testid="stLayoutWrapper"]:has(> .st-key-card_master),
+[data-testid="stLayoutWrapper"]:has(> .st-key-card_preview) {position: sticky; top: 76px;}
+.st-key-card_master {min-height: calc(100vh - 100px);}
+.st-key-card_master img {max-height: 64vh; object-fit: contain;}
+[class*="st-key-bento_"] {gap: .7rem;}
+.st-key-bento_tiles {margin-bottom: .2rem;}
+.bn-group {display: flex; align-items: center; gap: .45rem; font-size: .7rem; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; color: #5b6370; margin: .25rem 0 -.1rem;}
+.bn-group::before {content: ""; width: .5rem; height: .5rem; border-radius: 2px; background: #cf4836;}
+.bn-empty {color: #8a919c; font-size: .86rem; padding: .35rem 0 .2rem;}
+.bn-swatches {display: flex; gap: .55rem;}
+.bn-swatch {flex: 1; display: flex; flex-direction: column; gap: .15rem; min-width: 0;}
+.bn-swatch span {height: 46px; border-radius: 10px; border: 1px solid rgba(0, 0, 0, .12);}
+.bn-swatch small {font-size: .7rem; color: #5b6370;}
+.bn-swatch code {font-size: .74rem; padding: 0; background: none; color: #0e1318;}
+.bn-stats {display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem;}
+.bn-stat {background: #f4f6f9; border-radius: 12px; padding: .55rem .65rem;}
+.bn-stat small {display: block; font-size: .66rem; color: #5b6370; text-transform: uppercase; letter-spacing: .05em;}
+.bn-stat b {display: block; font-size: 1.12rem; margin-top: .1rem; font-variant-numeric: tabular-nums;}
+.bn-big {font-size: 1.9rem; font-weight: 750; line-height: 1.1; color: #13294b; margin-bottom: .35rem;}
+.bn-big small {font-size: .82rem; font-weight: 500; color: #5b6370;}
+.bn-chips {display: flex; flex-wrap: wrap; gap: .3rem;}
+.bn-chip {font-size: .74rem; border-radius: 999px; padding: .08rem .55rem; background: #eef2f8; color: #1d3f6e;
+  white-space: nowrap;}
+.bn-chip i {font-style: normal; opacity: .65;}
+.bn-nodes {display: flex; flex-direction: column; gap: .15rem; margin-top: .2rem;}
+.bn-node {display: grid; grid-template-columns: 1fr auto auto; gap: .6rem; align-items: baseline;
+  font-size: .8rem; padding: .22rem .1rem; border-bottom: 1px solid #f0f1f4;}
+.bn-node b {font-weight: 600; color: #13294b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.bn-node span {color: #3c4250;}
+.bn-node i {font-style: normal; color: #8a919c; font-variant-numeric: tabular-nums;}
+.bn-ocr {font-size: .74rem; color: #6b7280; padding: 0 .1rem .2rem;}
 
 /* Step 2: the grey workspace around the page, and the white side panel */
-.st-key-ts_workspace {background: #ebecf0; border-radius: 12px; padding: 14px 18px 12px;}
-.st-key-ts_panel {background: #fff; border: 1px solid #e3e5e8; border-radius: 12px;
+.st-key-ts_workspace {background: #e8eaee; border-radius: 16px; padding: 14px 18px 12px;}
+.st-key-ts_panel {background: #fff; border: 1px solid #e4e7ec; border-radius: 16px;
   padding: .25rem 1rem 1rem; box-shadow: 0 1px 3px rgba(16, 24, 40, .06);}
 .st-key-ts_panel button[role="tab"] p {font-weight: 650;}
 .ts-section {font-size: .7rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
@@ -268,16 +332,19 @@ def _step_pills(active: int) -> str:
     return '<div class="ts-steps">' + '<div class="ts-line"></div>'.join(cells) + "</div>"
 
 
-def top_bar(active: int, subtitle: str = ""):
-    """The bar across the top of a step, like a design tool's header: the
-    brand and the design being edited, the three steps, and an empty
-    column that the page fills with its actions (returned)."""
+def top_bar(active: int, subtitle: str = "", tool: str = None):
+    """The bar across the top of a page, like a design tool's header: the
+    brand and the design being edited, the three steps (or, on a research
+    tool's page, the tool's name), and an empty column that the page fills
+    with its actions (returned)."""
     with st.container(key="ts_topbar"):
         brand, steps, actions = st.columns([1.25, 2.7, 2.05], vertical_alignment="center", gap="small")
         brand.markdown(f'<div class="ts-brand"><span class="ts-logo">T</span><span><b>ThemeSync</b>'
                        + (f'<small title="{html.escape(subtitle)}">{html.escape(subtitle)}</small>' if subtitle else "")
                        + "</span></div>", unsafe_allow_html=True)
-        steps.markdown(_step_pills(active), unsafe_allow_html=True)
+        steps.markdown(_step_pills(active) if tool is None else
+                       f'<div class="ts-steps"><div class="ts-step ts-active"><span class="ts-num">R</span>'
+                       f'<span class="ts-label">{html.escape(tool)}</span></div></div>', unsafe_allow_html=True)
     return actions
 
 

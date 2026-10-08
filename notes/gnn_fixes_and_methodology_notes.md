@@ -2535,3 +2535,37 @@ are unaffected.
   (Soft)", State_02 added.
 - No exceptions on the page.
 - Both test files pass.
+
+**Follow-up, same day: a pinned header and bento layouts (user's request).**
+- **The top bar is pinned.**
+  - It is full width and stays at the top while the page scrolls.
+  - Streamlit's own » (sidebar) and ⋮ (menu) sit in it, drawn white.
+  - Streamlit's header is transparent and lets clicks through, except on
+    its buttons. Its toolbar had caught every click on the bar until that
+    was fixed; Firefox showed "Evaluate" blocked.
+  - With the sidebar open, or below 1380 px, only the current step keeps
+    its name.
+  - The Phase 4 page has the bar too, labelled as a research tool.
+- **Step 1 is a bento grid on one workspace,** still as p.51 describes it:
+  - Left: the master template's viewport, kept in view while you scroll.
+  - Right, cards in three groups:
+    - Visual DNA, autonomous: colour centroids, SIFT/SURF keypoints, the
+      node graph (the parsed nodes listed, as in Figure 2's mockup),
+      stylistic markers;
+    - Visual DNA, user injected: logos, typography;
+    - the target: format and validation with Initialize, and the content
+      payload in a scrolling card.
+  - The logo and motif tick-boxes became multi-select pills (same
+    defaults). The uploads for title artwork, extra logos and JSON moved
+    into popovers.
+- **Step 3 is bento too:**
+  - headline tiles across the top;
+  - the evaluated layout kept in view on the left;
+  - cards on the right: fitness beside the manual-edit check, then
+    structural accuracy, latency and the Visual DNA checks.
+- **Checked in headless Firefox:**
+  - Step 1 empty and with a poster extracted;
+  - Initialize builds the layout and opens Step 2;
+  - the ⋮ menu, », Download and Evaluate all respond;
+  - Steps 2–3 and the Phase 4 page show no exceptions.
+  - Both test files pass.

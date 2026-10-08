@@ -163,7 +163,7 @@ def _run_cli(args: list, label: str, total: int = None) -> tuple:
 # Page
 # ---------------------------------------------------------------------------
 
-st.title("Phase 4 · Evaluation Set")
+ui.top_bar(0, "Research tools · outside the three-step workflow", tool="Phase 4 Evaluation Set")
 st.caption(f"Builds the blind expert-rating packet: {N_POSTERS} unseen event posters × certificate "
            "and event ID × GNN-guided and no-GNN baseline (Chapter 3, p. 54). Everything here is "
            "saved to data/raw/phase4_posters/manifest.csv, the same file the CLI uses.")

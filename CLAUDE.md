@@ -52,6 +52,9 @@ Read first: `notes/system_development_progress.md`, then the tail of
     request). See `.streamlit/config.toml` (start Streamlit from the repo
     root) and `EDITOR_CSS` in `components.py`. Keep p.53–54's arrangement:
     canvas centre, the two tabs on the right.
+  - The top bar is pinned, with Streamlit's » and ⋮ inside it. Steps 1
+    and 3 are bento grids of `card_*` containers: master/preview on the
+    left (kept in view), cards on the right (p.51's "right-hand panel").
 - **Phase 4:**
   - 16 unseen posters are in `data/raw/phase4_posters/` with
     `manifest.csv`, which Claude drafted from the posters. Unconfirmed

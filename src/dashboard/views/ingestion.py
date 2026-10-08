@@ -3,7 +3,8 @@ ThemeSync — Perceptual Ingestion & Initialization Dashboard (Figure 2)
 =======================================================================
 Chapter 3, pp. 50-51. The central viewport shows the uploaded master
 template; the right-hand panel exposes the "Hybrid Visual DNA" in its two
-parts and the target set-up:
+parts and the target set-up, laid out as a bento grid of cards so the whole
+workspace fits beside the master:
 
   Visual DNA — autonomous extraction
     K-Means colour centroids (Stage 0), SIFT/SURF keypoints (saliency,
@@ -25,6 +26,7 @@ until a layout is initialized.
 """
 
 import glob
+import html
 import json
 import os
 import sys
@@ -88,11 +90,16 @@ def _friendly(var_name: str) -> str:
     return var_name.strip("{}").replace("_", " ").title()
 
 
-def _node_label(node: dict) -> str:
-    """Figure 2's 'Node_01: Logo (Static)' style line for a detected node."""
+def _node_row(node: dict) -> str:
+    """Figure 2's 'Node_01: Logo (Static)' style row for a detected node,
+    with its OCR text when it has some."""
     kind = node["node_id"].split("_")[1] if node["node_id"].startswith("auto_") else node["structural_class"]
     nature = "Fluid" if node["structural_class"] == "text_node" else "Static"
-    return f"**{node['node_id']}** — {kind.title()} ({nature}) · conf={node.get('detection_confidence', 0.0):.2f}"
+    row = (f'<div class="bn-node"><b>{html.escape(node["node_id"])}</b><span>{kind.title()} ({nature})</span>'
+           f'<i>{node.get("detection_confidence", 0.0):.2f}</i></div>')
+    if node["structural_class"] == "text_node" and node.get("ocr_text"):
+        row += f'<div class="bn-ocr">“{html.escape(node["ocr_text"][:60])}”</div>'
+    return row
 
 
 @st.cache_data(show_spinner="Stage 0: K-Means palette and SIFT saliency...")
@@ -108,28 +115,32 @@ def _style_kit(path: str, mtime: float, nodes_json: str) -> dict:
                            logo_boxes=[n["bbox"] for n in nodes if n.get("semantic_category") == "logo"])
 
 
-def _swatch(hexcode: str, label: str) -> None:
-    st.markdown(f'<div style="background:{hexcode};height:34px;border-radius:6px;'
-                f'border:1px solid rgba(0,0,0,.15);"></div>', unsafe_allow_html=True)
-    st.caption(f"{label}\n\n`{hexcode}`")
-
-
 # ---------------------------------------------------------------------------
 # Page
 # ---------------------------------------------------------------------------
 
-ui.enter_step(1, "New design · start from a master layout")
-st.caption("Phase 1 · Perceptual Ingestion & Feature Extraction — Master Template Dashboard (Figure 2). "
-           "Upload a master layout, review its Visual DNA, then set up the target format.")
+ui.enter_step(1, "New design · upload a master layout, review its Visual DNA, set up the target")
 
-col_left, col_right = st.columns([1.3, 1], gap="large")
+# A bento layout on one workspace (p.51): the master template's viewport on
+# the left, kept in view; the right-hand panel's diagnostics and controls as
+# a grid of cards beside it. The cards are laid out first and filled in the
+# order the values depend on each other.
+master_col, grid_col = st.columns([0.95, 1.65], gap="medium")
 dna = None
+master_path = None
+typography = dict(DEFAULT_TYPOGRAPHY)
+logo_images, motif_paths, use_wordmark, wordmark_path = None, None, True, None
+
+
+def _empty(text: str = "Waiting for the master layout.") -> None:
+    st.markdown(f'<div class="bn-empty">{html.escape(text)}</div>', unsafe_allow_html=True)
+
 
 # ---------------------------------------------------------------------------
-# LEFT — Master Template Preview
+# LEFT — the master template (the central viewport)
 # ---------------------------------------------------------------------------
-with col_left:
-    st.subheader("Master Template Preview")
+with master_col, st.container(border=True, key="card_master"):
+    st.markdown(":material/image: **Master Template**")
     uploaded = st.file_uploader("Upload a master layout (event poster, banner, letterhead...)",
                                 type=["png", "jpg", "jpeg", "bmp", "webp"])
     if uploaded is not None:
@@ -138,7 +149,8 @@ with col_left:
 
     if master_path and os.path.exists(master_path):
         extracted = st.session_state.get("dna_for") == master_path
-        if st.button("🔍 Extract Visual DNA", type="primary", disabled=extracted,
+        if st.button("Extract Visual DNA", icon=":material/biotech:", type="primary", disabled=extracted,
+                     width="stretch",
                      help="Stage 0 (K-Means + SIFT), Stage 0b (YOLOv8 + OCR) and Stage 0c "
                           "(stylistic markers) on the uploaded image."):
             st.session_state["dna_for"] = master_path
@@ -166,93 +178,144 @@ with col_left:
         else:
             st.image(master_path, width="stretch")
     else:
-        st.info("Upload an image to begin — it drives everything in the panel on the right.")
+        st.caption("Phase 1 · Perceptual Ingestion & Feature Extraction (Figure 2). The master layout "
+                   "drives every card on the right: its colours, style, elements and logos.")
 
 # ---------------------------------------------------------------------------
-# RIGHT — Visual DNA + Target Initialization
+# RIGHT — the Hybrid Visual DNA and the target set-up, as cards
 # ---------------------------------------------------------------------------
-with col_right:
-    st.subheader("Visual DNA")
-    typography = dict(DEFAULT_TYPOGRAPHY)
-    logo_images, motif_paths, use_wordmark, wordmark_path = None, None, True, None
+with grid_col, st.container(key="bento_grid"):
+    st.markdown('<div class="bn-group">Visual DNA · autonomous extraction</div>', unsafe_allow_html=True)
+    a1, a2 = st.columns([1.1, 1], gap="small")
+    card_colours = a1.container(border=True, key="card_colours")
+    card_sift = a2.container(border=True, key="card_sift")
+    b1, b2 = st.columns([1, 1.1], gap="small")
+    card_graph = b1.container(border=True, key="card_graph")
+    card_markers = b2.container(border=True, key="card_markers")
+    st.markdown('<div class="bn-group">Visual DNA · user injected</div>', unsafe_allow_html=True)
+    c1, c2 = st.columns([1.15, 1], gap="small")
+    card_logos = c1.container(border=True, key="card_logos")
+    card_type = c2.container(border=True, key="card_type")
+    st.markdown('<div class="bn-group">Target initialization</div>', unsafe_allow_html=True)
+    d1, d2 = st.columns([1, 1.15], gap="small")
+    card_target = d1.container(border=True, key="card_target")
+    card_content = d2.container(border=True, key="card_content")
 
+ing = dna["ingestion"] if dna else None
+kit = dna["kit"] if dna else None
+
+with card_colours:
+    st.markdown(":material/palette: **K-Means Color Centroids**")
     if not dna:
-        st.info("Waiting on Visual DNA extraction (left panel).")
+        _empty()
     else:
-        ing, kit = dna["ingestion"], dna["kit"]
-
-        st.markdown("**[-] K-Means Color Centroids**")
         palette = _palette_from_centroids(ing["color_centroids"])
-        cols = st.columns(len(ing["palette_hex"]))
-        for i, hexcode in enumerate(ing["palette_hex"]):
-            with cols[i]:
-                _swatch(hexcode, f"Centroid {i + 1}")
-        st.caption(f"Roles the renderer assigns — primary `{palette['primary']}` · accent "
+        st.markdown('<div class="bn-swatches">' + "".join(
+            f'<div class="bn-swatch"><span style="background:{h}"></span><small>Centroid {i + 1}</small>'
+            f'<code>{h}</code></div>' for i, h in enumerate(ing["palette_hex"])) + "</div>",
+            unsafe_allow_html=True)
+        st.caption(f"Roles the renderer assigns: primary `{palette['primary']}` · accent "
                    f"`{palette['accent']}` · certificate panel `{palette['panel']}`.")
 
-        st.markdown("**[-] SIFT/SURF Keypoints**")
+with card_sift:
+    st.markdown(":material/scatter_plot: **SIFT/SURF Keypoints**")
+    if not dna:
+        _empty()
+    else:
         logos_found = [n for n in dna["nodes"] if n.get("semantic_category") == "logo"]
-        st.write(f"- Saliency weight: `{ing['saliency_weight']:.4f}`")
-        st.write(f"- Logo detected: `{bool(logos_found)}`")
-        st.write(f"- Native size: `{ing['image_wh'][0]}×{ing['image_wh'][1]} px`")
+        stats = [("Saliency weight", f"{ing['saliency_weight']:.4f}"),
+                 ("Logo detected", "Yes" if logos_found else "No"),
+                 ("Native size", f"{ing['image_wh'][0]}×{ing['image_wh'][1]}")]
+        st.markdown('<div class="bn-stats">' + "".join(
+            f'<div class="bn-stat"><small>{k}</small><b>{v}</b></div>' for k, v in stats) + "</div>",
+            unsafe_allow_html=True)
+        st.caption("The saliency weight is the master's SIFT keypoint density. Its map is what the "
+                   "legibility penalty (Formula 3.15) checks text against.")
 
-        st.markdown("**[-] Relational Node Graph**")
-        if dna["yolo_error"]:
-            st.warning(f"Stage 0b unavailable — {dna['yolo_error']}")
-        elif not dna["nodes"]:
-            st.caption("No nodes detected above the confidence threshold.")
-        else:
-            with st.expander(f"{len(dna['nodes'])} node(s) parsed from the master layout"):
-                for n in dna["nodes"]:
-                    st.markdown(f"- {_node_label(n)}")
-                    if n["structural_class"] == "text_node" and n.get("ocr_text"):
-                        st.caption(f"  ↳ OCR: “{n['ocr_text'][:60]}”")
+with card_graph:
+    st.markdown(":material/account_tree: **Relational Node Graph**")
+    if not dna:
+        _empty()
+    elif dna["yolo_error"]:
+        st.warning(f"Stage 0b unavailable — {dna['yolo_error']}")
+    elif not dna["nodes"]:
+        st.caption("No nodes detected above the confidence threshold.")
+    else:
+        counts = {}
+        for n in dna["nodes"]:
+            counts[n["semantic_category"]] = counts.get(n["semantic_category"], 0) + 1
+        st.markdown(f'<div class="bn-big">{len(dna["nodes"])}<small> nodes parsed (Stage 0b)</small></div>'
+                    '<div class="bn-chips">' + "".join(f'<span class="bn-chip">{c} <i>{k}</i></span>'
+                                                       for c, k in sorted(counts.items())) + "</div>",
+                    unsafe_allow_html=True)
+        with st.container(height=250, border=False, key="node_list"):
+            st.markdown('<div class="bn-nodes">' + "".join(_node_row(n) for n in dna["nodes"]) + "</div>",
+                        unsafe_allow_html=True)
 
-        # Stylistic markers (Stage 0c)
-        st.markdown("**[-] Stylistic Markers (Stage 0c)**")
+with card_markers:
+    st.markdown(":material/auto_awesome_mosaic: **Stylistic Markers (Stage 0c)**")
+    if not dna:
+        _empty()
+        motif_paths = []
+    else:
+        images, captions = [], []
         with Image.open(kit["background"]) as bg:
-            st.image(cover(bg.convert("RGB"), 240, 150), caption="Text-free background layer",
-                     width=240)
+            images.append(cover(bg.convert("RGB"), 240, 150))
+            captions.append("Text-free background")
         if kit["wordmark"]:
             with Image.open(kit["wordmark"]["path"]) as wm:
-                st.image(ui.tile(wm, 220), caption="Title artwork", width=220)
+                images.append(ui.tile(wm, 150))
+                captions.append("Title artwork")
+        st.image(images, caption=captions, width=150)
+        if kit["wordmark"]:
             use_wordmark = st.checkbox("Use the event's title artwork on the event ID", value=True)
         else:
             use_wordmark = False
             st.caption("No title artwork separated cleanly — the event title is typed.")
-        up = st.file_uploader("…or upload title artwork (transparent PNG)", type=["png", "webp"],
-                              key="wordmark_upload")
+        with st.popover("Upload title artwork", icon=":material/upload:", width="stretch"):
+            up = st.file_uploader("Title artwork (transparent PNG)", type=["png", "webp"], key="wordmark_upload")
         if up:
             wordmark_path = ui.save_upload(up, prefix="wordmark_")
             use_wordmark = True
         if kit["motifs"]:
-            st.caption("Motifs (the master's own decorations) — untick any that shouldn't travel:")
-            motif_paths = []
-            for start in range(0, len(kit["motifs"]), 4):
-                for m, col in zip(kit["motifs"][start:start + 4], st.columns(4)):
-                    with col:
-                        with Image.open(m["path"]) as im:
-                            st.image(ui.tile(im, 110), width="stretch")
-                        if st.checkbox(f"conf {m['confidence']:.2f}", value=True, key=f"motif_{m['path']}"):
-                            motif_paths.append(m["path"])
+            tiles = []
+            for m in kit["motifs"]:
+                with Image.open(m["path"]) as im:
+                    tiles.append(ui.tile(im, 90))
+            st.image(tiles, caption=[f"M{i + 1}" for i in range(len(tiles))], width=62)
+            picked = st.pills("Motifs that travel (the master's own decorations)", list(range(len(kit["motifs"]))),
+                              selection_mode="multi", default=list(range(len(kit["motifs"]))),
+                              format_func=lambda i: f"M{i + 1} · {kit['motifs'][i]['confidence']:.2f}",
+                              key=f"motifs_{dna['stem']}")
+            motif_paths = [kit["motifs"][i]["path"] for i in picked or []]
         else:
             motif_paths = []
             st.caption("No motifs separated cleanly from this master.")
 
-        # Organisation logos
-        st.markdown("**[-] User Injected — Organisation Logos**")
+with card_logos:
+    st.markdown(":material/verified: **Organisation Logos**")
+    if not dna:
+        _empty()
+    else:
         cands = ui.logo_detections(master_path, dna["nodes"])
-        extra = st.file_uploader("Add logos Stage 0b missed (transparent PNGs look best)",
-                                 type=["png", "jpg", "jpeg", "webp"], accept_multiple_files=True,
-                                 key="logo_upload")
+        if cands:
+            st.image([ui.tile(c["image"], 100) for c in cands], caption=[c["label"] for c in cands], width=72)
+            picked = st.pills("Logos to use", list(range(len(cands))), selection_mode="multi",
+                              default=[i for i, c in enumerate(cands) if c["auto"]],
+                              format_func=lambda i: f"{cands[i]['label']} · {cands[i]['conf']:.2f}",
+                              key=f"logos_{dna['stem']}")
+            ticked = [cands[i] for i in picked or []]
+        else:
+            ticked = []
+        with st.popover("Add logos", icon=":material/add_photo_alternate:", width="stretch"):
+            extra = st.file_uploader("Logos Stage 0b missed (transparent PNGs look best)",
+                                     type=["png", "jpg", "jpeg", "webp"], accept_multiple_files=True,
+                                     key="logo_upload")
+            if cands:
+                st.image(ui.annotate(master_path, [(c["label"], c["bbox"], ui.GREEN if c in ticked else ui.RED)
+                                                   for c in cands]), caption="Detections: green = picked",
+                         width="stretch")
         uploads = [ui.save_upload(f, prefix="logo_") for f in extra or []]
-        ticked = []
-        for start in range(0, len(cands), 4):
-            for c, col in zip(cands[start:start + 4], st.columns(4)):
-                with col:
-                    st.image(ui.tile(c["image"], 100), width="stretch")
-                    if st.checkbox(f"{c['label']} · {c['conf']:.2f}", value=c["auto"], key=f"logo_{c['id']}"):
-                        ticked.append(c)
         auto_ids = {c["id"] for c in cands if c["auto"]}
         if not cands and not uploads:
             st.caption("No logos detected — a drawn badge stands in unless you upload one.")
@@ -268,21 +331,20 @@ with col_right:
             logo_images += uploads
             logo_images = logo_images or None
             st.caption("Manual logo pick — the first is the certificate seal.")
-        with st.expander("Logo detections on the master"):
-            st.image(ui.annotate(master_path, [(c["label"], c["bbox"], ui.GREEN if c in ticked else ui.RED)
-                                               for c in cands]), width="stretch")
 
-        # Administrative typography
-        st.markdown("**[-] User Injected — Administrative Typography**")
-        font_label = st.selectbox("Primary Font", list(FONT_OPTIONS.keys()))
-        weight = st.selectbox("Font Weight", FONT_WEIGHTS, index=FONT_WEIGHTS.index(700),
-                              format_func=lambda w: f"{w} — {WEIGHT_NAMES[w]}")
-        base = st.number_input("Base Size (px)", min_value=1.0, max_value=400.0, value=48.0, step=1.0,
-                               help="The certificate title's size; the whole type scale is built on it.")
+with card_type:
+    st.markdown(":material/text_fields: **Administrative Typography**")
+    font_label = st.selectbox("Primary Font", list(FONT_OPTIONS.keys()), disabled=not dna)
+    weight = st.selectbox("Font Weight", FONT_WEIGHTS, index=FONT_WEIGHTS.index(700), disabled=not dna,
+                          format_func=lambda w: f"{w} — {WEIGHT_NAMES[w]}")
+    base = st.number_input("Base Size (px)", min_value=1.0, max_value=400.0, value=48.0, step=1.0,
+                           disabled=not dna,
+                           help="The certificate title's size; the whole type scale is built on it.")
+    if dna:
         typography = {"family": FONT_OPTIONS[font_label], "weight": int(weight), "base_size": float(base)}
 
-    st.markdown("---")
-    st.subheader("Target Initialization")
+with card_target:
+    st.markdown(":material/flag: **Target Format**")
     formats = _discover_target_formats()
     if not formats:
         st.error("No *_payload.json files found under data/raw/.")
@@ -291,17 +353,22 @@ with col_right:
     target = formats[target_label]
     schema = target["meta"].get("variable_schema", {})
     canvas_w, canvas_h = pipeline._derive_canvas(target["meta"], None, None)
+    st.caption(f"{canvas_w}×{canvas_h} px · required structural fields:")
+    st.markdown('<div class="bn-chips">' + "".join(
+        f'<span class="bn-chip">{props.get("instantiation_count", 1)}× {_friendly(var)} '
+        f'<i>{props.get("structural_class")}</i></span>' for var, props in schema.items()) + "</div>",
+        unsafe_allow_html=True)
 
-    st.markdown("**Required structural fields**")
-    for var, props in schema.items():
-        st.write(f"- [■] [{props.get('instantiation_count', 1)}] {_friendly(var)}  `{props.get('structural_class')}`")
-
-    # Content payload
-    domain = target["meta"].get("domain_context")
-    sample_path = _CONTENT_DATA_BY_DOMAIN.get(domain)
-    sample = json.load(open(sample_path)) if sample_path and os.path.exists(sample_path) else {}
-    payload_upload = st.file_uploader("Content payload (JSON) — optional; edit the fields below instead",
-                                      type=["json"], key=f"payload_{domain}")
+# Content payload
+domain = target["meta"].get("domain_context")
+sample_path = _CONTENT_DATA_BY_DOMAIN.get(domain)
+sample = json.load(open(sample_path)) if sample_path and os.path.exists(sample_path) else {}
+content = {}
+with card_content:
+    st.markdown(":material/edit_note: **Content Payload**")
+    with st.popover("Load a JSON payload", icon=":material/upload_file:", width="stretch"):
+        payload_upload = st.file_uploader("Content payload (JSON); it fills the fields below",
+                                          type=["json"], key=f"payload_{domain}")
     if payload_upload is not None and st.session_state.get("payload_applied") != payload_upload.file_id:
         # applied once per file, so edits made afterwards aren't overwritten on rerun
         try:
@@ -311,8 +378,7 @@ with col_right:
             st.session_state["payload_applied"] = payload_upload.file_id
         except (ValueError, UnicodeDecodeError, AttributeError) as e:
             st.error(f"Could not read that JSON: {e}")
-    content = {}
-    with st.expander("Content payload", expanded=True):
+    with st.container(height=380, border=False, key="content_fields"):
         for var, props in schema.items():
             count = props.get("instantiation_count", 1)
             keys = [f"{var}_{i}" for i in range(count)] if count > 1 else [var]
@@ -330,24 +396,27 @@ with col_right:
                 else:
                     content[key] = st.text_input(label, key=wkey, max_chars=props.get("max_characters"))
 
-    # Pre-orchestration schema validation (Chapter 3, p.44)
+# Pre-orchestration schema validation (Chapter 3, p.44), then initialize
+with card_target:
     checks = {"typography": validate_typography(typography, canvas_w, canvas_h),
               "content": validate_content(content, target["meta"])}
     problems = [f"{name}: {e}" for name, v in checks.items() for e in v["errors"]]
     if problems:
         st.error("Schema validation — initialization would be rejected:\n\n" + "\n".join(f"- {p}" for p in problems))
     else:
-        st.success("Schema validation passed — typography and content payload conform.")
+        st.success("Schema validation passed: typography and content payload conform.",
+                   icon=":material/task_alt:")
 
     use_gnn = st.toggle("GNN-guided layout (off: no-GNN baseline)", value=True)
     ready = dna is not None and not problems
     if dna is None:
-        st.caption("Extract Visual DNA on the left before initializing orchestration.")
+        st.caption("Extract the Visual DNA (left) before initializing orchestration.")
     elif st.session_state.get("orch") is not None:
         st.caption("Initializing starts a new layout; the one you were editing stays saved in its "
                    "session folder.")
 
-    if st.button("▶ Initialize Orchestration", type="primary", disabled=not ready):
+    if st.button("Initialize Orchestration", icon=":material/play_arrow:", type="primary",
+                 disabled=not ready, width="stretch"):
         out_dir = os.path.join(ui.SESSIONS_DIR, f"{time.strftime('%Y%m%d_%H%M%S')}_{dna['stem']}_{domain}")
         session = pipeline.OrchestrationSession(
             target["path"], template_image=master_path, content_data=content, typography=typography,
