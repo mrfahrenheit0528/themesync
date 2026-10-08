@@ -285,12 +285,23 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
 [class*="st-key-card_"] {background: #fff; border: 1px solid #e4e7ec !important; border-radius: 16px !important;
   padding: 14px 16px 12px !important; box-shadow: 0 1px 2px rgba(16, 24, 40, .05);}
 [class*="st-key-card_m_"] [data-testid="stMetricValue"] {font-size: 2rem; font-weight: 650; color: #13294b;}
-[class*="st-key-bento_"] [data-testid="stColumn"] > [data-testid="stVerticalBlock"],
-[data-testid="stColumn"]:has(.st-key-card_preview) > [data-testid="stVerticalBlock"] {height: 100%;}
+[class*="st-key-bento_"] [data-testid="stColumn"] > [data-testid="stVerticalBlock"] {height: 100%;}
 [class*="st-key-bento_"] [data-testid="stColumn"] > [data-testid="stVerticalBlock"]
   > [data-testid="stLayoutWrapper"]:has(> [class*="st-key-card_"]) {height: 100%;}
 [class*="st-key-bento_"] [data-testid="stColumn"] [class*="st-key-card_"] {height: 100%;}
-[data-testid="stLayoutWrapper"]:has(> .st-key-card_preview) {position: sticky; top: 76px;}
+/* Step 3 (Evaluation Report): the evaluated layout fixed on the left at the
+   window's height, the report scrolling on the right; the page itself
+   doesn't scroll (user's request, 2026-10-09, notes §3.39) */
+.st-key-card_preview {height: var(--ts-avail) !important; flex: none !important; overflow: hidden;
+  flex-wrap: nowrap;}
+.st-key-card_preview > * {flex-shrink: 0;}
+.st-key-card_preview [data-testid="stImage"] img {max-height: calc(var(--ts-avail) - 255px);
+  width: auto !important; max-width: 100%; object-fit: contain; margin: 0 auto; display: block;
+  border-radius: 6px; box-shadow: 0 4px 16px rgba(16, 24, 40, .18);}
+.st-key-card_preview [data-testid="stFullScreenFrame"] {display: flex; justify-content: center;}
+.st-key-report_scroll {height: var(--ts-avail); overflow-y: auto; overflow-x: hidden; flex: none !important;
+  flex-wrap: nowrap; scrollbar-width: thin; padding-right: .45rem; gap: .7rem;}
+.st-key-report_scroll > * {flex-shrink: 0;}
 [class*="st-key-bento_"] {gap: .7rem;}
 
 /* Card headings (ui.card_title): a tinted icon, the title, a note on the right */

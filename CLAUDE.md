@@ -22,7 +22,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.38).
+§3.39).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
@@ -65,8 +65,10 @@ Read first: `notes/system_development_progress.md`, then the tail of
       `canvas_editor.request_edit`.
     - The canvas renders in a shadow DOM: test it with Playwright locators,
       not `document.querySelector`.
-  - The top bar is pinned, with Streamlit's » and ⋮ inside it. Step 3 is
-    a bento grid of `card_*` containers: preview left, cards right.
+  - The top bar is pinned, with Streamlit's » and ⋮ inside it.
+  - **Step 3:** the evaluated layout is fixed on the left at the window's
+    height; the report (intro, headline tiles, cards) scrolls on the right
+    in `report_scroll`; the page itself doesn't scroll (§3.39).
   - **Step 1 follows the user's mockups A1–A3** (2026-10-09, §3.37) and
     fits one screen with no page scroll:
     - left, the **Master Layout**:

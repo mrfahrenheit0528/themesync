@@ -2878,3 +2878,23 @@ the timeline (now a dialog) and the ranked variations (now a strip with
 details). The arrangement differs, so a Figure 3 screenshot (revision item
 3.17) would need p.54's wording to match. The mockup can also stay.
 
+### 3.39 Step 3: the evaluated layout stays in view; only the report scrolls (2026-10-09)
+
+**The user's request:** keep the generated layout fixed on the left, the
+cards on the right, and only the right side scrollable.
+
+**Built (`views/report.py`, `components.py`; UI only):**
+- **Left:** the "Evaluated layout" card, at the window's height
+  (`--ts-avail`). The image is sized to fit and centred; the caption,
+  downloads and master layout sit beneath it.
+- **Right:** one scroll area (`report_scroll`) holding the intro line, the
+  four headline tiles, and every card: fitness, manual edits kept, F1,
+  latency, Visual DNA, and the IoU/MOS note.
+- The page itself no longer scrolls. Before, the whole page scrolled
+  (about 2,200 px).
+- **Checked in Edge:** the certificate at 1780×880 and the event ID at
+  1366×768. The page fits the window exactly. The right side scrolls
+  (about 2,080 px of report in 770 px). The preview stays at the same
+  place with the report scrolled to its end, and it's centred. No
+  exceptions.
+

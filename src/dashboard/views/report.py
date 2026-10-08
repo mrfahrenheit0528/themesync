@@ -51,8 +51,6 @@ layout, fit = report["layout"], report["fitness"]
 acc, kept, lat, dna = (report["structural_accuracy"], report["retention"], report["latency"],
                        report["visual_dna"])
 
-st.caption("Evaluation Report · the finished layout scored against Chapter 3's evaluation metrics "
-           "(pp. 55-58). Go back to keep editing; the report follows every change.")
 with actions:
     edit_col, back_col, json_col = st.columns([1.2, 1, 1.15], gap="small")
     if edit_col.button("Edit", icon=":material/arrow_back:", type="primary", width="stretch",
@@ -64,12 +62,20 @@ with actions:
                              icon=":material/download:", file_name=f"ThemeSync_{session.stem}_report.json",
                              mime="application/json", width="stretch", help="The report as JSON.")
 
+# The evaluated layout stays in view on the left; only the report on the
+# right scrolls (user's request, 2026-10-09, notes §3.39).
+preview_col, detail_col = st.columns([0.95, 1.65], gap="medium")
+report_side = detail_col.container(key="report_scroll")
+
 # ---------------------------------------------------------------------------
-# Headline numbers
+# Headline numbers (the top of the scrolling side)
 # ---------------------------------------------------------------------------
 yours, recommended = fit["yours"]["c_total"], fit["recommended"]["c_total"]
 same = yours is not None and abs(yours - recommended) < 1e-9
-with st.container(key="bento_tiles"):
+with report_side:
+    st.caption("Evaluation Report · the finished layout scored against Chapter 3's evaluation metrics "
+               "(pp. 55-58). Go back to keep editing; the report follows every change.")
+with report_side, st.container(key="bento_tiles"):
     t1, t2, t3, t4 = st.columns(4, gap="small")
     with t1.container(border=True, key="card_m_fitness"):
         st.metric("Fitness (C_total)", _num(yours),
@@ -93,8 +99,6 @@ with st.container(key="bento_tiles"):
         else:
             st.metric("Pipeline latency", f"{lat['pipeline_total_ms'] / 1000:.1f} s",
                       help="Stages 0-6 at initialization.")
-
-preview_col, detail_col = st.columns([0.95, 1.65], gap="medium")
 
 # ---------------------------------------------------------------------------
 # LEFT — the layout being evaluated, kept in view
@@ -122,9 +126,9 @@ with preview_col, st.container(border=True, key="card_preview"):
             st.image(master, width="stretch")
 
 # ---------------------------------------------------------------------------
-# RIGHT — the metrics, as cards
+# RIGHT — the metrics, as cards (scrolling)
 # ---------------------------------------------------------------------------
-with detail_col, st.container(key="bento_report"):
+with report_side, st.container(key="bento_report"):
     f_col, k_col = st.columns([1.45, 1], gap="small")
     with f_col.container(border=True, key="card_fitness"):
         st.markdown(":material/functions: **Heuristic fitness (Formula 3.11)**")
@@ -212,5 +216,6 @@ with detail_col, st.container(key="bento_report"):
             st.caption(f"Text and typography edits re-validated in Step 2: {dna['revalidated_edits']} passed "
                        "(a rejected edit is never applied).")
 
+with report_side:
     st.caption("IoU (p.55) needs ground-truth boxes and the MOS (pp.57-58) needs expert raters, so neither "
                "applies to a single layout: they are measured in Phase 1 and Phase 4.")
