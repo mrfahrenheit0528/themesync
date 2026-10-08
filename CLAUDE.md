@@ -6,16 +6,17 @@ Guiller Angelo Hermoso, with Rona Mae Quite and Michelle Tercero.
 
 **`manuscript/Manu 0910.1.pdf` is the source of truth** for what the
 system is supposed to do. It is the group's Prism revision (2026-10-09), in
-the past tense, and its LaTeX export is in `manuscript/LaTeX/`. Search it
-with `pdftotext -layout "manuscript/Manu 0910.1.pdf" out.txt`.
+the past tense. Search it with
+`pdftotext -layout "manuscript/Manu 0910.1.pdf" out.txt`.
 - Chapter 3 (Methodology) starts at p.37.
 - The 4-phase Research Procedure is pp.55–61.
 - Figures 2 and 3 (the dashboard prototypes) are on pp.56 and 59.
 - The May PDF (future tense, formerly `Final Manuscript.pdf`) is
   `manuscript/Manu 1905.pdf`. Page numbers elsewhere in this file and in
   notes dated before 2026-10-09 are the May PDF's.
-- The group edits in Prism. Fixes go there, not into `manuscript/LaTeX/`.
-  Write every addition in the past tense.
+- The group edits the manuscript by hand in Prism. The LaTeX export was
+  removed from the repo (user, 2026-10-09), so cite the PDF's pages, not
+  LaTeX lines. Write every addition in the past tense.
 - `manuscript/RSC paged.pdf` is the panel's recommendation sheet from the
   May defense, with the group's actions.
 
