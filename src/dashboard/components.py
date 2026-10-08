@@ -319,45 +319,99 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
   display: flex; align-items: center; justify-content: center;}
 .ts-thumb.off .ts-frame {opacity: .4;}
 
-/* Step 1 (Perceptual Ingestion) fits one screen: two rows of cards whose
-   heights share the window, and the target panel on the right. A card
-   whose content runs longer scrolls inside itself. */
-:root {--ts-avail: max(600px, calc(100vh - 158px)); --ts-h1: calc(var(--ts-avail) * .55);
-  --ts-h2: calc(var(--ts-avail) * .45);}
-.st-key-ts_work {gap: .45rem;}
-.st-key-bento_top, .st-key-bento_bottom {gap: .6rem;}
-.st-key-bento_top [data-testid="stColumn"] > [data-testid="stVerticalBlock"],
-.st-key-bento_bottom [data-testid="stColumn"] > [data-testid="stVerticalBlock"] {gap: .6rem;}
-.st-key-bento_top [class*="st-key-card_"], .st-key-bento_bottom [class*="st-key-card_"] {flex: none !important;}
-.st-key-bento_top [class*="st-key-card_"] {height: var(--ts-h1) !important;}
-.st-key-bento_bottom [class*="st-key-card_"] {height: var(--ts-h2) !important;}
-.st-key-bento_bottom .st-key-card_colours, .st-key-bento_bottom .st-key-card_sift {
-  height: calc((var(--ts-h2) - .6rem) / 2) !important;}
-.st-key-bento_top [class*="st-key-card_"], .st-key-bento_bottom [class*="st-key-card_"] {overflow-y: auto;
-  overflow-x: hidden; flex-wrap: nowrap; gap: .55rem; scrollbar-width: thin;}
-.st-key-bento_top [class*="st-key-card_"] > *, .st-key-bento_bottom [class*="st-key-card_"] > * {flex-shrink: 0;}
-.st-key-content_fields, .st-key-node_list {flex: 1 1 auto !important; min-height: 0; overflow-y: auto;
-  scrollbar-width: thin; padding-right: .35rem;}
-.st-key-content_fields {gap: .35rem;}
-.st-key-card_content [data-testid="stWidgetLabel"] p {font-size: .78rem; color: #3c4250;}
-.st-key-content_head, .st-key-drawer_head {align-items: center; flex-wrap: nowrap !important;}
-/* The master template: a thumbnail beside its controls */
-.ts-poster {display: flex; align-items: center; justify-content: center; height: calc(var(--ts-h2) - 74px);
-  border-radius: 12px; background: #eef0f4; overflow: hidden;}
-.ts-poster img {max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px;
-  box-shadow: 0 2px 10px rgba(16, 24, 40, .18);}
-.ts-poster.empty {border: 2px dashed #e6a59c; background: #fdf6f5; color: #a8322a; font-size: .84rem;
-  text-align: center; padding: 1rem; flex-direction: column; gap: .35rem;}
-.ts-poster.empty b {font-size: 1.6rem; line-height: 1;}
-.st-key-card_master [data-testid="stFileUploaderDropzone"] {padding: .6rem .75rem;}
-.ts-legend {display: flex; flex-wrap: wrap; gap: .25rem .6rem; font-size: .7rem; color: #5b6370;}
+/* Step 1 (Perceptual Ingestion), from the user's mockups A1-A3: the master
+   layout on the left, three cards stacked on the right, all inside one
+   screen (a card whose content runs longer scrolls inside itself), and
+   the target panel as an overlay that moves nothing. Heights are set from
+   one variable, so the parts always add up to the window. */
+:root {--ts-avail: max(560px, calc(100vh - 110px)); --ts-assets: calc(var(--ts-avail) * .45);
+  --ts-type: 130px; --ts-content: calc(var(--ts-avail) - var(--ts-assets) - var(--ts-type) - 1.5rem);}
+.st-key-card_master, .st-key-right_stack, .st-key-card_assets, .st-key-card_type,
+.st-key-card_content {flex: none !important;}
+.st-key-card_master, .st-key-right_stack {height: var(--ts-avail) !important;}
+.st-key-right_stack {gap: .75rem !important; flex-wrap: nowrap;}
+.st-key-card_assets {height: var(--ts-assets) !important;}
+.st-key-card_type {height: var(--ts-type) !important;}
+.st-key-card_content {height: var(--ts-content) !important;}
+.st-key-card_master, .st-key-card_assets, .st-key-card_type, .st-key-card_content {overflow: hidden;
+  flex-wrap: nowrap; gap: .6rem;}
+.st-key-card_master > *, .st-key-card_assets > *, .st-key-card_content > * {flex-shrink: 0;}
+/* Headings with icon buttons on the right */
+.st-key-master_head, .st-key-content_head, .st-key-drawer_head {flex-wrap: nowrap !important; align-items: center;}
+.st-key-master_head > :first-child, .st-key-content_head > :first-child,
+.st-key-drawer_head > :first-child {flex: 1 1 auto; min-width: 0;}
+.st-key-master_head button, .st-key-content_head button, .st-key-drawer_head button {min-height: 2.1rem;
+  padding: .15rem .55rem; border-radius: 999px;}
+.st-key-ts_drawer p:has(> [data-testid="stIconMaterial"]:first-child) {display: flex; align-items: center;
+  gap: .5rem; margin: 0; font-size: 1.05rem; color: #13294b;}
+.st-key-ts_drawer p > [data-testid="stIconMaterial"]:first-child {color: #cf4836; background: #fdecea;
+  border-radius: 8px; padding: 4px; font-size: 1.05rem;}
+/* The master layout: the preview (or upload area), its tools, and beneath
+   it Extract (A1) or the K-Means and SIFT/SURF results (A2) */
+.st-key-master_view {position: relative;}
+.ts-poster {display: flex; align-items: center; justify-content: center; border-radius: 14px;
+  background: radial-gradient(circle at 50% 35%, #f7f8fb, #e7eaf0); overflow: hidden;
+  height: calc(var(--ts-avail) - 166px); border: 1px solid #e4e7ec;}
+.ts-poster.a2 {height: calc(var(--ts-avail) - 226px);}
+.ts-poster img {max-width: 92%; max-height: 92%; object-fit: contain; border-radius: 6px;
+  box-shadow: 0 6px 22px rgba(16, 24, 40, .22);}
+.st-key-master_view > [data-testid="stLayoutWrapper"]:has(> .st-key-preview_tools) {position: absolute;
+  top: 10px; right: 10px; z-index: 3; width: auto !important;}
+.st-key-preview_tools button {background: rgba(255, 255, 255, .94); border-color: #dfe3ea;
+  box-shadow: 0 2px 8px rgba(16, 24, 40, .15); min-height: 2.1rem; padding: .15rem .5rem;}
+.st-key-master_drop [data-testid="stFileUploaderDropzone"] {height: calc(var(--ts-avail) - 166px);
+  flex-direction: column; justify-content: center; align-items: center; gap: .9rem; text-align: center;
+  border: 2px dashed #e6a59c; background: #fdf6f5; border-radius: 14px;}
+.st-key-master_drop [data-testid="stFileUploaderDropzone"] > * {flex: 0 0 auto !important; margin: 0 !important;}
+.st-key-master_drop [data-testid="stFileUploaderDropzone"]::before {content: "⬆"; font-size: 3.2rem;
+  line-height: 1; color: #cf4836;}
+.ts-swatches {display: flex; gap: .45rem;}
+.ts-swatch {flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .2rem;}
+.ts-swatch span {height: 42px; border-radius: 10px; border: 1px solid rgba(0, 0, 0, .12);}
+.ts-swatch code {font-size: .66rem; background: none; padding: 0; color: #3c4250; text-align: center;}
+.ts-stats {display: grid; grid-template-columns: repeat(3, 1fr); gap: .45rem;}
+.ts-stat {background: #f4f6f9; border-radius: 10px; padding: .45rem .4rem; text-align: center; min-width: 0;}
+.ts-stat small {display: block; font-size: .6rem; text-transform: uppercase; letter-spacing: .05em; color: #5b6370;}
+.ts-stat b {display: block; font-size: .86rem; font-variant-numeric: tabular-nums; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;}
+.st-key-card_master [data-testid="stCaptionContainer"] {font-size: .72rem;}
+/* Logos and stylistic markers: pickable tiles above the card's buttons */
+.st-key-logo_grid, .st-key-marker_grid, .st-key-content_fields, .st-key-logo_tiles, .st-key-marker_tiles,
+[class*="st-key-tile_"] {flex: none !important;}
+.st-key-logo_grid, .st-key-marker_grid {height: calc(var(--ts-assets) - 128px); overflow-y: auto;
+  overflow-x: hidden; scrollbar-width: thin; gap: .45rem; align-content: flex-start;}
+.st-key-logo_tiles, .st-key-marker_tiles {gap: .6rem .7rem !important;}
+[class*="st-key-tile_"] {align-items: center; gap: .15rem !important;}
+[class*="st-key-tile_"] .ts-thumbs {margin: 0;}
+[class*="st-key-tile_"] [data-testid="stCheckbox"] label p {font-size: .72rem; color: #3c4250;}
+.ts-thumb figcaption:empty {display: none;}
+.ts-thumb.photo figcaption {max-width: none; white-space: nowrap;}
+.ts-note {font-size: .74rem; color: #5b6370;}
+.ts-placeholder {color: #8a919c; font-size: .82rem; padding: .7rem .8rem; border: 1px dashed #d6dae1;
+  border-radius: 12px; background: #fafbfc; line-height: 1.35;}
+/* Typography in one row; the content payload in two columns */
+.st-key-card_type [data-testid="stWidgetLabel"] p, .st-key-card_content [data-testid="stWidgetLabel"] p {
+  font-size: .76rem; color: #3c4250;}
+.st-key-content_fields {height: calc(var(--ts-content) - 74px); overflow-y: auto; scrollbar-width: thin;
+  padding-right: .3rem; gap: .35rem;}
+/* Streamlit pulls the element after a markdown block up by 1rem (its
+   paragraphs' margin); the page's HTML blocks have none, so it overlapped */
+:is(.st-key-card_master, .st-key-card_assets, .st-key-ts_drawer, [role="dialog"])
+  [data-testid="stMarkdownContainer"]:has(> div[class^="ts-"], > div[class^="bn-"]) {margin-bottom: 0 !important;}
+[role="dialog"] [data-testid="stImage"] img {max-height: 66vh; object-fit: contain;}
+.ts-legend {display: flex; flex-wrap: wrap; gap: .25rem .6rem; font-size: .72rem; color: #5b6370;}
 .ts-legend i {display: inline-block; width: .6rem; height: .6rem; border-radius: 2px; margin-right: .25rem;}
-/* The target panel (retractable, from the top bar) */
-.st-key-ts_drawer {background: #fff; border: 1px solid #e4e7ec; border-radius: 16px; padding: 14px 16px 12px;
-  box-shadow: 0 4px 18px rgba(16, 24, 40, .08); height: calc(var(--ts-avail) + 2.85rem);
-  flex: none !important; overflow-y: auto; scrollbar-width: thin; gap: .7rem;}
+/* The target panel (A3): an overlay under the top bar; Initialize at its foot */
+[data-testid="stLayoutWrapper"]:has(> .st-key-ts_drawer) {position: fixed !important; top: 60px; right: 0;
+  bottom: 0; width: min(400px, 94vw) !important; z-index: 990; margin: 0 !important;}
+.st-key-ts_drawer {height: 100%; background: #fff; border-left: 1px solid #e4e7ec;
+  box-shadow: -14px 0 34px rgba(16, 24, 40, .18); padding: 20px 22px 18px !important; overflow-y: auto;
+  scrollbar-width: thin; flex-wrap: nowrap; gap: .85rem; animation: ts-slide .2s ease-out;}
+@keyframes ts-slide {from {transform: translateX(32px); opacity: 0;} to {transform: none; opacity: 1;}}
 .st-key-ts_drawer [data-testid="stRadio"] label p {font-weight: 600;}
-.ts-drawer-note {font-size: .78rem; color: #5b6370; border-top: 1px solid #eef0f3; padding-top: .55rem;}
+.st-key-ts_drawer > [data-testid="stLayoutWrapper"]:has(> .st-key-drawer_cta) {margin-top: auto;}
+.st-key-drawer_cta {border-top: 1px solid #eef0f3; padding-top: .85rem; gap: .5rem;}
+.st-key-drawer_cta button {min-height: 2.9rem; font-size: 1rem; font-weight: 650;}
 .st-key-bento_tiles {margin-bottom: .2rem;}
 .bn-group {display: flex; align-items: center; gap: .45rem; font-size: .7rem; font-weight: 700;
   letter-spacing: .08em; text-transform: uppercase; color: #5b6370; margin: .25rem 0 -.1rem;}

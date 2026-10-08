@@ -22,7 +22,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.36).
+§3.37).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
@@ -54,15 +54,25 @@ Read first: `notes/system_development_progress.md`, then the tail of
     canvas centre, the two tabs on the right.
   - The top bar is pinned, with Streamlit's » and ⋮ inside it. Step 3 is
     a bento grid of `card_*` containers: preview left, cards right.
-  - **Step 1 fits one screen, with no page scroll** (user's layout,
-    2026-10-08, §3.36):
-    - top row: logos, stylistic markers, typography, content payload;
-    - bottom row: master template, K-Means + SIFT/SURF, node graph;
-    - right: a retractable Target panel, toggled from the top bar, where
-      **Initialize** now sits.
-    - Row heights come from `--ts-h1/--ts-h2` in `EDITOR_CSS`; a card
-      scrolls inside itself. Check 1780×880 and 1366×768 after changes.
-    - It departs from p.51's "central viewport" plus "right-hand panel".
+  - **Step 1 follows the user's mockups A1–A3** (2026-10-09, §3.37) and
+    fits one screen with no page scroll:
+    - left, the **Master Layout**:
+      - A1, before extraction: an upload area, Extract, and the toggle;
+      - A2, after: the preview (⤢ full size; ⓘ opens the node graph
+        modal; an upload icon replaces the poster), with K-Means and
+        SIFT/SURF beneath;
+    - right: logos + stylistic markers in one card (tick a tile to use
+      it), typography in one row, the content payload in two columns;
+    - **Target Initialization** is a fixed overlay opened from the top
+      bar. It moves nothing, and **Initialize** is at its foot (only
+      there).
+    - Heights come from `--ts-avail` and its parts in `EDITOR_CSS`.
+      Check 1780×880 and 1366×768 after changes.
+    - Streamlit's markdown blocks carry a −1rem bottom margin. HTML
+      blocks in the Step 1 cards and dialogs reset it, or the next
+      element overlaps them.
+    - It departs from p.51's "central viewport" plus "right-hand panel"
+      (§3.36).
   - **Thumbnails go through `ui.thumbs`** (an HTML grid with gaps), not a
     list in `st.image`, which draws them edge to edge.
 - **Phase 4:**

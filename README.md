@@ -209,19 +209,22 @@ The workflow has three steps, shown in the top bar; one is open at a time.
 
 | where | what |
 |---|---|
-| top row | Organisation Logos · Stylistic Markers · Administrative Typography · Content Payload |
-| bottom row | the Master Template · K-Means colours and SIFT/SURF keypoints · the Relational Node Graph |
-| right | the **Target** panel; hide or show it with the **Target** button in the top bar |
+| left | the **Master Layout**: upload it and extract its Visual DNA; then its preview, with K-Means colours and SIFT/SURF keypoints beneath |
+| right | Organisation Logos and Stylistic Markers · Administrative Typography · Content Payload |
+| panel | **Target Initialization**, opened from the top bar over the page: target format, GNN or baseline, schema validation, **Initialize** |
 
-1. Upload a poster in the **Master Template** card (bottom left).
+1. Upload a poster in the **Master Layout** card.
 2. Click **Extract Visual DNA**. The first time takes a few seconds while
    the models load.
-3. Review what it found: logos (picked ones have a coral ring), the
-   background, title artwork and motifs, the palette and the detections.
-   **View full size** opens the poster large.
-4. Set the typography, edit the content fields, and pick the target
-   format in the Target panel.
-5. Click **Initialize** (top right).
+3. Review what it found:
+   - tick or untick the logos, the title artwork and the motifs (a ticked
+     tile has a coral ring);
+   - **ⓘ** opens the Relational Node Graph, with the detections drawn on
+     the poster;
+   - **⤢** opens the poster full size; the upload icon replaces it.
+4. Set the typography and edit the content fields.
+5. Open **Target Initialization** (top right), pick the format, and click
+   **Initialize** at the bottom of the panel.
 
 **2. Active Orchestration (Figure 3).**
 

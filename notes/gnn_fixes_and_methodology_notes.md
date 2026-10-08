@@ -2745,3 +2745,54 @@ exit code 139 (a segfault).
     dashboard flow; both test files (12 tests).
   - Rendered output is the same. On the server, renders are now
     serialized, which also keeps two sessions from rendering at once.
+
+### 3.37 Step 1 rebuilt from the user's mockups A1–A3 (2026-10-09)
+
+**The user's mockups** replaced §3.36's arrangement.
+- **A1, no master yet:** the master card shows a large upload area,
+  Extract Visual DNA and the Stage 0b toggle. K-Means and SIFT stay hidden.
+- **A2, after extraction:** the master's preview with an expand icon,
+  K-Means and SIFT beneath it, and an (i) icon that shows the relational
+  node graph in a modal.
+- **Right:** logos and stylistic markers in one card with Add Logos and
+  Upload Title Artwork at the bottom, typography in one row, the content
+  payload in two columns.
+- **A3:** the Target Initialization panel must not move the other
+  sections, and Initialize belongs in it.
+- "Master template" is renamed **Master Layout**.
+
+**Built (`views/ingestion.py`, `components.py`; UI only):**
+- **Left, the Master Layout card**, as A1 and A2.
+  - The (i) modal holds the node list and the poster with the Stage 0b
+    boxes. Those are the same parsed nodes, so the detections live there
+    and in the full-size view.
+  - A1 keeps the toggle as drawn, disabled until extraction.
+  - **Added beyond the mockups:** an upload icon beside (i) to replace the
+    master after extraction (without it the poster couldn't be changed),
+    and a short status line under the logo and marker tiles.
+- **Picking stays on the tiles.** Each logo, the title artwork and each
+  motif is a tile with a checkbox under it. Ticked tiles get the coral
+  ring. This replaces §3.36's pills, which the mockup didn't show.
+- **Typography is enabled before extraction** (it was disabled): the user
+  can set it first.
+- **Target Initialization is a fixed overlay** under the top bar.
+  - Opening it reflows nothing.
+  - **Initialize is only there,** at its foot; the top bar holds just the
+    panel's button, which looks pressed while the panel is open.
+  - The format and the GNN setting are kept while it's closed.
+  - The brand and the step pills stay in the top bar (the consultant's
+    remark); the mockups show the bar empty.
+- **Two layout bugs found on the way:**
+  - Streamlit gives each markdown block a −1rem bottom margin, so the
+    element after an HTML block overlapped it (a tile's checkbox over the
+    tile). It's reset for the Step 1 cards, the panel and the dialogs.
+  - A CSS grid for the two-column fields overlapped rows. The fields are
+    now laid out in Python: short ones in pairs, long ones on their own
+    row.
+- **Checked in Edge:**
+  - At 1780×880 and 1366×768, A1, A2 and A3 fit with no page scroll; only
+    the content fields (and the markers on the laptop size) scroll inside
+    their card.
+  - Initialize from the panel → Step 2 → Evaluate → Step 3 runs without
+    errors.
+  - Steps 2–3 are unchanged.
