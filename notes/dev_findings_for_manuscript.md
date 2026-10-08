@@ -99,10 +99,9 @@ results before then.
 1. **Mean IoU on the 40 validation images** (p.62). This is in "Code
    before Chapter 4".
 2. **The stress test** (p.55; M3). Done: numbers in D2.
-3. **The latency benchmark** (p.62; A5 above): solver and full-edit
-   timings over many edits, against 0.1 s and 1.0 s.
-4. **F1 over the 64 rated layouts in the results files** ("Code before
-   Chapter 4").
+3. **The latency benchmark** (p.62; A5 above). Done: numbers in D3.
+4. **F1 over the 64 rated layouts** ("Code before Chapter 4"). Done:
+   numbers in D4.
 5. **"the K-Means elbow graph"** in the Step 3 report (`chapter3.tex:417`,
    p.60). The report shows a table of WCSS per k; the development chat
    will add the chart, so this sentence can stay.
@@ -246,3 +245,71 @@ It ran on this Windows checkout. No Phase 4 file or pipeline code changed.
   reports the stress test, it needs the text-fit measure beside F1.
 - **"student names":** p.55's example field is the certificate's
   recipient name, which passed at its 60-character maximum.
+
+### D3. Latency over many edits (p.62; M26, A5) — 2026-10-09
+
+`src/evaluation/latency_benchmark.py` → `results/latency_benchmark.json`;
+notes §3.43.
+
+**Setup:**
+- **Sessions:** 34 editing sessions: the 16 Phase 4 posters on both
+  formats, opened as the packet opened them, plus the synthetic theme.
+- **Edits:** 40 recorded edits per session, 1,360 in all: moves, resizes,
+  locks, text edits, typography, undo, restore and candidate clicks.
+- **Two timings per edit:**
+  - **the solver:** the Cassowary re-solve, the "constraint
+    recalculation";
+  - **the full edit:** re-solve, re-score, re-draw and save the state
+    chain, the "state synchronization".
+  - Neither includes the browser redrawing the page.
+- **Machine:** the Windows PC.
+
+| | edits | median | 95th percentile | max | within 0.1 s | within 1.0 s |
+|---|---|---|---|---|---|---|
+| solver | 1,012 | 0.4 ms | 0.8 ms | 1.8 ms | 100% | 100% |
+| full edit | 1,360 | 157 ms | 338 ms | 393 ms | 22% | 100% |
+| full edit, certificate | 680 | 220 ms | 370 ms | 393 ms | 19% | 100% |
+| full edit, event ID | 680 | 143 ms | 223 ms | 298 ms | 25% | 100% |
+
+**For the text (M26):**
+- **The solver met the 0.1 s limit on every edit.**
+- **A full edit met the 1.0 s limit on every edit,** but not 0.1 s:
+  about 0.17 s for a move or resize on a poster's theme. The cost is
+  re-drawing and re-scoring the poster's background. On the synthetic
+  theme a full edit took 4 ms.
+- **Suggested wording:** "constraint recalculation within 0.1 s, state
+  synchronization within 1.0 s".
+- **Not a per-edit figure:** opening a layout (Initialize, Stages 0–6)
+  took a median of 3.6 s, once per layout.
+
+### D4. F1 over the 64 rated layouts (Chapter 4) — 2026-10-09
+
+`src/evaluation/rated_layouts_check.py` →
+`results/rated_layouts_check.json`; notes §3.44.
+
+**Setup:**
+- **What it reads:** the files the packets were printed from. All 64
+  match the Phase 4 key.
+- **Measures:**
+  - F1 as p.56 defines it;
+  - the reading order;
+  - whether each line of text fits its box (as in the stress test, D2).
+
+| | certificate GNN | certificate baseline | event ID GNN | event ID baseline |
+|---|---|---|---|---|
+| F1 | 1.0 on all 16 | 1.0 on all 16 | 1.0 on all 16 | 1.0 on all 16 |
+| reading order kept | 16 | 16 | 16 | 16 |
+| text fits its box | 16 | 16 | 14 | 14 |
+| text over other text or a picture | 0 | 0 | 0 | 0 |
+| smallest text | 7.8 pt | 7.8 pt | 6.5 pt | 6.5 pt |
+
+**For the text:**
+- **F1 1.0 on all 64 rated layouts,** in both conditions: every mandated
+  element present, none overlapping, none off the canvas.
+- **Two event IDs (RXEADY, ARANTABAYAN), in both conditions:** a header
+  line 6–19 px wider than its box on each side. It stays inside the card
+  and covers nothing, so it doesn't change how the pages read. It's the
+  stress test's header finding (D2) showing up mildly in the real set.
+  Mention it only if Chapter 4 discusses D2.
+- **The F1 is the same for both conditions,** so F1 doesn't separate GNN
+  from baseline. The Phase 4 comparison rests on the experts' scores.

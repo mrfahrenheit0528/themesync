@@ -3104,3 +3104,136 @@ plus the bisection runs.
 what the rated Phase 4 layouts were drawn with, and the experts are still
 scoring. Whether any rated event ID had a header line long enough to spill
 can be checked read-only from the saved state chains (task #4).
+
+### 3.43 Latency of the designer's edits (2026-10-09; p.62, M26)
+
+**Why:** p.62 says latency showed that "constraint recalculations and state
+synchronizations executed within" 0.1 s (instantaneous) and 1.0 s
+(uninterrupted flow). Until now there was only §3.32's one-edit estimate
+(≈ 160 ms end to end, Cassowary ≈ 0.4 ms). The manuscript chat asked for
+the median and the 95th percentile over many edits.
+
+**Script:** `src/evaluation/latency_benchmark.py` →
+`results/latency_benchmark.json`; sessions are written under
+`data/rendered/latency/` (git-ignored). Nothing in `data/phase4/`,
+`data/raw/` or the pipeline changes. The script times the session's own
+methods from outside (wrappers on one session object).
+
+**Setup:**
+- **Sessions:** 34 in all.
+  - The 16 Phase 4 posters × 2 formats, GNN on, opened as the packet
+    opened them (the manifest's content, logos and overrides).
+  - The synthetic theme, on both formats.
+- **Events:** 40 per session, 1,360 in all, from a fixed script shuffled
+  with a per-session seed: 14 moves, 8 resizes, 6 lock toggles, 4 text
+  edits, 2 typography changes, 2 undo, 2 redo, 1 candidate click, 1
+  restore. Moves go to random spots; resizes scale by 0.8–1.2.
+  - Redo only works straight after an undo. So only 2 of the 68 planned
+    redos ran; the others became moves.
+- **Two timings per event:**
+  - **solver:** the Cassowary re-solve alone, as each move, resize or
+    lock records it;
+  - **full edit:** `session.event_ms`, i.e. re-solve, re-score (Formula
+    3.11), re-render the SVG, and append and save the state chain.
+  - The full edit doesn't include Streamlit's rerun or the browser
+    repainting the canvas.
+- **Machine:** this Windows checkout (Intel 12th-gen CPU; edits don't use
+  the GPU). The server may differ.
+
+**Results:**
+
+| | n | median | 95th pct | max | ≤ 0.1 s | ≤ 1.0 s |
+|---|---|---|---|---|---|---|
+| **solver** (re-solves) | 1,012 | 0.4 ms | 0.8 ms | 1.8 ms | 100% | 100% |
+| **full edit**, all events | 1,360 | 157 ms | 338 ms | 393 ms | 22% | **100%** |
+| certificate | 680 | 220 ms | 370 ms | 393 ms | 19% | 100% |
+| event ID | 680 | 143 ms | 223 ms | 298 ms | 25% | 100% |
+| re-solving edits (move, resize, lock) | 1,012 | ≈ 170 ms | ≈ 345 ms | 393 ms | ≈ 5% | 100% |
+| re-drawing edits (text, typography, undo, restore, candidate) | 346 | ≈ 73 ms | ≈ 172 ms | 200 ms | ≈ 70% | 100% |
+| synthetic theme only | 80 | 3.8 ms | 5.9 ms | 7.4 ms | 100% | 100% |
+
+**Where the time goes** (medians over all events):
+- solving and placing motifs 0.4 ms; saving the chain 3 ms;
+- **scoring 105 ms, rendering 71 ms.** On a master's theme, scoring
+  composes the layout's background and computes its SIFT saliency map
+  (Formula 3.15's legibility). Rendering composes the background again and
+  encodes it as a JPEG.
+- The synthetic theme has no background to compose, hence 4 ms.
+
+**Chain length doesn't slow it:** the median of each session's first 10
+events (157 ms) and of its last 10 (157 ms) are the same. Saving the whole
+chain on every edit stays cheap at 40 states.
+
+**Opening a layout** (Stages 0–6, Initialize) took a median of 3.6 s
+(95th pct 8.2 s). It happens once per layout, not per edit.
+
+**What it means for p.62:**
+- **Constraint recalculation** (the solver) is far within 0.1 s, always.
+- **State synchronization** (the full edit) is within 1.0 s every time,
+  and within 0.1 s for about a fifth of edits. On a master's theme a
+  re-solving edit takes about 0.17 s; only the synthetic theme stays
+  under 0.1 s.
+- So: the solver meets 0.1 s, and a full edit meets 1.0 s. That's A5/M26's
+  wording.
+
+**A possible speed-up (not done):** compose the background once per edit
+and share it between scoring and rendering. That removes one of the two
+compositions; whether a full edit then gets under 0.1 s needs measuring.
+It would change pipeline code, though not its output. Leave it until the
+Phase 4 scores are in.
+
+### 3.44 The 64 rated layouts: F1 and text fit (2026-10-09; "Code before Chapter 4")
+
+**Why:** the revision list asks for F1 over the rated set in the results
+files (§3.35, finding 5). §3.42 also showed that F1 can't see text spilling
+out of its box, and that the event ID's header spills past about 48
+characters per line. Three rated posters have a 50-character header line.
+
+**Script:** `src/evaluation/rated_layouts_check.py` →
+`results/rated_layouts_check.json`. It reads the 64 rated layouts from the
+files the packets were printed from:
+`data/phase4/samples/<poster>/<format>_<condition>/`, the state chain (the
+boxes) and the SVG (what was drawn).
+- It only reads; `git status` shows `data/phase4/` unchanged.
+- It reads the key only to confirm that each folder's layout is the one
+  the key records. It prints and saves no sample codes.
+- It reuses `stress_test.py`'s measures.
+
+**Results** (16 posters × 2 formats × GNN/baseline):
+
+| | certificate GNN | certificate baseline | event ID GNN | event ID baseline |
+|---|---|---|---|---|
+| layouts (all match the key) | 16 | 16 | 16 | 16 |
+| **F1 (p.56)** | **1.0 on all** | **1.0 on all** | **1.0 on all** | **1.0 on all** |
+| reading order kept | 16 | 16 | 16 | 16 |
+| text fits its box | 16 | 16 | 14 | 14 |
+| text over other text, a picture or a motif | 0 | 0 | 0 | 0 |
+| smallest text | 7.8 pt | 7.8 pt | 6.5 pt | 6.5 pt |
+
+- **F1 1.0 on all 64:** every element the payload mandates is present (11
+  per certificate, 6 per event ID), none overlaps another and none leaves
+  the canvas. This agrees with §3.33, where none of the 384 candidates broke
+  the constraints.
+- **Two event IDs' headers are wider than their box,** in both conditions
+  (the header box is the same):
+  - RXEADY: "COLLEGE OF HEALTH SCIENCES COLLEGE STUDENT COUNCIL" (50
+    characters), 599 px in a 560 px box, so 19 px past each side;
+  - ARANTABAYAN: "COLLEGE OF INFORMATION AND BUSINESS MANAGEMENT" (46
+    characters), 572 px in 560 px, so 6 px past each side.
+  - The header is centred, so the spill is shared between the two sides. On
+    the printed RXEADY page it stays inside the card's panel and covers
+    nothing; it reads as a full-width line, not as a defect.
+  - FLOWERS_OF_HOPE and RZEADY_SET_BOOTH have the same 50-character line in
+    a 595 px box: 2 px past each side, within the tolerance.
+  - Consistent with §3.42. The header never shrinks to its box's width, so
+    whether a line fits depends on the box the layout gives it.
+- **The smallest text is the type scale's:** the certificate's signature
+  titles (7.8 pt) and the event ID's header (6.5 pt), the same in every
+  layout. Nothing is under 6 pt.
+
+**Also:** `experiment_runner.py` now records `f1`, `fp` and `fn` per run,
+and prints F1 in its summary table. `results/experiment_log.json` was not
+re-run: it is the server's result of record. Note that the battery isn't
+the rated set: `run_single` doesn't pass the manifest's logo picks or its
+title-artwork and motif overrides. The rated set's F1 is in
+`results/rated_layouts_check.json`.

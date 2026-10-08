@@ -27,7 +27,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.42).
+§3.44).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
@@ -223,7 +223,8 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
 - **Results:** `experiment_runner.py` (the Phase 3 battery),
   `gnn_heldout_eval.py`, `evaluate.py`, `yolo_iou.py` (the detector's mean
   IoU, p.62), `stress_test.py` (p.55's extreme payloads; analysis only),
-  then re-execute
+  `latency_benchmark.py` (p.62's edit latency), `rated_layouts_check.py`
+  (F1 and text fit of the 64 rated layouts, read-only), then re-execute
   `notebooks/results_analysis.ipynb`. `weight_calibration.py` is the
   Formula 3.11 weight calibration (item 3.25; analysis only, `--reuse`
   re-analyses the saved runs).

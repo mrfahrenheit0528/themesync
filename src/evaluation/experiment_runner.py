@@ -11,6 +11,9 @@ each target format, under three Stage 2 conditions (notes §3.26):
 
 and writes results/experiment_log.json for notebooks/results_analysis.ipynb.
 
+Each run records p.56's F1 (layout_report.structural_accuracy: FP = an
+element overlapping another or leaving the canvas, FN = one missing).
+
 Besides the fitness terms (Formula 3.11), each run records its structure
 error: how far the winning layout's anchored elements (logo row, header,
 title, details — whichever the format maps) sit vertically from their
@@ -53,6 +56,7 @@ for _p in (_EVAL_DIR, _SRC):
 import phase4_packet as p4                 # noqa: E402 — imports rasterize (fonts) first
 import pipeline                            # noqa: E402
 import structure_mapping                   # noqa: E402 — on the path via pipeline
+from layout_report import structural_accuracy  # noqa: E402
 from PIL import Image                      # noqa: E402
 
 CONDITIONS = ("gnn", "mapping", "baseline")
@@ -145,6 +149,9 @@ def run_single(poster_path: str, domain_key: str, condition: str, content: dict,
                  if n.get("gnn_predicted") and n["node_id"] in resolved]
         mean_iou = round(sum(_iou(a, b) for a, b in pairs) / len(pairs), 4) if pairs else 0.0
 
+    accuracy = structural_accuracy(winner["nodes"], session.canvas_w, session.canvas_h,
+                                   [n["node_id"] for n in session.base_nodes])
+
     timings = summary["timings_ms"]
     return {
         "poster":        os.path.basename(poster_path),
@@ -165,6 +172,9 @@ def run_single(poster_path: str, domain_key: str, condition: str, content: dict,
         "P_align":       metrics.get("P_align", 0.0),
         "P_space":       metrics.get("P_space", 0.0),
         "P_legibility":  metrics.get("P_legibility", 0.0),
+        "f1":            accuracy["f1"],
+        "fp":            accuracy["fp"],
+        "fn":            accuracy["fn"],
         "mean_iou":      mean_iou,
         "num_nodes":     sum(1 for n in winner["nodes"] if n.get("structural_class") != "decor"),
         "motifs_placed": sum(1 for n in winner["nodes"] if n.get("structural_class") == "decor"),
@@ -191,7 +201,8 @@ def _print_summary_table(domain_label: str, trials: dict):
     print()
     print(f"  {'Metric':<26} {'GNN':>9} {'σ':>7} {'Mapping':>9} {'σ':>7} {'Base':>9} {'σ':>7}")
     print(f"  {'-'*26} {'-'*9} {'-'*7} {'-'*9} {'-'*7} {'-'*9} {'-'*7}")
-    for label, key in [("C_total (↓ better)", "C_total"), ("P_collision", "P_collision"),
+    for label, key in [("C_total (↓ better)", "C_total"), ("F1, p.56 (↑ better)", "f1"),
+                       ("P_collision", "P_collision"),
                        ("P_align", "P_align"), ("P_space", "P_space"), ("P_legibility", "P_legibility"),
                        ("Structure error, winner (↓)", "structure_error"),
                        ("Structure error, all 6 (↓)", "structure_error_all"),
