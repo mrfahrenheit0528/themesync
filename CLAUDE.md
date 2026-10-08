@@ -126,7 +126,9 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
   `python tests/test_id_pipeline.py` (11 tests).
 - **Results:** `experiment_runner.py` (the Phase 3 battery),
   `gnn_heldout_eval.py`, `evaluate.py`, then re-execute
-  `notebooks/results_analysis.ipynb`.
+  `notebooks/results_analysis.ipynb`. `weight_calibration.py` is the
+  Formula 3.11 weight calibration (item 3.25; analysis only, `--reuse`
+  re-analyses the saved runs).
 
 ## Gotchas
 

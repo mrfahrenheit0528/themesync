@@ -18,6 +18,7 @@ when asked for explicitly.
   TSA already asked about.
 - 🟡 **Should add.** Missing documentation of something that exists.
 - ⏸ **Blocked.** Waiting on a TA decision; do not edit until she answers.
+- ✅ **Resolved.** Fixed in the code; Chapters 1–3 need no change (Chapter 4 may).
 
 **Source notes:**
 - `mos_parameter_grounding.md`: verified citations and quotes.
@@ -613,7 +614,7 @@ generated layouts don't change.
 change; Chapter 4 should say F1 counts collisions and out-of-canvas
 elements per element.
 
-### 3.25 🔴 The fitness weights were never calibrated (p.43, Formula 3.11; Phase 3, p.52)
+### 3.25 ✅ The fitness weights hadn't been calibrated (p.43, Formula 3.11; Phase 3, p.52): done 2026-10-08, no Chapter 3 change
 
 **Now:**
 - α–δ are "empirically calibrated during Phase 3 testing" (p.43).
@@ -633,6 +634,18 @@ notes.
 Changing the deployed weights changes which candidate becomes the output,
 so the Phase 4 set would no longer reflect the system. Run it as an
 analysis.
+
+**Done (2026-10-08, notes §3.33):** `weight_calibration.py` ran p.52's loop
+on the Phase 3 battery (the 64 Phase 4 runs), with criteria fixed
+beforehand. It kept no change, so the deployed weights are confirmed.
+Halving or doubling any weight changes at most 1 of the 64 rated layouts.
+The experts won't re-score (user, 2026-10-08), so the weights stay as they
+are either way.
+
+**Manuscript:** p.43 and p.52 can stay as written. Chapter 4 reports the
+calibration and says the weights were set by p.43's priority rule and then
+confirmed. It ran after the Phase 4 layouts were generated (and before any
+rating was analysed); don't claim it came first.
 
 ### 3.26 🟡 The Spatial Hierarchy Index is a reading order, not a size rank (p.48; Appendix B)
 
@@ -723,6 +736,10 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
     underlay 0.643 vs. 0.138. The dataset is now **200** images
     (160 train / 40 validation); item 3.2 is updated.
   - **Mean IoU** on the 40 validation images: not computed yet (item 3.4).
+- **Fitness weight calibration (item 3.25, notes §3.33):** the deployed
+  weights are confirmed; halving or doubling any weight changes at most 1
+  of the 64 rated layouts. No candidate ever overlapped, so α's value never
+  decided; the choices come down to whitespace against legibility.
 - **Data-quality catch:** a mixed-format export would have silently
   dropped about 23% of images (§3.12).
 - **GNN v1 → v2 (notes §3.22):** the first GNN predicted from inputs it
@@ -799,7 +816,7 @@ Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
    3.18–3.21, 3.23, 3.26–3.29.
    - These answer the TSA directly.
    - 3.2 needs the image source/permission details from the group.
-2. **Code first, then the text:** 3.4 (mean-IoU script), 3.25 (weight
-   calibration). 3.24 (F1) is done in code.
+2. **Code first, then the text:** 3.4 (mean-IoU script). 3.24 (F1) and
+   3.25 (weight calibration) are done in code.
 3. **After the consultant weighs in:** 3.9.
 4. **After the TA answers:** 3.10, 3.11, 3.12.

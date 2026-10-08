@@ -2426,3 +2426,58 @@ chain.
 **Checks:** both test files pass (12 tests, new
 `test_structural_accuracy_p56`). The step locking was run headless with
 Streamlit's AppTest; the step bar was checked in a light and a dark theme.
+
+### 3.33 Calibrating Formula 3.11's weights (2026-10-08, revision item 3.25)
+
+**Why:** p.43 says α–δ were "empirically calibrated during Phase 3
+testing"; p.52 says they were "iteratively calibrated" until the scores
+"consistently align with strict architectural constraints and human-centric
+design rules." The weights (α 50, β 2, γ 1, δ 1.5) had been set by hand,
+from p.43's rule that α is the highest. The calibration should have come
+before the Phase 4 packets (2026-10-07). The experts won't re-score, so it
+was run as an analysis, and the deployed weights stay whatever it finds.
+
+**Method (`src/evaluation/weight_calibration.py`, criteria fixed before
+the run):**
+- **Test set:** the Phase 3 battery, i.e. the 16 Phase 4 posters × 2
+  formats × GNN/baseline = 64 runs, generated as the packet generated them.
+  The weights only rank the six candidates, so each run's candidates are
+  generated once and re-ranked under any weights. No expert rating is used.
+- **A, constraints first (p.43):** the chosen layout must have no overlap
+  and nothing off the canvas (p.56) wherever an option allows it, and α
+  must stay the highest weight.
+- **B, design rules (p.52):** from the deployed weights, each round tries
+  one weight × 0.25, 0.5, 2 or 4. A change is kept only if the chosen
+  layouts get better on average on alignment, whitespace or legibility
+  and worse on none. It stops when no change qualifies.
+- "Chosen" is what the system outputs: the fittest candidate of the layout
+  type the master calls for (item 3.23). The plain ranking (lowest C_total
+  of all six) is reported too.
+
+**Result (`results/weight_calibration.json`):**
+- **Reproduced:** all 64 runs' penalties, and all 64 choices match the
+  pipeline and the Phase 4 key.
+- **Criterion A holds**, trivially: none of the 384 candidates overlaps or
+  leaves the canvas (Cassowary prevents it), so α's value never decides
+  anything on this battery.
+- **Criterion B: the loop keeps no change**, for both the deployed choice
+  and the plain ranking. The deployed weights count as calibrated.
+- **Robust:** halving or doubling any one weight changes at most **1 of the
+  64 rated layouts** (KAINANG_PAMILYA certificate, GNN: F → B). At × 0.25
+  or × 4, still at most 1. Only dropping a term entirely (× 0) changes
+  more: whitespace 11, legibility 5.
+- **Why the weights matter so little:**
+  - alignment is near zero on every candidate (max 5 × 10⁻⁷), so β never
+    decides;
+  - 16 runs' layout type has only one candidate;
+  - of the 48 runs with two candidates of the type, 22 are exact ties at 4
+    decimals (generation order decides), and the median gap is 0.0002.
+  - So the choices come down to whitespace against legibility, and
+    Formula 3.11 barely separates the two candidates of a type (as §3.31
+    found across types).
+
+**For the thesis:** Chapter 3's wording can stay. Chapter 4 should say the
+weights were set by p.43's priority rule and then confirmed by this
+calibration, and give the robustness figure. It was run on 2026-10-08,
+after the Phase 4 layouts were generated and before any rating was
+analysed. Don't write that it came before the packets.

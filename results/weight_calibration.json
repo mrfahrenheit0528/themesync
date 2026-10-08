@@ -1,0 +1,5908 @@
+{
+ "timestamp": "2026-10-08T17:37:25",
+ "criteria": "before the first run (2026-10-08):\n\n  A. Constraints first (p.43). A candidate breaks the constraints if any\n     element overlaps another or leaves the canvas (p.56's FP/FN, or\n     P_collision > 0). The chosen layout must keep the constraints in every\n     run where one of its options does, and alpha must stay the highest\n     weight.\n  B. Design rules (p.52). The loop starts from the deployed weights. Each\n     round tries multiplying one weight by 0.25, 0.5, 2 or 4. A change is\n     kept only if it makes the chosen layouts better on average on at least\n     one design rule (alignment, whitespace, legibility: Formulas 3.13-3.15)\n     and worse on none, without breaking criterion A. The loop stops when\n     no change qualifies.\n\n  The deployed weights count as calibrated if criterion A holds and the\n  loop keeps no change. \"Chosen\" means what the deployed system shows: the\n  fittest candidate of the layout type the master's composition calls for\n  (revision item 3.23). The plain fitness ranking (lowest C_total of all\n  six, the no-master case) is reported beside it.",
+ "analysis": {
+  "deployed_weights": {
+   "alpha": 50.0,
+   "beta": 2.0,
+   "gamma": 1.0,
+   "delta": 1.5
+  },
+  "sanity": {
+   "runs": 64,
+   "penalties_reproduced": 64,
+   "choice_matches_pipeline": 64,
+   "choice_matches_phase4_packet": 64,
+   "candidates_breaking_constraints": 0,
+   "runs_with_one_option": 16
+  },
+  "deployed": {
+   "at_deployed_weights": {
+    "constraints_kept": 64,
+    "constraints_possible": 64,
+    "alpha_highest": true,
+    "P_align": 0.0,
+    "P_space": 0.08083,
+    "P_legibility": 0.00389
+   },
+   "criterion_a": true,
+   "alpha_needed": null,
+   "loop": [],
+   "loop_end_weights": {
+    "alpha": 50.0,
+    "beta": 2.0,
+    "gamma": 1.0,
+    "delta": 1.5
+   },
+   "outputs_changed_at_loop_end": 0,
+   "calibrated": true,
+   "sensitivity": {
+    "alpha": [
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": false,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 0.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 0.1
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 0.25
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 0.5
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 1.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 2.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 4.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 10.0
+     }
+    ],
+    "beta": [
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 0.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 0.1
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 0.25
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 0.5
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 1.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 2.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 4.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 1,
+      "multiplier": 10.0
+     }
+    ],
+    "gamma": [
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08158,
+      "P_legibility": 0.00389,
+      "outputs_changed": 11,
+      "multiplier": 0.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 1,
+      "multiplier": 0.1
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 1,
+      "multiplier": 0.25
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 1,
+      "multiplier": 0.5
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 1.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 1,
+      "multiplier": 2.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 4.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 1,
+      "multiplier": 10.0
+     }
+    ],
+    "delta": [
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00397,
+      "outputs_changed": 5,
+      "multiplier": 0.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.0039,
+      "outputs_changed": 2,
+      "multiplier": 0.1
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 1,
+      "multiplier": 0.25
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 1,
+      "multiplier": 0.5
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 1.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 2.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 4.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08083,
+      "P_legibility": 0.00389,
+      "outputs_changed": 0,
+      "multiplier": 10.0
+     }
+    ]
+   }
+  },
+  "plain": {
+   "at_deployed_weights": {
+    "constraints_kept": 64,
+    "constraints_possible": 64,
+    "alpha_highest": true,
+    "P_align": 0.0,
+    "P_space": 0.06988,
+    "P_legibility": 0.00376
+   },
+   "criterion_a": true,
+   "alpha_needed": null,
+   "loop": [],
+   "loop_end_weights": {
+    "alpha": 50.0,
+    "beta": 2.0,
+    "gamma": 1.0,
+    "delta": 1.5
+   },
+   "outputs_changed_at_loop_end": 0,
+   "calibrated": true,
+   "sensitivity": {
+    "alpha": [
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": false,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 0.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 0.1
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 0.25
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 0.5
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 1.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 2.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 4.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 10.0
+     }
+    ],
+    "beta": [
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 0.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 0.1
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 0.25
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 0.5
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 1.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 2.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 4.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 10.0
+     }
+    ],
+    "gamma": [
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.09524,
+      "P_legibility": 0.00031,
+      "outputs_changed": 36,
+      "multiplier": 0.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08648,
+      "P_legibility": 0.0005,
+      "outputs_changed": 23,
+      "multiplier": 0.1
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.07826,
+      "P_legibility": 0.00136,
+      "outputs_changed": 13,
+      "multiplier": 0.25
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.07208,
+      "P_legibility": 0.00281,
+      "outputs_changed": 5,
+      "multiplier": 0.5
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 1.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00377,
+      "outputs_changed": 2,
+      "multiplier": 2.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00377,
+      "outputs_changed": 2,
+      "multiplier": 4.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 10.0
+     }
+    ],
+    "delta": [
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00382,
+      "outputs_changed": 4,
+      "multiplier": 0.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00377,
+      "outputs_changed": 2,
+      "multiplier": 0.1
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 0.25
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 1,
+      "multiplier": 0.5
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.06988,
+      "P_legibility": 0.00376,
+      "outputs_changed": 0,
+      "multiplier": 1.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.07208,
+      "P_legibility": 0.00281,
+      "outputs_changed": 3,
+      "multiplier": 2.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.07826,
+      "P_legibility": 0.00136,
+      "outputs_changed": 13,
+      "multiplier": 4.0
+     },
+     {
+      "constraints_kept": 64,
+      "constraints_possible": 64,
+      "alpha_highest": true,
+      "P_align": 0.0,
+      "P_space": 0.08648,
+      "P_legibility": 0.0005,
+      "outputs_changed": 23,
+      "multiplier": 10.0
+     }
+    ]
+   }
+  }
+ },
+ "runs": [
+  {
+   "poster": "ANTI_HAZING_LAW.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0010567500000000507,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07557278645833343,
+     "P_legibility": 0.00015698587214881248,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0010567500000000507,
+     "P_legibility": 0.00032431003376737195,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0010567500000000507,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0010567500000000507,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07557278645833343,
+     "P_legibility": 0.00018315018417361454,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "ANTI_HAZING_LAW.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0010567500000000507,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07557278645833343,
+     "P_legibility": 5.232862404960416e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0010567500000000507,
+     "P_legibility": 0.00042892157501888035,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0010567500000000507,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0010567500000000507,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07557278645833343,
+     "P_legibility": 0.0001308215601240104,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "ANTI_HAZING_LAW.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0006757847222140411,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 7.861635337273279e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0006757847222140411,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0008272979061539267,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0008502783892931891,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 7.861635337273279e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "ANTI_HAZING_LAW.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0004518679933610305,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0012096773833036422,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0005787037037037037,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0028571428938044445,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0007397274127583099,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 7.716049440205097e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "ARANTABAYAN.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "banner",
+   "deployed_winner": "Candidate_C",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006827499999999542,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07615716145833351,
+     "P_legibility": 8.140008337113447e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006827499999999542,
+     "P_legibility": 0.0072478992921881985,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006827499999999542,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006827499999999542,
+     "P_legibility": 0.0009337068438863888,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07615716145833351,
+     "P_legibility": 8.140008337113447e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "ARANTABAYAN.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "banner",
+   "deployed_winner": "Candidate_C",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006827499999999542,
+     "P_legibility": 0.0009337068438863888,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07615716145833351,
+     "P_legibility": 0.00029507530222036245,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006827499999999542,
+     "P_legibility": 0.0056022408963585435,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006827499999999542,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006827499999999542,
+     "P_legibility": 0.0009337068438863888,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07615716145833351,
+     "P_legibility": 0.00029507530222036245,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "ARANTABAYAN.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "card",
+   "deployed_winner": "Candidate_B",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.008496732026143792,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.006644880174291939,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.006644880174291939,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.006644880174291939,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "ARANTABAYAN.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "card",
+   "deployed_winner": "Candidate_F",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.00625,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0013888889302810033,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "CHS_BIRISTUHAN.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.001111749999999967,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07548684895833346,
+     "P_legibility": 0.00022335387356988676,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.001111749999999967,
+     "P_legibility": 0.00013403799019607842,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001111749999999967,
+     "P_legibility": 0.00023496240776564394,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.001111749999999967,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07548684895833346,
+     "P_legibility": 0.00014652015006804203,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "CHS_BIRISTUHAN.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.001111749999999967,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07548684895833346,
+     "P_legibility": 8.934154942795471e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.001111749999999967,
+     "P_legibility": 0.0002626050420168067,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001111749999999967,
+     "P_legibility": 0.00023496240776564394,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.001111749999999967,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07548684895833346,
+     "P_legibility": 0.0002616431304823348,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "CHS_BIRISTUHAN.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0001587301596171326,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 7.122507387841189e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.00010582010641142173,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 5.9737154731044066e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "CHS_BIRISTUHAN.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0012786596651292509,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0007936508394777775,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0009259259716297189,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "CMET.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001091583333333368,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07551835937500007,
+     "P_legibility": 0.0027472527472527475,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001091583333333368,
+     "P_legibility": 0.005689775910364145,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001091583333333368,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001091583333333368,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07551835937500007,
+     "P_legibility": 0.0018315018315018315,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "CMET.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001091583333333368,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07551835937500007,
+     "P_legibility": 0.004807692307692307,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001091583333333368,
+     "P_legibility": 0.0028011204481792717,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001091583333333368,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001091583333333368,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07551835937500007,
+     "P_legibility": 0.004807692307692307,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "CMET.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.008333333333333333,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.005555555555555555,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.005555555555555555,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.005555555555555555,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "CMET.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0018518518518518517,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.008333333333333333,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0018518518518518517,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0018518518518518517,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0018518518518518517,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "CTC.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.003198999999999952,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07222552083333345,
+     "P_legibility": 0.0003846153760185609,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.003198999999999952,
+     "P_legibility": 0.0028594772094020656,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.003198999999999952,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.003198999999999952,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07222552083333345,
+     "P_legibility": 0.00047619046554678963,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "CTC.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.003198999999999952,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07222552083333345,
+     "P_legibility": 0.0003846153760185609,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.003198999999999952,
+     "P_legibility": 0.0009337068438863888,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.003198999999999952,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.003198999999999952,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07222552083333345,
+     "P_legibility": 0.00014652014324516603,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "CTC.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.01111111111111111,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.007407407407407407,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.007407407407407407,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.007407407407407407,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "CTC.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.00625,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.004166666666666667,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "DEAR_SENDER.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006451666666666966,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0762158854166668,
+     "P_legibility": 0.00022893773576060494,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006451666666666966,
+     "P_legibility": 0.004201680672268907,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006451666666666966,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006451666666666966,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0762158854166668,
+     "P_legibility": 0.00022893773576060494,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "DEAR_SENDER.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006451666666666966,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0762158854166668,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006451666666666966,
+     "P_legibility": 0.0028011204481792717,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006451666666666966,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0006451666666666966,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0762158854166668,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "DEAR_SENDER.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.011342592592592592,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.008564814814814813,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.009422657952069716,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.009606481481481481,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "DEAR_SENDER.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0045138888888888885,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.004976851851851852,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.004793028322440087,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0045138888888888885,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "DONATION_PROGRAM.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.001311583333333366,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07517460937500009,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.001311583333333366,
+     "P_legibility": 0.0028011204481792717,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001311583333333366,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.001311583333333366,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07517460937500009,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "DONATION_PROGRAM.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.001311583333333366,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07517460937500009,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.001311583333333366,
+     "P_legibility": 0.0014005602240896359,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001311583333333366,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.001311583333333366,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07517460937500009,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "DONATION_PROGRAM.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "band",
+   "deployed_winner": "Candidate_C",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.007407407407407407,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.007407407407407407,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.007407407407407407,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.005555555555555555,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "DONATION_PROGRAM.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "band",
+   "deployed_winner": "Candidate_C",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.016530501089324617,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0020833333333333333,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.016993464052287584,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.016993464052287584,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.016530501089324617,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "FLOWERS_OF_HOPE.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.0026169166666666355,
+     "P_legibility": 0.0014880952824439322,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07313502604166666,
+     "P_legibility": 0.00047778309537814214,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.0026169166666666355,
+     "P_legibility": 0.004726890813694948,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026169166666666355,
+     "P_legibility": 0.0029761905648878644,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.0026169166666666355,
+     "P_legibility": 0.0029761905648878644,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07313502604166666,
+     "P_legibility": 0.0003981525794817851,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "FLOWERS_OF_HOPE.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.0026169166666666355,
+     "P_legibility": 0.0029761905648878644,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07313502604166666,
+     "P_legibility": 0.0004180602084558744,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.0026169166666666355,
+     "P_legibility": 0.00665266126269052,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026169166666666355,
+     "P_legibility": 0.0029761905648878644,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.0026169166666666355,
+     "P_legibility": 0.0029761905648878644,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07313502604166666,
+     "P_legibility": 0.0004180602084558744,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "FLOWERS_OF_HOPE.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.01824618736383442,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0210239651416122,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.015141612200435728,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.015141612200435728,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "FLOWERS_OF_HOPE.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "GUESS_THE_TEACHER.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "split",
+   "deployed_winner": "Candidate_B",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009439999999999449,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0757489583333334,
+     "P_legibility": 9.392317207086654e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009439999999999449,
+     "P_legibility": 0.004245448179271708,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009439999999999449,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009439999999999449,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0757489583333334,
+     "P_legibility": 9.392317207086654e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "GUESS_THE_TEACHER.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "split",
+   "deployed_winner": "Candidate_F",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009439999999999449,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0757489583333334,
+     "P_legibility": 0.0002817695162125996,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009439999999999449,
+     "P_legibility": 0.0028011204481792717,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009439999999999449,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009439999999999449,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0757489583333334,
+     "P_legibility": 0.0001408847581062998,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "GUESS_THE_TEACHER.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "left",
+   "deployed_winner": "Candidate_D",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.028104575163398694,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.004166666666666667,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.028104575163398694,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.028104575163398694,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.028104575163398694,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.004166666666666667,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "GUESS_THE_TEACHER.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "left",
+   "deployed_winner": "Candidate_D",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.014814814814814814,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0020833333333333333,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.014814814814814814,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.014814814814814814,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.014814814814814814,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0006944444651405016,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "JFINEX.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0008523333333333438,
+     "P_legibility": 0.005952380952380952,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07589218750000004,
+     "P_legibility": 6.208480796316168e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0008523333333333438,
+     "P_legibility": 0.011292016806722689,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0008523333333333438,
+     "P_legibility": 0.008753501400560224,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0008523333333333438,
+     "P_legibility": 0.008753501400560224,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07589218750000004,
+     "P_legibility": 9.312721194474251e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "JFINEX.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0008523333333333438,
+     "P_legibility": 0.008753501400560224,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07589218750000004,
+     "P_legibility": 0.0001629726209032994,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0008523333333333438,
+     "P_legibility": 0.0065359478237248265,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0008523333333333438,
+     "P_legibility": 0.008753501400560224,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0008523333333333438,
+     "P_legibility": 0.008753501400560224,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07589218750000004,
+     "P_legibility": 0.0001629726209032994,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "JFINEX.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.01111111111111111,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0020833333333333333,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.01111111111111111,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.01111111111111111,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.01111111111111111,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0020833333333333333,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "JFINEX.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "KAINANG_PAMILYA.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "split",
+   "deployed_winner": "Candidate_F",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.0008110833333332401,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07595664062500007,
+     "P_legibility": 8.585164835164836e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.0008110833333332401,
+     "P_legibility": 0.0028448879551820727,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0008110833333332401,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.0008110833333332401,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07595664062500007,
+     "P_legibility": 5.7234432234432234e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "KAINANG_PAMILYA.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "split",
+   "deployed_winner": "Candidate_B",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.0008110833333332401,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07595664062500007,
+     "P_legibility": 0.0001502403846153846,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.0008110833333332401,
+     "P_legibility": 0.0035451680672268907,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0008110833333332401,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.0008110833333332401,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 5.208333333328597e-07,
+     "P_space": 0.07595664062500007,
+     "P_legibility": 0.0001502403846153846,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "KAINANG_PAMILYA.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "left",
+   "deployed_winner": "Candidate_D",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.014814814814814814,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.014814814814814814,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.014814814814814814,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.014814814814814814,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "KAINANG_PAMILYA.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "left",
+   "deployed_winner": "Candidate_D",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.01111111111111111,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0020833333333333333,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.01111111111111111,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.01111111111111111,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.01111111111111111,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0020833333333333333,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "LUCKY_TERA.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0011401666666666088,
+     "P_legibility": 8.210180593388421e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07544244791666677,
+     "P_legibility": 0.00018946570600127127,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0011401666666666088,
+     "P_legibility": 0.0003087598630240192,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0011401666666666088,
+     "P_legibility": 4.376750700280112e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0011401666666666088,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07544244791666677,
+     "P_legibility": 0.0011131110329917827,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "LUCKY_TERA.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0011401666666666088,
+     "P_legibility": 8.210180593388421e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07544244791666677,
+     "P_legibility": 0.00016578249275111235,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0011401666666666088,
+     "P_legibility": 0.0005145997946419303,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0011401666666666088,
+     "P_legibility": 4.376750700280112e-05,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0011401666666666088,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07544244791666677,
+     "P_legibility": 0.00016578249275111235,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "LUCKY_TERA.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "band",
+   "deployed_winner": "Candidate_C",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.004094045135382287,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.00043572984911777353,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0003220611976252662,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0003445305758052402,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.005512152736385664,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "LUCKY_TERA.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "band",
+   "deployed_winner": "Candidate_C",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0011574074350021502,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0012152778062348565,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.00023148148838016721,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0016628873775954597,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0003086419776082039,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0012152778062348565,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "RXEADY.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "banner",
+   "deployed_winner": "Candidate_C",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026159999999999517,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07313645833333338,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026159999999999517,
+     "P_legibility": 0.0028011204481792717,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026159999999999517,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026159999999999517,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07313645833333338,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "RXEADY.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "banner",
+   "deployed_winner": "Candidate_C",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026159999999999517,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07313645833333338,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026159999999999517,
+     "P_legibility": 0.0014005602240896359,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026159999999999517,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026159999999999517,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07313645833333338,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "RXEADY.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "card",
+   "deployed_winner": "Candidate_B",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "RXEADY.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "card",
+   "deployed_winner": "Candidate_B",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0010416666666666667,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0013888889302810033,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "RZEADY_SET_BOOTH.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026086666666665925,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07314791666666676,
+     "P_legibility": 0.0013736263736263737,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026086666666665925,
+     "P_legibility": 0.0008003201638283182,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026086666666665925,
+     "P_legibility": 0.0012755102611013822,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026086666666665925,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07314791666666676,
+     "P_legibility": 0.0009157509157509158,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "RZEADY_SET_BOOTH.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026086666666665925,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07314791666666676,
+     "P_legibility": 0.0024038461538461535,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026086666666665925,
+     "P_legibility": 0.0012004802457424772,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026086666666665925,
+     "P_legibility": 0.0012755102611013822,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0026086666666665925,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07314791666666676,
+     "P_legibility": 0.0024038461538461535,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "RZEADY_SET_BOOTH.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.014215686274509804,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.011437908496732025,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.008496732026143792,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.008496732026143792,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "RZEADY_SET_BOOTH.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0010416666666666667,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0037037037037037034,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0010416666666666667,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "SHARE_KO_LANG.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001607666666666674,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07471197916666672,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001607666666666674,
+     "P_legibility": 0.0007002801120448179,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001607666666666674,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001607666666666674,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07471197916666672,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "SHARE_KO_LANG.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_A",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001607666666666674,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07471197916666672,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001607666666666674,
+     "P_legibility": 0.000744047619047619,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001607666666666674,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.001607666666666674,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.07471197916666672,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "SHARE_KO_LANG.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0315359477124183,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.02875816993464052,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.01993464052287582,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.01993464052287582,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "SHARE_KO_LANG.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "classic",
+   "deployed_winner": "Candidate_E",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.01111111111111111,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0026041666666666665,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.01111111111111111,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.01111111111111111,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.01111111111111111,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0020833333333333333,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "SIGN_LANGUAGE_DAY.jpg",
+   "format": "certificate",
+   "condition": "gnn",
+   "preferred_archetype": "left",
+   "deployed_winner": "Candidate_D",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009054999999998925,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0758091145833335,
+     "P_legibility": 0.0009157509157509158,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009054999999998925,
+     "P_legibility": 0.002801120531659166,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009054999999998925,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009054999999998925,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0758091145833335,
+     "P_legibility": 0.0024038461538461535,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "SIGN_LANGUAGE_DAY.jpg",
+   "format": "certificate",
+   "condition": "baseline",
+   "preferred_archetype": "left",
+   "deployed_winner": "Candidate_D",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009054999999998925,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0758091145833335,
+     "P_legibility": 0.0024038461538461535,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "banner",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009054999999998925,
+     "P_legibility": 0.002801120531659166,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009054999999998925,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0009054999999998925,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "split",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.0758091145833335,
+     "P_legibility": 0.0024038461538461535,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "SIGN_LANGUAGE_DAY.jpg",
+   "format": "event_id",
+   "condition": "gnn",
+   "preferred_archetype": "left",
+   "deployed_winner": "Candidate_D",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.003086419845068896,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0037037038140826754,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0037037038140826754,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0037037038140826754,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  },
+  {
+   "poster": "SIGN_LANGUAGE_DAY.jpg",
+   "format": "event_id",
+   "condition": "baseline",
+   "preferred_archetype": "left",
+   "deployed_winner": "Candidate_D",
+   "candidates": [
+    {
+     "candidate_id": "Candidate_A",
+     "order": 0,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.15281935483870968,
+     "P_legibility": 0.0012345679380275586,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_B",
+     "order": 1,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0011904762436946233,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_C",
+     "order": 2,
+     "archetype": "band",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0012345679380275586,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_D",
+     "order": 3,
+     "archetype": "left",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1383032258064517,
+     "P_legibility": 0.0012345679380275586,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_E",
+     "order": 4,
+     "archetype": "classic",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.1479806451612904,
+     "P_legibility": 0.0012345679380275586,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    },
+    {
+     "candidate_id": "Candidate_F",
+     "order": 5,
+     "archetype": "card",
+     "P_collision": 0.0,
+     "P_align": 0.0,
+     "P_space": 0.185302575643911,
+     "P_legibility": 0.0125,
+     "constraints_ok": true,
+     "problems": [],
+     "reproduced": true
+    }
+   ]
+  }
+ ]
+}
