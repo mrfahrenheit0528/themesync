@@ -1,20 +1,6 @@
-% =====================================================================
-% Chapter 4 draft (2026-10-09), written for Manu 0910.1's template.
-% Paste into chapters/chapter4.tex in Prism, and un-comment
-% \input{chapters/chapter4} in thesis.tex.
-%
-% Every number comes from a results file in the repository (named in a
-% comment next to it). Text in \pending{...} prints in bold brackets and
-% has to be filled in before submission: the Phase 4 scores, the
-% statistical tests (after the consultant's answers), and a few facts.
-% =====================================================================
-
-\providecommand{\pending}[1]{\textbf{[PENDING: #1]}}
-\providecommand{\tbd}{\textbf{[PENDING]}}
 
 \chapter{Results and Discussion}
 \begin{refsection}
-
 This chapter presented the results of the evaluation and testing of ThemeSync. The results were organized by the three specific objectives of the study. The first covered the extraction of the master layout's structure and stylistic markers (Phase 1), the second covered the reactive layout synthesis engine (Phase 2), and the third covered the heuristic evaluation of the generated candidates and the expert validation of the final layouts (Phases 3 and 4). Each section reported the evaluation metrics defined in Chapter 3 and discussed what the results showed about the framework's strengths and limitations.
 
 \section{Evaluation Setup}
@@ -402,12 +388,23 @@ Two points bore on the interpretation of these results. First, the baseline turn
 
 The results also identified the framework's main limitations: the heuristic evaluation's blindness to the master's composition, the small share of the final layout that the GNN decides in tall formats once the anchors are placed, the weaker detection of underlays and embellishments, the event ID header's fixed wrapping, the absence of a limit on signature blocks, and a full edit that met the 1.0-second limit but not the 0.1-second limit.
 
+
+
+% \begin{figure}[ht]
+%     \centering
+% 	\includegraphics[width=0.85\textwidth]{figures/sampleFig1.jpg}
+% 	\caption[Barred spiral galaxy NGC 1300]{Barred spiral galaxy NGC 1300 photographed by Hubble telescope. While the galaxy in the photo is not our sun, it does emit light, much like our sun. Image credit: NASA.}
+% 	\label{fig:firstddd}
+% \end{figure}
+
+
+
+
+
+
 %=======================================================%
 %%%%% Do not delete this part %%%%%%
 \clearpage
 
-\begin{center}
-\textbf{Notes}
-\end{center}
-\printbibliography[heading=none]
+\printbibliography[heading=subbibintoc, title={\centering Notes}]
 \end{refsection}
