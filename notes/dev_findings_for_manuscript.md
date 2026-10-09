@@ -373,3 +373,101 @@ notes §3.46.
   analysis: a master-derived target would have changed 2 of the 64 rated
   layouts.
 - The deployed value stays at 0.65 either way.
+
+### D7. Phase 4: the analysis plan and the results — 2026-10-10
+
+Notes §3.48 (plan) and §3.49 (results). Files:
+- `src/evaluation/phase4_analysis.py` → `results/phase4_analysis.json`;
+- the ratings: `results/mos_results.json`;
+- post hoc: `results/phase4_posthoc.json`.
+
+**The consultation:**
+- **Outcome:** it concluded "recommended for POD".
+- **Statistics:** the consultant checks only the prototype, so the group
+  adopted the guide's suggested answer to all eleven questions (user,
+  2026-10-10).
+- **For item 3.9 and Chapter 3's statistical treatment,** the decisions
+  are:
+  - **Q1:** MOS (the arithmetic mean, ITU-T P.800) ± SD per parameter and
+    overall, by condition and format; the count of each rating 1–5.
+  - **Q2:** Kendall's W with its χ² test, per parameter and overall.
+  - **Q3, Q4:** the Wilcoxon signed-rank test on the 32 pairs; each
+    layout's score is the mean of its four experts' ratings.
+  - **Q5:** both formats in one test; each format's MOS reported, not
+    tested.
+  - **Q6:** the overall MOS is the main test; the three parameters are
+    follow-ups, with Holm's correction.
+  - **Q7, Q8:** two-sided; "a significance level of 0.05" (not "α",
+    which Formula 3.11 uses).
+  - **Q9:** the rank-biserial r beside every p-value; a non-significant
+    result is "no significant difference was detected".
+  - **Q10:** purposive sampling, with three criteria:
+    1. real school-organisation event posters;
+    2. in no training data, checked with an image-duplicate test;
+    3. their text fits both formats.
+  - **Q11:** mean ± SD of C_total, latency, F1 and IoU; the same Wilcoxon
+    test for GNN vs baseline C_total.
+  - **Q2's "acceptable value and source" got no answer.** Commonly used,
+    to verify before citing:
+    - Schmidt (1997) for Kendall's W (0.5 moderate, 0.7 strong);
+    - Krippendorff (2004) for α (0.667 / 0.800);
+    - Koo & Li (2016) for ICC.
+- **The plan was fixed in code and committed before any score was
+  imported or summarised** (commit `b9a60ab`). Chapter 3 or 4 can say so.
+
+**Label the conditions** "structure mapping + GNN" and "baseline (neither
+structure mapping nor GNN)" (your C1; p.61's "GNN module deactivated" is
+M4).
+
+**Results** (768 ratings; 4 experts × 64 layouts × 3 parameters):
+
+| | mapping + GNN, MOS ± SD | baseline, MOS ± SD | pairs where the baseline / mapping + GNN was higher / equal | p (Holm) | r |
+|---|---|---|---|---|---|
+| **overall (main test)** | 3.33 ± 0.89 | 3.73 ± 0.93 | 25 / 2 / 5 | **< 0.001** | **−0.95** |
+| Visual Hierarchy | 3.61 ± 1.06 | 3.73 ± 1.11 | 16 / 7 / 9 | 0.127 | −0.36 |
+| Brand & Typographic | 3.47 ± 1.09 | 3.70 ± 1.02 | 22 / 5 / 5 | < 0.001 | −0.74 |
+| Constraint & Whitespace | 2.92 ± 1.18 | 3.77 ± 1.13 | 26 / 2 / 4 | < 0.001 | −0.98 |
+
+- **By format, overall:**
+  - certificates: 3.50 vs 3.78;
+  - event IDs: 3.17 vs 3.69.
+  - All 64 layouts together: 3.53 ± 0.93 (between Fair and Good on Table
+    2's scale).
+- **Agreement:** Kendall's W 0.63 overall (Hierarchy 0.58, Brand 0.48,
+  Whitespace 0.57), all p < 0.001.
+  - Absolute agreement is lower (ICC(2,1) 0.16–0.31, α 0.01–0.23). The
+    experts order the layouts alike but differ in leniency: each one's
+    mean runs from 2.88 to 4.32.
+- **Q11:**
+  - **C_total:** 0.0879 ± 0.0791 (mapping + GNN) vs 0.0855 ± 0.0766. The
+    Wilcoxon test gives p = 0.030 (r = +0.53): Formula 3.11 also rated
+    the baseline slightly better.
+  - **F1:** 1.0 ± 0 in both conditions.
+  - **Latency:** solver 0.53 ± 3.01 ms; full edit 90.6 ± 57.5 ms.
+  - **IoU:** strict 0.644 ± 0.351; found 0.837 ± 0.097.
+- **Sensitivity (secondary):** the paired t-test and Bonferroni give the
+  same conclusions. Without the one pair whose layouts were identical,
+  Visual Hierarchy reaches p = 0.046. Without ANTI_HAZING_LAW (its CLOSED
+  stamp, item 3.9's question), all conclusions are unchanged.
+
+**For Chapter 4 (don't draft until asked; these are the facts it must
+carry):**
+- **The main result:** at a significance level of 0.05, the experts rated
+  the baseline significantly higher than structure mapping + GNN overall,
+  with a large effect, and on Brand & Typographic Consistency and
+  Constraint & Whitespace Harmony. No significant difference was detected
+  on Visual Hierarchy Preservation.
+- **Not a claim this supports:** "the GNN improved the layouts". The GNN's
+  own gain is the Phase 3 held-out test.
+- **Exploratory, labelled post hoc:**
+  - Structure mapping + GNN places elements at the master's positions,
+    leaving larger, uneven gaps. Its largest gap was bigger in 23 of 32
+    pairs and never smaller, while the baseline's gaps were perfectly
+    even.
+  - The pairs whose gaps grew most lost the most MOS (Spearman ρ ≈ −0.42
+    to −0.45, p ≈ 0.01–0.02).
+  - Formula 3.11 doesn't measure gap evenness (its difference doesn't
+    track the MOS, ρ = −0.20).
+- **The system stays as rated.** Even spacing after anchoring, or a
+  gap-evenness term, belongs in the recommendations; it would need new
+  ratings.

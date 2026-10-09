@@ -1,0 +1,1178 @@
+{
+ "generated": "2026-10-10T00:21:48",
+ "data": "results\\mos_results.json",
+ "design": {
+  "experts": [
+   "Eisen Rose D. Galvante",
+   "Kyz Denise Aquino",
+   "Mark Joseph Orias",
+   "Mark Kenneth C. Ellorde"
+  ],
+  "layouts": 64,
+  "ratings": 768,
+  "pairs": 32,
+  "identical_pairs": [
+   "LUCKY_TERA.jpg certificate"
+  ]
+ },
+ "plan": {
+  "significance_level": 0.05,
+  "main_test": "overall MOS",
+  "correction": "Holm, over 4 tests",
+  "sides": "two-sided",
+  "zero_method": "wilcox (pairs with equal MOS dropped)",
+  "effect_size": "matched-pairs rank-biserial r = (W+ - W-)/(W+ + W-); positive = GNN higher",
+  "scipy": "1.18.0"
+ },
+ "q1_describe": {
+  "all": {
+   "overall": {
+    "n": 256,
+    "mean": 3.5339,
+    "sd": 0.9263,
+    "median": 3.6667,
+    "iqr": [
+     3.0,
+     4.0
+    ]
+   },
+   "visual_hierarchy_preservation": {
+    "n": 256,
+    "mean": 3.668,
+    "sd": 1.0824,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     5.0
+    ]
+   },
+   "brand_typographic_consistency": {
+    "n": 256,
+    "mean": 3.5859,
+    "sd": 1.0592,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     4.0
+    ]
+   },
+   "constraint_whitespace_harmony": {
+    "n": 256,
+    "mean": 3.3477,
+    "sd": 1.2304,
+    "median": 3.0,
+    "iqr": [
+     2.0,
+     4.0
+    ]
+   }
+  },
+  "gnn": {
+   "overall": {
+    "n": 128,
+    "mean": 3.3333,
+    "sd": 0.8864,
+    "median": 3.3333,
+    "iqr": [
+     2.6667,
+     4.0
+    ]
+   },
+   "visual_hierarchy_preservation": {
+    "n": 128,
+    "mean": 3.6094,
+    "sd": 1.0592,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     4.0
+    ]
+   },
+   "brand_typographic_consistency": {
+    "n": 128,
+    "mean": 3.4688,
+    "sd": 1.0863,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     4.0
+    ]
+   },
+   "constraint_whitespace_harmony": {
+    "n": 128,
+    "mean": 2.9219,
+    "sd": 1.1813,
+    "median": 3.0,
+    "iqr": [
+     2.0,
+     4.0
+    ]
+   }
+  },
+  "certificate gnn": {
+   "overall": {
+    "n": 64,
+    "mean": 3.5,
+    "sd": 0.8948,
+    "median": 3.5,
+    "iqr": [
+     3.0,
+     4.0
+    ]
+   },
+   "visual_hierarchy_preservation": {
+    "n": 64,
+    "mean": 3.875,
+    "sd": 1.0465,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     5.0
+    ]
+   },
+   "brand_typographic_consistency": {
+    "n": 64,
+    "mean": 3.5625,
+    "sd": 1.0216,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     4.0
+    ]
+   },
+   "constraint_whitespace_harmony": {
+    "n": 64,
+    "mean": 3.0625,
+    "sd": 1.2833,
+    "median": 3.0,
+    "iqr": [
+     2.0,
+     4.0
+    ]
+   }
+  },
+  "event_id gnn": {
+   "overall": {
+    "n": 64,
+    "mean": 3.1667,
+    "sd": 0.8524,
+    "median": 3.0,
+    "iqr": [
+     2.6667,
+     3.6667
+    ]
+   },
+   "visual_hierarchy_preservation": {
+    "n": 64,
+    "mean": 3.3438,
+    "sd": 1.0113,
+    "median": 3.0,
+    "iqr": [
+     3.0,
+     4.0
+    ]
+   },
+   "brand_typographic_consistency": {
+    "n": 64,
+    "mean": 3.375,
+    "sd": 1.1478,
+    "median": 3.5,
+    "iqr": [
+     2.0,
+     4.0
+    ]
+   },
+   "constraint_whitespace_harmony": {
+    "n": 64,
+    "mean": 2.7812,
+    "sd": 1.0611,
+    "median": 3.0,
+    "iqr": [
+     2.0,
+     3.0
+    ]
+   }
+  },
+  "baseline": {
+   "overall": {
+    "n": 128,
+    "mean": 3.7344,
+    "sd": 0.9253,
+    "median": 3.6667,
+    "iqr": [
+     3.0,
+     4.6667
+    ]
+   },
+   "visual_hierarchy_preservation": {
+    "n": 128,
+    "mean": 3.7266,
+    "sd": 1.1063,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     5.0
+    ]
+   },
+   "brand_typographic_consistency": {
+    "n": 128,
+    "mean": 3.7031,
+    "sd": 1.0223,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     5.0
+    ]
+   },
+   "constraint_whitespace_harmony": {
+    "n": 128,
+    "mean": 3.7734,
+    "sd": 1.1309,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     5.0
+    ]
+   }
+  },
+  "certificate baseline": {
+   "overall": {
+    "n": 64,
+    "mean": 3.776,
+    "sd": 0.9832,
+    "median": 3.6667,
+    "iqr": [
+     3.0,
+     4.6667
+    ]
+   },
+   "visual_hierarchy_preservation": {
+    "n": 64,
+    "mean": 3.7344,
+    "sd": 1.1984,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     5.0
+    ]
+   },
+   "brand_typographic_consistency": {
+    "n": 64,
+    "mean": 3.7812,
+    "sd": 0.9995,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     5.0
+    ]
+   },
+   "constraint_whitespace_harmony": {
+    "n": 64,
+    "mean": 3.8125,
+    "sd": 1.1936,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     5.0
+    ]
+   }
+  },
+  "event_id baseline": {
+   "overall": {
+    "n": 64,
+    "mean": 3.6927,
+    "sd": 0.8694,
+    "median": 3.6667,
+    "iqr": [
+     3.0,
+     4.4167
+    ]
+   },
+   "visual_hierarchy_preservation": {
+    "n": 64,
+    "mean": 3.7188,
+    "sd": 1.0153,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     5.0
+    ]
+   },
+   "brand_typographic_consistency": {
+    "n": 64,
+    "mean": 3.625,
+    "sd": 1.0465,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     4.0
+    ]
+   },
+   "constraint_whitespace_harmony": {
+    "n": 64,
+    "mean": 3.7344,
+    "sd": 1.0726,
+    "median": 4.0,
+    "iqr": [
+     3.0,
+     5.0
+    ]
+   }
+  }
+ },
+ "q1_rating_counts": {
+  "gnn": {
+   "visual_hierarchy_preservation": {
+    "1": 5,
+    "2": 11,
+    "3": 43,
+    "4": 39,
+    "5": 30
+   },
+   "brand_typographic_consistency": {
+    "1": 4,
+    "2": 22,
+    "3": 37,
+    "4": 40,
+    "5": 25
+   },
+   "constraint_whitespace_harmony": {
+    "1": 14,
+    "2": 36,
+    "3": 40,
+    "4": 22,
+    "5": 16
+   },
+   "all three": {
+    "1": 23,
+    "2": 69,
+    "3": 120,
+    "4": 101,
+    "5": 71
+   }
+  },
+  "baseline": {
+   "visual_hierarchy_preservation": {
+    "1": 6,
+    "2": 9,
+    "3": 37,
+    "4": 38,
+    "5": 38
+   },
+   "brand_typographic_consistency": {
+    "1": 3,
+    "2": 11,
+    "3": 40,
+    "4": 41,
+    "5": 33
+   },
+   "constraint_whitespace_harmony": {
+    "1": 5,
+    "2": 12,
+    "3": 33,
+    "4": 35,
+    "5": 43
+   },
+   "all three": {
+    "1": 14,
+    "2": 32,
+    "3": 110,
+    "4": 114,
+    "5": 114
+   }
+  }
+ },
+ "q2_kendall_w": {
+  "overall": {
+   "W": 0.6296,
+   "chi2": 158.655,
+   "df": 63,
+   "p": 3.3030016760089e-10,
+   "raters": 4,
+   "objects": 64
+  },
+  "visual_hierarchy_preservation": {
+   "W": 0.5791,
+   "chi2": 145.934,
+   "df": 63,
+   "p": 1.5737139975862746e-08,
+   "raters": 4,
+   "objects": 64
+  },
+  "brand_typographic_consistency": {
+   "W": 0.477,
+   "chi2": 120.216,
+   "df": 63,
+   "p": 1.903356051210418e-05,
+   "raters": 4,
+   "objects": 64
+  },
+  "constraint_whitespace_harmony": {
+   "W": 0.5696,
+   "chi2": 143.544,
+   "df": 63,
+   "p": 3.176920752161117e-08,
+   "raters": 4,
+   "objects": 64
+  }
+ },
+ "q3_q9_wilcoxon": {
+  "overall": {
+   "pairs": 32,
+   "nonzero": 27,
+   "higher": 2,
+   "lower": 25,
+   "equal": 5,
+   "mean_diff": -0.401,
+   "median_diff": -0.4167,
+   "W_plus": 9.5,
+   "W_minus": 368.5,
+   "statistic": 9.5,
+   "p": 1.538481999628878e-05,
+   "method": "normal approximation",
+   "r": -0.9497,
+   "p_holm": 4.615445998886634e-05,
+   "p_bonferroni": 6.153927998515512e-05,
+   "significant_holm": true
+  },
+  "visual_hierarchy_preservation": {
+   "pairs": 32,
+   "nonzero": 23,
+   "higher": 7,
+   "lower": 16,
+   "equal": 9,
+   "mean_diff": -0.1172,
+   "median_diff": -0.125,
+   "W_plus": 88.5,
+   "W_minus": 187.5,
+   "statistic": 88.5,
+   "p": 0.12704014010790504,
+   "method": "normal approximation",
+   "r": -0.3587,
+   "p_holm": 0.12704014010790504,
+   "p_bonferroni": 0.5081605604316202,
+   "significant_holm": false
+  },
+  "brand_typographic_consistency": {
+   "pairs": 32,
+   "nonzero": 27,
+   "higher": 5,
+   "lower": 22,
+   "equal": 5,
+   "mean_diff": -0.2344,
+   "median_diff": -0.25,
+   "W_plus": 50.0,
+   "W_minus": 328.0,
+   "statistic": 50.0,
+   "p": 0.00048520921408324815,
+   "method": "normal approximation",
+   "r": -0.7354,
+   "p_holm": 0.0009704184281664963,
+   "p_bonferroni": 0.0019408368563329926,
+   "significant_holm": true
+  },
+  "constraint_whitespace_harmony": {
+   "pairs": 32,
+   "nonzero": 28,
+   "higher": 2,
+   "lower": 26,
+   "equal": 4,
+   "mean_diff": -0.8516,
+   "median_diff": -1.0,
+   "W_plus": 4.0,
+   "W_minus": 402.0,
+   "statistic": 4.0,
+   "p": 5.406850516564512e-06,
+   "method": "normal approximation",
+   "r": -0.9803,
+   "p_holm": 2.162740206625805e-05,
+   "p_bonferroni": 2.162740206625805e-05,
+   "significant_holm": true
+  }
+ },
+ "pairs": [
+  {
+   "poster": "ANTI_HAZING_LAW.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 3.4167,
+   "visual_hierarchy_preservation_gnn": 3.5,
+   "brand_typographic_consistency_gnn": 3.75,
+   "constraint_whitespace_harmony_gnn": 3.0,
+   "overall_baseline": 3.75,
+   "visual_hierarchy_preservation_baseline": 3.75,
+   "brand_typographic_consistency_baseline": 4.0,
+   "constraint_whitespace_harmony_baseline": 3.5
+  },
+  {
+   "poster": "ANTI_HAZING_LAW.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 4.1667,
+   "visual_hierarchy_preservation_gnn": 4.25,
+   "brand_typographic_consistency_gnn": 4.25,
+   "constraint_whitespace_harmony_gnn": 4.0,
+   "overall_baseline": 4.1667,
+   "visual_hierarchy_preservation_baseline": 4.25,
+   "brand_typographic_consistency_baseline": 4.25,
+   "constraint_whitespace_harmony_baseline": 4.0
+  },
+  {
+   "poster": "ARANTABAYAN.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 2.9167,
+   "visual_hierarchy_preservation_gnn": 2.75,
+   "brand_typographic_consistency_gnn": 3.25,
+   "constraint_whitespace_harmony_gnn": 2.75,
+   "overall_baseline": 3.25,
+   "visual_hierarchy_preservation_baseline": 2.75,
+   "brand_typographic_consistency_baseline": 3.5,
+   "constraint_whitespace_harmony_baseline": 3.5
+  },
+  {
+   "poster": "ARANTABAYAN.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 3.25,
+   "visual_hierarchy_preservation_gnn": 3.75,
+   "brand_typographic_consistency_gnn": 3.25,
+   "constraint_whitespace_harmony_gnn": 2.75,
+   "overall_baseline": 3.25,
+   "visual_hierarchy_preservation_baseline": 3.5,
+   "brand_typographic_consistency_baseline": 3.5,
+   "constraint_whitespace_harmony_baseline": 2.75
+  },
+  {
+   "poster": "CHS_BIRISTUHAN.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 4.0833,
+   "visual_hierarchy_preservation_gnn": 4.5,
+   "brand_typographic_consistency_gnn": 4.25,
+   "constraint_whitespace_harmony_gnn": 3.5,
+   "overall_baseline": 4.5,
+   "visual_hierarchy_preservation_baseline": 4.5,
+   "brand_typographic_consistency_baseline": 4.25,
+   "constraint_whitespace_harmony_baseline": 4.75
+  },
+  {
+   "poster": "CHS_BIRISTUHAN.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 2.9167,
+   "visual_hierarchy_preservation_gnn": 2.75,
+   "brand_typographic_consistency_gnn": 3.5,
+   "constraint_whitespace_harmony_gnn": 2.5,
+   "overall_baseline": 3.5,
+   "visual_hierarchy_preservation_baseline": 3.0,
+   "brand_typographic_consistency_baseline": 3.75,
+   "constraint_whitespace_harmony_baseline": 3.75
+  },
+  {
+   "poster": "CMET.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 3.8333,
+   "visual_hierarchy_preservation_gnn": 4.5,
+   "brand_typographic_consistency_gnn": 3.75,
+   "constraint_whitespace_harmony_gnn": 3.25,
+   "overall_baseline": 3.9167,
+   "visual_hierarchy_preservation_baseline": 4.0,
+   "brand_typographic_consistency_baseline": 3.5,
+   "constraint_whitespace_harmony_baseline": 4.25
+  },
+  {
+   "poster": "CMET.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 2.75,
+   "visual_hierarchy_preservation_gnn": 3.5,
+   "brand_typographic_consistency_gnn": 2.25,
+   "constraint_whitespace_harmony_gnn": 2.5,
+   "overall_baseline": 3.1667,
+   "visual_hierarchy_preservation_baseline": 3.25,
+   "brand_typographic_consistency_baseline": 3.0,
+   "constraint_whitespace_harmony_baseline": 3.25
+  },
+  {
+   "poster": "CTC.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 3.75,
+   "visual_hierarchy_preservation_gnn": 4.25,
+   "brand_typographic_consistency_gnn": 4.0,
+   "constraint_whitespace_harmony_gnn": 3.0,
+   "overall_baseline": 4.3333,
+   "visual_hierarchy_preservation_baseline": 4.25,
+   "brand_typographic_consistency_baseline": 4.25,
+   "constraint_whitespace_harmony_baseline": 4.5
+  },
+  {
+   "poster": "CTC.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 3.5,
+   "visual_hierarchy_preservation_gnn": 3.5,
+   "brand_typographic_consistency_gnn": 4.0,
+   "constraint_whitespace_harmony_gnn": 3.0,
+   "overall_baseline": 4.1667,
+   "visual_hierarchy_preservation_baseline": 4.25,
+   "brand_typographic_consistency_baseline": 4.0,
+   "constraint_whitespace_harmony_baseline": 4.25
+  },
+  {
+   "poster": "DEAR_SENDER.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 3.8333,
+   "visual_hierarchy_preservation_gnn": 4.0,
+   "brand_typographic_consistency_gnn": 4.0,
+   "constraint_whitespace_harmony_gnn": 3.5,
+   "overall_baseline": 4.4167,
+   "visual_hierarchy_preservation_baseline": 4.5,
+   "brand_typographic_consistency_baseline": 4.25,
+   "constraint_whitespace_harmony_baseline": 4.5
+  },
+  {
+   "poster": "DEAR_SENDER.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 3.4167,
+   "visual_hierarchy_preservation_gnn": 3.75,
+   "brand_typographic_consistency_gnn": 3.5,
+   "constraint_whitespace_harmony_gnn": 3.0,
+   "overall_baseline": 3.4167,
+   "visual_hierarchy_preservation_baseline": 4.0,
+   "brand_typographic_consistency_baseline": 3.25,
+   "constraint_whitespace_harmony_baseline": 3.0
+  },
+  {
+   "poster": "DONATION_PROGRAM.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 3.5833,
+   "visual_hierarchy_preservation_gnn": 4.25,
+   "brand_typographic_consistency_gnn": 3.5,
+   "constraint_whitespace_harmony_gnn": 3.0,
+   "overall_baseline": 4.3333,
+   "visual_hierarchy_preservation_baseline": 4.5,
+   "brand_typographic_consistency_baseline": 4.0,
+   "constraint_whitespace_harmony_baseline": 4.5
+  },
+  {
+   "poster": "DONATION_PROGRAM.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 3.3333,
+   "visual_hierarchy_preservation_gnn": 3.25,
+   "brand_typographic_consistency_gnn": 4.0,
+   "constraint_whitespace_harmony_gnn": 2.75,
+   "overall_baseline": 3.9167,
+   "visual_hierarchy_preservation_baseline": 3.5,
+   "brand_typographic_consistency_baseline": 4.25,
+   "constraint_whitespace_harmony_baseline": 4.0
+  },
+  {
+   "poster": "FLOWERS_OF_HOPE.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 4.0833,
+   "visual_hierarchy_preservation_gnn": 4.5,
+   "brand_typographic_consistency_gnn": 4.25,
+   "constraint_whitespace_harmony_gnn": 3.5,
+   "overall_baseline": 4.4167,
+   "visual_hierarchy_preservation_baseline": 4.5,
+   "brand_typographic_consistency_baseline": 4.25,
+   "constraint_whitespace_harmony_baseline": 4.5
+  },
+  {
+   "poster": "FLOWERS_OF_HOPE.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 4.1667,
+   "visual_hierarchy_preservation_gnn": 4.5,
+   "brand_typographic_consistency_gnn": 4.25,
+   "constraint_whitespace_harmony_gnn": 3.75,
+   "overall_baseline": 4.5,
+   "visual_hierarchy_preservation_baseline": 4.75,
+   "brand_typographic_consistency_baseline": 4.0,
+   "constraint_whitespace_harmony_baseline": 4.75
+  },
+  {
+   "poster": "GUESS_THE_TEACHER.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 2.4167,
+   "visual_hierarchy_preservation_gnn": 2.75,
+   "brand_typographic_consistency_gnn": 2.75,
+   "constraint_whitespace_harmony_gnn": 1.75,
+   "overall_baseline": 2.4167,
+   "visual_hierarchy_preservation_baseline": 2.25,
+   "brand_typographic_consistency_baseline": 3.0,
+   "constraint_whitespace_harmony_baseline": 2.0
+  },
+  {
+   "poster": "GUESS_THE_TEACHER.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 2.5833,
+   "visual_hierarchy_preservation_gnn": 3.0,
+   "brand_typographic_consistency_gnn": 2.5,
+   "constraint_whitespace_harmony_gnn": 2.25,
+   "overall_baseline": 3.5833,
+   "visual_hierarchy_preservation_baseline": 3.5,
+   "brand_typographic_consistency_baseline": 3.5,
+   "constraint_whitespace_harmony_baseline": 3.75
+  },
+  {
+   "poster": "JFINEX.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 4.0,
+   "visual_hierarchy_preservation_gnn": 4.5,
+   "brand_typographic_consistency_gnn": 4.0,
+   "constraint_whitespace_harmony_gnn": 3.5,
+   "overall_baseline": 4.5,
+   "visual_hierarchy_preservation_baseline": 4.5,
+   "brand_typographic_consistency_baseline": 4.5,
+   "constraint_whitespace_harmony_baseline": 4.5
+  },
+  {
+   "poster": "JFINEX.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 3.5833,
+   "visual_hierarchy_preservation_gnn": 3.25,
+   "brand_typographic_consistency_gnn": 4.25,
+   "constraint_whitespace_harmony_gnn": 3.25,
+   "overall_baseline": 4.1667,
+   "visual_hierarchy_preservation_baseline": 3.75,
+   "brand_typographic_consistency_baseline": 4.25,
+   "constraint_whitespace_harmony_baseline": 4.5
+  },
+  {
+   "poster": "KAINANG_PAMILYA.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 2.4167,
+   "visual_hierarchy_preservation_gnn": 2.75,
+   "brand_typographic_consistency_gnn": 2.5,
+   "constraint_whitespace_harmony_gnn": 2.0,
+   "overall_baseline": 2.0833,
+   "visual_hierarchy_preservation_baseline": 1.75,
+   "brand_typographic_consistency_baseline": 2.75,
+   "constraint_whitespace_harmony_baseline": 1.75
+  },
+  {
+   "poster": "KAINANG_PAMILYA.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 2.75,
+   "visual_hierarchy_preservation_gnn": 2.75,
+   "brand_typographic_consistency_gnn": 3.5,
+   "constraint_whitespace_harmony_gnn": 2.0,
+   "overall_baseline": 3.6667,
+   "visual_hierarchy_preservation_baseline": 3.5,
+   "brand_typographic_consistency_baseline": 3.75,
+   "constraint_whitespace_harmony_baseline": 3.75
+  },
+  {
+   "poster": "LUCKY_TERA.jpg",
+   "format": "certificate",
+   "identical_layouts": true,
+   "overall_gnn": 3.75,
+   "visual_hierarchy_preservation_gnn": 4.0,
+   "brand_typographic_consistency_gnn": 3.75,
+   "constraint_whitespace_harmony_gnn": 3.5,
+   "overall_baseline": 3.6667,
+   "visual_hierarchy_preservation_baseline": 3.0,
+   "brand_typographic_consistency_baseline": 4.0,
+   "constraint_whitespace_harmony_baseline": 4.0
+  },
+  {
+   "poster": "LUCKY_TERA.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 3.0,
+   "visual_hierarchy_preservation_gnn": 3.0,
+   "brand_typographic_consistency_gnn": 3.5,
+   "constraint_whitespace_harmony_gnn": 2.5,
+   "overall_baseline": 3.6667,
+   "visual_hierarchy_preservation_baseline": 3.5,
+   "brand_typographic_consistency_baseline": 3.75,
+   "constraint_whitespace_harmony_baseline": 3.75
+  },
+  {
+   "poster": "RXEADY.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 2.8333,
+   "visual_hierarchy_preservation_gnn": 2.75,
+   "brand_typographic_consistency_gnn": 2.75,
+   "constraint_whitespace_harmony_gnn": 3.0,
+   "overall_baseline": 2.9167,
+   "visual_hierarchy_preservation_baseline": 2.75,
+   "brand_typographic_consistency_baseline": 3.25,
+   "constraint_whitespace_harmony_baseline": 2.75
+  },
+  {
+   "poster": "RXEADY.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 2.5,
+   "visual_hierarchy_preservation_gnn": 2.5,
+   "brand_typographic_consistency_gnn": 3.0,
+   "constraint_whitespace_harmony_gnn": 2.0,
+   "overall_baseline": 3.6667,
+   "visual_hierarchy_preservation_baseline": 3.5,
+   "brand_typographic_consistency_baseline": 4.0,
+   "constraint_whitespace_harmony_baseline": 3.5
+  },
+  {
+   "poster": "RZEADY_SET_BOOTH.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 4.0833,
+   "visual_hierarchy_preservation_gnn": 4.5,
+   "brand_typographic_consistency_gnn": 4.0,
+   "constraint_whitespace_harmony_gnn": 3.75,
+   "overall_baseline": 4.25,
+   "visual_hierarchy_preservation_baseline": 4.5,
+   "brand_typographic_consistency_baseline": 3.75,
+   "constraint_whitespace_harmony_baseline": 4.5
+  },
+  {
+   "poster": "RZEADY_SET_BOOTH.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 2.9167,
+   "visual_hierarchy_preservation_gnn": 3.5,
+   "brand_typographic_consistency_gnn": 2.5,
+   "constraint_whitespace_harmony_gnn": 2.75,
+   "overall_baseline": 3.6667,
+   "visual_hierarchy_preservation_baseline": 4.0,
+   "brand_typographic_consistency_baseline": 3.0,
+   "constraint_whitespace_harmony_baseline": 4.0
+  },
+  {
+   "poster": "SHARE_KO_LANG.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 3.4167,
+   "visual_hierarchy_preservation_gnn": 4.25,
+   "brand_typographic_consistency_gnn": 3.25,
+   "constraint_whitespace_harmony_gnn": 2.75,
+   "overall_baseline": 4.0833,
+   "visual_hierarchy_preservation_baseline": 4.25,
+   "brand_typographic_consistency_baseline": 3.75,
+   "constraint_whitespace_harmony_baseline": 4.25
+  },
+  {
+   "poster": "SHARE_KO_LANG.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 2.9167,
+   "visual_hierarchy_preservation_gnn": 3.25,
+   "brand_typographic_consistency_gnn": 2.75,
+   "constraint_whitespace_harmony_gnn": 2.75,
+   "overall_baseline": 3.3333,
+   "visual_hierarchy_preservation_baseline": 3.5,
+   "brand_typographic_consistency_baseline": 3.0,
+   "constraint_whitespace_harmony_baseline": 3.5
+  },
+  {
+   "poster": "SIGN_LANGUAGE_DAY.jpg",
+   "format": "certificate",
+   "identical_layouts": false,
+   "overall_gnn": 3.5833,
+   "visual_hierarchy_preservation_gnn": 4.25,
+   "brand_typographic_consistency_gnn": 3.25,
+   "constraint_whitespace_harmony_gnn": 3.25,
+   "overall_baseline": 3.5833,
+   "visual_hierarchy_preservation_baseline": 4.0,
+   "brand_typographic_consistency_baseline": 3.5,
+   "constraint_whitespace_harmony_baseline": 3.25
+  },
+  {
+   "poster": "SIGN_LANGUAGE_DAY.jpg",
+   "format": "event_id",
+   "identical_layouts": false,
+   "overall_gnn": 2.9167,
+   "visual_hierarchy_preservation_gnn": 3.0,
+   "brand_typographic_consistency_gnn": 3.0,
+   "constraint_whitespace_harmony_gnn": 2.75,
+   "overall_baseline": 3.25,
+   "visual_hierarchy_preservation_baseline": 3.75,
+   "brand_typographic_consistency_baseline": 2.75,
+   "constraint_whitespace_harmony_baseline": 3.25
+  }
+ ],
+ "q11_phase3": {
+  "c_total": {
+   "gnn": {
+    "n": 32,
+    "mean": 0.0879,
+    "sd": 0.0791,
+    "median": 0.1099,
+    "iqr": [
+     0.0024,
+     0.1605
+    ]
+   },
+   "baseline": {
+    "n": 32,
+    "mean": 0.0855,
+    "sd": 0.0766,
+    "median": 0.1082,
+    "iqr": [
+     0.0024,
+     0.1535
+    ]
+   },
+   "certificate gnn": {
+    "n": 16,
+    "mean": 0.0125,
+    "sd": 0.025,
+    "median": 0.0021,
+    "iqr": [
+     0.0011,
+     0.0075
+    ]
+   },
+   "certificate baseline": {
+    "n": 16,
+    "mean": 0.0126,
+    "sd": 0.0251,
+    "median": 0.0021,
+    "iqr": [
+     0.0011,
+     0.0076
+    ]
+   },
+   "event_id gnn": {
+    "n": 16,
+    "mean": 0.1633,
+    "sd": 0.0133,
+    "median": 0.1606,
+    "iqr": [
+     0.1545,
+     0.1725
+    ]
+   },
+   "event_id baseline": {
+    "n": 16,
+    "mean": 0.1583,
+    "sd": 0.0135,
+    "median": 0.1535,
+    "iqr": [
+     0.1504,
+     0.1615
+    ]
+   }
+  },
+  "c_total_wilcoxon": {
+   "pairs": 32,
+   "nonzero": 22,
+   "higher": 15,
+   "lower": 7,
+   "equal": 10,
+   "mean_diff": 0.0024,
+   "median_diff": 0.0,
+   "W_plus": 193.5,
+   "W_minus": 59.5,
+   "statistic": 59.5,
+   "p": 0.029572315796273813,
+   "method": "normal approximation",
+   "r": 0.5296,
+   "reading": "positive r / 'higher' = the GNN's C_total is higher, i.e. worse (Formula 3.11 is minimised)"
+  },
+  "latency_ms": {
+   "solver": {
+    "n": 1012,
+    "mean": 0.5256,
+    "sd": 3.0081,
+    "median": 0.4,
+    "iqr": [
+     0.3,
+     0.5
+    ]
+   },
+   "full_edit": {
+    "n": 1360,
+    "mean": 90.6415,
+    "sd": 57.4587,
+    "median": 89.5,
+    "iqr": [
+     27.3,
+     146.2
+    ]
+   },
+   "source": "results/latency_benchmark.json"
+  },
+  "f1_rated_layouts": {
+   "gnn": {
+    "n": 32,
+    "mean": 1.0,
+    "sd": 0.0,
+    "median": 1.0,
+    "iqr": [
+     1.0,
+     1.0
+    ]
+   },
+   "baseline": {
+    "n": 32,
+    "mean": 1.0,
+    "sd": 0.0,
+    "median": 1.0,
+    "iqr": [
+     1.0,
+     1.0
+    ]
+   },
+   "source": "results/rated_layouts_check.json"
+  },
+  "detector_iou": {
+   "ground_truth_boxes": 607,
+   "strict_mean_iou": 0.6443,
+   "strict_sd": 0.3508,
+   "found": 455,
+   "found_mean_iou": 0.8371,
+   "found_sd": 0.097,
+   "source": "results/yolo_iou.json (all 40 validation images)"
+  }
+ },
+ "sensitivity": {
+  "agreement_icc_krippendorff": {
+   "overall": {
+    "ICC(2,1)": 0.3061,
+    "ICC(2,k)": 0.6383,
+    "krippendorff_alpha": 0.2302,
+    "alpha_metric": "interval"
+   },
+   "visual_hierarchy_preservation": {
+    "ICC(2,1)": 0.2604,
+    "ICC(2,k)": 0.5847,
+    "krippendorff_alpha": 0.2078,
+    "alpha_metric": "ordinal"
+   },
+   "brand_typographic_consistency": {
+    "ICC(2,1)": 0.1579,
+    "ICC(2,k)": 0.4286,
+    "krippendorff_alpha": 0.0099,
+    "alpha_metric": "ordinal"
+   },
+   "constraint_whitespace_harmony": {
+    "ICC(2,1)": 0.2688,
+    "ICC(2,k)": 0.5952,
+    "krippendorff_alpha": 0.2002,
+    "alpha_metric": "ordinal"
+   }
+  },
+  "paired_t": {
+   "overall": {
+    "t": -6.5662,
+    "df": 31,
+    "p": 2.4770823518991007e-07,
+    "mean_diff": -0.401,
+    "cohen_dz": -1.1608
+   },
+   "visual_hierarchy_preservation": {
+    "t": -1.4342,
+    "df": 31,
+    "p": 0.16152784637050255,
+    "mean_diff": -0.1172,
+    "cohen_dz": -0.2535
+   },
+   "brand_typographic_consistency": {
+    "t": -4.0997,
+    "df": 31,
+    "p": 0.0002767035632560699,
+    "mean_diff": -0.2344,
+    "cohen_dz": -0.7247
+   },
+   "constraint_whitespace_harmony": {
+    "t": -8.3846,
+    "df": 31,
+    "p": 1.8009115779422052e-09,
+    "mean_diff": -0.8516,
+    "cohen_dz": -1.4822
+   }
+  },
+  "wilcoxon_without_identical_pair": {
+   "overall": {
+    "pairs": 31,
+    "nonzero": 26,
+    "higher": 1,
+    "lower": 25,
+    "equal": 5,
+    "mean_diff": -0.4167,
+    "median_diff": -0.4167,
+    "W_plus": 6.5,
+    "W_minus": 344.5,
+    "statistic": 6.5,
+    "p": 1.6808242164179147e-05,
+    "method": "normal approximation",
+    "r": -0.963,
+    "p_holm": 5.042472649253744e-05,
+    "p_bonferroni": 6.723296865671659e-05,
+    "significant_holm": true
+   },
+   "visual_hierarchy_preservation": {
+    "pairs": 31,
+    "nonzero": 22,
+    "higher": 6,
+    "lower": 16,
+    "equal": 9,
+    "mean_diff": -0.1532,
+    "median_diff": -0.25,
+    "W_plus": 66.0,
+    "W_minus": 187.0,
+    "statistic": 66.0,
+    "p": 0.04614286072398168,
+    "method": "normal approximation",
+    "r": -0.4783,
+    "p_holm": 0.04614286072398168,
+    "p_bonferroni": 0.18457144289592672,
+    "significant_holm": true
+   },
+   "brand_typographic_consistency": {
+    "pairs": 31,
+    "nonzero": 26,
+    "higher": 5,
+    "lower": 21,
+    "equal": 5,
+    "mean_diff": -0.2339,
+    "median_diff": -0.25,
+    "W_plus": 47.5,
+    "W_minus": 303.5,
+    "statistic": 47.5,
+    "p": 0.0007014299438074529,
+    "method": "normal approximation",
+    "r": -0.7293,
+    "p_holm": 0.0014028598876149058,
+    "p_bonferroni": 0.0028057197752298117,
+    "significant_holm": true
+   },
+   "constraint_whitespace_harmony": {
+    "pairs": 31,
+    "nonzero": 27,
+    "higher": 2,
+    "lower": 25,
+    "equal": 4,
+    "mean_diff": -0.8629,
+    "median_diff": -1.0,
+    "W_plus": 4.0,
+    "W_minus": 374.0,
+    "statistic": 4.0,
+    "p": 8.099751740682771e-06,
+    "method": "normal approximation",
+    "r": -0.9788,
+    "p_holm": 3.2399006962731084e-05,
+    "p_bonferroni": 3.2399006962731084e-05,
+    "significant_holm": true
+   }
+  }
+ }
+}

@@ -25,15 +25,16 @@ the past tense. Search it with
 Before claiming the code "matches the manuscript", re-read the PDF and the
 code; notes go stale.
 
-## Where things stand (2026-10-09)
+## Where things stand (2026-10-10)
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.47).
+§3.49).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
-  ~88%.
+  ~88%. The 2026-10-09 consultation concluded **"recommended for POD"**
+  (user, 2026-10-10).
 - **Deployed:** YOLO **v5** (`themesync_yolo_v5.pt`) and GNN **v3**
   (`themesync_gnn_v3.pth`). The pipeline picks the newest checkpoint in the
   repo root.
@@ -143,13 +144,23 @@ Read first: `notes/system_development_progress.md`, then the tail of
   review. Still open: three [GROUP: …] facts, p.55's stress-test wording
   (M3), p.62's latency wording (M26), the figures (M17), and 3.9–3.12.
   Chapter 4 is drafted in `chapters/chapter4.tex`.
-- **Waiting on the consultant's answers** from the 2026-10-09 statistics
-  consultation (the answer sheet in `notes/consultation_guidelines.pdf`).
-  If the user hasn't sent them, remind them. They decide item 3.9 and the
-  Phase 4 analysis script; don't pick the tests before they arrive.
-- **Waiting on:** the expert scores. The user will upload all four at
-  once (the first expert's arrived 2026-10-07). Import them with
-  `mos_collector.py --import_scores … --key data/phase4/phase4_key.csv`.
+- **Phase 4 is analysed** (2026-10-10, notes §3.48–3.49, handoff D7):
+  - **The statistical treatment:** the consultant checks only the
+    prototype, so the group adopted the consultation guide's suggested
+    answer to all eleven questions (`notes/consultation_guidelines.pdf`).
+    `src/evaluation/phase4_analysis.py` implements them. It was committed
+    (`b9a60ab`) before the scores were imported; change it only to fix a
+    bug, and say so.
+  - **The data:** all four experts' sheets are imported into
+    `results/mos_results.json` (768 ratings).
+  - **The result:** the experts rated the **baseline significantly higher**
+    than structure mapping + GNN: overall MOS 3.73 vs 3.33, p_Holm < 0.001,
+    r = −0.95. It was mainly on Constraint & Whitespace (3.77 vs 2.92);
+    Visual Hierarchy n.s.
+  - **Post hoc** (`phase4_posthoc.py`): mapping + GNN leaves larger,
+    uneven gaps. Formula 3.11 doesn't measure that.
+  - **Reporting:** report it as found; label the conditions "structure
+    mapping + GNN" vs "baseline (neither)". The system stays as rated.
 
 ## Working rules (from the user)
 
@@ -245,8 +256,9 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
   IoU, p.62), `stress_test.py` (p.55's extreme payloads; analysis only),
   `latency_benchmark.py` (p.62's edit latency), `rated_layouts_check.py`
   (F1 and text fit of the 64 rated layouts, read-only),
-  `r_target_analysis.py` (a master-derived R_target; analysis only), then
-  re-execute
+  `r_target_analysis.py` (a master-derived R_target; analysis only),
+  `phase4_analysis.py` (the fixed Phase 4 plan; `--simulate` tests it) and
+  `phase4_posthoc.py` (exploratory), then re-execute
   `notebooks/results_analysis.ipynb`. `weight_calibration.py` is the
   Formula 3.11 weight calibration (item 3.25; analysis only, `--reuse`
   re-analyses the saved runs).

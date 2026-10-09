@@ -1,0 +1,5124 @@
+{
+  "evaluations": [
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S39",
+      "sample_code": "S39",
+      "poster_file": "CTC.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 3,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S52",
+      "sample_code": "S52",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 4,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S17",
+      "sample_code": "S17",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 5,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.0,
+      "comment": "change of logo brand"
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S16",
+      "sample_code": "S16",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 6,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S28",
+      "sample_code": "S28",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 7,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.0,
+      "comment": "placement of the logo"
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S46",
+      "sample_code": "S46",
+      "poster_file": "JFINEX.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 8,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S12",
+      "sample_code": "S12",
+      "poster_file": "RXEADY.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 9,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S48",
+      "sample_code": "S48",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 10,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S43",
+      "sample_code": "S43",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 11,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": "the icon \"closed\" isnt properly placed"
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S13",
+      "sample_code": "S13",
+      "poster_file": "RXEADY.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 12,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S59",
+      "sample_code": "S59",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 13,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.0,
+      "comment": "not properly placed"
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S11",
+      "sample_code": "S11",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 14,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S23",
+      "sample_code": "S23",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 15,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S33",
+      "sample_code": "S33",
+      "poster_file": "CMET.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 16,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": "the logo"
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S31",
+      "sample_code": "S31",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 17,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S41",
+      "sample_code": "S41",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 18,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S47",
+      "sample_code": "S47",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 19,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S44",
+      "sample_code": "S44",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 20,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S32",
+      "sample_code": "S32",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 21,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S34",
+      "sample_code": "S34",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 22,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S04",
+      "sample_code": "S04",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 23,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S14",
+      "sample_code": "S14",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 24,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S58",
+      "sample_code": "S58",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 25,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S29",
+      "sample_code": "S29",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 26,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S54",
+      "sample_code": "S54",
+      "poster_file": "JFINEX.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 27,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S20",
+      "sample_code": "S20",
+      "poster_file": "CTC.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 28,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S01",
+      "sample_code": "S01",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 29,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S53",
+      "sample_code": "S53",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 30,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S57",
+      "sample_code": "S57",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 31,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S02",
+      "sample_code": "S02",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 32,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S26",
+      "sample_code": "S26",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 33,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S60",
+      "sample_code": "S60",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 34,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S49",
+      "sample_code": "S49",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 35,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S30",
+      "sample_code": "S30",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 36,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S61",
+      "sample_code": "S61",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 37,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S35",
+      "sample_code": "S35",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 38,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S42",
+      "sample_code": "S42",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 39,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S19",
+      "sample_code": "S19",
+      "poster_file": "CTC.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 40,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S24",
+      "sample_code": "S24",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 41,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S64",
+      "sample_code": "S64",
+      "poster_file": "CMET.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 42,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S06",
+      "sample_code": "S06",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 43,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S45",
+      "sample_code": "S45",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 44,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S15",
+      "sample_code": "S15",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 45,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S62",
+      "sample_code": "S62",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 46,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S37",
+      "sample_code": "S37",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 47,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S56",
+      "sample_code": "S56",
+      "poster_file": "CMET.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 48,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S55",
+      "sample_code": "S55",
+      "poster_file": "JFINEX.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 49,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S63",
+      "sample_code": "S63",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 50,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S40",
+      "sample_code": "S40",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 51,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S08",
+      "sample_code": "S08",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 52,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S22",
+      "sample_code": "S22",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 53,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S09",
+      "sample_code": "S09",
+      "poster_file": "RXEADY.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 54,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S10",
+      "sample_code": "S10",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 55,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S51",
+      "sample_code": "S51",
+      "poster_file": "RXEADY.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 56,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S25",
+      "sample_code": "S25",
+      "poster_file": "CTC.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 57,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S05",
+      "sample_code": "S05",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 58,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S27",
+      "sample_code": "S27",
+      "poster_file": "CMET.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 59,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S03",
+      "sample_code": "S03",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 60,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S21",
+      "sample_code": "S21",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 61,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S07",
+      "sample_code": "S07",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 62,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S50",
+      "sample_code": "S50",
+      "poster_file": "JFINEX.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 63,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S36",
+      "sample_code": "S36",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 64,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S38",
+      "sample_code": "S38",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 65,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Eisen Rose D. Galvante",
+      "layout_file": "S18",
+      "sample_code": "S18",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 66,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S03",
+      "sample_code": "S03",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 3,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S34",
+      "sample_code": "S34",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 4,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S64",
+      "sample_code": "S64",
+      "poster_file": "CMET.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 5,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S35",
+      "sample_code": "S35",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 6,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S07",
+      "sample_code": "S07",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 7,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S42",
+      "sample_code": "S42",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 8,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S13",
+      "sample_code": "S13",
+      "poster_file": "RXEADY.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 9,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 1,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S02",
+      "sample_code": "S02",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 10,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 1,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S45",
+      "sample_code": "S45",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 11,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S19",
+      "sample_code": "S19",
+      "poster_file": "CTC.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 12,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S16",
+      "sample_code": "S16",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 13,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S24",
+      "sample_code": "S24",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 14,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S60",
+      "sample_code": "S60",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 15,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S58",
+      "sample_code": "S58",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 16,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S05",
+      "sample_code": "S05",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 17,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S43",
+      "sample_code": "S43",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 18,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S20",
+      "sample_code": "S20",
+      "poster_file": "CTC.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 19,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S33",
+      "sample_code": "S33",
+      "poster_file": "CMET.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 20,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S32",
+      "sample_code": "S32",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 21,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S55",
+      "sample_code": "S55",
+      "poster_file": "JFINEX.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 22,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S10",
+      "sample_code": "S10",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 23,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 1,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S50",
+      "sample_code": "S50",
+      "poster_file": "JFINEX.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 24,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S30",
+      "sample_code": "S30",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 25,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 1,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S26",
+      "sample_code": "S26",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 26,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S59",
+      "sample_code": "S59",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 27,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S09",
+      "sample_code": "S09",
+      "poster_file": "RXEADY.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 28,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 1,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S44",
+      "sample_code": "S44",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 29,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S27",
+      "sample_code": "S27",
+      "poster_file": "CMET.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 30,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S17",
+      "sample_code": "S17",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 31,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S21",
+      "sample_code": "S21",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 32,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S22",
+      "sample_code": "S22",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 33,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 1,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 2.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S62",
+      "sample_code": "S62",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 34,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S38",
+      "sample_code": "S38",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 35,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S61",
+      "sample_code": "S61",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 36,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S18",
+      "sample_code": "S18",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 37,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S29",
+      "sample_code": "S29",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 38,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S63",
+      "sample_code": "S63",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 39,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S04",
+      "sample_code": "S04",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 40,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S28",
+      "sample_code": "S28",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 41,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S57",
+      "sample_code": "S57",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 42,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S08",
+      "sample_code": "S08",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 43,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 1.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S51",
+      "sample_code": "S51",
+      "poster_file": "RXEADY.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 44,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S40",
+      "sample_code": "S40",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 45,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S36",
+      "sample_code": "S36",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 46,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S25",
+      "sample_code": "S25",
+      "poster_file": "CTC.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 47,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S49",
+      "sample_code": "S49",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 48,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S15",
+      "sample_code": "S15",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 49,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S41",
+      "sample_code": "S41",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 50,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 1,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S31",
+      "sample_code": "S31",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 51,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S52",
+      "sample_code": "S52",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 52,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S54",
+      "sample_code": "S54",
+      "poster_file": "JFINEX.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 53,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S12",
+      "sample_code": "S12",
+      "poster_file": "RXEADY.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 54,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S37",
+      "sample_code": "S37",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 55,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S23",
+      "sample_code": "S23",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 56,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S56",
+      "sample_code": "S56",
+      "poster_file": "CMET.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 57,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S53",
+      "sample_code": "S53",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 58,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S06",
+      "sample_code": "S06",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 59,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S01",
+      "sample_code": "S01",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 60,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S39",
+      "sample_code": "S39",
+      "poster_file": "CTC.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 61,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S11",
+      "sample_code": "S11",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 62,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S47",
+      "sample_code": "S47",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 63,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S46",
+      "sample_code": "S46",
+      "poster_file": "JFINEX.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 64,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S14",
+      "sample_code": "S14",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 65,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002142",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Kyz Denise Aquino",
+      "layout_file": "S48",
+      "sample_code": "S48",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 66,
+      "timestamp": "2026-10-10T00:21:42",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S35",
+      "sample_code": "S35",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 3,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S26",
+      "sample_code": "S26",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 4,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S09",
+      "sample_code": "S09",
+      "poster_file": "RXEADY.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 5,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S63",
+      "sample_code": "S63",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 6,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S24",
+      "sample_code": "S24",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 7,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 1,
+        "brand_typographic_consistency": 1,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 1.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S10",
+      "sample_code": "S10",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 8,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S21",
+      "sample_code": "S21",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 9,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S23",
+      "sample_code": "S23",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 10,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S28",
+      "sample_code": "S28",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 11,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 1,
+        "brand_typographic_consistency": 1,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 1.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S30",
+      "sample_code": "S30",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 12,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S17",
+      "sample_code": "S17",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 13,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S22",
+      "sample_code": "S22",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 14,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S01",
+      "sample_code": "S01",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 15,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 1,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S54",
+      "sample_code": "S54",
+      "poster_file": "JFINEX.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 16,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S49",
+      "sample_code": "S49",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 17,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S08",
+      "sample_code": "S08",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 18,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 1,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 1.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S25",
+      "sample_code": "S25",
+      "poster_file": "CTC.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 19,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S58",
+      "sample_code": "S58",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 20,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S51",
+      "sample_code": "S51",
+      "poster_file": "RXEADY.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 21,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S37",
+      "sample_code": "S37",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 22,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S52",
+      "sample_code": "S52",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 23,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S14",
+      "sample_code": "S14",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 24,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S44",
+      "sample_code": "S44",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 25,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S64",
+      "sample_code": "S64",
+      "poster_file": "CMET.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 26,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S07",
+      "sample_code": "S07",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 27,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S16",
+      "sample_code": "S16",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 28,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S61",
+      "sample_code": "S61",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 29,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S33",
+      "sample_code": "S33",
+      "poster_file": "CMET.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 30,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S32",
+      "sample_code": "S32",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 31,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S05",
+      "sample_code": "S05",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 32,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S48",
+      "sample_code": "S48",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 33,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S04",
+      "sample_code": "S04",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 34,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S42",
+      "sample_code": "S42",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 35,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S46",
+      "sample_code": "S46",
+      "poster_file": "JFINEX.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 36,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S31",
+      "sample_code": "S31",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 37,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S03",
+      "sample_code": "S03",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 38,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S39",
+      "sample_code": "S39",
+      "poster_file": "CTC.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 39,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S15",
+      "sample_code": "S15",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 40,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S12",
+      "sample_code": "S12",
+      "poster_file": "RXEADY.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 41,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S29",
+      "sample_code": "S29",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 42,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S53",
+      "sample_code": "S53",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 43,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S56",
+      "sample_code": "S56",
+      "poster_file": "CMET.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 44,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 1,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S13",
+      "sample_code": "S13",
+      "poster_file": "RXEADY.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 45,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S02",
+      "sample_code": "S02",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 46,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S18",
+      "sample_code": "S18",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 47,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S41",
+      "sample_code": "S41",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 48,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S36",
+      "sample_code": "S36",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 49,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S55",
+      "sample_code": "S55",
+      "poster_file": "JFINEX.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 50,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S20",
+      "sample_code": "S20",
+      "poster_file": "CTC.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 51,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S57",
+      "sample_code": "S57",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 52,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S59",
+      "sample_code": "S59",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 53,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 1,
+        "brand_typographic_consistency": 1,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 1.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S34",
+      "sample_code": "S34",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 54,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S38",
+      "sample_code": "S38",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 55,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S50",
+      "sample_code": "S50",
+      "poster_file": "JFINEX.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 56,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S40",
+      "sample_code": "S40",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 57,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S11",
+      "sample_code": "S11",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 58,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S27",
+      "sample_code": "S27",
+      "poster_file": "CMET.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 59,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S60",
+      "sample_code": "S60",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 60,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S43",
+      "sample_code": "S43",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 61,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S47",
+      "sample_code": "S47",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 62,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S06",
+      "sample_code": "S06",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 63,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S45",
+      "sample_code": "S45",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 64,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S19",
+      "sample_code": "S19",
+      "poster_file": "CTC.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 65,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Joseph Orias",
+      "layout_file": "S62",
+      "sample_code": "S62",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 66,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 1,
+        "brand_typographic_consistency": 1,
+        "constraint_whitespace_harmony": 1
+      },
+      "mean_mos": 1.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S01",
+      "sample_code": "S01",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 3,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S27",
+      "sample_code": "S27",
+      "poster_file": "CMET.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 4,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S41",
+      "sample_code": "S41",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 5,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S17",
+      "sample_code": "S17",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 6,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S03",
+      "sample_code": "S03",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 7,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S15",
+      "sample_code": "S15",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 8,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S33",
+      "sample_code": "S33",
+      "poster_file": "CMET.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 9,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S59",
+      "sample_code": "S59",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 10,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 2,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S18",
+      "sample_code": "S18",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 11,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S14",
+      "sample_code": "S14",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 12,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S36",
+      "sample_code": "S36",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 13,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S09",
+      "sample_code": "S09",
+      "poster_file": "RXEADY.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 14,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S31",
+      "sample_code": "S31",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 15,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S19",
+      "sample_code": "S19",
+      "poster_file": "CTC.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 16,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S04",
+      "sample_code": "S04",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 17,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S35",
+      "sample_code": "S35",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 18,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S38",
+      "sample_code": "S38",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 19,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S30",
+      "sample_code": "S30",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 20,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S29",
+      "sample_code": "S29",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 21,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S52",
+      "sample_code": "S52",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 22,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S25",
+      "sample_code": "S25",
+      "poster_file": "CTC.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 23,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S60",
+      "sample_code": "S60",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 24,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S10",
+      "sample_code": "S10",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 25,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S28",
+      "sample_code": "S28",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 26,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S56",
+      "sample_code": "S56",
+      "poster_file": "CMET.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 27,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S55",
+      "sample_code": "S55",
+      "poster_file": "JFINEX.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 28,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S47",
+      "sample_code": "S47",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 29,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S49",
+      "sample_code": "S49",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 30,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S16",
+      "sample_code": "S16",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 31,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S46",
+      "sample_code": "S46",
+      "poster_file": "JFINEX.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 32,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S48",
+      "sample_code": "S48",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 33,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S08",
+      "sample_code": "S08",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 34,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S53",
+      "sample_code": "S53",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 35,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S32",
+      "sample_code": "S32",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 36,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S45",
+      "sample_code": "S45",
+      "poster_file": "FLOWERS_OF_HOPE.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 37,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S11",
+      "sample_code": "S11",
+      "poster_file": "DONATION_PROGRAM.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 38,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S07",
+      "sample_code": "S07",
+      "poster_file": "KAINANG_PAMILYA.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 39,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S57",
+      "sample_code": "S57",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 40,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S54",
+      "sample_code": "S54",
+      "poster_file": "JFINEX.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 41,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S34",
+      "sample_code": "S34",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 42,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 2.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S43",
+      "sample_code": "S43",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 43,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S39",
+      "sample_code": "S39",
+      "poster_file": "CTC.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 44,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S02",
+      "sample_code": "S02",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 45,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S20",
+      "sample_code": "S20",
+      "poster_file": "CTC.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 46,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S50",
+      "sample_code": "S50",
+      "poster_file": "JFINEX.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 47,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S21",
+      "sample_code": "S21",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 48,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S62",
+      "sample_code": "S62",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 49,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S63",
+      "sample_code": "S63",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 50,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S22",
+      "sample_code": "S22",
+      "poster_file": "CHS_BIRISTUHAN.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 51,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S12",
+      "sample_code": "S12",
+      "poster_file": "RXEADY.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 52,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S42",
+      "sample_code": "S42",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 53,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S26",
+      "sample_code": "S26",
+      "poster_file": "DEAR_SENDER.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 54,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S05",
+      "sample_code": "S05",
+      "poster_file": "SHARE_KO_LANG.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 55,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S06",
+      "sample_code": "S06",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 56,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S40",
+      "sample_code": "S40",
+      "poster_file": "ARANTABAYAN.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 57,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S44",
+      "sample_code": "S44",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 58,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 3,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S23",
+      "sample_code": "S23",
+      "poster_file": "ANTI_HAZING_LAW.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 59,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 5.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S51",
+      "sample_code": "S51",
+      "poster_file": "RXEADY.jpg",
+      "format": "event_id",
+      "condition": "gnn",
+      "presentation_order": 60,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 2
+      },
+      "mean_mos": 3.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S64",
+      "sample_code": "S64",
+      "poster_file": "CMET.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 61,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 2,
+        "constraint_whitespace_harmony": 4
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S13",
+      "sample_code": "S13",
+      "poster_file": "RXEADY.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 62,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 4,
+        "brand_typographic_consistency": 5,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 4.0,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S24",
+      "sample_code": "S24",
+      "poster_file": "GUESS_THE_TEACHER.jpg",
+      "format": "certificate",
+      "condition": "baseline",
+      "presentation_order": 63,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 3,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 3
+      },
+      "mean_mos": 3.33,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S61",
+      "sample_code": "S61",
+      "poster_file": "SIGN_LANGUAGE_DAY.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 64,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S58",
+      "sample_code": "S58",
+      "poster_file": "RZEADY_SET_BOOTH.jpg",
+      "format": "event_id",
+      "condition": "baseline",
+      "presentation_order": 65,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    },
+    {
+      "session_id": "20261010_002143",
+      "instrument": "manuscript_ch3_table2_3param",
+      "source": "paper_packet",
+      "evaluator": "Mark Kenneth C. Ellorde",
+      "layout_file": "S37",
+      "sample_code": "S37",
+      "poster_file": "LUCKY_TERA.jpg",
+      "format": "certificate",
+      "condition": "gnn",
+      "presentation_order": 66,
+      "timestamp": "2026-10-10T00:21:43",
+      "scores": {
+        "visual_hierarchy_preservation": 5,
+        "brand_typographic_consistency": 4,
+        "constraint_whitespace_harmony": 5
+      },
+      "mean_mos": 4.67,
+      "comment": null
+    }
+  ]
+}

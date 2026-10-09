@@ -3449,3 +3449,156 @@ the next-slowest of the 1,012 re-solves took 1.9 ms. All 1,012 are within
 
 **Also:** `yolo_iou.py` now records the SD of the IoU, for Q11. The means
 are unchanged: strict 0.644 ± 0.351 over 607 boxes; found 0.837 ± 0.097.
+
+### 3.49 Phase 4 results (2026-10-10)
+
+**Data:**
+- The four experts' sheets were imported with `mos_collector.py
+  --import_scores` (Eisen as "Eisen Rose D. Galvante"), with no validation
+  errors: 256 evaluations, 768 ratings, in `results/mos_results.json`.
+- Then `phase4_analysis.py` ran unchanged since its commit `b9a60ab` →
+  `results/phase4_analysis.json`.
+- The conditions are **"structure mapping + GNN"** (labelled `gnn`) and
+  **"baseline (neither)"**. The baseline drops the master's structure
+  mapping too (M4), so a difference can't be credited to the GNN alone.
+
+**Q1: MOS ± SD of the ratings** (1–5; n = 64 ratings per format ×
+condition cell, 128 per condition):
+
+| | overall | Visual Hierarchy | Brand & Typographic | Constraint & Whitespace |
+|---|---|---|---|---|
+| structure mapping + GNN | 3.33 ± 0.89 | 3.61 ± 1.06 | 3.47 ± 1.09 | 2.92 ± 1.18 |
+| baseline | 3.73 ± 0.93 | 3.73 ± 1.11 | 3.70 ± 1.02 | 3.77 ± 1.13 |
+| certificate, mapping + GNN | 3.50 ± 0.89 | 3.88 ± 1.05 | 3.56 ± 1.02 | 3.06 ± 1.28 |
+| certificate, baseline | 3.78 ± 0.98 | 3.73 ± 1.20 | 3.78 ± 1.00 | 3.81 ± 1.19 |
+| event ID, mapping + GNN | 3.17 ± 0.85 | 3.34 ± 1.01 | 3.38 ± 1.15 | 2.78 ± 1.06 |
+| event ID, baseline | 3.69 ± 0.87 | 3.72 ± 1.02 | 3.62 ± 1.05 | 3.73 ± 1.07 |
+| all 64 layouts | 3.53 ± 0.93 | 3.67 ± 1.08 | 3.59 ± 1.06 | 3.35 ± 1.23 |
+
+- **Medians (IQR), overall:** mapping + GNN 3.33 (2.67–4.00); baseline
+  3.67 (3.00–4.67).
+- **How often each rating was given** (all three parameters,
+  1/2/3/4/5):
+  - mapping + GNN: 23 / 69 / 120 / 101 / 71;
+  - baseline: 14 / 32 / 110 / 114 / 114.
+  - On Constraint & Whitespace, mapping + GNN got 50 ratings of 1–2,
+    against 17 for the baseline.
+
+**Q2: agreement:** Kendall's W over the 64 layouts, 4 raters, df 63; all
+p < 0.001:
+
+| | W | χ² |
+|---|---|---|
+| overall | 0.630 | 158.7 |
+| Visual Hierarchy | 0.579 | 145.9 |
+| Brand & Typographic | 0.477 | 120.2 |
+| Constraint & Whitespace | 0.570 | 143.5 |
+
+**Q3–Q9: the main tests.** Wilcoxon signed-rank on the 32 pairs, each
+layout the mean of its 4 experts; two-sided; Holm over 4; normal
+approximation (scipy, because of ties); r < 0 means the baseline was rated
+higher:
+
+| | baseline higher / mapping + GNN higher / equal | median diff | W | p | p (Holm) | r |
+|---|---|---|---|---|---|---|
+| **overall (main test)** | **25 / 2 / 5** | −0.42 | 9.5 | 1.5 × 10⁻⁵ | **4.6 × 10⁻⁵** | **−0.95** |
+| Visual Hierarchy | 16 / 7 / 9 | −0.13 | 88.5 | 0.127 | 0.127 | −0.36 |
+| Brand & Typographic | 22 / 5 / 5 | −0.25 | 50.0 | 4.9 × 10⁻⁴ | 9.7 × 10⁻⁴ | −0.74 |
+| Constraint & Whitespace | 26 / 2 / 4 | −1.00 | 4.0 | 5.4 × 10⁻⁶ | 2.2 × 10⁻⁵ | −0.98 |
+
+**At a significance level of 0.05:**
+- The experts rated the baseline significantly higher than structure
+  mapping + GNN overall, and on Brand & Typographic Consistency and
+  Constraint & Whitespace Harmony.
+- No significant difference was detected on Visual Hierarchy.
+
+**Sensitivity checks (secondary):**
+- **The paired t-test agrees:**
+  - overall t(31) = −6.57, p < 0.001, d_z = −1.16;
+  - Hierarchy t = −1.43, p = 0.16;
+  - Brand t = −4.10, p < 0.001;
+  - Whitespace t = −8.38, p < 0.001.
+- **Bonferroni:** the same conclusions as Holm.
+- **Without the identical pair** (LUCKY_TERA certificate): the same,
+  except that Visual Hierarchy reaches p = 0.046 (Holm 0.046, r = −0.48).
+  So the hierarchy result is borderline either way.
+- **Absolute agreement is low:**
+  - ICC(2,1): overall 0.31, Hierarchy 0.26, Brand 0.16, Whitespace 0.27;
+  - ICC(2,4): 0.64 / 0.58 / 0.43 / 0.60;
+  - Krippendorff's α: 0.23 (interval) / 0.21 / 0.01 / 0.20 (ordinal).
+  - The experts order the layouts alike (W) but differ in leniency: each
+    expert's mean rating runs from 2.88 (Orias) to 4.32 (Ellorde).
+  - Values for interpreting these, to verify before citing: Kendall's W
+    0.5 moderate, 0.7 strong (Schmidt, 1997); α ≥ 0.667 tentative, ≥ 0.800
+    reliable (Krippendorff, 2004); ICC < 0.5 poor, 0.5–0.75 moderate (Koo
+    & Li, 2016).
+
+**Q11: the system's own numbers** (mean ± SD):
+- **C_total** (lower is better):
+  - mapping + GNN 0.0879 ± 0.0791; baseline 0.0855 ± 0.0766;
+  - certificates 0.0125 / 0.0126; event IDs 0.1633 / 0.1583.
+- **Wilcoxon on the 32 pairs:** mapping + GNN higher (worse) in 15, lower
+  in 7, equal in 10; p = 0.030; r = +0.53. Formula 3.11 also favoured the
+  baseline, slightly.
+- **Latency:** solver 0.53 ± 3.01 ms (median 0.4; the SD comes from one
+  95.9 ms pause); full edit 90.6 ± 57.5 ms.
+- **F1 of the 64 rated layouts:** 1.0 ± 0 in both conditions.
+- **Detector IoU:** strict 0.644 ± 0.351 (607 boxes); found 0.837 ± 0.097
+  (455).
+
+**Post hoc, exploratory** (`src/evaluation/phase4_posthoc.py` →
+`results/phase4_posthoc.json`; written after the planned tests; p-values
+uncorrected):
+- **Every expert, on their own, rated the baseline higher on average:**
+
+  | expert | mapping + GNN | baseline | pairs: baseline higher / mapping + GNN higher / equal |
+  |---|---|---|---|
+  | Eisen Rose D. Galvante | 3.22 | 3.37 | 14 / 7 / 11 |
+  | Kyz Denise Aquino | 3.27 | 4.02 | 25 / 4 / 3 |
+  | Mark Joseph Orias | 2.71 | 3.05 | 20 / 7 / 5 |
+  | Mark Kenneth C. Ellorde | 4.13 | 4.50 | 16 / 6 / 10 |
+
+- **What the experts saw: the spacing.**
+  - The baseline stacks the elements with perfectly even gaps (gap CV
+    0.000; largest gap 2.0% of the height).
+  - Structure mapping + GNN puts them at the master's positions, so the
+    stack spreads (81.6% of the height, against 74.6%) with uneven gaps
+    (CV 0.47; largest gap 7.2%). Its gaps were larger in 23 of the 32
+    pairs, and smaller in none.
+  - The pairs where its gaps grew most lost the most MOS (Spearman, n = 32):
+    - largest gap ρ = −0.42 (p = 0.017);
+    - gap CV ρ = −0.42 (p = 0.017);
+    - spread ρ = −0.45 (p = 0.010).
+  - The examples, RXEADY and GUESS_THE_TEACHER event IDs (−1.17 and −1.00
+    overall): the logo row and header sit high and the title artwork low,
+    as on the master, so an empty band opens between the header and the
+    title. The baseline keeps the same elements evenly spaced in one
+    centred group.
+- **Without ANTI_HAZING_LAW** (30 pairs; its four rated pages carry the
+  misplaced "CLOSED" stamp, §3.35, a check raised before the data): the
+  same conclusions.
+  - overall: 24 / 2 / 4 (baseline higher / mapping + GNN higher / equal),
+    p_Holm 6.8 × 10⁻⁵, r = −0.95;
+  - Visual Hierarchy: p = 0.153;
+  - Brand: p_Holm 0.0014;
+  - Whitespace: p_Holm 3.2 × 10⁻⁵.
+- **Formula 3.11 doesn't see it:** the C_total difference doesn't follow
+  the MOS difference (ρ = −0.20, p = 0.26). Its whitespace term compares
+  area ratios, not how evenly the gaps fall. F1 is 1.0 on both conditions
+  (§3.44): nothing overlaps; the experts judged rhythm, not collisions.
+- **The experts' comments** (5, all Eisen's): logo placement or the logo
+  brand changed (RZEADY_SET_BOOTH and GUESS_THE_TEACHER event IDs, mapping
+  + GNN); the CLOSED stamp misplaced (ANTI_HAZING_LAW certificate, mapping +
+  GNN; §3.35); "not properly placed" (KAINANG_PAMILYA certificate,
+  baseline); "the logo" (CMET certificate, baseline).
+
+**What it means:**
+- The pre-specified main test found the opposite of the expected
+  direction. The two-sided test (Q7) was chosen for exactly this case.
+- The difference sits mainly in whitespace (−0.85 MOS) and comes, by the
+  post hoc evidence, from following the master's positions. That's the
+  structure mapping's job (the GNN's output is registered to its anchors),
+  and this design can't separate the two.
+- The system stays as rated: the MOS describes it. A change (for example,
+  spreading the gaps evenly after anchoring, or a gap-evenness term in
+  Formula 3.11) would need new ratings. It belongs in the recommendations.

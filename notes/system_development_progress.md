@@ -44,11 +44,16 @@ As of 2026-10-08:
 - **Colour clustering is seeded** (§3.29). Earlier results carry palette
   noise.
 
-The remaining gap is Phase 4's data. The packets went out to four experts
-on 2026-10-07; the ratings, their import and the analysis remain. The
-statistical treatment waits on the consultant's answers from the
-2026-10-09 consultation. Five smaller gaps found on 2026-10-08 are in
-notes §3.35.
+Phase 4 is analysed (2026-10-10, notes §3.48–3.49). The 2026-10-09
+consultation concluded "recommended for POD". The group adopted the
+consultation guide's suggested statistical treatment, fixed in
+`phase4_analysis.py` before the scores were imported.
+- **The experts rated the baseline significantly higher** than structure
+  mapping + GNN: overall MOS 3.73 vs 3.33, p_Holm < 0.001, r = −0.95.
+- **Most of it is Constraint & Whitespace** (3.77 vs 2.92).
+- **Post hoc,** it goes with the larger, uneven gaps the structure mapping
+  leaves.
+- Five smaller gaps found on 2026-10-08 are in notes §3.35.
 
 ---
 
@@ -119,16 +124,12 @@ conditions (GNN, mapping only, baseline) with YOLO v5: 96 full runs
 | Component | Manuscript requirement | Status |
 |---|---|---|
 | MOS collection tool | 5-point Likert scale, 3 named dimensions (Visual Hierarchy Preservation, Brand & Typographic Consistency, Constraint & Whitespace Harmony), each scored via Table 2's descriptive rubric, on a randomized sample of outputs | **Built and matches the manuscript (fixed 2026-09-26).** `mos_collector.py` now uses the 3 named parameters verbatim, shows Table 2's full score/rating/description scale to the evaluator (start of session + `?` at any prompt), and presents layouts in a seeded random order (`--sample_size`, `--seed`). Previously implemented a different 4-dimension rubric — found in the 2026-09-15 audit (§3.10), fixed in §3.13 of `gnn_fixes_and_methodology_notes.md`. |
-| Actual expert evaluation data | A designated domain expert (professional layout artist/graphic designer) rates a randomized subset of generated outputs | **Packets out, ratings pending.** Sent 2026-10-07 to four experts: Eisen Rose D. Galvante, Kyz Denise Aquino, Mark Joseph Orias and Mark Kenneth C. Ellorde. The four `scores_*.csv` in the repo are still blank; the user uploads all four together |
+| Actual expert evaluation data | A designated domain expert (professional layout artist/graphic designer) rates a randomized subset of generated outputs | **Collected and analysed (2026-10-10).** Four experts (Eisen Rose D. Galvante, Kyz Denise Aquino, Mark Joseph Orias, Mark Kenneth C. Ellorde), 768 ratings, in `results/mos_results.json`. `phase4_analysis.py` (the adopted plan, committed before the import): baseline MOS 3.73 vs 3.33 for structure mapping + GNN, Wilcoxon p_Holm < 0.001, r = −0.95; Constraint & Whitespace 3.77 vs 2.92; Visual Hierarchy n.s.; Kendall's W 0.63. Post hoc: `phase4_posthoc.py` (§3.49) |
 | Rating set and packet | Outputs compared against the original master layout (p.54) | **Built and sent (2026-10-07).** `phase4_packet.py`: 16 unseen posters × 2 formats × GNN / no-GNN baseline = 64 layouts, blind codes, a private key (2026-10-07 14:43), a packet and score sheet per expert (§3.20). The layouts come from the code at `8422282` (§3.32). ANTI_HAZING_LAW's four pages carry the "CLOSED" stamp and a damaged title cut (§3.35). The dashboard page "Phase 4 Evaluation Set" does the same without editing CSVs (§3.21) |
 
-**Phase 4 status (2026-10-08):** the instrument, the set and the packets
-are done. Remaining:
-- the four experts' scores, imported with `mos_collector.py
-  --import_scores … --key data/phase4/phase4_key.csv`;
-- the analysis, after the consultant's answers from the 2026-10-09
-  consultation (revision item 3.9), including whether to report it with
-  and without ANTI_HAZING_LAW (§3.35);
+**Phase 4 status (2026-10-10):** the scores are imported and analysed
+(§3.48–3.49). Without ANTI_HAZING_LAW, the conclusions are the same.
+Remaining:
 - confirming the manifest's guesses: ANTI_HAZING_LAW's university, CMET's
   year, "DEBESMSCAT", and the three blank dates. They are already printed
   on the rated pages, so this is for the record, not a change.
