@@ -159,6 +159,20 @@ Read first: `notes/system_development_progress.md`, then the tail of
 - **No thesis prose unless asked.** Notes, findings, evidence tables and
   revision lists are welcome; chapter drafts (Chapter 4, etc.) wait for an
   explicit request.
+- **References are in ACM format, and there is never an "et al."**
+  (user, 2026-10-09).
+  - In the text, name every author, or use a numeric `\cite{}`.
+  - In the Notes, `acmnumeric.bbx` truncates after 10 authors, so give a
+    longer entry `options = {maxbibnames=99}`. "and others" in an author
+    field also prints "et al.".
+  - Keep the formatting consistent with Chapters 1–3.
+- **Chapters 4 and 5 follow the TSA's guidelines** in
+  `manuscript/Learning Materials/`.
+  - Chapter 4: per objective, Results (facts only) and then Discussion
+    (principal findings, interpretation, context of the literature,
+    implications, limitations, summary). Past tense, with no proposal
+    language.
+  - Chapter 5: Summary, Findings, Conclusions, Recommendations.
 - **`notes/manuscript_revision_list.md` tracks the manuscript against the
   code.** It was re-checked against Manu 0910.1 on 2026-10-09: 26 earlier
   items applied, 27 new (M1–M27, including §3.35's open findings and the
