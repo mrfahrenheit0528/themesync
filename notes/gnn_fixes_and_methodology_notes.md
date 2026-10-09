@@ -3176,11 +3176,9 @@ chain on every edit stays cheap at 40 states.
 - So: the solver meets 0.1 s, and a full edit meets 1.0 s. That's A5/M26's
   wording.
 
-**A possible speed-up (not done):** compose the background once per edit
-and share it between scoring and rendering. That removes one of the two
-compositions; whether a full edit then gets under 0.1 s needs measuring.
-It would change pipeline code, though not its output. Leave it until the
-Phase 4 scores are in.
+**Speed-up:** done in §3.47, with byte-identical output: the median full
+edit went from 157 ms to 90 ms. `results/latency_benchmark.json` now holds
+the numbers after it.
 
 ### 3.44 The 64 rated layouts: F1 and text fit (2026-10-09; "Code before Chapter 4")
 
@@ -3237,3 +3235,157 @@ re-run: it is the server's result of record. Note that the battery isn't
 the rated set: `run_single` doesn't pass the manifest's logo picks or its
 title-artwork and motif overrides. The rated set's F1 is in
 `results/rated_layouts_check.json`.
+
+### 3.45 The elbow graph in Step 3; "GNN–solver overlap" (2026-10-09)
+
+**The K-Means elbow graph (p.60):** p.60 lists "the K-Means elbow graph"
+among the Evaluation Report's contents, and Step 3 showed only a table of
+WCSS per k.
+- `views/report.py` now draws the graph (Altair, in the dashboard's
+  colours) in the Hybrid Visual DNA card:
+  - WCSS against k;
+  - the dashed chord joining the curve's ends;
+  - the chosen k, marked in coral. `VisionExtractor._find_elbow` picks the
+    point farthest from that chord.
+- The table moved into a "WCSS per k" expander.
+- **Also fixed:** the caption's "CIE L\*a\*b\*" had rendered as "CIE
+  Lab\*", because Markdown read the asterisks as italics.
+- **Checked:** in Edge at 1780×880 and 1366×768, on a dashboard upload,
+  with no exceptions.
+
+**"Mean IoU" renamed to "GNN–solver overlap"** (§3.35, finding 4):
+- `evaluate.py` and `experiment_runner.py` reported the IoU between each
+  GNN-predicted box and where Cassowary finally put it as "Mean IoU"
+  (`mean_iou`). p.62 defines IoU as the detector's accuracy against
+  ground truth (§3.41), and says IoU wasn't used on generated layouts.
+- It is now `gnn_solver_overlap` ("GNN–solver overlap": how much of the
+  prediction survived Stage 3); `evaluate.py`'s per-node list is
+  `gnn_solver_overlap_per_node`. The numbers are unchanged.
+- The results files written before the rename keep `mean_iou`, and the
+  notebook reads either name. Its stored output table still says
+  `mean_iou` until the notebook is re-executed (on the server; this
+  `.venv` has no Jupyter).
+
+### 3.46 A master-derived R_target (2026-10-09; analysis only, M19)
+
+**Why:** p.47 says Formula 3.14 measures whitespace against "an optimal
+target ratio (R_target) established by the master template's visual DNA".
+The code fixes R_target at 0.65 for every master. The experts rated what
+0.65 chose, so the deployed value stays. The manuscript chat asked how many
+of the 64 rated outputs a master-derived R_target would have changed (as
+§3.33 did for the weights).
+
+**Script:** `src/evaluation/r_target_analysis.py` →
+`results/r_target_analysis.json` (`--reuse` re-analyses the saved runs).
+- **Runs:** the 64 rated runs are regenerated as the packet generated them,
+  into `data/rendered/r_target/` (git-ignored). The key is read only to
+  confirm the choices.
+- **The master's R_target:** Formula 3.14 applied to the master itself,
+  over its whole canvas. Its elements are what Stage 0b parsed as logos and
+  text (embellishments and underlays are the background layer, as motifs
+  are for the target). Two readings:
+  - **sum:** as the formula writes it;
+  - **union:** the union of the boxes, since detections overlap.
+- **Re-ranking:** each candidate's penalty becomes |ratio − R_target|, with
+  the deployed weights. The other penalties don't depend on R_target.
+
+**Sanity:** all 64 regenerated runs reproduce their P_space from the
+recomputed ratios. At 0.65 the choice matches the pipeline and the Phase 4
+key in **64 of 64** (this Windows checkout).
+
+**What the masters and candidates look like:**
+- **Masters' R_target:**
+  - sum: 0.13–0.86 (median 0.64);
+  - union: 0.46–0.86 (median 0.74).
+  - The sum's low outlier is RZEADY_SET_BOOTH (0.13), where overlapping
+    text detections are counted twice. The union is the sounder reading.
+- **Candidates' whitespace ratios:**
+  - certificate: 0.57–0.65 (median 0.651), right at 0.65;
+  - event ID: 0.46–0.51 (median 0.50), about 0.15 below 0.65 on every
+    candidate. The event ID is denser than 0.65 allows, so its P_space is
+    roughly constant.
+
+**Results:**
+
+Outputs that would change, of 64:
+
+| choice rule | master R (sum) | master R (union) | another fixed R instead of 0.65 |
+|---|---|---|---|
+| deployed (fittest of the master's layout type) | **2** | **2** | none from 0.50 to 0.95; 15 from 0.30 to 0.45 |
+| plain (fittest of all six) | 20 | 12 | all 64 at 0.50 or below; 32 at 0.55–0.60; 2 at 0.70–0.95 |
+
+- **The two changes, under both readings:** RZEADY_SET_BOOTH and
+  SHARE_KO_LANG, event ID, baseline. Candidate_E becomes Candidate_A: both
+  are "classic", with whitespace 0.502 against 0.497, and those masters'
+  R_target is 0.46–0.47. No GNN-condition output and no certificate
+  changes.
+- **Why so few:**
+  - the deployed choice is among the candidates of the master's layout
+    type: 16 runs have one, and the rest two, with nearly the same
+    whitespace;
+  - R_target matters when choosing between layout types (the plain
+    ranking), not within one.
+
+**For p.47:** R_target isn't derived from the master. Deriving it would
+have changed 2 of the 64 rated layouts, both baseline event IDs, so the
+rated set is almost exactly what a master-derived R_target would have
+chosen. Either reword p.47 (a fixed target of 0.65) or report this
+analysis. The deployed value doesn't change.
+
+### 3.47 Faster edits: the renderer stops re-reading unchanged images (2026-10-09)
+
+**Why:** §3.43 found that a full edit on a master's theme took a median of
+157 ms. The solver accounts for 0.4 ms of that. Profiling one edit showed
+the rest going to work on images that don't change within a session:
+- every edit builds a new renderer, which re-reads and re-encodes the logos
+  and the title artwork (≈ 110 ms);
+- the background is decoded and scaled twice per edit, once for scoring
+  and once for rendering, and the motifs are decoded each time;
+- the background's half-size JPEG layer is re-encoded on every render.
+
+**Change:** caches keyed by each file's identity (path, size, modification
+time), so a file rewritten in place, such as a later session's logo crop,
+is read again:
+- `aesthetic_renderer._load_image`: logos, the title artwork and motifs as
+  data URIs (64 entries);
+- `aesthetic_renderer._background_uri`: the background's JPEG layer;
+- `decor._decoded`: motif and artwork files decoded to RGBA;
+- `decor._covered`: the background scaled to cover the canvas.
+
+Each cache holds a pure function of the file's bytes. Callers only resize
+or convert the cached images, which returns new ones. Composing the
+background and SIFT on it still run on every edit: the motifs move with
+the layout.
+
+**Output unchanged, byte for byte** (the rated layouts must stay what the
+experts rated):
+- **The 64 rated runs,** regenerated before and after (`r_target_analysis.py`):
+  all 64 SVGs byte-identical, all 64 state chains identical (timestamps and
+  timings aside), all 384 candidates' penalties identical, and 64 of 64
+  choices matching the Phase 4 key.
+- **The 34 latency sessions,** after the same seeded 40 edits each: all
+  final SVGs byte-identical, and every state's boxes and fitness identical.
+- Both test files pass (12 tests).
+
+**Latency after** (`results/latency_benchmark.json`, the same 1,360 edits;
+before in brackets, from §3.43):
+
+| | median | 95th pct | max | ≤ 0.1 s | ≤ 1.0 s |
+|---|---|---|---|---|---|
+| solver | 0.4 ms (0.4) | 0.8 ms (0.8) | 1.9 ms* (1.8) | 100% | 100% |
+| full edit, all | **90 ms** (157) | **176 ms** (338) | 206 ms (393) | **61%** (22%) | 100% |
+| certificate | 146 ms (220) | 182 ms (370) | 206 ms (393) | 29% (19%) | 100% |
+| event ID | 86 ms (143) | 103 ms (223) | 159 ms (298) | 93% (25%) | 100% |
+| re-solving edits (move, resize, lock) | ≈ 104 ms (≈ 170) | ≈ 178 ms | | ≈ 47% (≈ 5%) | 100% |
+| re-drawing edits (text, typography, undo, restore, candidate) | ≈ 12 ms (≈ 73) | ≈ 40 ms | | **100%** (≈ 70%) | 100% |
+
+\* One re-solve in the synthetic session took 95.9 ms. That session uses
+none of the caches (no images), so it was a pause of the Python process;
+the next-slowest of the 1,012 re-solves took 1.9 ms. All 1,012 are within
+0.1 s either way.
+
+- **What's left:** scoring, now 90 ms of a median edit: composing the
+  layout's background and SIFT on it, for Formula 3.15. Getting a
+  re-solving edit under 0.1 s would mean changing how legibility is
+  scored. That changes the fitness, so it stays as it is.
+- **Opening a layout:** median 3.4 s (3.6).

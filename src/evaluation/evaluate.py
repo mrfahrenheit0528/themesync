@@ -6,7 +6,11 @@ payload, GNN-guided vs. no-GNN baseline, running the same
 OrchestrationSession the dashboard uses:
 
   - Latency         : wall-clock time per pipeline stage (ms)
-  - IoU             : GNN-predicted boxes vs. where the CSP finally put them
+  - GNN–solver overlap: the IoU of each GNN-predicted box with where the CSP
+                      finally put it (how much of the prediction survived
+                      Stage 3). Not p.62's IoU, which is the detector's
+                      (src/evaluation/yolo_iou.py); renamed from "Mean IoU"
+                      on 2026-10-09 (notes §3.45)
   - Constraint F1   : structural accuracy as p.56 defines it, after three
                       simulated designer events — a move (on-drop), a resize
                       (on-resize-complete) and a lock. Every payload node is
@@ -113,12 +117,12 @@ def _run_once(payload_path: str, use_gnn: bool, template_image: str = None,
     timings = {f"{k}_ms": v for k, v in summary["timings_ms"].items()}
     timings["total_ms"] = summary["total_ms"]
 
-    # IoU: GNN prediction vs. CSP resolution (GNN runs only — the baseline
-    # has no prediction to compare)
+    # GNN–solver overlap: GNN prediction vs. CSP resolution (GNN runs only —
+    # the baseline has no prediction to compare)
     resolved = {n["node_id"]: n["bbox"] for n in winner["nodes"]}
     predicted = [n for n in session.guided_nodes if n.get("gnn_predicted")]
     iou_scores = [calculate_iou(n["bbox"], resolved[n["node_id"]]) for n in predicted if n["node_id"] in resolved]
-    mean_iou = round(sum(iou_scores) / len(iou_scores), 4) if iou_scores else None
+    overlap = round(sum(iou_scores) / len(iou_scores), 4) if iou_scores else None
 
     # Constraint F1 (p.56) after the simulated edits, and their retention
     with contextlib.redirect_stdout(io.StringIO()):
@@ -138,8 +142,8 @@ def _run_once(payload_path: str, use_gnn: bool, template_image: str = None,
 
     return {
         "timings_ms":        timings,
-        "mean_iou":          mean_iou,
-        "per_node_iou":      [round(v, 4) for v in iou_scores],
+        "gnn_solver_overlap":          overlap,
+        "gnn_solver_overlap_per_node": [round(v, 4) for v in iou_scores],
         "constraint_f1":     f1_result,
         "heuristic_fitness": {
             "P_collision":   metrics.get("P_collision", 0.0),
@@ -183,8 +187,9 @@ def run_evaluation(
         gnn_results.append(r_gnn)
         baseline_results.append(r_base)
         for tag, r in (("GNN ", r_gnn), ("Base", r_base)):
-            iou = f"{r['mean_iou']:.4f}" if r["mean_iou"] is not None else "  —   "
-            print(f"     {tag}  | IoU={iou}  F1={r['constraint_f1']['f1']:.4f}  "
+            ov = r["gnn_solver_overlap"]
+            ov = f"{ov:.4f}" if ov is not None else "  —   "
+            print(f"     {tag}  | GNN–solver overlap={ov}  F1={r['constraint_f1']['f1']:.4f}  "
                   f"C_total={r['heuristic_fitness']['C_total']:.4f}  "
                   f"Total={r['timings_ms']['total_ms']:.1f}ms")
 
@@ -203,7 +208,7 @@ def run_evaluation(
     print(f"  {'-'*38} {'-'*12} {'-'*12} {'-'*10}")
 
     metrics_to_report = [
-        ("Mean IoU",            ["mean_iou"],                          True),
+        ("GNN–solver overlap",  ["gnn_solver_overlap"],                True),
         ("Constraint F1",       ["constraint_f1", "f1"],               True),
         ("P_align",             ["heuristic_fitness", "P_align"],      False),
         ("P_space",             ["heuristic_fitness", "P_space"],      False),

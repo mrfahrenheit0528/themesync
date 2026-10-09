@@ -1,5 +1,6 @@
 import base64
 import colorsys
+import functools
 import io
 import json
 import os
@@ -37,10 +38,30 @@ def _balanced_two_lines(text: str) -> list:
     return [" ".join(words[:best]), " ".join(words[best:])]
 
 
+def file_key(path: str) -> tuple:
+    """A file's identity for the caches below: its path, size and
+    modification time, so a file rewritten in place (a later session's logo
+    crop at the same path) is read again."""
+    st = os.stat(path)
+    return (os.path.abspath(path), st.st_size, st.st_mtime_ns)
+
+
 def _load_image(path: str, max_side: int = 512) -> tuple:
     """Loads an image file (PNG/JPG/WebP...) and returns (base64 PNG data URI,
     width/height), downscaled so the SVG stays small. (None, None) if
-    unreadable."""
+    unreadable. Cached per file and size: every canvas edit builds a new
+    renderer with the same logos and artwork (notes §3.47)."""
+    try:
+        key = file_key(path)
+    except OSError as e:
+        print(f"  ⚠  Could not load logo image '{path}': {e} — using drawn badge")
+        return None, None
+    return _load_image_cached(key, max_side)
+
+
+@functools.lru_cache(maxsize=64)
+def _load_image_cached(key: tuple, max_side: int) -> tuple:
+    path = key[0]
     try:
         with Image.open(path) as img:
             img = img.convert("RGBA")
@@ -288,6 +309,19 @@ DEFAULT_TYPOGRAPHY = {
 }
 
 
+@functools.lru_cache(maxsize=8)
+def _background_uri(key: tuple, width: int, height: int) -> str:
+    """The text-free background at half the canvas size, as a JPEG data URI
+    (cached per file and size; notes §3.47)."""
+    from stylistic_markers import cover
+
+    with Image.open(key[0]) as bg:
+        layer = cover(bg.convert("RGB"), width, height)
+    buf = io.BytesIO()
+    layer.save(buf, format="JPEG", quality=90)
+    return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
+
+
 def _hex_mean(image, bbox) -> str:
     """Mean colour of the composed background under a box, as hex."""
     x, y, w, h = bbox
@@ -433,11 +467,7 @@ class AestheticSVGRenderer:
         self._raster = compose_background(background, int(W), int(H), decor_nodes,
                                           panel_rgb=tuple(int(panel_hex[i:i + 2], 16) for i in (1, 3, 5)),
                                           layers=layers, watermark=wordmark, art=art)
-        with Image.open(background) as bg:
-            layer = cover(bg.convert("RGB"), max(1, int(W // 2)), max(1, int(H // 2)))
-        buf = io.BytesIO()
-        layer.save(buf, format="JPEG", quality=90)
-        uri = "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
+        uri = _background_uri(file_key(background), max(1, int(W // 2)), max(1, int(H // 2)))
         elements = [f'<image x="0" y="0" width="{W}" height="{H}" preserveAspectRatio="none" '
                     f'xlink:href="{uri}" />']
         p, a = self.palette["primary"], self.palette["accent"]

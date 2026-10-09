@@ -27,7 +27,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.44).
+§3.47).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
@@ -73,7 +73,8 @@ Read first: `notes/system_development_progress.md`, then the tail of
   - The top bar is pinned, with Streamlit's » and ⋮ inside it.
   - **Step 3:** the evaluated layout is fixed on the left at the window's
     height; the report (intro, headline tiles, cards) scrolls on the right
-    in `report_scroll`; the page itself doesn't scroll (§3.39).
+    in `report_scroll`; the page itself doesn't scroll (§3.39). The
+    Visual DNA card draws p.60's K-Means elbow graph (Altair; §3.45).
   - **Step 1 follows the user's mockups A1–A3** (2026-10-09, §3.37) and
     fits one screen with no page scroll:
     - left, the **Master Layout**:
@@ -224,7 +225,9 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
   `gnn_heldout_eval.py`, `evaluate.py`, `yolo_iou.py` (the detector's mean
   IoU, p.62), `stress_test.py` (p.55's extreme payloads; analysis only),
   `latency_benchmark.py` (p.62's edit latency), `rated_layouts_check.py`
-  (F1 and text fit of the 64 rated layouts, read-only), then re-execute
+  (F1 and text fit of the 64 rated layouts, read-only),
+  `r_target_analysis.py` (a master-derived R_target; analysis only), then
+  re-execute
   `notebooks/results_analysis.ipynb`. `weight_calibration.py` is the
   Formula 3.11 weight calibration (item 3.25; analysis only, `--reuse`
   re-analyses the saved runs).
@@ -237,6 +240,11 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
   - torchaudio was dropped: nothing imports it.
   - The other pins come from a different machine. The server's Python is
     3.10.20, with ultralytics 8.4.121.
+- **The renderer caches image files** by path, size and modification
+  time (`aesthetic_renderer._load_image`, `_background_uri`;
+  `decor._decoded`, `_covered`; §3.47). A file rewritten in place is read
+  again. The output is byte-identical to the uncached code (checked on the
+  64 rated runs and 1,360 edits).
 - **Cairo runs on one thread** (`rasterize.on_cairo_thread`).
   - On Windows, Tesseract's Cairo DLL segfaults when a second thread
     renders, and Streamlit runs every rerun on a new thread. The dashboard

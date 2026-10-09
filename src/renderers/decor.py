@@ -21,6 +21,9 @@ Motifs are shrunk, then dropped, rather than allowed to cover any text,
 logo, or each other.
 """
 
+import functools
+import os
+
 from PIL import Image
 
 import numpy as np
@@ -238,12 +241,36 @@ def _hex_rgb(hexcode: str) -> tuple:
     return tuple(int(hexcode[i:i + 2], 16) for i in (1, 3, 5))
 
 
+def _file_key(path: str) -> tuple:
+    """A file's identity (path, size, modification time) for the caches."""
+    st = os.stat(path)
+    return (os.path.abspath(path), st.st_size, st.st_mtime_ns)
+
+
+@functools.lru_cache(maxsize=32)
+def _decoded(key: tuple) -> Image.Image:
+    """A motif or artwork file decoded to RGBA, once per file (notes §3.47).
+    Callers only resize it, which returns a new image."""
+    with Image.open(key[0]) as im:
+        return im.convert("RGBA")
+
+
+@functools.lru_cache(maxsize=8)
+def _covered(key: tuple, width: int, height: int) -> Image.Image:
+    """The background file scaled to cover width × height, once per file
+    and size (notes §3.47). Callers only convert it, which returns a new
+    image."""
+    from stylistic_markers import cover  # data_preprocessing is on sys.path in every entry point
+
+    with Image.open(key[0]) as bg:
+        return cover(bg.convert("RGB"), int(width), int(height))
+
+
 def _paste(canvas: Image.Image, path: str, box: list, opacity: float = 1.0, flip: bool = False) -> Image.Image:
     x, y, w, h = box
     if w < 2 or h < 2:
         return canvas
-    with Image.open(path) as im:
-        art = im.convert("RGBA").resize((int(round(w)), int(round(h))), Image.LANCZOS)
+    art = _decoded(_file_key(path)).resize((int(round(w)), int(round(h))), Image.LANCZOS)
     if flip:
         art = art.transpose(Image.FLIP_LEFT_RIGHT)
     if opacity < 1.0:
@@ -266,10 +293,7 @@ def compose_background(background_path: str, width: int, height: int,
     SVG renderer draws, used for the saliency map (Legibility Penalty) and
     for picking legible text colours.
     """
-    from stylistic_markers import cover  # data_preprocessing is on sys.path in every entry point
-
-    with Image.open(background_path) as bg:
-        canvas = cover(bg.convert("RGB"), int(width), int(height)).convert("RGBA")
+    canvas = _covered(_file_key(background_path), int(width), int(height)).convert("RGBA")
     if layers is None:
         layers = {"panel": panel, "panel_style": "panel", "overlays": [], "art_box": None,
                   "watermark": bool(panel and watermark)}

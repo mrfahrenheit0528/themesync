@@ -102,11 +102,10 @@ results before then.
 3. **The latency benchmark** (p.62; A5 above). Done: numbers in D3.
 4. **F1 over the 64 rated layouts** ("Code before Chapter 4"). Done:
    numbers in D4.
-5. **"the K-Means elbow graph"** in the Step 3 report (`chapter3.tex:417`,
-   p.60). The report shows a table of WCSS per k; the development chat
-   will add the chart, so this sentence can stay.
-6. **The GNN–solver "Mean IoU"** ("Code before Chapter 4"): the
-   development chat will rename it, or take it out of the notebook.
+5. **"the K-Means elbow graph"** in the Step 3 report (p.60). Done:
+   see D5.
+6. **The GNN–solver "Mean IoU"** ("Code before Chapter 4"). Renamed:
+   see D5.
 
 Also: the Phase 4 analysis waits on the consultant's answers and the
 experts' scores (item 3.9).
@@ -246,10 +245,10 @@ It ran on this Windows checkout. No Phase 4 file or pipeline code changed.
 - **"student names":** p.55's example field is the certificate's
   recipient name, which passed at its 60-character maximum.
 
-### D3. Latency over many edits (p.62; M26, A5) — 2026-10-09
+### D3. Latency over many edits (p.62; M26, A5) — 2026-10-09, updated after the speed-up
 
 `src/evaluation/latency_benchmark.py` → `results/latency_benchmark.json`;
-notes §3.43.
+notes §3.43 and §3.47.
 
 **Setup:**
 - **Sessions:** 34 editing sessions: the 16 Phase 4 posters on both
@@ -264,23 +263,37 @@ notes §3.43.
   - Neither includes the browser redrawing the page.
 - **Machine:** the Windows PC.
 
+**The speed-up:** after the first measurement, the development chat made
+the renderer stop re-reading image files that don't change during a
+session (§3.47).
+- The output is byte-identical: the same 64 rated layouts, and the same
+  result after every edit.
+- These are the numbers for the system as it is now; the earlier ones are
+  in brackets.
+
 | | edits | median | 95th percentile | max | within 0.1 s | within 1.0 s |
 |---|---|---|---|---|---|---|
-| solver | 1,012 | 0.4 ms | 0.8 ms | 1.8 ms | 100% | 100% |
-| full edit | 1,360 | 157 ms | 338 ms | 393 ms | 22% | 100% |
-| full edit, certificate | 680 | 220 ms | 370 ms | 393 ms | 19% | 100% |
-| full edit, event ID | 680 | 143 ms | 223 ms | 298 ms | 25% | 100% |
+| solver | 1,012 | 0.4 ms | 0.8 ms | 1.9 ms* | 100% | 100% |
+| full edit | 1,360 | 90 ms (157) | 176 ms (338) | 206 ms (393) | 61% (22%) | 100% |
+| full edit, certificate | 680 | 146 ms (220) | 182 ms (370) | 206 ms (393) | 29% (19%) | 100% |
+| full edit, event ID | 680 | 86 ms (143) | 103 ms (223) | 159 ms (298) | 93% (25%) | 100% |
+
+\* One outlier of 95.9 ms (a pause of the process, in a session that
+loads no images) is still within 0.1 s.
 
 **For the text (M26):**
 - **The solver met the 0.1 s limit on every edit.**
-- **A full edit met the 1.0 s limit on every edit,** but not 0.1 s:
-  about 0.17 s for a move or resize on a poster's theme. The cost is
-  re-drawing and re-scoring the poster's background. On the synthetic
-  theme a full edit took 4 ms.
+- **A full edit met the 1.0 s limit on every edit, and the 0.1 s limit on
+  61% of them.**
+  - Edits that only re-draw the canvas (text, typography, undo, restore,
+    a candidate) all took under 0.1 s (median 12 ms).
+  - Edits that re-solve the layout (move, resize, lock) took a median of
+    104 ms on a poster's theme, about half of them under 0.1 s.
+  - What's left is re-scoring legibility against the poster's background.
 - **Suggested wording:** "constraint recalculation within 0.1 s, state
   synchronization within 1.0 s".
 - **Not a per-edit figure:** opening a layout (Initialize, Stages 0–6)
-  took a median of 3.6 s, once per layout.
+  took a median of 3.4 s, once per layout.
 
 ### D4. F1 over the 64 rated layouts (Chapter 4) — 2026-10-09
 
@@ -313,3 +326,50 @@ notes §3.43.
   Mention it only if Chapter 4 discusses D2.
 - **The F1 is the same for both conditions,** so F1 doesn't separate GNN
   from baseline. The Phase 4 comparison rests on the experts' scores.
+
+### D5. The elbow graph and "GNN–solver overlap" — 2026-10-09
+
+Notes §3.45.
+- **p.60, "the K-Means elbow graph": now true.** Step 3's Hybrid Visual
+  DNA card draws WCSS against k, with the chosen k marked and the line
+  joining the curve's ends. The Elbow Method picks the point farthest from
+  that line. The WCSS table is still there, under the graph.
+- **The GNN–solver "Mean IoU" is now called "GNN–solver overlap"**
+  (`gnn_solver_overlap` in the results files written from now on; older
+  files keep `mean_iou`). It is the IoU between each GNN-predicted box and
+  where the solver finally put it. Chapter 4 should use that name, or leave
+  it out; it isn't p.62's IoU, which is the detector's (D1).
+
+### D6. A master-derived R_target (p.47; M19) — 2026-10-09
+
+`src/evaluation/r_target_analysis.py` → `results/r_target_analysis.json`;
+notes §3.46.
+
+**Setup:**
+- **Runs:** the 64 rated runs, regenerated. All 64 choices match the Phase
+  4 key.
+- **The master-derived R_target:** Formula 3.14 applied to the master
+  poster itself, with its detected logos and text as the elements.
+- **Re-ranking:** each run's candidates, re-ranked with that R_target in
+  place of 0.65.
+
+**Results:**
+- **2 of the 64 rated layouts would have changed:** RZEADY_SET_BOOTH and
+  SHARE_KO_LANG, event ID, baseline condition. Each swaps between two
+  candidates of the same layout type whose whitespace differs by 0.5%.
+- **The certificates and the GNN condition:** none would change.
+- **The masters' own ratios** run from 0.46 to 0.86 (median 0.74).
+- **The candidates' ratios:**
+  - certificate: 0.57–0.65, so 0.65 fits it;
+  - event ID: 0.46–0.51 on every candidate, so it can never reach 0.65.
+- **Why it changes so little:** the system first keeps the layout type the
+  master calls for, then compares the candidates of that type, and those
+  have nearly the same whitespace. R_target only matters when choosing
+  between layout types.
+
+**For p.47:**
+- R_target was a fixed 0.65, not derived from the master.
+- Either reword p.47 to say so, or keep the sentence and report this
+  analysis: a master-derived target would have changed 2 of the 64 rated
+  layouts.
+- The deployed value stays at 0.65 either way.

@@ -140,14 +140,16 @@ def run_single(poster_path: str, domain_key: str, condition: str, content: dict,
     metrics = winner["metrics"]
     structure = master_structure_of(session)
 
-    # IoU between the GNN's predicted boxes (before the solver) and where the
-    # solver finally put them — how much of the prediction survived Stage 3.
-    mean_iou = None
+    # GNN–solver overlap: the IoU between the GNN's predicted boxes (before
+    # the solver) and where the solver finally put them — how much of the
+    # prediction survived Stage 3. Not p.62's IoU (the detector's,
+    # yolo_iou.py); called "mean_iou" before 2026-10-09.
+    overlap = None
     if use_gnn:
         resolved = {n["node_id"]: n["bbox"] for n in winner["nodes"]}
         pairs = [(n["bbox"], resolved[n["node_id"]]) for n in session.guided_nodes
                  if n.get("gnn_predicted") and n["node_id"] in resolved]
-        mean_iou = round(sum(_iou(a, b) for a, b in pairs) / len(pairs), 4) if pairs else 0.0
+        overlap = round(sum(_iou(a, b) for a, b in pairs) / len(pairs), 4) if pairs else 0.0
 
     accuracy = structural_accuracy(winner["nodes"], session.canvas_w, session.canvas_h,
                                    [n["node_id"] for n in session.base_nodes])
@@ -175,7 +177,7 @@ def run_single(poster_path: str, domain_key: str, condition: str, content: dict,
         "f1":            accuracy["f1"],
         "fp":            accuracy["fp"],
         "fn":            accuracy["fn"],
-        "mean_iou":      mean_iou,
+        "gnn_solver_overlap": overlap,
         "num_nodes":     sum(1 for n in winner["nodes"] if n.get("structural_class") != "decor"),
         "motifs_placed": sum(1 for n in winner["nodes"] if n.get("structural_class") == "decor"),
         "title_artwork": bool(session.style_kit.get("wordmark")),

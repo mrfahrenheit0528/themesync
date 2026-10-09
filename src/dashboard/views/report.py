@@ -32,6 +32,27 @@ def _preview(svg_path: str, mtime: float) -> str:
     return ui.png_of(svg_path, 1.0)
 
 
+def _elbow_chart(elbow: dict):
+    """The K-Means elbow graph (p.60): WCSS against k, the chord joining the
+    curve's ends, and the k the Elbow Method picked (farthest from it)."""
+    import altair as alt
+
+    ks, wcss = elbow["ks"], elbow["wcss"]
+    points = alt.Data(values=[{"k": k, "WCSS": w, "chosen": k == elbow["k"]} for k, w in zip(ks, wcss)])
+    x = alt.X("k:Q", title="k (colour clusters)", scale=alt.Scale(domain=[ks[0], ks[-1]], nice=False),
+              axis=alt.Axis(values=list(ks), format="d", grid=False))
+    y = alt.Y("WCSS:Q", title="WCSS", scale=alt.Scale(zero=False), axis=alt.Axis(format="~s"))
+    chord = alt.Chart(alt.Data(values=[{"k": ks[0], "WCSS": wcss[0]}, {"k": ks[-1], "WCSS": wcss[-1]}])) \
+        .mark_line(color="#9aa3af", strokeDash=[4, 4]).encode(x=x, y=y)
+    base = alt.Chart(points).encode(x=x, y=y)
+    curve = base.mark_line(color="#13294b", strokeWidth=2) + \
+        base.mark_point(filled=True, size=45, color="#13294b").encode(tooltip=["k:Q", "WCSS:Q"])
+    picked = base.transform_filter("datum.chosen")
+    marker = picked.mark_point(filled=True, size=170, color="#cf4836") + \
+        picked.mark_text(dy=16, color="#cf4836", fontWeight="bold").encode(text=alt.value(f"k = {elbow['k']}"))
+    return (chord + curve + marker).properties(height=190)
+
+
 def _num(value, digits: int = 4) -> str:
     return "—" if value is None else f"{value:.{digits}f}"
 
@@ -201,11 +222,14 @@ with report_side, st.container(key="bento_report"):
         elbow = dna["elbow"]
         with elbow_col:
             if elbow:
-                st.dataframe([{"k": k, "WCSS": w, "": "◀ chosen (elbow)" if k == elbow["k"] else ""}
-                              for k, w in zip(elbow["ks"], elbow["wcss"])], hide_index=True, width="stretch")
-                st.caption(f"K-Means in CIE L*a*b* (Formula 3.1) for k = {elbow['ks'][0]}–{elbow['ks'][-1]}; "
+                st.altair_chart(_elbow_chart(elbow), width="stretch")
+                st.caption(rf"K-Means in CIE L\*a\*b\* (Formula 3.1) for k = {elbow['ks'][0]}–{elbow['ks'][-1]}; "
                            f"the Elbow Method picked k = {elbow['k']}, the point farthest from the line "
-                           "joining the curve's ends.")
+                           "joining the curve's ends (dashed).")
+                with st.expander("WCSS per k"):
+                    st.dataframe([{"k": k, "WCSS": w, "": "◀ chosen (elbow)" if k == elbow["k"] else ""}
+                                  for k, w in zip(elbow["ks"], elbow["wcss"])], hide_index=True,
+                                 width="stretch")
             else:
                 st.caption("Elbow Method: not recorded for this layout (a grayscale master clusters with a "
                            "fixed k).")
