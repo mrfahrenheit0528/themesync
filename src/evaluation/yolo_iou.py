@@ -134,10 +134,12 @@ def summarise(gt_rows: list, n_pred: dict) -> dict:
             "ground_truth_boxes": len(values),
             "detections": n_detections,
             "strict_mean_iou": round(float(np.mean(values)), 4) if values else None,
+            "strict_sd": round(float(np.std(values, ddof=1)), 4) if len(values) > 1 else None,
             "found": len(found),
             "recall": round(len(found) / len(values), 4) if values else None,
             "precision": round(len(found) / n_detections, 4) if n_detections else None,
             "found_mean_iou": round(float(np.mean(found)), 4) if found else None,
+            "found_sd": round(float(np.std(found, ddof=1)), 4) if len(found) > 1 else None,
         }
     out = {cls: block([v for c, v in gt_rows if c == cls], n_pred.get(cls, 0)) for cls in CLASSES}
     out["all"] = block([v for _, v in gt_rows], sum(n_pred.values()))

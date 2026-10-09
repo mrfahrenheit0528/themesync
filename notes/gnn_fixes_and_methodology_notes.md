@@ -3389,3 +3389,63 @@ the next-slowest of the 1,012 re-solves took 1.9 ms. All 1,012 are within
   re-solving edit under 0.1 s would mean changing how legibility is
   scored. That changes the fitness, so it stays as it is.
 - **Opening a layout:** median 3.4 s (3.6).
+
+### 3.48 Phase 4: the statistical analysis plan, fixed before the scores were read (2026-10-10)
+
+**Background:**
+- **The consultation (2026-10-09) concluded "recommended for POD"** (user,
+  2026-10-10).
+- **The statistical treatment:** the consultant said she checks only the
+  prototype. So the group adopted the guide's suggested answer to every
+  question in `notes/consultation_guidelines.pdf` (user, 2026-10-10).
+- **The scores:** all four experts' sheets arrived on 2026-10-10, in
+  `data/phase4/packets/<expert>/scores_<expert>.csv`.
+
+**Integrity, checked without reading the scores:**
+- 4 files, 64 rows each.
+- Every row's code matches the packet's own page order (`order.json`),
+  pages 3–66.
+- No blank score cells; no byte-order marks.
+
+**The plan:** `src/evaluation/phase4_analysis.py`, committed before
+`mos_collector.py --import_scores` ran and before any score was summarised.
+- **Q1 (describe):** MOS (mean) ± SD per parameter and overall, for GNN and
+  baseline, certificates and event IDs; counts of 1–5 per condition.
+- **Q2 (agreement):** Kendall's W, tie-corrected, per parameter and
+  overall over the 64 layouts, with its χ² test.
+- **Q3–Q4 (main test):** the Wilcoxon signed-rank test on the 32 pairs.
+  Each layout's score is the mean of its four experts' ratings.
+- **Q5 (formats):** both formats in one test; each format described, not
+  tested.
+- **Q6 (several tests):** the overall MOS is the main test; the three
+  parameters are follow-ups; Holm's correction over the four.
+- **Q7–Q9:** two-sided; a significance level of 0.05; the matched-pairs
+  rank-biserial r beside every p-value.
+- **Q11 (Phase 3 numbers):** mean ± SD of C_total, latency, F1 and IoU;
+  the same Wilcoxon test for GNN vs baseline C_total.
+- **Fixed details:** pairs with equal MOS are dropped (scipy's
+  `zero_method="wilcox"`); exact or normal-approximation p as scipy chooses
+  (reported); sample SDs.
+- **Sensitivity checks, secondary and labelled:**
+  - median and IQR;
+  - ICC(2,1) and ICC(2,k), absolute agreement; Krippendorff's α (ordinal;
+    interval for the overall);
+  - the paired t-test with d_z;
+  - Bonferroni beside Holm;
+  - the main tests without the one pair whose layouts rendered identically
+    (LUCKY_TERA certificate).
+- **Not run:** a one-sided test, per-format tests, a mixed-effects model.
+
+**The code is checked:**
+- **Kendall's W** equals the Friedman-derived W = χ²_F / (m(n − 1)) (scipy).
+- **ICC** reproduces Shrout & Fleiss's (1979) example: ICC(2,1) 0.29,
+  ICC(2,4) 0.62.
+- **Krippendorff's α** matches the `krippendorff` package, ordinal and
+  interval. The package went to the scratchpad only; it isn't a project
+  dependency.
+- **Holm and r** were checked by hand.
+- **A run on simulated random ratings** (`--simulate`, written to
+  `data/rendered/`) exercised every path.
+
+**Also:** `yolo_iou.py` now records the SD of the IoU, for Q11. The means
+are unchanged: strict 0.644 ± 0.351 over 607 boxes; found 0.837 ± 0.097.
