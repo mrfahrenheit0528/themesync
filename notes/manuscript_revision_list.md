@@ -731,7 +731,26 @@ rated layouts.
 
 ---
 
-## Chapter 4: Results (don't draft until asked)
+## Chapter 4: Results
+
+**Drafted 2026-10-09: `manuscript/chapter4_draft.tex`** (user's request). It
+is organized by the three specific objectives, and every number comes from
+a file in `results/`, named in a comment beside it. It compiles in the
+template with no errors (about 17 pages).
+- **Still `\pending{}`:** the Phase 4 MOS tables and text, inter-rater
+  agreement, and the GNN-vs-baseline test (the experts' scores and the
+  consultant's answers); the server's GPU; the certificate's paper size;
+  and whether ANTI_HAZING_LAW is also analysed separately.
+- **The IoU, stress test, latency and rated-layout check** come from the
+  development chat's Windows runs (notes §3.41–3.44). CLAUDE.md treats the
+  server as the source of results of record, so the group should decide
+  whether to re-run them there.
+- **No figures yet.** Sample outputs could be added after the scores are
+  in, and the Step 3 report and its elbow chart once the dashboard
+  settles.
+
+The findings below were the inputs. Where the draft and this list differ,
+the draft's numbers, re-read from `results/`, are the current ones.
 
 Not revisions, but the findings Chapter 4 will need, so nothing gets lost:
 

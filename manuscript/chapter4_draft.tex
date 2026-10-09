@@ -1,0 +1,413 @@
+% =====================================================================
+% Chapter 4 draft (2026-10-09), written for Manu 0910.1's template.
+% Paste into chapters/chapter4.tex in Prism, and un-comment
+% \input{chapters/chapter4} in thesis.tex.
+%
+% Every number comes from a results file in the repository (named in a
+% comment next to it). Text in \pending{...} prints in bold brackets and
+% has to be filled in before submission: the Phase 4 scores, the
+% statistical tests (after the consultant's answers), and a few facts.
+% =====================================================================
+
+\providecommand{\pending}[1]{\textbf{[PENDING: #1]}}
+\providecommand{\tbd}{\textbf{[PENDING]}}
+
+\chapter{Results and Discussion}
+\begin{refsection}
+
+This chapter presented the results of the evaluation and testing of ThemeSync. The results were organized by the three specific objectives of the study. The first covered the extraction of the master layout's structure and stylistic markers (Phase 1), the second covered the reactive layout synthesis engine (Phase 2), and the third covered the heuristic evaluation of the generated candidates and the expert validation of the final layouts (Phases 3 and 4). Each section reported the evaluation metrics defined in Chapter 3 and discussed what the results showed about the framework's strengths and limitations.
+
+\section{Evaluation Setup}
+
+The evaluation used four sets of data, each matched to the metric it was designed for (\ref{tab:eval-sets}). The deployed system consisted of the YOLOv8s layout detector trained on the empirical master-layout dataset, the third version of the Graph Neural Network, the Cassowary constraint solver, and the Heuristic Fitness Function (Formula 3.11) with weights $\alpha = 50$, $\beta = 2$, $\gamma = 1$, and $\delta = 1.5$.
+
+\begin{table}[ht]
+\centering
+\caption{Evaluation Sets and the Metrics Computed on Them}
+\label{tab:eval-sets}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.30\textwidth} >{\raggedright\arraybackslash}p{0.28\textwidth} >{\raggedright\arraybackslash}p{0.32\textwidth}}
+\hline
+\textbf{Set} & \textbf{Size} & \textbf{Metrics} \\ \hline
+Validation split of the empirical master-layout dataset & 40 images, 607 annotated elements & Intersection over Union (IoU), mAP50 \\
+Held-out CGL-Dataset layouts (a seeded 5\% of the training split) & 2,900 layouts & GNN position, gap, and order errors \\
+Unseen event posters (withheld from every detector training set) & 16 posters $\times$ 2 formats & Structure error, Heuristic Fitness Function, F1, latency, MOS \\
+Synthetic administrative templates & Certificate and event ID, 52 runs & Stress test: F1, reading order, text fit \\ \hline
+\end{tabular}
+\end{table}
+
+Three Stage 2 conditions were compared on the unseen posters. In the \textit{GNN-guided} condition, the full system ran: the target elements were mapped to the master's structure and refined by the GNN. In the \textit{mapping only} condition, the master's structure was mapped but the GNN was turned off, which isolated the GNN's own contribution. In the \textit{baseline} condition, both the structure mapping and the GNN were turned off, so the elements were arranged as a naive reading-order stack. All three conditions shared the layout archetype selected from the master's composition, the extracted palette, the reconstructed background, and the stylistic markers. The Phase 4 evaluation compared the GNN-guided and baseline conditions.
+
+The Phase 3 battery (16 posters $\times$ 2 formats $\times$ 3 conditions, 96 runs) was run on the school's server (Python 3.10, PyTorch 2.5.1, Ultralytics 8.4; \pending{server GPU}). The detector's IoU, the stress test, the latency benchmark, and the check of the rated layouts were run on a workstation with an NVIDIA RTX 3060 GPU (Python 3.12, PyTorch 2.5.1) using the same library versions for the models.
+% Sources: results/experiment_log.json (run 20261006_195534); results/yolo_iou.json;
+% results/stress_test.json; results/latency_benchmark.json; results/rated_layouts_check.json.
+
+% =====================================================================
+\section{Objective 1: Relational Logic and Feature Extraction}
+
+The first objective was to design a model that identified and mapped the structural dependencies and stylistic markers of a master design file. This section reported the accuracy of the layout detector, the extraction of colors and stylistic markers, the accuracy of the GNN, and how much of the master's structure reached the generated layouts.
+
+\subsection{Semantic Layout Parsing}
+
+\subsubsection{The Domain Gap of the CGL-Trained Detector}
+
+The first detector (v1) was a YOLOv8n model trained only on the CGL-Dataset \cite{zhou2022cglgan, li2023radm}. On CGL-Dataset's own held-out images it reached an mAP50 of 0.539. On real event posters, however, it detected almost nothing. On three posters that no detector had been trained on, its highest detection confidence ranged from 0.035 to 0.211, and not one detection reached the system's 0.25 threshold (\ref{tab:domain-gap}). The CGL-Dataset consists of e-commerce posters, whose product photography and dense marketing layouts differ from institutional event designs. Fine-tuning on the empirical master-layout dataset closed this gap: after fine-tuning on the first 65 annotated images (v2), every poster produced 8 to 16 usable detections, with top confidences of 0.69 to 0.74.
+
+\begin{table}[ht]
+\centering
+\caption{Highest Detection Confidence on Three Real Posters Outside the Training Sets}
+\label{tab:domain-gap}
+\small
+\begin{tabular}{l c c c}
+\hline
+\textbf{Detector} & \textbf{La Serata} & \textbf{TAN-AW} & \textbf{LODT} \\ \hline
+v1 (CGL-Dataset only) & 0.035 (0) & 0.204 (0) & 0.211 (0) \\
+v2 (+ 65 master layouts) & 0.740 (16) & 0.735 (13) & 0.694 (8) \\
+v3 (+ 124 master layouts) & 0.843 (10) & 0.753$^{a}$ (9) & 0.793 (11) \\ \hline
+\multicolumn{4}{p{0.80\textwidth}}{\footnotesize Values in parentheses are the number of detections at or above the 0.25 confidence threshold. $^{a}$TAN-AW was part of v3's training data.}
+\end{tabular}
+\end{table}
+% Source: results/yolo_domain_gap_check.json; v1 in-domain mAP50 0.539 (notes §3.5).
+
+\subsubsection{Detector Development}
+
+The detector was improved in two further steps (\ref{tab:yolo-v3-v4} and \ref{tab:yolo-v4-v5}). Each comparison scored both models on the same validation images, so the figures within a table were comparable, while the figures across tables were not. First, replacing the YOLOv8n model trained at 640 pixels with a YOLOv8s model initialized from COCO weights and trained at 1024 pixels (v4) raised the mAP50 from 0.363 to 0.454 on the 124-image batch's validation labels. Logos and text improved the most, while underlay and embellishment changed little. Second, the group re-annotated the dataset to 200 images under clearer class definitions and retrained with the same recipe (v5). On the 32 validation images that neither model had trained on, the mAP50 rose from 0.486 to 0.728. The re-annotation corrected what the larger model had not: embellishment recall rose from 0.21 to 0.51, and underlay recall from 0.10 to 0.52. Part of this gain came from v5 having learned the same labeling conventions that the new validation labels followed, but the improvement in logos and embellishments held on any reading. The v5 model was deployed.
+
+\begin{table}[ht]
+\centering
+\caption{Detector v3 Versus v4 on the 124-Image Batch's Validation Labels (mAP50)}
+\label{tab:yolo-v3-v4}
+\small
+\begin{tabular}{l c c c c c}
+\hline
+\textbf{Detector} & \textbf{All} & \textbf{Logo} & \textbf{Text} & \textbf{Underlay} & \textbf{Embellishment} \\ \hline
+v3 (YOLOv8n, 640 px) & 0.363 & 0.620 & 0.584 & 0.037 & 0.212 \\
+v4 (YOLOv8s, 1024 px) & 0.454 & 0.818 & 0.682 & 0.115 & 0.201 \\ \hline
+\end{tabular}
+\end{table}
+% Source: results/yolo_v4_experiment.json.
+
+\begin{table}[ht]
+\centering
+\caption{Detector v4 Versus v5 on 32 Validation Images Neither Model Trained On}
+\label{tab:yolo-v4-v5}
+\small
+\begin{tabular}{l c c c c c}
+\hline
+\textbf{Detector} & \textbf{All} & \textbf{Logo} & \textbf{Text} & \textbf{Underlay} & \textbf{Embellishment} \\ \hline
+\multicolumn{6}{l}{\textit{mAP50}} \\
+v4 (124 images) & 0.486 & 0.864 & 0.680 & 0.138 & 0.263 \\
+v5 (200 images, deployed) & 0.728 & 0.977 & 0.684 & 0.643 & 0.609 \\
+\multicolumn{6}{l}{\textit{Recall}} \\
+v4 (124 images) & 0.458 & 0.868 & 0.657 & 0.097 & 0.210 \\
+v5 (200 images, deployed) & 0.671 & 0.938 & 0.722 & 0.516 & 0.507 \\ \hline
+\end{tabular}
+\end{table}
+% Source: results/yolo_v5_comparison.json. Seven of the 40 validation images were in v4's
+% training data and one (HIRAYA) duplicated a v5 training image; all eight were left out.
+
+\subsubsection{Intersection over Union}
+
+As defined in Chapter 3, IoU was computed only for Phase 1, between the deployed detector's boxes and the ground-truth annotations of the 40-image validation split. In each image and for each class, every ground-truth box was paired with at most one detection, choosing the pairing that maximized the total IoU, at the system's own confidence threshold. The mean IoU was averaged over all 607 ground-truth boxes, with a missed box counting as zero (\ref{tab:iou}).
+
+\begin{table}[ht]
+\centering
+\caption{Intersection over Union of the Deployed Detector on the 40 Validation Images}
+\label{tab:iou}
+\small
+\begin{tabular}{l c c c c c}
+\hline
+\textbf{Class} & \textbf{Boxes} & \textbf{Mean IoU} & \textbf{Found (recall)} & \textbf{Precision} & \textbf{IoU of found} \\ \hline
+Logo & 140 & 0.844 & 0.957 & 0.957 & 0.882 \\
+Text & 260 & 0.679 & 0.796 & 0.695 & 0.818 \\
+Underlay & 41 & 0.548 & 0.634 & 0.605 & 0.850 \\
+Embellishment & 166 & 0.445 & 0.530 & 0.633 & 0.809 \\ \hline
+\textbf{All} & \textbf{607} & \textbf{0.644} & \textbf{0.750} & \textbf{0.734} & \textbf{0.837} \\ \hline
+\multicolumn{6}{p{0.86\textwidth}}{\footnotesize ``Found'' is a pairing with IoU $\geq 0.5$. ``IoU of found'' averages over those pairs only.}
+\end{tabular}
+\end{table}
+% Source: results/yolo_iou.json (notes §3.41). Without the HIRAYA duplicate (39 images):
+% mean IoU 0.640, found 74.4%, IoU of found 0.837. mAP50 on the same 40 images: 0.746.
+
+The detector reached a mean IoU of 0.644 across all elements. It found 75.0\% of the annotated elements, and the elements it found matched their annotations closely, with an average IoU of 0.837. The mAP50 on the same 40 images was 0.746. Logos were detected most reliably (mean IoU 0.844, 95.7\% found), which mattered most for brand consistency, since the logo row anchored the generated layouts. Embellishments were the weakest class (mean IoU 0.445): decorative elements vary widely in shape and are the hardest to separate from the background, even for human annotators. The dashboard compensated for missed elements through its human-in-the-loop controls, which let the designer tick the detected logos and stylistic markers to use or upload a missed one.
+
+\subsection{Color Extraction and Stylistic Markers}
+
+The K-Means extraction selected the number of colors by the Elbow Method between $k = 2$ and $k = 6$, each $k$ taking the best of five seeded initializations. During development, an unseeded version was found to give the same poster different palettes on identical runs, which could change the selected candidate. The seeding made the extraction deterministic, and every result in this chapter was produced after this correction.
+
+In the automatic Phase 3 battery, Stage 0c transferred the master's title artwork to 14 of the 16 outputs of each format and its decorative motifs to 3 of 16. A review of all 32 outputs found three posters where the cut-out title artwork was wrong, one poster whose logotype had been taken as a motif, and one whose ``CLOSED'' stamp had been taken as a motif. The logotype case led to a new rule that skips any motif candidate overlapped by text detections; the other cases were handled as per-poster human-in-the-loop choices in the Phase 4 evaluation set, alongside the logo selections.
+% Source: results/experiment_log.json (title_artwork, motifs_placed); notes §3.31.
+
+\subsection{Graph Neural Network}
+
+The GNN was evaluated on 2,900 CGL-Dataset layouts held out from training (\ref{tab:gnn-heldout}). The position error was the mean distance between each element's predicted and true position, and the gap error the mean error in the spacing between consecutive elements, both as fractions of the canvas. ``Order kept'' was the share of consecutive element pairs whose top-to-bottom order matched the designer's.
+
+\begin{table}[ht]
+\centering
+\caption{GNN Accuracy on 2,900 Held-Out CGL-Dataset Layouts}
+\label{tab:gnn-heldout}
+\small
+\begin{tabular}{l c c c c}
+\hline
+\textbf{Starting layout $\rightarrow$ model} & \textbf{Position error} & \textbf{Gap error} & \textbf{Order kept} & \textbf{Overlap} \\ \hline
+Naive stack, no model & 0.175 & 0.077 & 1.000 & 0.000 \\
+v1, as first deployed & 0.210 & 0.349 & 0.472 & 0.002 \\
+Naive stack $\rightarrow$ v2 & 0.121 & 0.074 & 0.999 & 0.000 \\
+Naive stack $\rightarrow$ v3 & 0.121 & 0.074 & 0.999 & 0.000 \\ \hline
+Master's structure, no model & 0.050 & 0.052 & 0.981 & 0.004 \\
+Master's structure $\rightarrow$ v2 & 0.096 & 0.097 & 0.924 & 0.004 \\
+Master's structure $\rightarrow$ v3 (deployed) & 0.036 & 0.041 & 0.971 & 0.0005 \\ \hline
+\end{tabular}
+\end{table}
+% Source: results/gnn_heldout_eval.json (notes §3.22, §3.26).
+
+The first version of the GNN (v1) was worse than using no model at all: it kept the reading order of only 47.2\% of element pairs, no better than chance, because it had been trained on inputs that differed from the ones it received at inference. Retraining from the naive stack, the same starting layout used at inference (v2), reduced the position error from 0.175 to 0.121 and kept the order of 99.9\% of pairs. The deployed version (v3) was trained to start from the master's structure. From that start, it reduced the position error from 0.050 to 0.036 (28\%), the gap error from 0.052 to 0.041, and the overlap by 89\%. Version 2, never trained on such a start, made it worse (0.096).
+
+A second test measured how the GNN placed the elements that had no counterpart on the master, when the master's anchors were exactly right (\ref{tab:gnn-anchors}). Used directly, v3 moved the correct anchors by 2.6\% of the height. Registered back onto the anchors, as the deployed pipeline does, it kept them exactly and placed the unmapped elements 8\% more accurately than linear interpolation (0.075 against 0.081).
+
+\begin{table}[ht]
+\centering
+\caption{Vertical-Center Error With the Master's Exact Anchors (Fraction of the Height)}
+\label{tab:gnn-anchors}
+\small
+\begin{tabular}{l c c c}
+\hline
+\textbf{Method} & \textbf{Anchored elements} & \textbf{Unmapped elements} & \textbf{All} \\ \hline
+Linear interpolation (mapping only) & 0.000 & 0.081 & 0.018 \\
+v3, used directly & 0.026 & 0.084 & 0.040 \\
+v3, registered to the anchors (deployed) & 0.000 & 0.075 & 0.017 \\
+v2, registered to the anchors & 0.000 & 0.109 & 0.025 \\ \hline
+\multicolumn{4}{p{0.80\textwidth}}{\footnotesize 8,356 anchored and 2,432 unmapped elements in the held-out layouts.}
+\end{tabular}
+\end{table}
+% Source: results/gnn_heldout_eval.json, "exact_anchors".
+
+\subsection{Transfer of the Master's Structure}
+
+On the 16 unseen posters, the \textit{structure error} measured how far the output's mapped elements (the logo row, header, title, and details) sat from their counterparts on the master, as a fraction of the height, averaged over the six candidates of each run. Lower values meant that the output kept more of the master's composition (\ref{tab:structure-error}).
+
+\begin{table}[ht]
+\centering
+\caption{Structure Error on the 16 Unseen Posters (Mean of Six Candidates per Run)}
+\label{tab:structure-error}
+\small
+\begin{tabular}{l c c c}
+\hline
+\textbf{Format} & \textbf{GNN-guided} & \textbf{Mapping only} & \textbf{Baseline} \\ \hline
+Academic Certificate (14 posters) & 0.056 & 0.056 & 0.089 \\
+Event identification card (15 posters) & 0.045 & 0.045 & 0.117 \\ \hline
+\multicolumn{4}{p{0.80\textwidth}}{\footnotesize Posters without a mappable role for a format were excluded from that format's mean.}
+\end{tabular}
+\end{table}
+% Source: results/experiment_log.json (structure_error_all), run 20261006_195534.
+
+The GNN-guided output was closer to the master than the baseline on every poster that had mappable roles: 14 certificates and 15 event IDs. On event IDs, the structure error fell from 0.117 to 0.045, less than half. Certificates gained less (0.089 to 0.056) because a certificate takes only the master's logo row and header; a poster's title position does not suit a certificate. The GNN-guided and mapping-only conditions had identical structure errors because both kept the same anchors. The GNN's own contribution lay in the unmapped elements: it moved them on 14 of the 32 runs, by at most 7.5\% of the height. Both target formats are tall stacks with little vertical slack, so once the anchors were placed, the solver's design rules left the unmapped elements few positions to choose from. The GNN's advantage over interpolation was therefore measured on the held-out data (\ref{tab:gnn-anchors}) rather than on the posters.
+
+% =====================================================================
+\section{Objective 2: Reactive Layout Synthesis}
+
+The second objective was to develop an engine that propagated manual Hard Constraints in real time while preserving the global layout. This section reported the structural accuracy of the generated layouts, a stress test of the solver, the retention of manual refinements, and the latency of the designer's edits.
+
+\subsection{Structural Accuracy Rate (F1-Score)}
+
+The F1-score was computed per element as defined in Chapter 3: an element placed without overlapping another element and inside the canvas (and, for a designer-locked element, still where the designer placed it) was a true positive; an element that overlapped another or left the canvas was a false positive; and a mandated element that was missing was a false negative. \ref{tab:rated-f1} reported the check of the 64 layouts rated in Phase 4, read from the files the evaluation packets were printed from.
+
+\begin{table}[ht]
+\centering
+\caption{Structural Accuracy and Text Fit of the 64 Rated Layouts}
+\label{tab:rated-f1}
+\small
+\begin{tabular}{l c c c c}
+\hline
+ & \multicolumn{2}{c}{\textbf{Certificate}} & \multicolumn{2}{c}{\textbf{Event ID}} \\
+ & \textbf{GNN} & \textbf{Baseline} & \textbf{GNN} & \textbf{Baseline} \\ \hline
+Layouts & 16 & 16 & 16 & 16 \\
+F1-score & 1.0 (all) & 1.0 (all) & 1.0 (all) & 1.0 (all) \\
+Reading order kept & 16 & 16 & 16 & 16 \\
+All text within its box & 16 & 16 & 14 & 14 \\
+Text over other content & 0 & 0 & 0 & 0 \\
+Smallest text at print size & 7.8 pt & 7.8 pt & 6.5 pt & 6.5 pt \\ \hline
+\end{tabular}
+\end{table}
+% Source: results/rated_layouts_check.json (notes §3.44).
+
+All 64 rated layouts reached an F1-score of 1.0 in both conditions: every element mandated by the payload was present (11 per certificate and 6 per event ID), none overlapped another, and none left the canvas. This agreed with the weight calibration reported later in this chapter, in which none of the 384 candidates generated for these layouts broke a constraint. Because both conditions scored 1.0, the F1-score did not distinguish the GNN-guided layouts from the baseline; that comparison rested on the experts' ratings. On two event IDs, in both conditions, one line of the organization header was 6 to 19 pixels wider than its box on each side; it stayed inside the card's panel and covered nothing. The F1-score also dropped when the designer crowded the canvas: in a test where the citation was dragged onto the recipient's name, the solver could no longer keep the logo and the issuing organization apart, and the F1-score fell to 0.90.
+
+\subsection{Stress Test of the Synthetic Templates}
+
+The synthetic templates were filled with extreme payloads to find where the layout broke (\ref{tab:stress}). Every text field was set to 25\%, 50\%, 75\%, and 100\% of its maximum length, both as real words and as one unbroken string, then each field alone at its maximum, and each field one character over it. The certificate's signature blocks were increased from 1 to 10. Each output was checked for its F1-score, its reading order, and whether every rendered line of text fit inside its box, measured with the actual glyph widths of the font.
+
+\begin{table}[ht]
+\centering
+\caption{Stress Test of the Synthetic Templates}
+\label{tab:stress}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.32\textwidth} >{\raggedright\arraybackslash}p{0.28\textwidth} >{\raggedright\arraybackslash}p{0.28\textwidth}}
+\hline
+\textbf{Condition} & \textbf{Academic Certificate} & \textbf{Event ID} \\ \hline
+Every field at its maximum (real words) & All text fit & The organization header overflowed \\
+First failure (real words) & None & Organization header from 49 of 90 characters \\
+First failure (one unbroken string) & Citation from 98 of 150 characters & Event details from 51 of 80 characters \\
+Maximum + 1 character & Rejected (all 7 fields) & Rejected (all 5 fields) \\
+Reading order & Held in every run & Held in every run \\
+F1-score & 1.0 in every length run & 1.0 in every run \\
+Signature blocks & Clean up to 5; overlapping from 6 (F1 0.92) & --- \\
+Smallest text at print size & 7.8 pt & 6.5 pt \\ \hline
+\multicolumn{3}{p{0.88\textwidth}}{\footnotesize Print sizes: the event ID at A6; the certificate at US Letter landscape \pending{confirm the certificate's paper size; on A4 every point size is 6\% larger}.}
+\end{tabular}
+\end{table}
+% Source: results/stress_test.json (notes §3.42).
+
+The solver held in every length run: the boxes stayed apart, on the canvas, and in reading order, and the schema rejected every over-length field. On the certificate, all text fit its box at every maximum length with real words; the recipient's name shrank from 31.3 to 13.5 points to fit its box at 60 characters. Two limits appeared. On the event ID, the organization header wrapped at a fixed line length and sized itself only by the box's height, so a line longer than 48 characters ran out of its box, and from about 56 characters past the canvas edge. On the certificate, the row of signature blocks held five blocks cleanly; from six the blocks overlapped, since the schema set no upper limit on their number. A long unbroken string spilled 3 to 48 pixels into the margin without covering another element. The test also showed that the F1-score, which scores the boxes rather than the text inside them, could not detect these failures: every run with overflowing text still scored 1.0, and the text-fit measure was needed to find them.
+% Group decision: this reports the limits as found (the rated layouts were drawn before any fix).
+% If the development chat fixes the header and caps the signature count after Phase 4 scoring,
+% re-run the test and add the new figures, noting that the rated layouts predate the fix.
+
+\subsection{Retention of Manual Refinements}
+
+The Bi-directional State Machine recorded every terminal edit as a new, immutable state in the JSON state chain. Simulated moves, resizes, and locks were kept exactly through every subsequent re-solve, with no overlap among the surrounding elements, and every re-solve of a session's chain was checked against the edits made before it. Undo and redo restored earlier states by appending them as new states, so the chain remained append-only, and text edits were re-validated against the content schema before they were accepted. Each of these edits was made directly on the canvas of the dashboard and produced exactly one terminal event, verified in a real browser.
+% Sources: evaluate.py (test_hard_constraints_preserved), layout_report.retention_check (notes §3.28, §3.32).
+
+\subsection{Algorithmic Latency}
+
+Latency was measured over 34 editing sessions (the 16 posters in both formats, opened as the evaluation set had opened them, plus the synthetic theme), with 40 recorded edits per session (1,360 edits in all): moves, resizes, locks, text edits, typography changes, undo, restore, and candidate selections. Two timings were taken per edit: the Cassowary re-solve, which was the constraint recalculation, and the full edit, which re-solved, re-scored, re-drew, and saved the state chain, which was the state synchronization (\ref{tab:latency}).
+
+\begin{table}[ht]
+\centering
+\caption{Latency of the Designer's Edits Against the 0.1-Second and 1.0-Second Limits}
+\label{tab:latency}
+\small
+\begin{tabular}{l c c c c c c}
+\hline
+\textbf{Timing} & \textbf{Edits} & \textbf{Median} & \textbf{95th pct.} & \textbf{Max} & \textbf{$\leq$ 0.1 s} & \textbf{$\leq$ 1.0 s} \\ \hline
+Constraint recalculation (solver) & 1,012 & 0.4 ms & 0.8 ms & 1.8 ms & 100\% & 100\% \\
+State synchronization (full edit) & 1,360 & 157 ms & 338 ms & 393 ms & 22\% & 100\% \\
+\quad Certificate & 680 & 220 ms & 370 ms & 393 ms & 19\% & 100\% \\
+\quad Event ID & 680 & 143 ms & 223 ms & 298 ms & 25\% & 100\% \\ \hline
+\end{tabular}
+\end{table}
+% Source: results/latency_benchmark.json (notes §3.43). Browser redraw not included.
+
+Every constraint recalculation finished within the 0.1-second limit for a response perceived as instantaneous, with a maximum of 1.8 milliseconds. Every full edit finished within the 1.0-second limit for uninterrupted task flow \cite{nielsen1993usability}, but only 22\% finished within 0.1 seconds: most of a full edit's time went to re-drawing and re-scoring the poster's background, since a full edit on the synthetic theme took about 4 milliseconds. Opening a layout, which ran every stage of the pipeline once, took a median of 3.6 seconds; this happened once per layout, not per edit.
+
+% =====================================================================
+\section{Objective 3: Heuristic Evaluation and Expert Validation}
+
+The third objective was to evaluate the generated layouts with the Heuristic Fitness Function and then with a panel of human experts. This section reported the Phase 3 battery's fitness results, the selection of the layout type, the calibration of the fitness weights, and the Phase 4 Mean Opinion Score.
+
+\subsection{Parallel Candidate Generation}
+
+Each run generated six candidates, which varied the layout archetype, the page margin, the vertical rhythm, and the arrangement of the decorative motifs. Each candidate was solved by Cassowary and scored by Formula 3.11 on its own composed background. Across the 64 runs behind the rated layouts, none of the 384 candidates overlapped or left the canvas.
+
+\subsection{Heuristic Fitness Function}
+
+\ref{tab:fitness} reported the fitness of the output layout in each condition. The collision penalty was zero and the alignment penalty negligible in every run, so the scores came from the whitespace and legibility penalties.
+
+\begin{table}[ht]
+\centering
+\caption{Heuristic Fitness of the Output Layouts on the 16 Unseen Posters (Means)}
+\label{tab:fitness}
+\small
+\begin{tabular}{l l c c c}
+\hline
+\textbf{Format} & \textbf{Condition} & \textbf{$F_{layout}$} & \textbf{$P_{whitespace}$} & \textbf{$P_{legibility}$} \\ \hline
+Certificate & GNN-guided & 0.0125 & 0.0108 & 0.0011 \\
+ & Mapping only & 0.0125 & 0.0108 & 0.0011 \\
+ & Baseline & 0.0126 & 0.0108 & 0.0012 \\ \hline
+Event ID & GNN-guided & 0.1633 & 0.1508 & 0.0083 \\
+ & Mapping only & 0.1621 & 0.1508 & 0.0075 \\
+ & Baseline & 0.1583 & 0.1508 & 0.0050 \\ \hline
+\multicolumn{5}{p{0.80\textwidth}}{\footnotesize Lower is better. $P_{collision} = 0$ and $P_{alignment} \approx 0$ in every run.}
+\end{tabular}
+\end{table}
+% Source: results/experiment_log.json, run 20261006_195534.
+
+On certificates, the GNN-guided and baseline outputs scored the same on 10 of the 16 posters; the GNN-guided output scored lower (better) on 4 and higher on 2. On event IDs, the baseline scored slightly better (0.1583 against 0.1633) and the GNN-guided output scored higher on 13 of 16, entirely through the legibility penalty. Following a poster's composition placed text where the poster had its artwork, and because the reconstructed background kept that artwork, the area behind the text was visually busier. The fitness function therefore did not reward the transfer of the master's structure measured in \ref{tab:structure-error}: nothing in Formula 3.11 encodes whether a layout keeps the master's composition. This was a limitation of the heuristic evaluation, and the reason the study relied on the experts' Visual Hierarchy Preservation and Brand and Typographic Consistency scores to judge composition.
+
+\subsection{Selection of the Layout Type}
+
+In an earlier run, Formula 3.11 could not distinguish the layout archetypes: ``classic centered'' won 14 of the 16 certificates because the top candidates tied exactly, and ``left-aligned'' won all 16 event IDs by a small, steady margin. Every poster's output therefore had the same layout per format. The selection was changed so that the master's composition chose the archetype, read from the detected elements, and the fitness function ranked the candidates within it. \ref{tab:archetypes} presented the archetypes chosen for the 16 posters.
+
+\begin{table}[ht]
+\centering
+\caption{Layout Archetypes Selected From the Masters' Compositions (16 Posters)}
+\label{tab:archetypes}
+\small
+\begin{tabular}{l c l c}
+\hline
+\multicolumn{2}{c}{\textbf{Certificate}} & \multicolumn{2}{c}{\textbf{Event ID}} \\ \hline
+Classic centered & 11 & Classic centered & 9 \\
+Header banner & 2 & Floating card & 2 \\
+Art column & 2 & Full-width band & 2 \\
+Left-aligned & 1 & Left-aligned & 3 \\ \hline
+\end{tabular}
+\end{table}
+% Source: results/experiment_log.json (winner_label); same archetype in both conditions of every poster.
+
+Most event posters are centered, so the classic layout remained the most common, but now because of each poster's composition rather than a tie-break. Both conditions read the same master and received the same archetype on every poster, which kept the comparison fair. The change had a cost visible in the fitness: the chosen candidate was not always the one with the lowest $F_{layout}$. The art column scored about 0.076 against about 0.002 for the classic layout, because its text was packed into a narrower column, and the floating card about 0.185 against 0.149.
+
+\subsection{Calibration of the Fitness Weights}
+
+The weights of Formula 3.11 were first set by the priority rule of Chapter 3, with the collision weight $\alpha$ the highest, and then calibrated on the 64 runs behind the rated layouts with criteria fixed before the run. Each round tried multiplying one weight by 0.25, 0.5, 2, or 4, and kept a change only if the selected layouts improved on average in alignment, whitespace, or legibility and worsened in none. The loop kept no change, which confirmed the deployed weights. The selection was also robust: halving or doubling any single weight changed at most 1 of the 64 selected layouts, and only removing a term entirely changed more (whitespace 11, legibility 5). The weights mattered little because $\alpha$ never decided anything (no candidate overlapped), the alignment penalty was near zero everywhere, and 22 of the 48 runs with two candidates of the chosen archetype tied exactly. The calibration ran after the Phase 4 layouts had been generated and before any rating was analyzed.
+% Source: results/weight_calibration.json (notes §3.33).
+
+\subsection{Expert Aesthetic Validation (Mean Opinion Score)}
+
+Four professional designers rated the 64 layouts (16 posters $\times$ 2 formats $\times$ the GNN-guided and baseline conditions) in printed packets on the three parameters of \ref{tab:mos-rating-scale}, without knowing which condition produced which page. Following ITU-T P.800, the Mean Opinion Score was the arithmetic mean of the ratings \cite{itut1996p800}, reported here with its standard deviation.
+
+\begin{table}[ht]
+\centering
+\caption{Mean Opinion Score by Parameter and Condition (Mean $\pm$ SD)}
+\label{tab:mos}
+\small
+\begin{tabular}{l c c}
+\hline
+\textbf{Parameter} & \textbf{GNN-guided} & \textbf{Baseline} \\ \hline
+Visual Hierarchy Preservation & \tbd & \tbd \\
+Brand and Typographic Consistency & \tbd & \tbd \\
+Constraint and Whitespace Harmony & \tbd & \tbd \\ \hline
+\textbf{Overall} & \tbd & \tbd \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Mean Opinion Score by Format and Condition (Mean $\pm$ SD)}
+\label{tab:mos-format}
+\small
+\begin{tabular}{l c c}
+\hline
+\textbf{Format} & \textbf{GNN-guided} & \textbf{Baseline} \\ \hline
+Academic Certificate & \tbd & \tbd \\
+Event identification card & \tbd & \tbd \\ \hline
+\end{tabular}
+\end{table}
+
+\pending{Describe the scores: which parameters and formats rated highest and lowest, and how the two conditions compared.}
+
+\pending{Inter-rater agreement among the four experts, with the statistic chosen after the consultation.}
+
+\pending{The paired comparison of the GNN-guided and baseline conditions, with the test chosen after the consultation, its statistic, and its p-value.}
+
+Two points bore on the interpretation of these results. First, the baseline turned off the structure mapping as well as the GNN, so any difference between the conditions measured the whole Stage 2 pipeline (the master's structure refined by the GNN) rather than the GNN alone; the GNN's own contribution was the held-out result in \ref{tab:gnn-anchors}. Second, for one poster (ANTI\_HAZING\_LAW), the per-poster choices that excluded a misdetected ``CLOSED'' stamp and a damaged title cut-out were lost before the evaluation set was generated, so its four rated pages carried both defects. Because the defects were identical in both conditions, the poster's paired comparison remained valid, although its absolute scores may have been lower. \pending{Whether the analysis is also reported without this poster, as advised by the consultant.}
+
+% =====================================================================
+\section{Summary of Findings}
+
+\textbf{Objective 1.} Fine-tuning on the 200-image empirical master-layout dataset closed the domain gap of the CGL-trained detector. The deployed detector reached a mean IoU of 0.644 on the held-out validation split, finding 75.0\% of the elements with an average IoU of 0.837, and detected logos most reliably (mean IoU 0.844). The GNN, trained to start from the master's structure, reduced that structure's position error by 28\% on 2,900 held-out layouts and, registered to the master's anchors, placed the unmapped elements 8\% more accurately than interpolation. On the unseen posters, the generated layouts kept more of the master's composition than the baseline on every poster with mappable roles, with the structure error on event IDs falling from 0.117 to 0.045.
+
+\textbf{Objective 2.} All 64 rated layouts reached an F1-score of 1.0, and manual moves, resizes, and locks were retained exactly through every re-solve. Every constraint recalculation met the 0.1-second limit (maximum 1.8 ms), and every full edit met the 1.0-second limit (median 157 ms). The stress test confirmed that the solver kept every layout valid at every tested length, and it located two limits: the event ID's organization header overflowed beyond 48 characters per line, and the certificate held at most five signature blocks.
+
+\textbf{Objective 3.} The Heuristic Fitness Function separated valid from invalid layouts but not the conditions: it scored the GNN-guided and baseline certificates alike and slightly favored the baseline on event IDs, because it does not measure whether a layout keeps the master's composition. Its weights were confirmed by calibration and changed at most one of the 64 rated layouts when halved or doubled. \pending{The experts' Mean Opinion Score, and what it showed about the GNN-guided and baseline layouts.}
+
+The results also identified the framework's main limitations: the heuristic evaluation's blindness to the master's composition, the small share of the final layout that the GNN decides in tall formats once the anchors are placed, the weaker detection of underlays and embellishments, the event ID header's fixed wrapping, the absence of a limit on signature blocks, and a full edit that met the 1.0-second limit but not the 0.1-second limit.
+
+%=======================================================%
+%%%%% Do not delete this part %%%%%%
+\clearpage
+
+\begin{center}
+\textbf{Notes}
+\end{center}
+\printbibliography[heading=none]
+\end{refsection}
