@@ -14,9 +14,11 @@ the past tense. Search it with
 - The May PDF (future tense, formerly `Final Manuscript.pdf`) is
   `manuscript/Manu 1905.pdf`. Page numbers elsewhere in this file and in
   notes dated before 2026-10-09 are the May PDF's.
-- The group edits the manuscript by hand in Prism. The LaTeX export was
-  removed from the repo (user, 2026-10-09), so cite the PDF's pages, not
-  LaTeX lines. Write every addition in the past tense.
+- The group edits the manuscript in Prism. The user uploaded the LaTeX
+  again as `manuscript/Thesis Latex/` (2026-10-09). The manuscript chat
+  edits those files there, and the user copies them into Prism. Cite the
+  PDF's pages, not LaTeX lines, since the lines move. Write every addition
+  in the past tense.
 - `manuscript/RSC paged.pdf` is the panel's recommendation sheet from the
   May defense, with the group's actions.
 
@@ -135,12 +137,12 @@ Read first: `notes/system_development_progress.md`, then the tail of
   `notes/system_development_progress.md`. All three are done: the steps
   (§3.32), a report on the user's layout (§3.32), the dataset (v5).
 - **Manuscript:** the revised Manu 0910.1 (2026-10-09) is in
-  `manuscript/`. Its open fixes are M1–M27 in the revision list, and
-  `manuscript/manu0910_fixes.md` has them as paste-ready text. Among the
-  🔴: two paragraphs run off the page (unescaped `_`), a stress test
-  described as done (none exists), a Phase 4 baseline described as "GNN
-  deactivated" (it also drops the structure mapping), and wrong reference
-  entries for CGL-GAN, RADM and O'Donovan.
+  `manuscript/`. Its fixes (M1–M27 in the revision list) are listed in
+  `manuscript/manu0910_fixes.md`. They were applied to
+  `manuscript/Thesis Latex/` on 2026-10-09, uncommitted, for the user to
+  review. Still open: three [GROUP: …] facts, p.55's stress-test wording
+  (M3), p.62's latency wording (M26), the figures (M17), and 3.9–3.12.
+  Chapter 4 is drafted in `chapters/chapter4.tex`.
 - **Waiting on the consultant's answers** from the 2026-10-09 statistics
   consultation (the answer sheet in `notes/consultation_guidelines.pdf`).
   If the user hasn't sent them, remind them. They decide item 3.9 and the
@@ -169,6 +171,9 @@ Read first: `notes/system_development_progress.md`, then the tail of
   before starting.
 - **Commit and push after each set of changes** (user, 2026-10-07), so
   work survives the school server going down.
+  - **Except manuscript drafts** (anything under `manuscript/`: the LaTeX,
+    chapter drafts, the fix list). Leave them uncommitted; the user checks
+    and commits them (user, 2026-10-09).
   - The server's push uses the user's token, cached for a day
     (`credential.helper cache`). If the push asks for a password, tell the
     user to push.
