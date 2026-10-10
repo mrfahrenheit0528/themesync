@@ -66,6 +66,45 @@ group's Prism revision, in the past tense; its LaTeX source is in
   - Chapter 2 saying, in the past tense, that ThemeSync computes Xu et
     al.'s R_shm (M27).
 
+## Applied in `manuscript/Thesis Latex/` (uncommitted, for the user to review)
+
+- **2026-10-09:**
+  - every fix in `manuscript/manu0910_fixes.md` except the cover month,
+    including the group's annotation facts and the 15-image expert review;
+  - "et al." removed from the text and the Notes;
+  - Chapter 4 restructured to the TSA's guidelines.
+- **2026-10-10, after the development chat's D2, D3 and D7:**
+  - **3.9 done:** Chapter 3 has a Statistical Treatment subsection, the
+    plan adopted from the consultation guide (Q1–Q11), with method
+    citations (Wilcoxon 1945, Kendall & Babington Smith 1939, Holm 1979,
+    Kerby 2014, Cohen 1988, Shrout & Fleiss 1979, Krippendorff 2004,
+    Schmidt 1997). Purposive sampling is now described, with Etikan, Musa &
+    Alkassim 2016 (p.48 and the Phase 4 section).
+    - Schmidt's 0.5/0.7 scale for Kendall's W was confirmed only through a
+      secondary source. Check the full text if possible.
+  - **M3 done:** p.55 now describes the stress test's design, and Chapter 4
+    reports its results as found.
+  - **M26 done:** p.62 now applies 0.1 s to the constraint recalculation and
+    1.0 s to the state synchronization.
+  - **M28 (new, done):** Chapter 3 claimed results the expert ratings
+    contradict. They now describe the method instead:
+    - Research Design: "to guarantee professional aesthetic compliance";
+    - Phase 4: "to ensure industry-standard aesthetic compliance";
+    - Evaluation Metrics: "ensured that the framework achieved … aesthetic
+      validity";
+    - Heuristic Fitness Function: "guaranteed that subjective aesthetic
+      principles were translated";
+    - MOS: "verified that these … bounds successfully translated into …
+      aesthetically pleasing designs";
+    - Optimization Theory: "successfully bridged the gap";
+    - HCI Theory: "the system proved that … could successfully
+      synthesize".
+  - **Condition labels:** "structure mapping + GNN" and "baseline" in
+    Chapters 3 and 4.
+  - **Chapter 4:** the Phase 4 results and the Objective 3 discussion are in.
+    Two facts are still pending: the server's GPU, and the certificate's
+    paper size for the stress test.
+
 ---
 
 ## New items (2026-10-09)

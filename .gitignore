@@ -27,3 +27,19 @@ repomix-output.xml
 yolo26n.pt
 yolov8s.pt
 *_candidate.pt
+
+# LaTeX build files from building the manuscript in place (VS Code LaTeX
+# Workshop); the sources and figures are what get committed.
+manuscript/**/*.aux
+manuscript/**/*.acn
+manuscript/**/*.bbl
+manuscript/**/*.bcf
+manuscript/**/*.blg
+manuscript/**/*.fdb_latexmk
+manuscript/**/*.fls
+manuscript/**/*.glo
+manuscript/**/*.ist
+manuscript/**/*.log
+manuscript/**/*.run.xml
+manuscript/**/*.synctex.gz
+manuscript/**/*.synctex(busy)
