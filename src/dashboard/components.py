@@ -362,7 +362,7 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
 .st-key-ts_drawer p > [data-testid="stIconMaterial"]:first-child {color: #cf4836; background: #fdecea;
   border-radius: 8px; padding: 4px; font-size: 1.05rem;}
 /* The master layout: the preview (or upload area), its tools, and beneath
-   it Extract (A1) or the K-Means and SIFT/SURF results (A2) */
+   it Extract (A1) or the K-Means and SIFT results (A2) */
 .st-key-master_view {position: relative;}
 .ts-poster {display: flex; align-items: center; justify-content: center; border-radius: 14px;
   background: radial-gradient(circle at 50% 35%, #f7f8fb, #e7eaf0); overflow: hidden;
@@ -598,8 +598,18 @@ def design_name(session) -> str:
         return ""
     poster = os.path.splitext(os.path.basename(session.template_image or ""))[0]
     poster = re.sub(r"_[0-9a-f]{8}$", "", poster) or "no master"
-    return (f"{session.domain.replace('_', ' ').title()} · {poster} · "
-            f"{'GNN-guided' if session.use_gnn else 'no-GNN baseline'}")
+    return f"{session.domain.replace('_', ' ').title()} · {poster} · {condition_label(session, short=True)}"
+
+
+def condition_label(session, short: bool = False) -> str:
+    """Chapter 4's names for the Stage 2 conditions: structure mapping + GNN
+    (the GNN alone without a master to map), structure mapping only, or the
+    baseline (neither). `short` gives the tables' forms ("mapping + GNN")
+    for the top bar, where the full name doesn't fit."""
+    mapping = "mapping" if short else "structure mapping"
+    if session.use_gnn:
+        return f"{mapping} + GNN" if getattr(session, "structure_guided", False) else "GNN"
+    return f"{mapping} only" if session.use_structure else "baseline"
 
 
 def enter_step(step: int, subtitle: str = ""):

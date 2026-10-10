@@ -180,7 +180,10 @@ with canvas_col:
     with st.container(key="ts_workspace"):
         canvas_editor.active_canvas(session, _friendly)
 
-    thumbs_key = (id(session), json.dumps(session.typography, sort_keys=True))
+    # The thumbnails are drawn with the canvas's current words and typography,
+    # so a text edit, undo or restore that changes either redraws them.
+    thumbs_key = (id(session), json.dumps(session.typography, sort_keys=True),
+                  json.dumps(session.content(), sort_keys=True))
     cached = st.session_state.get("orch_thumbs")
     if not cached or cached["key"] != thumbs_key or "uris" not in cached:
         with st.spinner("Rendering the candidates..."):

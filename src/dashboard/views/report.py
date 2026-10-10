@@ -136,7 +136,7 @@ with preview_col, st.container(border=True, key="card_preview"):
     st.caption(f"{layout['format'].replace('_', ' ').title()} · {session.canvas_w}×{session.canvas_h}px · "
                f"{layout['state_id']} ({_plain(layout['label'])}) · {layout['states']} states, "
                f"{layout['designer_edits']} designer edit(s) · "
-               f"{'GNN-guided' if session.use_gnn else 'no-GNN baseline'}")
+               f"{ui.condition_label(session)}")
     d1, d2, d3 = st.columns(3, gap="small")
     d1.download_button("SVG", data=ui.reader(svg), file_name=os.path.basename(svg), mime="image/svg+xml",
                        icon=":material/download:", width="stretch")

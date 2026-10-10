@@ -8,7 +8,7 @@ Laid out from the user's mockups A1-A3 (2026-10-09, notes §3.37):
   Left: the Master Layout
     A1, before extraction: a large upload area, Extract Visual DNA, and the
     Stage 0b toggle. A2, after: the master's preview (the expand icon opens
-    it full size), its K-Means colour centroids (Stage 0) and SIFT/SURF
+    it full size), its K-Means colour centroids (Stage 0) and SIFT
     keypoints (saliency, logo detected) beneath it. The (i) icon opens the
     relational node graph YOLO parsed (Stage 0b), with its detections drawn
     on the master.
@@ -21,7 +21,7 @@ Laid out from the user's mockups A1-A3 (2026-10-09, notes §3.37):
     may start (p.43).
   The Target Initialization panel (A3)
     Opened from the top bar, it slides over the page without moving it:
-    target format and its structural fields, GNN-guided or baseline, the
+    target format and its structural fields, structure mapping + GNN or baseline, the
     schema validation, and "Initialize", which runs Stages 1-6 and moves on
     to Step 2, the Figure 3 workspace.
 
@@ -294,7 +294,7 @@ with card_master:
                 for h in ing["palette_hex"]) + "</div>", unsafe_allow_html=True)
             st.caption(f"Primary `{palette['primary']}` · accent `{palette['accent']}`")
         with sift_col:
-            ui.card_title("scatter_plot", "SIFT/SURF Keypoints")
+            ui.card_title("scatter_plot", "SIFT Keypoints")
             logos_found = any(n.get("semantic_category") == "logo" for n in dna["nodes"])
             stats = [("Saliency", f"{ing['saliency_weight']:.4f}"), ("Logo", "Yes" if logos_found else "No"),
                      ("Size", f"{ing['image_wh'][0]}×{ing['image_wh'][1]}")]
@@ -523,8 +523,10 @@ if drawer is not None:
         def _pick_gnn() -> None:
             st.session_state["use_gnn"] = st.session_state["gnn_toggle"]
 
-        st.toggle("GNN-guided layout", value=st.session_state["use_gnn"], key="gnn_toggle", on_change=_pick_gnn,
-                  help="Off: the no-GNN baseline (the naive stack the CSP builds on its own).")
+        st.toggle("Structure mapping + GNN", value=st.session_state["use_gnn"], key="gnn_toggle",
+                  on_change=_pick_gnn,
+                  help="On: the master's structure is mapped onto the target and refined by the GNN. "
+                       "Off: the baseline, with neither; the solver stacks the elements in reading order.")
         if problems:
             st.error("Schema validation — initialization would be rejected:\n\n"
                      + "\n".join(f"- {p}" for p in problems))

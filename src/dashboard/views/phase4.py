@@ -140,6 +140,19 @@ def _saved_ticks(row: dict, cands: list) -> tuple:
             next((c["id"] for c in cands if c["primary"]), None))
 
 
+def _from_manifest(key: str, value) -> None:
+    """Seeds a keyed widget from the manifest, and re-seeds it whenever the
+    manifest's value changes. A keyed widget keeps its session value and
+    ignores `value=` once created, so a page left open showed stale fields
+    and saved them back: that is how ANTI_HAZING_LAW lost its overrides
+    (notes §3.35). An unsaved edit still survives reruns until the manifest
+    itself changes."""
+    source = f"{key}__manifest"
+    if st.session_state.get(source) != value:
+        st.session_state[key] = value
+        st.session_state[source] = value
+
+
 _reader = ui.reader
 
 
@@ -165,7 +178,7 @@ def _run_cli(args: list, label: str, total: int = None) -> tuple:
 
 ui.top_bar(0, "Research tools · outside the three-step workflow", tool="Phase 4 Evaluation Set")
 st.caption(f"Builds the blind expert-rating packet: {N_POSTERS} unseen event posters × certificate "
-           "and event ID × GNN-guided and no-GNN baseline (Chapter 3, p. 54). Everything here is "
+           "and event ID × structure mapping + GNN and baseline (Chapter 3). Everything here is "
            "saved to data/raw/phase4_posters/manifest.csv, the same file the CLI uses.")
 
 os.makedirs(POSTERS_DIR, exist_ok=True)
@@ -270,23 +283,28 @@ else:
     poster_path = os.path.join(POSTERS_DIR, pick)
     cands = _logo_candidates(row, poster_path)
     saved_ticked, saved_seal = _saved_ticks(row, cands)
-    for c in cands:  # first visit: start from what's saved
-        st.session_state.setdefault(f"{stem}_tick_{c['id']}", c["id"] in saved_ticked)
+    for c in cands:  # start from what's saved, and follow the manifest when it changes
+        _from_manifest(f"{stem}_tick_{c['id']}", c["id"] in saved_ticked)
+    _from_manifest(f"{stem}_title", row.get("event_title", ""))
+    _from_manifest(f"{stem}_date", row.get("event_date", ""))
+    _from_manifest(f"{stem}_venue", row.get("event_venue", ""))
+    _from_manifest(f"{stem}_org", "\n".join(s.strip() for s in row.get("organization_header", "").split("|")
+                                             if s.strip()))
+    _from_manifest(f"{stem}_title_art", p4.use_title_artwork(row))
+    _from_manifest(f"{stem}_motifs", p4.use_motifs(row))
 
     img_col, form_col = st.columns([1, 1.25], gap="large")
     with form_col:
         st.subheader("Event text")
-        title = st.text_input("Event title", value=row.get("event_title", ""), max_chars=TITLE_MAX,
-                              key=f"{stem}_title",
+        title = st.text_input("Event title", max_chars=TITLE_MAX, key=f"{stem}_title",
                               help="The event's name as the poster shows it. Short names read best "
                                    "on the event ID; drop long taglines.")
-        date = st.text_input("Date", value=row.get("event_date", ""), key=f"{stem}_date",
+        date = st.text_input("Date", key=f"{stem}_date",
                              placeholder="e.g. September 12, 2026 — blank if the poster has none")
-        venue = st.text_input("Venue", value=row.get("event_venue", ""), key=f"{stem}_venue",
+        venue = st.text_input("Venue", key=f"{stem}_venue",
                               placeholder="e.g. CSPC Gymnasium — blank if the poster has none")
         org_text = st.text_area(
             "Organization (one line each)", key=f"{stem}_org", height=80,
-            value="\n".join(s.strip() for s in row.get("organization_header", "").split("|") if s.strip()),
             help="Line 1 is the certificate's issuing organization; lines 1-2 are the event ID "
                  "header. Blank means Camarines Sur Polytechnic Colleges.",
         )
@@ -303,12 +321,10 @@ else:
                        "sample data that change per poster.")
 
         use_art = st.checkbox("Use the event's title artwork on the event ID", key=f"{stem}_title_art",
-                              value=p4.use_title_artwork(row),
                               help="Untick when the artwork cut from the poster looks clipped or messy "
                                    "in the preview; the event ID then types the title.")
         draft["title_artwork"] = "" if use_art else "no"
         use_deco = st.checkbox("Use the poster's decorations (motifs)", key=f"{stem}_motifs",
-                               value=p4.use_motifs(row),
                                help="Untick when a 'decoration' in the preview is really lettering, a "
                                     "stamp or a logo.")
         draft["motifs"] = "" if use_deco else "no"
@@ -387,7 +403,7 @@ else:
             content = p4.content_for(saved_row, idx)
             logos = p4.logo_paths(saved_row, POSTERS_DIR)
             pngs = {}
-            with st.spinner("Generating the certificate and event ID (GNN-guided)..."):
+            with st.spinner("Generating the certificate and event ID (structure mapping + GNN)..."):
                 for fmt in p4.FORMATS:
                     _, pngs[fmt] = p4.generate_sample(poster_path, content, fmt, "gnn",
                                                       os.path.join(PREVIEW_DIR, stem, fmt), logos,
@@ -402,7 +418,7 @@ else:
 
     preview = st.session_state.get(f"{stem}_preview")
     if preview:
-        st.markdown("**Preview** — GNN-guided; the packet also has the no-GNN baseline of each.")
+        st.markdown("**Preview** — structure mapping + GNN; the packet also has the baseline of each.")
         current = next(r for r in p4.read_manifest(POSTERS_DIR) if r["poster_file"] == pick)
         if current != preview["row"]:
             st.caption("The saved details changed after this preview; preview again to refresh it.")

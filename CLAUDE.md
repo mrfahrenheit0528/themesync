@@ -29,7 +29,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.51).
+§3.52).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal

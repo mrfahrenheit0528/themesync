@@ -763,3 +763,25 @@ All three are 1782 × 877 px, about 300 dpi at 6 inches wide.
 
   Re-take that screenshot after restarting the dashboard if it goes in the
   manuscript.
+
+### F3. Dashboard changes after the screenshots — 2026-10-10 (notes §3.52)
+
+- **SIFT only:**
+  - The Step 1 card now reads "SIFT Keypoints". The dashboard no longer
+    names SURF.
+  - That leaves item 3.10's choice with the manuscript: reword "SIFT/SURF"
+    to "SIFT" (pp.40, 56–57, 59, 65 and the Project Dictionary), as the
+    system and now the dashboard show.
+- **Condition names:** the dashboard uses Chapter 4's names.
+  - The full name, "structure mapping + GNN", appears in the Target
+    Initialization toggle and in the Step 3 caption.
+  - The top bar uses the short form, "mapping + GNN".
+  - The baseline is "baseline".
+- **Thumbnails:** the Recommendations strip now shows the canvas's current
+  words after a text edit. The earlier screenshot had "ANGELA" thumbnails
+  under a "LUKE" canvas.
+- **Re-take all three screenshots in `manuscript/Images/`** once the
+  dashboard is restarted, so the figures match the system:
+  - Step 1 shows "SIFT/SURF Keypoints";
+  - Steps 2 and 3 show "GNN-guided" in the top bar;
+  - the Step 2 strip shows stale names.

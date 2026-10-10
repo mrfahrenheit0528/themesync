@@ -3659,3 +3659,44 @@ in `views/report.py`:
 
 **Handoff:** `notes/dev_findings_for_manuscript.md`, section F, has the
 figure list with suggested places and what each screenshot shows.
+
+### 3.52 Dashboard fixes from the screenshots (2026-10-10)
+
+The user asked for the issues found in the dashboard screenshots to be
+fixed. The fixes are display-only, plus the Phase 4 page bug; none changes
+how a layout is generated.
+- **"SIFT/SURF Keypoints" → "SIFT Keypoints"** (Step 1). Only SIFT runs
+  (revision item 3.10). The dashboard no longer names SURF anywhere.
+- **Chapter 4's condition names** replace "GNN-guided" and "no-GNN
+  baseline" everywhere: the Target Initialization toggle, the top bar,
+  Step 3's caption, and the Phase 4 page.
+  - **The full names:** "structure mapping + GNN" (just "GNN" when there
+    is no master to map), "structure mapping only", "baseline".
+  - **The top bar** uses the tables' short form, "mapping + GNN", because
+    the full name was cut off there.
+  - The helper is `components.condition_label`.
+- **Candidate thumbnails follow text edits.** The Recommendations strip was
+  cached on the session and the typography only, so after a text edit it
+  kept showing the old words (the user's screenshot: "ANGELA" under a
+  "LUKE" canvas). Its key now includes the content
+  (`views/orchestration.py`).
+- **The Phase 4 page reloads its fields when the manifest changes**
+  (`views/phase4.py`, `_from_manifest`). This is the bug of §3.35: a keyed
+  widget keeps its session value and ignores `value=`, so a page left open
+  saved stale ticks back. That is how ANTI_HAZING_LAW lost its overrides.
+  All the per-poster fields now re-seed when the manifest's value differs
+  from the one they were seeded with.
+- **Checked** in Edge on a separate instance (port 8503), on a certificate
+  and on the CTC event ID:
+  - "SIFT Keypoints" shown, "SURF" nowhere;
+  - the new names in the toggle, top bar and caption; the top bar not cut
+    off;
+  - six thumbnails redrawn after a text edit;
+  - no braces in the caption;
+  - the Phase 4 page with no exceptions.
+
+**Not changed:** the two renderer limits the stress test found (§3.42). The
+event ID's header doesn't shrink to its box's width, and the signature
+count has no cap. Fixing the header would change how two rated event IDs
+render, against Chapter 4's "the system was not changed after the rating".
+It is left for the group to decide.
