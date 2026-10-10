@@ -137,13 +137,26 @@ Read first: `notes/system_development_progress.md`, then the tail of
 - **Consultant's remarks** (received 2026-10-07) and their status are in
   `notes/system_development_progress.md`. All three are done: the steps
   (§3.32), a report on the user's layout (§3.32), the dataset (v5).
-- **Manuscript:** the revised Manu 0910.1 (2026-10-09) is in
-  `manuscript/`. Its fixes (M1–M27 in the revision list) are listed in
-  `manuscript/manu0910_fixes.md`. They were applied to
-  `manuscript/Thesis Latex/` on 2026-10-09, uncommitted, for the user to
-  review. Still open: three [GROUP: …] facts, p.55's stress-test wording
-  (M3), p.62's latency wording (M26), the figures (M17), and 3.9–3.12.
-  Chapter 4 is drafted in `chapters/chapter4.tex`.
+- **Manuscript (2026-10-10):** the latest build is
+  `manuscript/Manu 1010.1.pdf`. `manuscript/Thesis Latex/` holds Chapters
+  1–5.
+  - Everything in the dev findings' section G is applied there,
+    uncommitted, for the user to review. That includes the group's
+    decisions of 2026-10-10:
+    - SIFT only, everywhere (SO1 included);
+    - the CNN removed (future work);
+    - c_i and s_i described as per-layout values, with a limitation;
+    - the certificate printed on US Letter;
+    - Figures 2–4 are now the dashboard screenshots, plus five Chapter 4
+      figures;
+    - the Significance in the past tense;
+    - Chapter 5 drafted.
+  - **Not done:**
+    - the cover month (the user fills it in);
+    - the abstract (later);
+    - the example-pair figure (left out: licensed cartoon characters).
+  - **Prism needs the current `references.bib`,** or new citations print
+    as raw keys.
 - **Phase 4 is analysed** (2026-10-10, notes §3.48–3.49, handoff D7):
   - **The statistical treatment:** the consultant checks only the
     prototype, so the group adopted the consultation guide's suggested

@@ -104,6 +104,39 @@ group's Prism revision, in the past tense; its LaTeX source is in
   - **Chapter 4:** the Phase 4 results and the Objective 3 discussion are in.
     Two facts are still pending: the server's GPU, and the certificate's
     paper size for the stress test.
+- **2026-10-10, after the development chat's sections E–G** (checked
+  against Manu 1010.1):
+  - **E1–E9 and G2 applied:**
+    - ANTI_HAZING_LAW's lost corrections (p.81);
+    - the server GPU (NVIDIA RTX A5000, 24 GB);
+    - the post-rating changes left the layouts byte-identical (p.99), and
+      latency was measured with the cache;
+    - the GNN runs once, at opening (p.29);
+    - no "GNN compositional scoring" (p.30);
+    - candidates are ranked "when a layout is initialized" (p.28);
+    - the signature-block "because" (p.90);
+    - 0.003 and 0.187 for the left-aligned layout (p.92);
+    - F1's FN and FP as in the code (p.64).
+  - **Decided by the user:**
+    - **3.10:** SIFT only, everywhere, SO1 included. Chapter 3's claim that
+      SIFT recognizes the logo is corrected: YOLOv8 locates logos, and SIFT
+      ranks motifs and builds the saliency map.
+    - **3.11:** the CNN is removed, and retraining on the 768 ratings is a
+      Chapter 5 recommendation.
+    - **3.12:** c_i and s_i are described as per-layout values, with a
+      Chapter 4 limitation. Appendix A shows the real record structure
+      (layout-level colours and saliency, nodes with category and box).
+    - **The certificate is printed on US Letter.**
+    - **M11:** the Significance is in the past tense, with the "visual
+      harmony" claim softened.
+  - **M17 done:** Figures 2 and 3 are the re-taken dashboard screenshots,
+    with new descriptions. The Evaluation Report is a new Figure 4.
+  - **Chapter 4 figures:** five from `results/figures/` (structure error,
+    latency, rating distribution, pairs, spacing; the last labelled
+    exploratory). The example pair is left out for licensing.
+  - **Chapter 5:** drafted (Summary, Findings, Conclusions,
+    Recommendations).
+  - **Still open:** the cover month (the user's) and the abstract (later).
 
 ---
 

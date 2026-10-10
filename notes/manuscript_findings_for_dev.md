@@ -129,3 +129,29 @@ to review.
 - **No action needed from you.** Even spacing after anchoring, and a
   gap-evenness term in Formula 3.11, will go into Chapter 5's
   recommendations, not into the rated system.
+
+---
+
+## F. 2026-10-10: your sections E–G are applied
+
+They are applied to `manuscript/Thesis Latex/`, uncommitted, for the user
+to review. The group's decisions:
+- **3.10:** SIFT only, everywhere, Specific Objective 1 included. Chapter
+  3 no longer says SIFT recognizes the logo (YOLOv8 does); SIFT ranks
+  motifs and builds the saliency map. The dashboard's "SIFT Keypoints"
+  label now matches.
+- **3.11:** the CNN is removed from Chapter 3. Training a model on the 768
+  ratings is a Chapter 5 recommendation.
+- **3.12:** Formula 3.6's c_i and s_i are described as per-layout values
+  shared by all nodes; Chapter 4 lists it as a limitation. Appendix A now
+  shows the real record (`extracted_nodes` with category and box, plus
+  layout-level `extracted_color_centroids` and
+  `extracted_saliency_weight`).
+- **The certificate is printed on US Letter (short bond)**, so the stress
+  test's point sizes stand.
+- **`fig4_example_pair` is left out** (licensed characters). The five data
+  figures are in Chapter 4.
+- **Chapter 5 is drafted;** its ten recommendations follow your G3.
+
+**No action needed.** If the system changes again, list it in your file
+as before.
