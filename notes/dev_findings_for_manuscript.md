@@ -1,5 +1,9 @@
 # Findings from system development, for the manuscript chat
 
+> **Start here (2026-10-10):** section G, at the end, is the consolidated list
+> of what the manuscript still needs (errors, wording, missing content, open
+> decisions), checked against Manu 1010.1. Sections A–F are the detail behind it.
+
 The system-development chat checked the revised manuscript against the
 code on 2026-10-09:
 - **Manuscript:** Manu 0910.1, as the LaTeX in `manuscript/LaTeX/chapters/`
@@ -785,3 +789,138 @@ All three are 1782 × 877 px, about 300 dpi at 6 inches wide.
   - Step 1 shows "SIFT/SURF Keypoints";
   - Steps 2 and 3 show "GNN-guided" in the top bar;
   - the Step 2 strip shows stale names.
+
+---
+
+## G. Final checklist: what the manuscript still needs — 2026-10-10
+
+**Start here.** This section consolidates everything still missing or
+wrong, as of:
+- **Manu 1010.1** and its LaTeX (`manuscript/Thesis Latex/`, commit
+  `5015202`, unchanged since);
+- **the system** at `f97d897`;
+- **`results/`.** None of the numbers Chapter 4 cites have changed since
+  1010.1; only the figures were added.
+
+Both test files pass. Details are in the sections referenced; "p." is Manu
+1010.1's page.
+
+### G1 🔴 Errors to correct
+
+1. **p.81, ANTI_HAZING_LAW (E1).** It says the CLOSED stamp and the title
+   cut-outs "were corrected" in the Phase 4 set. They were for CMET and
+   SIGN_LANGUAGE_DAY; ANTI_HAZING_LAW's corrections were lost, as p.93 says.
+   Add the exception.
+2. **Eleven citations print as raw keys in the Prism PDF (E2):**
+   "[Badros2001Cassowary]", "[schmidt1997managing]", "[kerby2014simple]",
+   and others on pp.10–99.
+   - The local `thesis.pdf` resolves all of them, so only Prism's copy of
+     `references.bib` is out of date.
+   - Upload the current `references.bib` to Prism and rebuild.
+3. **The title page says "May 2026"** (`thesis.tex`:
+   `\makeTitlePage{May}{2026}`). Set it to the defense month. The approval
+   date is still the template's "January 1, 2000", and the approval page is
+   commented out; fill both in when the defense is scheduled.
+
+### G2 🟡 Wording to fix
+
+| Page | Now | Fix | See |
+|---|---|---|---|
+| p.78 | "[PENDING: server GPU]" | an NVIDIA RTX A5000 (24 GB) | E3 |
+| p.99 | "The system was not changed after the rating" | the layout generation wasn't. The dashboard (labels, thumbnails, the Phase 4 page, the elbow graph) and a speed cache changed later, with the generated layouts byte-identical. Table 13's latency was measured with the cache. | E4, F3 |
+| p.29 | the GNN "within a live orchestration loop" | the GNN runs once, when a layout is opened; edits re-solve Cassowary | E5 |
+| p.30 | "AAPA and GNN compositional scoring … aesthetically validated layout candidates" | drop "GNN compositional scoring"; "fitness-ranked layout candidates" | E6 |
+| p.28 | candidates ranked "in real-time" | "when a layout is initialized" | E6 |
+| p.90 | "at most five signature blocks because the content schema set no upper limit" | "the row held at most five signature blocks without overlap, and the content schema set no upper limit on their number" | E7 |
+| p.92 | "about 0.002 … the floating card about 0.185 against 0.149" | "0.003 … 0.187 against 0.149 for the left-aligned layout" | E8 |
+| p.64 | FN "or the relational graph of the master template"; FP "overlapping an immutable designer-locked node" | only the payload mandates elements; an overlap with any element is an FP (as p.86 says) | E9 |
+| pp.6–7 | Significance: "This study will benefit …", "will provide …" | the past tense (M11). "Maintains mathematical visual harmony among all the formats" holds for the constraints (F1 1.0); Phase 4 found the experts preferred the baseline's spacing, so consider "keeps every element within its constraints across formats". | M11 |
+
+### G3 Content to add
+
+1. **Figures 2 and 3 (pp.57, 60).**
+   - **The images:** the chapter still includes the May mockups
+     (`figures/ts1.png`, `ts2.png`, `ts3.png`). Replace them with the
+     screenshots in `manuscript/Images/`, re-taken on 2026-10-10 after the
+     dashboard fixes:
+     - `Perceptual Ingestion.jpeg` → Figure 2;
+     - `Active Orchestration.jpeg` → Figure 3.
+   - **The text:** rewrite both descriptions to match ("central viewport",
+     "two critical computational tabs" no longer apply). F2 says what each
+     screenshot shows.
+   - **Optional:** a third figure for the Evaluation Report
+     (`Evaluation Report.jpeg`), which p.60 describes in words only.
+2. **Figures for Chapter 4,** which has only tables now. The seven
+   `results/figures/fig4_*` (PNG at 300 dpi + PDF) are listed in F1 with
+   suggested places.
+   - Label `fig4_spacing_vs_mos` as exploratory.
+   - Decide whether `fig4_example_pair`'s licensed cartoon characters can
+     be printed under fair use; GUESS_THE_TEACHER's event ID is the next
+     example.
+3. **Chapter 5 (Summary, Findings, Conclusions, Recommendations,** per the
+   TSA's guide). `chapter5.tex` is still the template's placeholder (a
+   sample galaxy figure) and is commented out in `thesis.tex`.
+   - **Findings:** restate Chapter 4's numbers per objective (D1–D7).
+   - **Recommendations** the results support:
+     1. spread the remaining space evenly after anchoring the master's
+        positions (Phase 4, §3.49);
+     2. add a gap-evenness term to Formula 3.11, whose differences didn't
+        follow the experts' (ρ = −0.20);
+     3. rate structure mapping only against structure mapping + GNN with
+        experts, which this design couldn't separate;
+     4. fit the event ID header to its box's width; cap the signature
+        blocks at five and limit their text (stress test, D2);
+     5. derive R_target from the master, or report it as a fixed design
+        choice (D6);
+     6. per-element colour and saliency features for the GNN (Appendix A,
+        item 3.12);
+     7. retrain the aesthetic CNN on the 768 expert ratings now available
+        (item 3.11);
+     8. faster re-solving edits through cheaper legibility scoring (48%
+        within 0.1 s, D3);
+     9. validate the detector beyond 40 campus images, with clearer
+        underlay and embellishment definitions (D1);
+     10. more raters, or a calibration round, to raise the absolute
+         agreement (ICC(2,1) 0.16–0.31, D7).
+4. **An abstract,** if CSPC's format requires one. The manuscript has none.
+   It would have to report the Phase 4 result as found.
+
+### G4 Decisions still open (the group, or the TA)
+
+- **3.10 SURF.** The dashboard now says "SIFT Keypoints" (F3), and only
+  SIFT runs. Reword "SIFT/SURF" to "SIFT" on pp.40, 56–57, 59, 65 and in
+  the Project Dictionary.
+- **3.11 CNN (p.39), "deployed for quantitative aesthetic evaluation".**
+  Nothing in the system uses it. Describe it as trained by distillation and
+  not deployed, or move it to future work (G3, recommendation 7).
+- **3.12 Formula 3.6 and Appendix A.** These describe c_i and s_i per
+  element; the GNN gets one colour and one saliency value per layout.
+  Reword, and list it as a limitation.
+- **p.87, the certificate's paper size ([PENDING]).** US Letter landscape
+  was assumed; on A4, every point size in Tables 11–12 is 6% larger.
+- **The stress test's two renderer limits.**
+  - Chapter 4 reports them as limitations, which is accurate.
+  - Fixing the header fit would change how two rated event IDs render.
+    Keep them as limitations unless the group wants the fix, and the
+    rewording of p.99 that goes with it.
+- **The manifest's guesses,** printed on the rated pages: ANTI_HAZING's
+  university, CMET's year, "DEBESMSCAT", and the blank dates on
+  DEAR_SENDER, LUCKY_TERA and SHARE_KO_LANG. Confirm them for the record.
+- **`notes/manuscript_revision_list.md`** was last re-checked against
+  Manu 0910.1. Re-check it against 1010.1 the same way.
+
+### G5 Already in the manuscript (no action)
+
+- **Chapter 3:**
+  - the statistical treatment (exactly what `phase4_analysis.py` runs, and
+    committed before the import);
+  - p.55's stress-test design and p.62's two latency limits;
+  - Cassowary re-solving on every event (M22) and the vertical-centre error
+    (M6);
+  - R_target fixed at 0.65 (M19), and the conditions named with both
+    modules off (M4, M5);
+  - the normalisations (M20);
+  - "event identification cards".
+- **Appendix B** is identical to the system's payload.
+- **Chapter 4:** every number in Tables 3–21 and the text matches the
+  results files (E, "Checked and correct").
