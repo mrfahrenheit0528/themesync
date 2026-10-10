@@ -79,25 +79,55 @@
 \label{annex:dynamic-content-payload}
 \begin{lstlisting}
 {
-  "domain_context": "academic_certificate",
-  "target_aspect_ratio": "4:3",
-  "variable_schema": {
-    "{{Student_Name}}": { 
-        "structural_class": "text_node", 
-        "spatial_hierarchy": 1,
-        "max_characters": 60 
-    },
-    "{{Course_Title}}": { 
-        "structural_class": "text_node", 
-        "spatial_hierarchy": 2,
-        "max_characters": 80 
-    },
-    "{{Signature_Blocks}}": { 
-        "structural_class": "repeating_group",
-        "spatial_hierarchy": 3,
-        "instantiation_count": 3 
+    "domain_context": "academic_certificate",
+    "target_aspect_ratio": "4:3",
+    "variable_schema": {
+        "{{Institution_Logo}}": {
+            "structural_class": "image_node",
+            "spatial_hierarchy": 0,
+            "lock_aspect_ratio": true
+        },
+        "{{Issuing_Organization}}": {
+            "structural_class": "text_node",
+            "spatial_hierarchy": 1,
+            "max_characters": 60
+        },
+        "{{Certificate_Title}}": {
+            "structural_class": "text_node",
+            "spatial_hierarchy": 2,
+            "max_characters": 40
+        },
+        "{{Presentation_Line}}": {
+            "structural_class": "text_node",
+            "spatial_hierarchy": 3,
+            "max_characters": 30
+        },
+        "{{Student_Name}}": {
+            "structural_class": "text_node",
+            "spatial_hierarchy": 4,
+            "max_characters": 60
+        },
+        "{{Citation_Body}}": {
+            "structural_class": "text_node",
+            "spatial_hierarchy": 5,
+            "max_characters": 150
+        },
+        "{{Date_Issued}}": {
+            "structural_class": "text_node",
+            "spatial_hierarchy": 6,
+            "max_characters": 30
+        },
+        "{{Certificate_ID}}": {
+            "structural_class": "text_node",
+            "spatial_hierarchy": 7,
+            "max_characters": 20
+        },
+        "{{Signature_Blocks}}": {
+            "structural_class": "repeating_group",
+            "spatial_hierarchy": 8,
+            "instantiation_count": 3
+        }
     }
-  }
 }
 \end{lstlisting}
 
