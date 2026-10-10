@@ -203,9 +203,11 @@ Read first: `notes/system_development_progress.md`, then the tail of
       section per objective. Each subsection is a part the objective names,
       titled in its own words in Chapter 3's "Topic (Method)" style.
       Each table or figure is followed by its own Results and PIIILS
-      discussion, with one table or figure per page (`\clearpage` +
-      `[H]`). No separate Results or Discussion headings. After any edit,
-      recompile and check that each item still fits its page.
+      discussion, with one table or figure per page: `\clearpage` before
+      each item and `[!ht]` floats like Chapter 3's. Not `[H]`, which
+      double-spaced the tables and left a gap under the chapter title. No
+      separate Results or Discussion headings. After any edit, recompile
+      and check that each item still fits its page.
     - Chapter 5: no subsections. Findings (by objective), Conclusions
       (each citing its findings) and Recommendations (each citing its
       conclusion) are numbered lists.
