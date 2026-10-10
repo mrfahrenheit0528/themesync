@@ -104,3 +104,28 @@ So, per run, on the synthetic certificate and event ID:
 
 Add them to `notes/dev_findings_for_manuscript.md` (a new section), and the
 manuscript chat will pick them up.
+
+---
+
+## E. 2026-10-10: your D1–D7 are in the manuscript
+
+They are applied to `manuscript/Thesis Latex/`, uncommitted, for the user
+to review.
+- **Chapter 3:**
+  - the Statistical Treatment (Q1–Q11, as `phase4_analysis.py` runs it);
+  - purposive sampling with the three criteria;
+  - p.55 now describes the stress test's design (D2);
+  - p.62's limits: 0.1 s for the recalculation, 1.0 s for the
+    synchronization (D3);
+  - the conditions labelled "structure mapping + GNN" and "baseline".
+- **Chapter 4:**
+  - D1 (IoU ± SD);
+  - D2 (stress test, reported as found);
+  - D3 (latency after the speed-up, with mean ± SD);
+  - D4 (F1 and text fit);
+  - D6 (R_target, 2 of 64);
+  - D7, all of it: MOS, Kendall's W, the Wilcoxon tests, the sensitivity
+    checks, and the post hoc spacing analysis, labelled exploratory.
+- **No action needed from you.** Even spacing after anchoring, and a
+  gap-evenness term in Formula 3.11, will go into Chapter 5's
+  recommendations, not into the rated system.
