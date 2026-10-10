@@ -198,8 +198,10 @@ Read first: `notes/system_development_progress.md`, then the tail of
     language.
   - Chapter 5: Summary, Findings, Conclusions, Recommendations.
   - **The TA's remarks (2026-10-11), applied to the LaTeX:**
-    - Chapter 4: the Evaluation Setup first (the user kept it), then one
-      section per objective, with subsections for that objective's parts.
+    - Chapter 4: the evaluation setup first, as the chapter's opening
+      paragraphs with no heading of its own (the user kept it), then one
+      section per objective. Each subsection is a part the objective names,
+      titled in its own words in Chapter 3's "Topic (Method)" style.
       Each table or figure is followed by its own Results and PIIILS
       discussion, with one table or figure per page (`\clearpage` +
       `[H]`). No separate Results or Discussion headings. After any edit,
