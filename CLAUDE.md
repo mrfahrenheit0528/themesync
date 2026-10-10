@@ -197,6 +197,18 @@ Read first: `notes/system_development_progress.md`, then the tail of
     implications, limitations, summary). Past tense, with no proposal
     language.
   - Chapter 5: Summary, Findings, Conclusions, Recommendations.
+  - **The TA's remarks (2026-10-11), applied to the LaTeX:**
+    - Chapter 4: the Evaluation Setup first (the user kept it), then one
+      section per objective, with subsections for that objective's parts.
+      Each table or figure is followed by its own Results and PIIILS
+      discussion, with one table or figure per page (`\clearpage` +
+      `[H]`). No separate Results or Discussion headings. After any edit,
+      recompile and check that each item still fits its page.
+    - Chapter 5: no subsections. Findings (by objective), Conclusions
+      (each citing its findings) and Recommendations (each citing its
+      conclusion) are numbered lists.
+    - Direct statements, "not AI written": short sentences with one point
+      each, few numbers per sentence, no stock connectors.
 - **`notes/manuscript_revision_list.md` tracks the manuscript against the
   code.** It was re-checked against Manu 0910.1 on 2026-10-09: 26 earlier
   items applied, 27 new (M1–M27, including §3.35's open findings and the
