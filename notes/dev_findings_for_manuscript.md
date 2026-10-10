@@ -471,3 +471,220 @@ carry):**
 - **The system stays as rated.** Even spacing after anchoring, or a
   gap-evenness term, belongs in the recommendations; it would need new
   ratings.
+
+---
+
+## E. Manu 1010.1 checked against the system — 2026-10-10
+
+The development chat checked `manuscript/Manu 1010.1.pdf` against the code
+and `results/` (commit `7082b10`).
+- **Chapter 3:** read in full.
+- **Chapters 1–2:** the sentences changed since Manu 0910.1, for system
+  claims.
+- **Chapter 4:** every number in Tables 3–21 and in the text, recomputed
+  from the results files.
+
+"p." is Manu 1010.1's page. There is no Chapter 5 yet.
+
+### What's wrong
+
+#### E1 🔴 p.81 says the stamp and the title cut-outs "were corrected" in the Phase 4 set; for ANTI_HAZING_LAW they weren't
+
+**Now:** "three posters with a wrong title-artwork cut-out, one poster
+whose logotype had been taken as a motif, and one whose 'CLOSED' stamp had
+been taken as a motif … the other cases were corrected as per-poster
+choices in the Phase 4 evaluation set".
+
+**Fact:**
+- **Corrected:** CMET and SIGN_LANGUAGE_DAY (title artwork off).
+- **Not corrected:** ANTI_HAZING_LAW's two corrections (its title cut-out
+  and the CLOSED stamp) were lost before the evaluation set was generated
+  (notes §3.35). Its four rated pages carry both.
+- **p.93 says so correctly,** so p.81 contradicts it.
+
+**Fix:** "… the other cases were corrected as per-poster choices for the
+Phase 4 evaluation set, except on ANTI_HAZING_LAW, whose corrections were
+lost before the set was generated (see Objective 3)."
+
+#### E2 🔴 Eleven citations print as raw keys
+
+**Now:** the PDF prints, for example, "[Badros2001Cassowary]" (pp.10,
+28, 41, 90), "[schmidt1997managing]" (pp.67, 94), "[koo2016guideline]"
+(p.99), "[etikan2016comparison]" (p.62), and in the statistical treatment
+(pp.67–68) "[kendall1939problem]", "[wilcoxon1945individual]",
+"[holm1979simple]", "[kerby2014simple]", "[cohen1988statistical]",
+"[shrout1979intraclass]" and "[krippendorff2004content]". None appears in
+the chapters' Notes.
+
+**Fact:** all eleven entries are in `manuscript/Thesis Latex/references.bib`
+(uncommitted). The Prism build didn't have the updated `.bib`, or wasn't
+re-run after it.
+
+**Fix:** copy `references.bib` into Prism and rebuild. Then check that each
+appears in its chapter's Notes, ACM style, with every author named.
+
+#### E3 🟡 p.78 "[PENDING: server GPU]"
+
+**Fact:** an NVIDIA RTX A5000 (24 GB), from the server's own Ultralytics
+logs (`results/yolo_v5_training.log`, `results/yolo_v4_experiment.log`:
+"CUDA:0 (NVIDIA RTX A5000, 24112MiB)").
+
+#### E4 🟡 p.99 "The system was not changed after the rating"
+
+**Fact:**
+- **The layout generation wasn't changed.** The code was:
+  - the dashboard;
+  - the Step 3 elbow graph;
+  - a renderer cache that made edits faster (2026-10-09, while the experts
+    were rating).
+- **The cache left the generated layouts byte-identical:** checked on all
+  64 rated runs and on 1,360 edits (notes §3.47).
+- **Table 13's latency was measured with the cache.** Without it, the full
+  edit's median was 157 ms, its 95th percentile 338 ms, its maximum 393 ms
+  (D3).
+
+**Fix (suggested):** "The generation of the layouts was not changed after
+the evaluation set was produced; later changes to the dashboard and a cache
+that made edits faster left the generated layouts byte-identical, so the
+reported MOS described the system as it was evaluated." Optionally, add
+that the latency was measured with that cache.
+
+#### E5 🟡 p.29: the GNN isn't in the live loop
+
+**Now:** "ThemeSync embeds multi-relational GNN inference and the Cassowary
+constraint-solving algorithm within a live orchestration loop, allowing
+structural changes to occur in real time".
+
+**Fact:** the GNN runs once, when a layout is opened (Stage 2). Every edit
+re-solves Cassowary from the GNN's stored output (`pipeline.py`:
+`_resolve` starts from `self.guided_nodes`).
+
+**Fix:** "… runs the GNN once when a layout is opened and keeps the
+Cassowary solver in the live orchestration loop …"
+
+#### E6 🟡 p.30 "GNN compositional scoring"; p.28 ranking "in real-time"
+
+**Now (p.30):** "integrates Aesthetic-Aware Preference Alignment (AAPA)
+and GNN compositional scoring into an interactive recommendation
+dashboard … aesthetically validated layout candidates".
+
+**Fact:**
+- **AAPA is fine:** it is the code's own name for the candidate
+  exploration (`pipeline.py`, Stage 4).
+- **The GNN scores nothing:** candidates are ranked by Formula 3.11 alone.
+- **"Aesthetically validated" overstates:** Phase 4 found the opposite
+  for the transferred layouts.
+
+**p.28:** the candidates are generated and ranked once, when a layout is
+opened (about 1.6 s of ranking in the Phase 3 battery). Edits don't
+re-rank them.
+
+**Fix:**
+- p.30: drop "GNN compositional scoring", and write "fitness-ranked layout
+  candidates".
+- p.28: "when a layout is initialized" instead of "in real-time".
+
+#### E7 🟡 p.90 Limitations: a causal "because" that isn't
+
+**Now:** "the certificate held at most five signature blocks because the
+content schema set no upper limit on their number".
+
+**Fact:** five is what the row fits. The missing schema limit is why more
+can be requested.
+
+**Fix:** "the certificate's row held at most five signature blocks without
+overlap, and the content schema set no upper limit on their number".
+
+#### E8 🟡 p.92: two figures slightly off
+
+**Now:** "the art column scored about 0.076 against about 0.002 for the
+classic layout, and the floating card about 0.185 against 0.149".
+
+**Fact:** the means over the 64 rated runs' candidates, from
+`results/r_target_analysis.json`:
+- art column 0.0759, classic certificate 0.0025;
+- floating card 0.1872;
+- and 0.149 is the left-aligned candidate (0.1488), which the sentence
+  doesn't name.
+
+**Fix:** "about 0.076 against 0.003 for the classic layout, and the
+floating card about 0.187 against 0.149 for the left-aligned layout".
+
+#### E9 🟡 p.64: F1's definitions are narrower or wider than the code's
+
+- **FN** "mandated by the Dynamic Content Payload or the relational graph
+  of the master template": in the code, only the payload mandates
+  elements (`layout_report.structural_accuracy`). Drop "or the relational
+  graph of the master template".
+- **FP** "overlapping an immutable designer-locked node": the code counts
+  an overlap with any element. Chapter 4 (p.86) says so correctly. Write
+  "overlapping another element (including a designer-locked one)".
+
+### Still open (already in the revision list)
+
+- **3.10 SURF:** pp.40, 56–57, 59, 65 and the Project Dictionary. Only SIFT
+  runs.
+- **3.11 CNN "deployed for quantitative aesthetic evaluation"** (p.39):
+  `themesync_cnn_v1.pth` exists, but nothing in the system uses it.
+- **3.12 Formula 3.6 and Appendix A** (pp.43, 104): c_i and s_i per
+  element.
+  - The GNN gets one value of each per layout: the master's primary
+    L\*a\*b\* centroid (OpenCV's 8-bit encoding, /255) and one saliency
+    weight, the same in every node.
+  - Training and inference agree on that, so the gap is per-element vs
+    per-layout.
+  - Appendix A still shows `node_id` and `text_features`, which the
+    pipeline drops.
+- **M17 / M24, Figures 2 and 3:**
+  - **Figure 2 (p.57)** still describes "the central viewport … the
+    right-hand panel". Step 1 now has the master layout on the left, the
+    logos and markers, typography and payload in cards on the right, and
+    Target Initialization in an overlay from the top bar (§3.37).
+  - **Figure 3 (p.60)** still describes "two critical computational tabs"
+    with the timeline below the Constraint Editor. Step 2 now has:
+    - the canvas, with the Recommendation Engine as a strip of thumbnails
+      beneath it;
+    - one right panel: the selected element, typography, and canvas
+      details;
+    - the State Timeline in a dialog opened from the top bar (§3.38).
+- **p.87 "[PENDING: confirm the certificate's paper size]":** the group's
+  call. US Letter landscape was assumed; on A4, every point size is 6%
+  larger.
+
+### Checked and correct
+
+- **Chapter 4's numbers all match the results files:**
+  - Table 4: `yolo_domain_gap_check.json`;
+  - Table 5: `yolo_v4_experiment.json`;
+  - Table 6: `yolo_v5_comparison.json`;
+  - Table 7 and the IoU SDs: `yolo_iou.json`;
+  - Tables 8–9, the 28%, 89% and 8% figures, and 8,356 / 2,432:
+    `gnn_heldout_eval.json`;
+  - Tables 10, 14 and 15, the 10/4/2 and 13-of-16 counts, and "every poster
+    with mappable roles": `experiment_log.json` (run 20261006_195534);
+  - Tables 11–12: `rated_layouts_check.json`, `stress_test.json`;
+  - Table 13, the 0.53/90.6 ms means, 105 ms and 48% for re-solving edits,
+    and 12 ms for re-drawing ones: `latency_benchmark.json`;
+  - Tables 16–21, the sensitivity checks and the per-expert 0.15–0.75:
+    `phase4_analysis.json`, `phase4_posthoc.json`;
+  - the R_target paragraph: `r_target_analysis.json`.
+- **Chapter 3 agrees with the code on:**
+  - Formula 3.7 (an MLP message, mean aggregation, a GRU update) and
+    Formula 3.8's edge features;
+  - Hard constraints as `required`;
+  - K-Means k = 2–6, best of five seeds;
+  - the schema rules;
+  - Formulas 3.12–3.15 with their normalisations and exclusions; R_target
+    fixed at 0.65;
+  - the re-solve on every terminal event (M22);
+  - the vertical-centre error (M6);
+  - the baseline described with both modules off (M4);
+  - the no-master fallback (M5);
+  - the event ID's and the certificate's box sizes;
+  - the stress test's description;
+  - the latency and IoU definitions;
+  - Table 2's labels.
+- **Appendix B** is now identical to `data/raw/academic_payload.json` (M7).
+- **The statistical treatment (pp.67–68)** is exactly what
+  `phase4_analysis.py` runs, and the "committed before the import" claim is
+  true (`b9a60ab`, unchanged since).

@@ -3602,3 +3602,19 @@ uncorrected):
 - The system stays as rated: the MOS describes it. A change (for example,
   spreading the gaps evenly after anchoring, or a gap-evenness term in
   Formula 3.11) would need new ratings. It belongs in the recommendations.
+
+### 3.50 Manu 1010.1 checked against the system (2026-10-10)
+
+The group's 2026-10-10 export adds Chapter 4 (Tables 3–21). Its numbers
+match the results files. Findings are for the manuscript chat in
+`notes/dev_findings_for_manuscript.md`, section E:
+- **E1 (p.81):** the claim that ANTI_HAZING_LAW's corrections reached the
+  rated set is wrong.
+- **E2:** eleven citation keys print raw (the Prism build lacks the
+  updated `.bib`).
+- **E3:** the [PENDING] server GPU is an RTX A5000.
+- **E4–E9:** smaller wording fixes, including "the system was not changed
+  after the rating" (the layouts weren't; the code was, byte-identically).
+- **Still open:** 3.10–3.12 and the figure texts.
+
+Nothing in the code changed.
