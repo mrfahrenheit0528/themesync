@@ -53,6 +53,11 @@ def _elbow_chart(elbow: dict):
     return (chord + curve + marker).properties(height=190)
 
 
+def _plain(label: str) -> str:
+    """A state label with its element ids as plain names ({{Event_Details}} -> Event Details)."""
+    return label.replace("{{", "").replace("}}", "").replace("_", " ")
+
+
 def _num(value, digits: int = 4) -> str:
     return "—" if value is None else f"{value:.{digits}f}"
 
@@ -129,7 +134,7 @@ with preview_col, st.container(border=True, key="card_preview"):
     svg = session.rendered_path
     st.image(_preview(svg, os.path.getmtime(svg)), width="stretch")
     st.caption(f"{layout['format'].replace('_', ' ').title()} · {session.canvas_w}×{session.canvas_h}px · "
-               f"{layout['state_id']} ({layout['label']}) · {layout['states']} states, "
+               f"{layout['state_id']} ({_plain(layout['label'])}) · {layout['states']} states, "
                f"{layout['designer_edits']} designer edit(s) · "
                f"{'GNN-guided' if session.use_gnn else 'no-GNN baseline'}")
     d1, d2, d3 = st.columns(3, gap="small")
@@ -154,10 +159,10 @@ with report_side, st.container(key="bento_report"):
     with f_col.container(border=True, key="card_fitness"):
         st.markdown(":material/functions: **Heuristic fitness (Formula 3.11)**")
         rec_name = fit["recommended"]["candidate_id"].replace("_", " ")
-        rows = [{"Penalty": f"{a['term']} (Formula {a['formula']})", "Weight": a["weight"],
+        rows = [{"Penalty": f"{a['term']} (Formula {a['formula']})", "Weight": f"{a['weight']:g}",
                  "Your layout": a["weighted"], f"Recommended ({rec_name})": b["weighted"]}
                 for a, b in zip(fit["yours"]["terms"], fit["recommended"]["terms"])]
-        rows.append({"Penalty": "C_total", "Weight": None, "Your layout": yours,
+        rows.append({"Penalty": "C_total", "Weight": "—", "Your layout": yours,
                      f"Recommended ({rec_name})": recommended})
         st.dataframe(rows, hide_index=True, width="stretch")
         st.caption(f"Each cell is the penalty × its weight; they add up to C_total, and lower is better. "

@@ -29,7 +29,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.49).
+§3.51).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
@@ -259,7 +259,10 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
   `r_target_analysis.py` (a master-derived R_target; analysis only),
   `phase4_analysis.py` (the fixed Phase 4 plan; `--simulate` tests it) and
   `phase4_posthoc.py` (exploratory), then re-execute
-  `notebooks/results_analysis.ipynb`. `weight_calibration.py` is the
+  `notebooks/results_analysis.ipynb` with `python notebooks/run_notebook.py`
+  (needs nbformat, nbclient, ipykernel). It saves every figure to
+  `results/figures/` (PNG 300 dpi + PDF); the clean ones for Chapter 4 are
+  `fig4_*` (§3.51, handoff F). `weight_calibration.py` is the
   Formula 3.11 weight calibration (item 3.25; analysis only, `--reuse`
   re-analyses the saved runs).
 

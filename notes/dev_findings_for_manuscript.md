@@ -688,3 +688,78 @@ floating card about 0.187 against 0.149 for the left-aligned layout".
 - **The statistical treatment (pp.67–68)** is exactly what
   `phase4_analysis.py` runs, and the "committed before the import" claim is
   true (`b9a60ab`, unchanged since).
+
+---
+
+## F. Figures for Chapter 4, and the dashboard screenshots — 2026-10-10
+
+### F1. Result figures (`results/figures/`)
+
+`notebooks/results_analysis.ipynb` now covers every result through Phase 4.
+It was re-executed on 2026-10-10 on the Windows checkout, with no errors.
+- **Each figure is saved twice:** a PNG at 300 dpi and a vector PDF, on
+  white.
+- **For LaTeX,** use the PDF; for Prism's image upload, the PNG.
+- **The design:** no titles inside the images, so the captions go in the
+  LaTeX; sized for a 6.5-inch text block.
+- **Colours:** blue is structure mapping + GNN, orange the baseline, each
+  with its own marker shape, so they also read in greyscale.
+
+Chapter 4 has only tables now. These figures show what the tables can't:
+the distribution, the pairs, and the example.
+
+| File | What it shows | Data | Suggested place |
+|---|---|---|---|
+| `fig4_structure_error` | per poster, the structure error of structure mapping + GNN against the baseline (14 certificates, 15 event IDs); every pair improves | `experiment_log.json` (Table 10) | Objective 1, Transfer of the Master's Structure |
+| `fig4_latency` | the cumulative share of edits by time (log scale) for the solver, re-drawing edits and re-solving edits, with the 0.1 s and 1.0 s limits | `latency_benchmark.json` (Table 13) | Objective 2, Algorithmic Latency |
+| `fig4_mos_by_parameter` | MOS ± SD by parameter and condition, with each Holm-corrected p and r | `phase4_analysis.json` (Tables 16, 20) | Objective 3, beside Table 16 |
+| `fig4_rating_distribution` | the share of ratings 1–5 per parameter and condition, centred on "Acceptable"; Constraint & Whitespace's 39% of 1–2 ratings for structure mapping + GNN stands out | `phase4_analysis.json` (Table 18, by parameter) | Objective 3, beside Table 18 |
+| `fig4_pairs` | each of the 32 pairs' overall MOS, the baseline against structure mapping + GNN, with the equality line; 25 lie below it | `phase4_analysis.json` (Table 20) | Objective 3, beside Table 20 |
+| `fig4_spacing_vs_mos` | the change in the largest gap against the change in overall MOS (Spearman ρ = −0.42, exploratory) | `phase4_posthoc.json` (Table 21) | Objective 3, the exploratory paragraph |
+| `fig4_example_pair` | RxEADY's event ID: (a) the master, (b) structure mapping + GNN (MOS 2.50), (c) the baseline (MOS 3.67). The empty band below the header in (b) is what the spacing analysis measures | the rated files in `data/phase4/samples/` | Objective 3, Discussion (interpretation) |
+
+**Two cautions:**
+- **Label `fig4_spacing_vs_mos` as exploratory** in its caption, as Table 21
+  is.
+- **The example pair's master poster uses licensed cartoon characters.**
+  The group should be comfortable printing it under academic fair use, or
+  pick another pair. After RxEADY, the largest MOS losses
+  are GUESS_THE_TEACHER's and KAINANG_PAMILYA's event IDs (−1.00 and
+  −0.92).
+
+**Also saved:** the notebook's own views (`nb_*`), as the notebook draws
+them, with titles. They are for reference, not print.
+
+### F2. The dashboard screenshots (`manuscript/Images/`, from the user)
+
+All three are 1782 × 877 px, about 300 dpi at 6 inches wide.
+- **The poster:** CTC ("CTC Got Talent"), one of the Phase 4 posters.
+- **The content:** made up ("Luke", "Contestant"); no names from
+  `data/raw/ID_layouts/` or the packets.
+
+| File | Step | What it shows (for the figure text, M17/M24) |
+|---|---|---|
+| `Perceptual Ingestion.jpeg` | Step 1 (Figure 2) | The step bar along the top, and Target Initialization in the top bar. **Left:** the Master Layout preview, with K-Means Color Centroids (three swatches with hex codes) and SIFT/SURF Keypoints (saliency 0.0245, logo detected: yes, size 1313×1313) beneath. **Right:** the detected organisation logo and the Stage 0c stylistic markers (text-free background, title artwork) as ticked tiles; Administrative Typography (Lato, 700 Bold, 48 px) in one row; and the Content Payload for the event ID. |
+| `Active Orchestration.jpeg` | Step 2 (Figure 3) | **Centre:** the event ID canvas, with the Event Title selected and its resize handles shown. **Beneath it:** the Recommendations strip of six candidates ranked by Formula 3.11. **Right:** the Selected Element panel (undo and redo, "Event Title · Hard · manual override", X 64, Y 313, W 616, H 263, Edit text, Release (Soft)), the typography, and Canvas details. **Top bar:** Timeline (the State Timeline opens as a dialog), Step 1, Download, Evaluate. |
+| `Evaluation Report.jpeg` | Step 3 | **Left:** the evaluated layout, with SVG / PNG / PDF downloads. **Right:** the headline tiles (Fitness C_total 0.1591, Structural accuracy F1 1.00, Manual edits kept 5/5, median edit latency 93 ms), the Formula 3.11 table (your layout against Candidate E), Manual refinements kept, and the F1 table per element. |
+
+**For the manuscript:**
+- **Figure 2's text (p.57)** still says "central viewport" and "right-hand
+  panel". The screenshot shows the master on the left and the cards on
+  the right, with target selection in an overlay from the top bar.
+- **Figure 3's text (p.60)** still says "two critical computational tabs"
+  and a timeline below the Constraint Editor. The screenshot shows one
+  right panel, the recommendations under the canvas, and the timeline
+  behind the top bar's Timeline button.
+- **Step 3** could become a third figure, since p.60 describes the
+  Evaluation Report in words only.
+- **The Step 1 screenshot labels the card "SIFT/SURF Keypoints".** If item
+  3.10 rewords the manuscript to SIFT only, the dashboard's label should
+  change too. Tell the development chat.
+- **Two display glitches in the Step 3 screenshot are fixed in the code**
+  (2026-10-10):
+  - the C_total row's Weight column showed "None";
+  - the caption under the layout printed "[{{Event_Details}}]".
+
+  Re-take that screenshot after restarting the dashboard if it goes in the
+  manuscript.

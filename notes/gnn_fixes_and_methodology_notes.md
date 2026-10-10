@@ -3618,3 +3618,44 @@ match the results files. Findings are for the manuscript chat in
 - **Still open:** 3.10–3.12 and the figure texts.
 
 Nothing in the code changed.
+
+### 3.51 The results notebook brought up to date; figures for Chapter 4 (2026-10-10)
+
+**Notebook** (`notebooks/results_analysis.ipynb`), added:
+- **Phase 1:** the detector's mean IoU (Table 7).
+- **Phase 2 (Objective 2):** the rated layouts' F1 and text fit, the
+  stress test, and the latency over 1,360 edits (Tables 11–13).
+- **Phase 3:** the master-derived R_target.
+- **Phase 4:** the "No real data yet" placeholder is replaced by the
+  analysis (Tables 16–21, sensitivity checks, per-expert means, the
+  spacing analysis).
+
+**Figures:**
+- **Every plot is saved** to `results/figures/` as a PNG at 300 dpi and a
+  vector PDF (TrueType fonts embedded).
+- **The existing views are `nb_*`.** A new section draws seven clean
+  figures for the manuscript (`fig4_*`): structure error per poster,
+  latency, MOS by parameter, the rating distribution, the 32 pairs, spacing
+  against MOS, and the RxEADY example.
+- **Design:** the dataviz skill's palette, validated against white (blue
+  = structure mapping + GNN, orange = baseline, aqua third). Marker shapes
+  carry the condition in greyscale; no titles inside the images.
+- **Every figure was checked as rendered.** The latency labels and the
+  legends were moved where they collided.
+
+**Running it:**
+- **Here:** re-executed on the Windows checkout with
+  `notebooks/run_notebook.py` (nbclient), with no errors.
+- **The `.venv` needed `nbformat`, `nbclient` and `ipykernel`,** installed
+  2026-10-10. They aren't in `requirements.txt`.
+- **The kernelspec is unchanged** (themesync_env), so the server opens it
+  as before.
+
+**Also, from the user's screenshots** (`manuscript/Images/`, for Figures
+2–3 and possibly a Step 3 figure), two display glitches in Step 3 are fixed
+in `views/report.py`:
+- the C_total row's Weight column showed "None";
+- the layout caption printed raw element ids ("[{{Event_Details}}]").
+
+**Handoff:** `notes/dev_findings_for_manuscript.md`, section F, has the
+figure list with suggested places and what each screenshot shows.
