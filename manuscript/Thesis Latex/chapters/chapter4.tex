@@ -26,7 +26,7 @@ Synthetic administrative templates & Certificate and event ID, 52 runs & Stress 
 
 Three Stage 2 conditions were compared on the unseen posters. In the \textit{structure mapping + GNN} condition, the full system ran: the target elements were mapped to the master's structure and refined by the GNN. In the \textit{structure mapping only} condition, the master's structure was mapped but the GNN was turned off, which isolated the GNN's own contribution. In the \textit{baseline} condition, neither the structure mapping nor the GNN was used, so the elements were arranged as a naive reading-order stack. All three conditions shared the layout archetype selected from the master's composition, the extracted palette, the reconstructed background, and the stylistic markers. The Phase 4 evaluation compared the structure mapping + GNN and baseline conditions on the 16 posters chosen by purposive sampling.
 
-The Phase 3 battery (16 posters $\times$ 2 formats $\times$ 3 conditions, 96 runs) was run on the school's server (Python 3.10, PyTorch 2.5.1, Ultralytics 8.4; \pending{server GPU}). The detector's IoU, the stress test, the latency benchmark, and the check of the rated layouts were run on a workstation with an NVIDIA RTX 3060 GPU (Python 3.12, PyTorch 2.5.1) using the same library versions for the models.
+The Phase 3 battery (16 posters $\times$ 2 formats $\times$ 3 conditions, 96 runs) was run on the school's server (Python 3.10, PyTorch 2.5.1, Ultralytics 8.4) with an NVIDIA RTX A5000 GPU (24 GB). The detector's IoU, the stress test, the latency benchmark, and the check of the rated layouts were run on a workstation with an NVIDIA RTX 3060 GPU (Python 3.12, PyTorch 2.5.1) using the same library versions for the models.
 % Sources: results/experiment_log.json (run 20261006_195534); results/yolo_iou.json;
 % results/stress_test.json; results/latency_benchmark.json; results/rated_layouts_check.json.
 
@@ -111,7 +111,7 @@ Embellishment & 166 & 0.445 & 0.530 & 0.633 & 0.809 \\ \hline
 
 \subsubsection{Color Extraction and Stylistic Markers}
 
-The K-Means extraction selected the number of colors by the Elbow Method between $k = 2$ and $k = 6$, each $k$ taking the best of five seeded initializations. During development, an unseeded version had given the same poster different palettes on identical runs; every result in this chapter was produced after the seeding was introduced. In the automatic Phase 3 battery, Stage 0c transferred the master's title artwork to 14 of the 16 outputs of each format and its decorative motifs to 3 of the 16. A review of all 32 outputs found three posters with a wrong title-artwork cut-out, one poster whose logotype had been taken as a motif, and one whose ``CLOSED'' stamp had been taken as a motif. The logotype case led to a rule that skipped any motif candidate overlapped by text detections; the other cases were corrected as per-poster choices in the Phase 4 evaluation set, alongside the logo selections.
+The K-Means extraction selected the number of colors by the Elbow Method between $k = 2$ and $k = 6$, each $k$ taking the best of five seeded initializations. During development, an unseeded version had given the same poster different palettes on identical runs; every result in this chapter was produced after the seeding was introduced. In the automatic Phase 3 battery, Stage 0c transferred the master's title artwork to 14 of the 16 outputs of each format and its decorative motifs to 3 of the 16. A review of all 32 outputs found three posters with a wrong title-artwork cut-out, one poster whose logotype had been taken as a motif, and one whose ``CLOSED'' stamp had been taken as a motif. The logotype case led to a rule that skipped any motif candidate overlapped by text detections; the other cases were corrected as per-poster choices for the Phase 4 evaluation set, alongside the logo selections, except on ANTI\_HAZING\_LAW, whose corrections were lost before the set was generated (see Objective 3).
 % Source: results/experiment_log.json (title_artwork, motifs_placed); notes §3.29, §3.31.
 
 \subsubsection{Graph Neural Network}
@@ -159,7 +159,7 @@ v2, registered to the anchors & 0.000 & 0.109 & 0.025 \\ \hline
 
 \subsubsection{Transfer of the Master's Structure}
 
-On the 16 unseen posters, the structure error measured how far the output's mapped elements (the logo row, header, title, and details) sat from their counterparts on the master, as a fraction of the height, averaged over the six candidates of each run (\ref{tab:structure-error}). The structure mapping + GNN output was closer to the master than the baseline on every poster that had mappable roles: 14 certificates and 15 event IDs. On event IDs, the structure error fell from 0.117 to 0.045; on certificates, from 0.089 to 0.056. The structure mapping + GNN and structure mapping only conditions had identical structure errors. The GNN moved the unmapped elements on 14 of the 32 runs, by at most 7.5\% of the height.
+On the 16 unseen posters, the structure error measured how far the output's mapped elements (the logo row, header, title, and details) sat from their counterparts on the master, as a fraction of the height, averaged over the six candidates of each run (\ref{tab:structure-error}). The structure mapping + GNN output was closer to the master than the baseline on every poster that had mappable roles: 14 certificates and 15 event IDs. On event IDs, the structure error fell from 0.117 to 0.045; on certificates, from 0.089 to 0.056. The structure mapping + GNN and structure mapping only conditions had identical structure errors. The GNN moved the unmapped elements on 14 of the 32 runs, by at most 7.5\% of the height. \ref{fig:structure-error} presented the structure error of each poster in both conditions.
 
 \begin{table}[ht]
 \centering
@@ -175,6 +175,14 @@ Event identification card (15 posters) & 0.045 & 0.045 & 0.117 \\ \hline
 \end{table}
 % Source: results/experiment_log.json (structure_error_all), run 20261006_195534.
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig4_structure_error}
+    \caption{Structure Error per Poster, Structure Mapping + GNN Against the Baseline}
+    \label{fig:structure-error}
+\end{figure}
+% Source: results/figures/fig4_structure_error (notebooks/results_analysis.ipynb).
+
 \subsection{Discussion}
 
 \textbf{Principal Findings.} The framework identified the structure of institutional master layouts reliably enough to carry it into new formats. The deployed detector located logos with high accuracy and text with good accuracy, while underlays and embellishments remained the hardest elements to detect. The GNN improved on the master's structure in held-out layouts, and the generated certificates and event IDs kept clearly more of the master's composition than layouts built without the master's structure. Keeping the master's positions, however, did not earn higher ratings from the experts (Objective 3).
@@ -185,7 +193,7 @@ Event identification card (15 posters) & 0.045 & 0.045 & 0.117 \\ \hline
 
 \textbf{Implications.} For designers, the reliable detection of logos meant that the element anchoring brand consistency was found automatically in most cases, while the dashboard's controls for selecting and uploading logos and stylistic markers covered the cases the detector missed. For future research, the results suggested that a small, carefully annotated in-domain dataset contributed more than a larger model, and that a layout model meant to refine an existing structure should be trained from that structure. Together with the expert ratings reported under Objective 3, they also showed that transferring a master's positions to a format with different proportions should be combined with rules for even spacing.
 
-\textbf{Limitations.} The detector was validated on 40 images from a single dataset collected from institutional and campus sources, so its accuracy on other kinds of master layouts was not established. The annotation sample reviewed by the expert came from the earlier 124-image batch. The GNN's advantage over interpolation was demonstrated on held-out CGL-Dataset layouts; in the final certificates and event IDs, its contribution was small and bounded by the solver's design rules. The automatic transfer of title artwork and motifs required human corrections on some posters. The structure error measured how closely the output followed the master, not whether the result looked better; the expert evaluation showed that the two did not coincide.
+\textbf{Limitations.} The detector was validated on 40 images from a single dataset collected from institutional and campus sources, so its accuracy on other kinds of master layouts was not established. The annotation sample reviewed by the expert came from the earlier 124-image batch. The GNN's advantage over interpolation was demonstrated on held-out CGL-Dataset layouts; in the final certificates and event IDs, its contribution was small and bounded by the solver's design rules. Its color and saliency features were per-layout values shared by all the nodes of a layout, so the model could not use differences in color or visual detail between elements. The automatic transfer of title artwork and motifs required human corrections on some posters. The structure error measured how closely the output followed the master, not whether the result looked better; the expert evaluation showed that the two did not coincide.
 
 \textbf{Summary.} The first objective was met: the framework extracted the colors, stylistic markers, and structure of real master layouts and mapped that structure onto new formats, with in-domain training data as the deciding factor for detection and the master's structure as the deciding factor for the GNN. Whether that transfer improved the layouts was answered by the expert evaluation under Objective 3.
 
@@ -239,7 +247,7 @@ Reading order & Held in every run & Held in every run \\
 F1-score & 1.0 in every length run & 1.0 in every run \\
 Signature blocks & Clean up to 5; overlapping from 6 (F1 0.92) & --- \\
 Smallest text at print size & 7.8 pt & 6.5 pt \\ \hline
-\multicolumn{3}{p{0.88\textwidth}}{\footnotesize Print sizes: the event ID at A6; the certificate at US Letter landscape \pending{confirm the certificate's paper size; on A4 every point size is 6\% larger}.}
+\multicolumn{3}{p{0.88\textwidth}}{\footnotesize Print sizes: the event ID at A6; the certificate at US Letter (short bond) landscape.}
 \end{tabular}
 \end{table}
 % Source: results/stress_test.json (notes §3.42).
@@ -269,10 +277,16 @@ Full edit & 1,360 & 90 ms & 176 ms & 206 ms & 61\% & 100\% \\
 \multicolumn{7}{p{0.80\textwidth}}{\footnotesize Solver: the constraint recalculation. Full edit: the state synchronization (re-solve, re-score, re-draw, and save). $^{a}$One solve paused by the operating system; every other solve took at most 1.9 ms. The browser's redraw of the page is not included.}
 \end{tabular}
 \end{table}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig4_latency}
+    \caption{Cumulative Share of Edits by Time, With the 0.1-Second and 1.0-Second Limits}
+    \label{fig:latency}
+\end{figure}
 % Source: results/latency_benchmark.json (notes §3.43, §3.47), measured after the renderer's image
 % cache (§3.47), which left every output byte-identical. Before it: full-edit median 157 ms, 22% within 0.1 s.
 
-Every constraint recalculation finished within the 0.1-second limit for a response perceived as instantaneous; apart from one solve paused by the operating system, none took longer than 1.9 milliseconds. Every full edit finished within the 1.0-second limit for uninterrupted task flow, and 61\% finished within 0.1 seconds. The mean times were 0.53 milliseconds (SD 3.01, inflated by the single paused solve) for a constraint recalculation and 90.6 milliseconds (SD 57.5) for a full edit. The edits that only re-drew the canvas (text edits, typography changes, undo, redo, restore, and candidate selections) all finished within 0.1 seconds, with a median of 12 milliseconds. The edits that re-solved the layout (moves, resizes, and locks) took a median of 105 milliseconds, and 48\% of them finished within 0.1 seconds; most of their time went to re-scoring the legibility of the text against the poster's background, while a full edit on the synthetic theme took about 4 milliseconds. Opening a layout, which ran every stage of the pipeline once, took a median of 3.4 seconds, once per layout.
+\ref{fig:latency} presented the cumulative share of edits by time. Every constraint recalculation finished within the 0.1-second limit for a response perceived as instantaneous; apart from one solve paused by the operating system, none took longer than 1.9 milliseconds. Every full edit finished within the 1.0-second limit for uninterrupted task flow, and 61\% finished within 0.1 seconds. The mean times were 0.53 milliseconds (SD 3.01, inflated by the single paused solve) for a constraint recalculation and 90.6 milliseconds (SD 57.5) for a full edit. The edits that only re-drew the canvas (text edits, typography changes, undo, redo, restore, and candidate selections) all finished within 0.1 seconds, with a median of 12 milliseconds. The edits that re-solved the layout (moves, resizes, and locks) took a median of 105 milliseconds, and 48\% of them finished within 0.1 seconds; most of their time went to re-scoring the legibility of the text against the poster's background, while a full edit on the synthetic theme took about 4 milliseconds. Opening a layout, which ran every stage of the pipeline once, took a median of 3.4 seconds, once per layout. These timings were measured after a cache was added to the renderer so that unchanged image files were not read again on every edit; the generated layouts were byte-identical with and without the cache.
 
 \subsection{Discussion}
 
@@ -284,7 +298,7 @@ Every constraint recalculation finished within the 0.1-second limit for a respon
 
 \textbf{Implications.} A designer could move, resize, lock, and retype elements and see the layout re-solved without losing earlier edits, which addressed the destructive state management identified in Chapter 1. For the evaluation of constraint-based layouts, the stress test implied that structural accuracy alone overstates the quality of layouts with long content, so text fit should be measured alongside it.
 
-\textbf{Limitations.} The event ID's organization header did not shrink to the width of its box beyond 48 characters per line, and the certificate held at most five signature blocks because the content schema set no upper limit on their number. Edits that re-solved the layout met the 0.1-second limit only about half the time. Latency was measured on a single workstation and excluded the browser's redraw of the page. Among the rated layouts, these limits appeared only as two header lines that stayed inside their panel.
+\textbf{Limitations.} The event ID's organization header did not shrink to the width of its box beyond 48 characters per line, and the certificate held at most five signature blocks without overlap, and the content schema set no upper limit on their number. Edits that re-solved the layout met the 0.1-second limit only about half the time. Latency was measured on a single workstation and excluded the browser's redraw of the page. Among the rated layouts, these limits appeared only as two header lines that stayed inside their panel.
 
 \textbf{Summary.} The second objective was met: the engine propagated manual Hard Constraints without destroying earlier edits and kept every rated layout structurally valid at interactive speed, within limits on very long header text and on the number of signature blocks.
 
@@ -323,7 +337,7 @@ Event ID & Mapping + GNN & 0.1633 & 0.1508 & 0.0083 \\
 
 \subsubsection{Selection of the Layout Type}
 
-In an earlier run in which the fitness function alone selected the output, ``classic centered'' won 14 of the 16 certificates because the top candidates tied exactly, and ``left-aligned'' won all 16 event IDs by a small, steady margin, so every poster's output had the same layout per format. The selection was then changed so that the master's composition, read from the detected elements, chose the archetype and the fitness function ranked the candidates within it. \ref{tab:archetypes} presented the archetypes chosen for the 16 posters; both conditions received the same archetype on every poster. The chosen candidate was not always the one with the lowest $F_{layout}$: the art column scored about 0.076 against about 0.002 for the classic layout, and the floating card about 0.185 against 0.149.
+In an earlier run in which the fitness function alone selected the output, ``classic centered'' won 14 of the 16 certificates because the top candidates tied exactly, and ``left-aligned'' won all 16 event IDs by a small, steady margin, so every poster's output had the same layout per format. The selection was then changed so that the master's composition, read from the detected elements, chose the archetype and the fitness function ranked the candidates within it. \ref{tab:archetypes} presented the archetypes chosen for the 16 posters; both conditions received the same archetype on every poster. The chosen candidate was not always the one with the lowest $F_{layout}$: the art column scored about 0.076 against 0.003 for the classic layout, and the floating card about 0.187 against 0.149 for the left-aligned layout.
 
 \begin{table}[ht]
 \centering
@@ -349,7 +363,7 @@ The weights of Formula 3.11 were first set by the priority rule of Chapter 3, wi
 
 Four professional designers rated the 64 layouts (16 posters $\times$ 2 formats $\times$ the structure mapping + GNN and baseline conditions) in printed packets on the three parameters of \ref{tab:mos-rating-scale}, without knowing which condition produced which page, giving 768 ratings. For one poster (ANTI\_HAZING\_LAW), the per-poster choices that excluded a misdetected ``CLOSED'' stamp and a damaged title cut-out were lost before the evaluation set was generated, so its four rated pages carried both defects in both conditions. The analysis followed the statistical treatment of Chapter 3, which had been fixed before the ratings were examined.
 
-\ref{tab:mos} presented the Mean Opinion Score by parameter and condition. Across all 64 layouts, the overall MOS was 3.53 (SD 0.93), between Acceptable and Good on the rating scale. The baseline received the higher MOS on every parameter and overall (3.73 against 3.33). The largest difference was on Constraint and Whitespace Harmony (3.77 against 2.92) and the smallest on Visual Hierarchy Preservation (3.73 against 3.61). In both formats, the baseline received the higher overall MOS (\ref{tab:mos-format}): 3.78 against 3.50 on certificates and 3.69 against 3.17 on event IDs. The one exception among the parameters was Visual Hierarchy Preservation on certificates, where structure mapping + GNN was rated higher (3.88 against 3.73). \ref{tab:mos-counts} presented how often each rating was given; on Constraint and Whitespace Harmony alone, structure mapping + GNN received 50 ratings of 1 or 2, against 17 for the baseline.
+\ref{tab:mos} presented the Mean Opinion Score by parameter and condition. Across all 64 layouts, the overall MOS was 3.53 (SD 0.93), between Acceptable and Good on the rating scale. The baseline received the higher MOS on every parameter and overall (3.73 against 3.33). The largest difference was on Constraint and Whitespace Harmony (3.77 against 2.92) and the smallest on Visual Hierarchy Preservation (3.73 against 3.61). In both formats, the baseline received the higher overall MOS (\ref{tab:mos-format}): 3.78 against 3.50 on certificates and 3.69 against 3.17 on event IDs. The one exception among the parameters was Visual Hierarchy Preservation on certificates, where structure mapping + GNN was rated higher (3.88 against 3.73). \ref{tab:mos-counts} presented how often each rating was given; on Constraint and Whitespace Harmony alone, structure mapping + GNN received 50 ratings of 1 or 2, against 17 for the baseline, as \ref{fig:rating-distribution} showed for each parameter.
 
 \begin{table}[ht]
 \centering
@@ -396,6 +410,13 @@ Baseline & 14 & 32 & 110 & 114 & 114 \\ \hline
 \end{table}
 % Source: results/phase4_analysis.json, q1_rating_counts.
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig4_rating_distribution}
+    \caption{Distribution of the Ratings by Parameter and Condition}
+    \label{fig:rating-distribution}
+\end{figure}
+
 \ref{tab:kendall} presented the agreement of the four experts. On the scale of Schmidt [\citeyear{schmidt1997managing}], Kendall's $W$ indicated moderate agreement overall ($W = 0.630$), on Visual Hierarchy Preservation (0.579), and on Constraint and Whitespace Harmony (0.570), and weak agreement on Brand and Typographic Consistency (0.477); all four values were significant ($p < 0.001$). As a secondary check, the absolute agreement was lower: ICC(2,1) ranged from 0.16 to 0.31 and Krippendorff's $\alpha$ from 0.01 to 0.23. The experts ordered the layouts similarly but differed in leniency, with individual mean ratings from 2.88 to 4.32.
 
 \begin{table}[ht]
@@ -413,7 +434,7 @@ Constraint and Whitespace Harmony & 0.570 & 143.5 & $< 0.001$ \\ \hline
 \end{table}
 % Source: results/phase4_analysis.json, q2_kendall_w; ICC and alpha from "sensitivity".
 
-\ref{tab:wilcoxon} presented the Wilcoxon signed-rank tests on the 32 pairs. At a significance level of 0.05, the experts rated the baseline significantly higher than structure mapping + GNN overall, the main test (25 pairs higher for the baseline, 2 for structure mapping + GNN, and 5 equal; $T = 9.5$, $p_{Holm} < 0.001$, $r = -0.95$, a large effect). In the follow-up tests, the baseline was also rated significantly higher on Brand and Typographic Consistency ($p_{Holm} < 0.001$, $r = -0.74$) and on Constraint and Whitespace Harmony ($p_{Holm} < 0.001$, $r = -0.98$). No significant difference was detected on Visual Hierarchy Preservation ($p_{Holm} = 0.127$, $r = -0.36$).
+\ref{tab:wilcoxon} presented the Wilcoxon signed-rank tests on the 32 pairs. At a significance level of 0.05, the experts rated the baseline significantly higher than structure mapping + GNN overall, the main test (25 pairs higher for the baseline, 2 for structure mapping + GNN, and 5 equal; $T = 9.5$, $p_{Holm} < 0.001$, $r = -0.95$, a large effect). In the follow-up tests, the baseline was also rated significantly higher on Brand and Typographic Consistency ($p_{Holm} < 0.001$, $r = -0.74$) and on Constraint and Whitespace Harmony ($p_{Holm} < 0.001$, $r = -0.98$). No significant difference was detected on Visual Hierarchy Preservation ($p_{Holm} = 0.127$, $r = -0.36$). \ref{fig:pairs} presented the overall MOS of each pair; 25 of the 32 pairs lay below the line of equal scores.
 
 \begin{table}[ht]
 \centering
@@ -431,9 +452,16 @@ Whitespace & 26 & 2 & 4 & $-1.00$ & 4.0 & $< 0.001$ & $-0.98$ \\ \hline
 \end{table}
 % Source: results/phase4_analysis.json, q3_q9_wilcoxon. Exact p (Holm): overall 4.6e-5, Brand 9.7e-4, Whitespace 2.2e-5.
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/fig4_pairs}
+    \caption{Overall Mean Opinion Score of the 32 Pairs}
+    \label{fig:pairs}
+\end{figure}
+
 The sensitivity analyses gave the same conclusions. The paired t-test agreed (overall $t(31) = -6.57$, $p < 0.001$), and the Bonferroni correction changed no conclusion. Without the one pair whose two layouts rendered identically, the result on Visual Hierarchy Preservation reached significance ($p_{Holm} = 0.046$, $r = -0.48$), so that result was borderline.
 
-The remaining analyses were exploratory: they were added after the planned tests, and their p-values were not corrected. Each of the four experts, taken alone, rated the baseline higher on average, by 0.15 to 0.75 points. Without ANTI\_HAZING\_LAW, whose rated pages carried the two defects, the conclusions were unchanged (overall $p_{Holm} < 0.001$, $r = -0.95$; Visual Hierarchy Preservation $p = 0.153$). A comparison of the spacing of the rated layouts (\ref{tab:spacing}) showed that structure mapping + GNN, which placed the elements at the master's positions, spread them over more of the height and left larger, uneven gaps, while the baseline stacked them with even gaps. Its largest gap was larger than the baseline's in 23 of the 32 pairs and smaller in none, and the pairs in which its gaps grew the most lost the most MOS (Spearman's $\rho$ from $-0.42$ to $-0.45$, $p$ from 0.010 to 0.017). The difference in fitness between the two conditions did not follow the difference in MOS ($\rho = -0.20$, $p = 0.26$).
+The remaining analyses were exploratory: they were added after the planned tests, and their p-values were not corrected. Each of the four experts, taken alone, rated the baseline higher on average, by 0.15 to 0.75 points. Without ANTI\_HAZING\_LAW, whose rated pages carried the two defects, the conclusions were unchanged (overall $p_{Holm} < 0.001$, $r = -0.95$; Visual Hierarchy Preservation $p = 0.153$). A comparison of the spacing of the rated layouts (\ref{tab:spacing}) showed that structure mapping + GNN, which placed the elements at the master's positions, spread them over more of the height and left larger, uneven gaps, while the baseline stacked them with even gaps. Its largest gap was larger than the baseline's in 23 of the 32 pairs and smaller in none, and the pairs in which its gaps grew the most lost the most MOS (Spearman's $\rho$ from $-0.42$ to $-0.45$, $p$ from 0.010 to 0.017). \ref{fig:spacing-vs-mos} presented the change in the largest gap against the change in overall MOS. The difference in fitness between the two conditions did not follow the difference in MOS ($\rho = -0.20$, $p = 0.26$).
 
 \begin{table}[ht]
 \centering
@@ -450,6 +478,13 @@ Stack spread & 0.816 $\pm$ 0.054 & 0.746 $\pm$ 0.025 & $-0.45$ & 0.010 \\ \hline
 \end{table}
 % Source: results/phase4_posthoc.json (notes §3.49).
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/fig4_spacing_vs_mos}
+    \caption{Change in the Largest Gap Against the Change in Overall MOS (Exploratory)}
+    \label{fig:spacing-vs-mos}
+\end{figure}
+
 \subsection{Discussion}
 
 \textbf{Principal Findings.} The expert evaluation found the opposite of the expected direction. The experts rated the baseline layouts significantly higher than the structure mapping + GNN layouts overall, with a large effect, and on Brand and Typographic Consistency and Constraint and Whitespace Harmony; no significant difference was detected on Visual Hierarchy Preservation. The experts agreed moderately on how they ordered the layouts. The Heuristic Fitness Function also slightly favored the baseline, but it did not capture what the experts responded to. Its weights were confirmed by calibration and were robust to large changes.
@@ -460,7 +495,7 @@ Stack spread & 0.816 $\pm$ 0.054 & 0.746 $\pm$ 0.025 & $-0.45$ & 0.010 \\ \hline
 
 \textbf{Implications.} For cross-format layout transfer, the results implied that copying a master's relative positions into a format with different proportions harmed the spacing that experts valued, so the anchored positions should be balanced with an even distribution of the remaining space, for example by redistributing the gaps after anchoring. For heuristic evaluation, a fitness function for such layouts should include a term for the evenness of the gaps, since the whitespace ratio alone did not reflect the experts' judgments. More generally, structural fidelity to a master and aesthetic quality in the target format proved to be different goals, which an orchestration framework has to balance.
 
-\textbf{Limitations.} Because the baseline used neither the structure mapping nor the GNN, the difference in MOS measured the whole Stage 2 pipeline rather than the GNN alone; the GNN's own contribution was the held-out result in \ref{tab:gnn-anchors}. The four experts agreed moderately on the order of the layouts but differed in leniency, so their absolute agreement was poor by the guidelines of Koo and Li [\citeyear{koo2016guideline}] and of Krippendorff [\citeyear{krippendorff2004content}], and the absolute MOS values were less dependable than the comparison between the conditions. The 16 posters were a purposive sample from school organizations, so the results may not generalize to other kinds of master layouts. The spacing explanation came from exploratory analyses. One poster's rated pages carried two defects in both conditions, although excluding it did not change the conclusions. The fitness function did not measure agreement with the master or the evenness of the gaps, and its whitespace target was fixed at 0.65 rather than derived from each master, although a master-derived target would have changed only 2 of the 64 rated layouts. The system was not changed after the rating, so the reported MOS described the system as it was evaluated.
+\textbf{Limitations.} Because the baseline used neither the structure mapping nor the GNN, the difference in MOS measured the whole Stage 2 pipeline rather than the GNN alone; the GNN's own contribution was the held-out result in \ref{tab:gnn-anchors}. The four experts agreed moderately on the order of the layouts but differed in leniency, so their absolute agreement was poor by the guidelines of Koo and Li [\citeyear{koo2016guideline}] and of Krippendorff [\citeyear{krippendorff2004content}], and the absolute MOS values were less dependable than the comparison between the conditions. The 16 posters were a purposive sample from school organizations, so the results may not generalize to other kinds of master layouts. The spacing explanation came from exploratory analyses. One poster's rated pages carried two defects in both conditions, although excluding it did not change the conclusions. The fitness function did not measure agreement with the master or the evenness of the gaps, and its whitespace target was fixed at 0.65 rather than derived from each master, although a master-derived target would have changed only 2 of the 64 rated layouts. The generation of the layouts was not changed after the evaluation set was produced; later changes to the dashboard and a cache that made edits faster left the generated layouts byte-identical, so the reported MOS described the system as it was evaluated.
 
 \textbf{Summary.} The third objective was carried out: the Heuristic Fitness Function ranked and filtered the parallel candidates with calibrated and robust weights, and the expert validation followed a statistical plan fixed in advance. The validation did not confirm an advantage for the structure mapping + GNN layouts; the experts preferred the evenly spaced baseline, and the evaluation identified the uneven spacing created by the transferred positions as the aspect of the framework to improve.
 

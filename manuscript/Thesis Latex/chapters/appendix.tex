@@ -53,26 +53,20 @@
 \chapter{Preprocessed CGL-Dataset Node Array for GNN Ingestion}
 \label{annex:cgl-node-array}
 \begin{lstlisting}
-[
-  {
-    "node_id": "19",
-    "semantic_category": "logo",
-    "bbox": [106, 22, 284, 65],
-    "extracted_color_centroids": ["#E83F3F", "#FFFFFF"],
-    "extracted_saliency_weight": 0.45
-  },
-  {
-    "node_id": "20",
-    "semantic_category": "text",
-    "bbox": [61, 140, 393, 67],
-    "text_features": {
-      "content": "11.1\\u62a2\\u534a\\u4ef7",
-      "font_size_scale": 0.08,
-      "alignment": "left"
+{
+  "extracted_nodes": [
+    {
+      "semantic_category": "logo",
+      "bbox": [106, 22, 284, 65]
     },
-    "extracted_saliency_weight": 0.72
-  }
-]
+    {
+      "semantic_category": "text",
+      "bbox": [61, 140, 393, 67]
+    }
+  ],
+  "extracted_color_centroids": [[135, 192, 167], [255, 128, 128]],
+  "extracted_saliency_weight": 0.45
+}
 \end{lstlisting}
 
 \chapter{Dynamic Content Payload for real-time runtime orchestration}

@@ -1,20 +1,84 @@
-
-\chapter{Conclusion}
+\chapter{Summary of Findings, Conclusions, and Recommendations}
 \begin{refsection}
-% text of this chapter goes here
+This chapter presented the summary of the study, the findings for each of its specific objectives, the conclusions drawn from those findings, and the recommendations for the improvement of the framework and for future research.
 
+\section{Summary}
 
-\begin{figure}[ht]
-    \centering
-	\includegraphics[width=0.85\textwidth]{figures/sampleFig1.jpg} 
-	\caption[Barred spiral galaxy NGC 1300]{Barred spiral galaxy NGC 1300 photographed by Hubble telescope. While the galaxy in the photo is not our sun, it does emit light, much like our sun. Image credit: NASA.}
-	\label{fig:firstFig}
-\end{figure}
+The study developed and evaluated ThemeSync, a graph-based design orchestration framework that transferred the visual identity of a master layout, such as an event poster, to new formats while keeping the designer in control of the result. Its general objective was to design and evaluate a framework that implemented real-time constraint satisfaction and stateful manual refinement across heterogeneous design formats. Its three specific objectives were to design a Relational Logic and Feature Extraction model that identified and mapped the structural dependencies and stylistic markers of master design files; to develop a Reactive Layout Synthesis engine that propagated manual Hard Constraints in real time while preserving the global layout; and to evaluate the generated layouts with a calibrated Heuristic Fitness Function, followed by a quantitative human-expert validation.
 
+The study was limited to two-dimensional layouts and branding assets, with two target formats: the Academic Certificate and the event identification card. The final design authority remained with the human user, and the framework was evaluated through computational metrics and through the ratings of four professional designers.
+
+The study employed a Constructive Research Design and was carried out in four phases. In Phase 1, the framework extracted the master layout's palette by K-Means clustering in the CIE $L^*a^*b^*$ color space, its stylistic markers and background saliency by SIFT, and its elements by a YOLOv8s detector trained on an empirical dataset of 200 annotated master layouts; a Graph Neural Network trained on the CGL-Dataset V2 refined the positions of the target elements, starting from the master's mapped structure. In Phase 2, the Cassowary constraint solver arranged the elements, and a Bi-directional State Machine recorded every manual edit in an append-only JSON state chain as a Hard Constraint, after validating the user's typography and content against a schema. In Phase 3, the framework generated six candidates per layout, scored them with the Heuristic Fitness Function (Formula 3.11), selected the layout archetype from the master's composition, and calibrated the fitness weights. In Phase 4, four professional designers rated 64 layouts generated from 16 event posters chosen by purposive sampling, in two formats and two conditions: structure mapping + GNN, and a baseline that used neither.
+
+The experts rated the layouts in printed packets with random sample codes and a separately randomized page order, on three parameters (Visual Hierarchy Preservation, Brand and Typographic Consistency, and Constraint and Whitespace Harmony) using a five-point scale adapted from ITU-T P.800. The system's own metrics were logged automatically: the detector's Intersection over Union, the GNN's errors on held-out layouts, the F1-score, the latency of the designer's edits, and the fitness scores. The statistical treatment, fixed before the ratings were examined, reported the Mean Opinion Score with its standard deviation, measured the experts' agreement with Kendall's $W$, and compared the two conditions with the two-sided Wilcoxon signed-rank test on 32 pairs, with the Holm correction, the rank-biserial correlation as the effect size, and a significance level of 0.05.
+
+In brief, the framework extracted and transferred the structure of real master layouts, kept every rated layout structurally valid, and re-solved the layout at interactive speed while preserving every manual edit. The experts, however, rated the baseline layouts significantly higher than the structure mapping + GNN layouts, mainly on the harmony of their spacing.
+
+\section{Findings}
+
+\subsection{Objective 1: Relational Logic and Feature Extraction}
+
+\begin{enumerate}
+    \item A detector trained only on the CGL-Dataset reached a highest detection confidence of 0.035 to 0.211 on three real event posters, with no detection at the 0.25 threshold. After fine-tuning on 65 annotated master layouts, each poster produced 8 to 16 usable detections.
+    \item The deployed detector, trained on the 200-image empirical dataset, reached an mAP50 of 0.728, against 0.486 for the previous model, on 32 validation images that neither had trained on. On the 40-image validation split, its mean IoU was 0.644 (SD 0.351); it found 75.0\% of the annotated elements, with an average IoU of 0.837 for the elements found. Logos had the highest mean IoU (0.844) and embellishments the lowest (0.445).
+    \item The K-Means extraction selected between two and six colors by the Elbow Method, with seeded initializations. In the automatic Phase 3 battery, the master's title artwork was transferred to 14 of the 16 outputs of each format, and its decorative motifs to 3 of the 16.
+    \item On 2,900 held-out CGL-Dataset layouts, the deployed GNN reduced the position error of the master's structure from 0.050 to 0.036 (28\%), its gap error from 0.052 to 0.041, and its overlap by 89\%. Registered to the master's exact anchors, it placed the unmapped elements with a vertical-center error of 0.075, against 0.081 for linear interpolation.
+    \item On the 16 unseen posters, the structure mapping + GNN layouts were closer to the master than the baseline on every poster with mappable roles, with the structure error falling from 0.117 to 0.045 on event IDs and from 0.089 to 0.056 on certificates. The GNN moved the unmapped elements on 14 of the 32 runs, by at most 7.5\% of the height.
+\end{enumerate}
+
+\subsection{Objective 2: Reactive Layout Synthesis}
+
+\begin{enumerate}
+    \setcounter{enumi}{5}
+    \item All 64 rated layouts reached an F1-score of 1.0 in both conditions, and none of the 384 candidates generated for them overlapped or left the canvas. A deliberately crowded edit lowered the F1-score to 0.90.
+    \item In the stress test, the solver kept every box apart, on the canvas, and in reading order at every tested length, and the schema rejected every over-length field. On the certificate, all text fit its box at every maximum length with real words; on the event ID, a line of the organization header longer than 48 characters ran out of its box. The certificate's row held five signature blocks without overlap; from six blocks they overlapped (F1-score 0.92).
+    \item Manual moves, resizes, and locks were kept exactly through every subsequent re-solve, and undo and redo were appended to the state chain as new states.
+    \item Every constraint recalculation finished within 0.1 seconds (median 0.4 milliseconds). Every full edit finished within 1.0 second (median 90 milliseconds), and 61\% within 0.1 seconds; edits that re-solved the layout took a median of 105 milliseconds, and edits that only re-drew the canvas a median of 12 milliseconds.
+\end{enumerate}
+
+\subsection{Objective 3: Heuristic Evaluation and Expert Validation}
+
+\begin{enumerate}
+    \setcounter{enumi}{9}
+    \item The collision penalty was zero in every run. On certificates, the two conditions had the same fitness on 10 of the 16 posters; on event IDs, the baseline scored lower (better) on average (0.1583 against 0.1633). Over the 32 pairs, the Wilcoxon signed-rank test favored the baseline ($p = 0.030$, $r = +0.53$).
+    \item Selecting the archetype from the master's composition produced four layout types in each format across the 16 posters; the selected candidate did not always have the lowest fitness score.
+    \item The calibration loop kept the deployed weights. Halving or doubling any single weight changed at most 1 of the 64 selected layouts, and a master-derived whitespace target would have changed 2.
+    \item Across the 768 ratings, the overall MOS was 3.53 (SD 0.93). The baseline received 3.73 overall against 3.33 for structure mapping + GNN, 3.77 against 2.92 on Constraint and Whitespace Harmony, 3.70 against 3.47 on Brand and Typographic Consistency, and 3.73 against 3.61 on Visual Hierarchy Preservation.
+    \item Kendall's $W$ was 0.630 overall and 0.477 to 0.579 for the three parameters ($p < 0.001$).
+    \item The experts rated the baseline significantly higher overall ($p_{Holm} < 0.001$, $r = -0.95$), on Brand and Typographic Consistency ($p_{Holm} < 0.001$, $r = -0.74$), and on Constraint and Whitespace Harmony ($p_{Holm} < 0.001$, $r = -0.98$). No significant difference was detected on Visual Hierarchy Preservation ($p_{Holm} = 0.127$, $r = -0.36$).
+    \item In the exploratory analyses, the largest gap of the structure mapping + GNN layouts was larger than the baseline's in 23 of the 32 pairs and smaller in none, and the change in spacing correlated with the change in MOS (Spearman's $\rho$ from $-0.42$ to $-0.45$).
+\end{enumerate}
+
+\section{Conclusions}
+
+Based on the findings, the study concluded the following.
+
+\textbf{Objective 1.} The first objective was met. The Relational Logic and Feature Extraction model identified the colors, stylistic markers, and structure of real institutional master layouts and mapped that structure onto new formats. A small, carefully annotated in-domain dataset, rather than a large dataset from another domain, made the layout parsing reliable, and training the GNN from the master's structure was what allowed it to improve on that structure. Graph-based extraction therefore preserved a master's stylistic markers and structural positions across formats; preserving the positions, however, did not make the layouts better in the experts' judgment.
+
+\textbf{Objective 2.} The second objective was met. The Reactive Layout Synthesis engine, built on the Cassowary solver and the Bi-directional State Machine, propagated manual Hard Constraints without overwriting earlier edits and kept every rated layout structurally valid. The constraint solver managed the designer's edits in real time, within the limit for an instantaneous response, while every full state synchronization stayed within the limit for uninterrupted work. The remaining limits concerned how very long header text and more than five signature blocks were rendered, not the solver.
+
+\textbf{Objective 3.} The third objective was carried out as planned, and its outcome qualified the framework's design. The calibrated Heuristic Fitness Function reliably rejected invalid layouts and ranked the candidates, but it did not capture the composition and spacing that the experts judged. The expert validation, analyzed with a plan fixed in advance, did not confirm an advantage for the structure mapping + GNN layouts; the experts preferred the evenly spaced baseline, and the uneven gaps created by transferring the master's positions were the most likely reason.
+
+Overall, ThemeSync showed that a stateful, constraint-based orchestration framework with human-in-the-loop refinement can transfer a master layout's visual identity to new formats, keep every element within its constraints, and preserve every manual edit at interactive speed. It also showed that fidelity to a master's structure and aesthetic quality in the target format are distinct goals, which such a framework has to balance explicitly.
+
+\section{Recommendations}
+
+Based on the conclusions, the following were recommended for the improvement of the framework and for future research:
+
+\begin{enumerate}
+    \item Distribute the remaining space evenly after anchoring the master's positions, so that structure transfer does not open uneven gaps in the target format.
+    \item Add a term for the evenness of the gaps to the Heuristic Fitness Function, and consider a term for agreement with the master's composition, since the whitespace ratio alone did not reflect the experts' judgments.
+    \item Evaluate the structure mapping alone against the structure mapping with the GNN in a new expert study, which the present design could not separate.
+    \item Fit the event ID's organization header to the width of its box, and cap the signature blocks at five with a character limit on their text.
+    \item Derive the whitespace target from each master layout, or report it as a fixed design choice, and evaluate the effect on the expert ratings.
+    \item Give the GNN per-element color and saliency features instead of values shared by the whole layout.
+    \item Train an aesthetic evaluation model on the 768 expert ratings collected in this study, and test whether it agrees with the experts better than the heuristic fitness function.
+    \item Reduce the time of edits that re-solve the layout, mainly by making the scoring of legibility cheaper, so that more of them finish within 0.1 seconds.
+    \item Validate the layout detector on a larger and more varied set of master layouts, with clearer definitions for underlays and embellishments.
+    \item Use more evaluators, or a calibration round before the rating, to raise the absolute agreement among experts.
+\end{enumerate}
 
 %=======================================================%
 %%%%% Do not delete this part %%%%%%
 \clearpage
-
-\printbibliography[heading=subbibintoc, title={\centering Notes}]
 \end{refsection}
