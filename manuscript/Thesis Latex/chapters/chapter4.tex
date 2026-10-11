@@ -2,45 +2,51 @@
 \providecommand{\pending}[1]{\textbf{[PENDING: #1]}}
 \providecommand{\tbd}{\textbf{[PENDING]}}
 
+% Layout (the TA's remarks, 2026-10-11): one table or figure per page. Each item starts with
+% \clearpage, and its float is [!ht] like Chapter 3's tables, so tables stay single-spaced and
+% a float that does not fit moves on without leaving a gap. Recompile after edits and check
+% that each item still fits its page.
+% Center every table caption, including long ones (the caption package otherwise left-aligns a
+% caption whose label and title do not fit on one line, as in Tables 4, 9, and 16).
+\captionsetup[table]{justification=centering}
 \chapter{Results and Discussion}
 \begin{refsection}
-This chapter presented and discussed the results of the evaluation of ThemeSync. After the evaluation setup, one section covered each specific objective. Each table and figure was followed by its results and by a discussion of the principal findings, their interpretation, the related literature, the implications, the limitations, and a summary.
+This chapter presented and discussed the results of the evaluation of ThemeSync, in one section for each specific objective, after the evaluation setup shared by all three. Each table and figure was followed by its results and by a discussion of the principal findings, their interpretation, the related literature, the implications, the limitations, and a summary.
 
-\section{Evaluation Setup}
+The evaluation used four sets of data (\ref{tab:eval-sets}) and the deployed system: the YOLOv8s detector trained on the empirical master-layout dataset, the third version of the Graph Neural Network (GNN), the Cassowary solver, and Formula 3.11 with $\alpha = 50$, $\beta = 2$, $\gamma = 1$, and $\delta = 1.5$.
 
-The evaluation used four sets of data, each matched to its metrics (\ref{tab:eval-sets}). The deployed system used the YOLOv8s layout detector trained on the empirical master-layout dataset, the third version of the Graph Neural Network (GNN), the Cassowary constraint solver, and the Heuristic Fitness Function (Formula 3.11) with weights $\alpha = 50$, $\beta = 2$, $\gamma = 1$, and $\delta = 1.5$.
-
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Evaluation Sets and the Metrics Computed on Them}
 \label{tab:eval-sets}
 \begin{tabular}{>{\raggedright\arraybackslash}p{0.30\textwidth} >{\raggedright\arraybackslash}p{0.26\textwidth} >{\raggedright\arraybackslash}p{0.34\textwidth}}
 \hline
 \textbf{Set} & \textbf{Size} & \textbf{Metrics} \\ \hline
-Validation split of the empirical master-layout dataset & 40 images, 607 annotated elements & Intersection over Union (IoU), mAP50 \\
-Held-out CGL-Dataset layouts (a seeded 5\% of the training split) & 2,900 layouts & GNN position, gap, and order errors \\
-Unseen event posters (purposive sample, in no training set) & 16 posters $\times$ 2 formats & Structure error, Heuristic Fitness Function, F1-score, latency, MOS \\
+Master-layout validation split & 40 images, 607 elements & Intersection over Union (IoU), mAP50 \\
+Held-out CGL-Dataset layouts & 2,900 layouts & GNN position, gap, and order errors \\
+Unseen event posters (purposive sample) & 16 posters $\times$ 2 formats & Structure error, fitness, F1-score, latency, MOS \\
 Synthetic administrative templates & Certificate and event ID, 52 runs & Stress test: F1-score, reading order, text fit \\ \hline
+\multicolumn{3}{p{0.90\textwidth}}{\footnotesize The Phase 3 battery ran on the school's server (NVIDIA RTX A5000 GPU) and the other measurements on a workstation (NVIDIA RTX 3060 GPU), both with PyTorch 2.5.1.}
 \end{tabular}
 \end{table}
 
-Three Stage 2 conditions were compared on the unseen posters. \textit{Structure mapping + GNN} was the full system: the target elements were mapped to the master's structure and then refined by the GNN. \textit{Structure mapping only} turned the GNN off to isolate its contribution. The \textit{baseline} used neither and stacked the elements in reading order. All three shared the archetype chosen from the master's composition, the palette, the background, and the stylistic markers. Phase 4 compared structure mapping + GNN with the baseline.
-
-The Phase 3 battery (16 posters $\times$ 2 formats $\times$ 3 conditions, 96 runs) ran on the school's server (Python 3.10, PyTorch 2.5.1, Ultralytics 8.4) with an NVIDIA RTX A5000 GPU (24 GB). The detector's IoU, the stress test, the latency benchmark, and the check of the rated layouts ran on a workstation with an NVIDIA RTX 3060 GPU (Python 3.12, PyTorch 2.5.1) with the same model libraries.
+Three Stage 2 conditions were compared: \textit{structure mapping + GNN}, the full system, in which the target elements were mapped to the master's structure and refined by the GNN; \textit{structure mapping only}, with the GNN off; and the \textit{baseline}, which used neither and stacked the elements in reading order. All three shared the archetype, palette, background, and stylistic markers; Phase 4 compared the full system with the baseline.
+% Held-out CGL-Dataset layouts: a seeded 5% of the training split. Phase 3 battery: 16 posters x 2 formats
+% x 3 conditions (96 runs); server GPU 24 GB, Python 3.10, Ultralytics 8.4; workstation Python 3.12.
 % Sources: results/experiment_log.json (run 20261006_195534); results/yolo_iou.json;
 % results/stress_test.json; results/latency_benchmark.json; results/rated_layouts_check.json.
 
 % =====================================================================
 \clearpage
-\section{Objective 1: Relational Logic and Feature Extraction}
+\section{Objective 1: Relational Logic and Feature Extraction Model}
 
 The first specific objective was to design a Relational Logic and Feature Extraction model that integrated the GNN, K-Means clustering, and SIFT to identify and map the structural dependencies and stylistic markers of master design files.
 
-\subsection{Semantic Layout Parsing}
+\subsection{Identification of Structural Elements (Layout Detector)}
 
 \ref{tab:domain-gap} presented the highest detection confidence of the first three detectors on three real event posters outside their training sets.
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Highest Detection Confidence on Three Real Posters Outside the Training Sets}
 \label{tab:domain-gap}
@@ -62,7 +68,7 @@ The CGL-trained detector could not read event posters, and a little in-domain da
 \clearpage
 The detector was then developed in two more steps (\ref{tab:yolo-dev}). Values were comparable within a panel but not across panels.
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Development of the Layout Detector}
 \label{tab:yolo-dev}
@@ -91,7 +97,7 @@ Better annotations improved the detector more than a larger model did. The large
 \clearpage
 IoU was computed for Phase 1 only, between the deployed detector's boxes and the annotations of the 40-image validation split (\ref{tab:iou}). Each annotated box was paired with at most one detection, and a missed box counted as zero.
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Intersection over Union of the Deployed Detector on the 40 Validation Images}
 \label{tab:iou}
@@ -115,11 +121,11 @@ The mean IoU over the 607 annotated boxes was 0.644 (SD 0.351). The detector fou
 The detector placed the elements it found accurately; its weakness was missing elements, mostly embellishments and underlays. The missed boxes, which counted as zero, explained the gap between the mean IoU and the IoU of the found elements. Logos, which anchor brand consistency, were almost always found. As in the annotation process, the classes of Zhou, Xu, Ma, Ge, Jiang, and Xu [\citeyear{zhou2022cglgan}] that are defined by appearance rather than content were the least consistent. The dashboard's controls for logos and markers covered what the detector missed. The 40 images came from one dataset of institutional and campus posters. The detector served logos and text well and the decorative classes less well.
 
 \clearpage
-\subsection{Color Extraction and Stylistic Markers}
+\subsection{Color Extraction and Stylistic Markers (K-Means Clustering and SIFT)}
 
 K-Means chose two to six colors by the Elbow Method, and SIFT measured the background's visual detail and ranked the candidate motifs. \ref{tab:markers} presented how often the master's title artwork and motifs reached the outputs of the automatic Phase 3 battery.
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Transfer of Stylistic Markers in the Automatic Phase 3 Battery}
 \label{tab:markers}
@@ -139,11 +145,11 @@ An unseeded K-Means had given the same poster different palettes on identical ru
 K-Means and SIFT extracted the palette and markers automatically, but the transfer of artwork and motifs still needed human checking. The errors came from elements that look decorative but carry meaning. The CIE L*a*b* color space followed Garcia and Chen [\citeyear{Garcia2023}], and seeding addressed the concern for stable centroids raised by Lertrusdachakul, Meesad, and Kittirachakul [\citeyear{Lertrusdachakul2025Hybrid}]. SIFT keypoints are robust to scale \cite{Shaharom2023SIFT}, so they measured detail regardless of the master's size, but not meaning. The dashboard's tick boxes remained necessary. The palettes were not compared with designers' choices. Extraction worked, with human review as a safeguard.
 
 \clearpage
-\subsection{Graph Neural Network}
+\subsection{Refinement of the Layout (Graph Neural Network)}
 
 The GNN was evaluated on 2,900 held-out CGL-Dataset layouts (\ref{tab:gnn-heldout}). Position and gap errors were fractions of the canvas, and ``order kept'' was the share of consecutive element pairs in the designer's top-to-bottom order.
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{GNN Accuracy on 2,900 Held-Out CGL-Dataset Layouts}
 \label{tab:gnn-heldout}
@@ -168,7 +174,7 @@ The GNN improved on the master's structure only when trained to start from it. A
 \clearpage
 A second test measured how the GNN placed the elements without a counterpart on the master when the master's anchors were exact (\ref{tab:gnn-anchors}).
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Vertical-Center Error With the Master's Exact Anchors (Fraction of the Height)}
 \label{tab:gnn-anchors}
@@ -189,11 +195,11 @@ Used directly, v3 moved the anchors by 2.6\% of the height. Registered back onto
 Registration kept the master's positions exact and let the GNN place the remaining elements better than interpolation. Used alone, the GNN drifted from the anchors; registered, it kept them and still improved the other elements. The gain was small, which matched the small corrections seen in the first test. Lee, Jiang, Essa, Le, Gong, Yang, and Yang [\citeyear{Lee2020Neural}] generated graphic layouts under user-specified constraints; in ThemeSync, the master's anchors played that role. With registration, a learned model can work alongside positions that must not move. The 8\% gain was measured on held-out CGL-Dataset layouts, and its effect on the final layouts was smaller, as the next subsection showed. Registration was the right way to combine the GNN with the master's anchors.
 
 \clearpage
-\subsection{Transfer of the Master's Structure}
+\subsection{Mapping of Structural Dependencies}
 
 On the 16 unseen posters, the structure error measured how far the output's mapped elements (the logo row, header, title, and details) sat from their counterparts on the master, as a fraction of the height, averaged over the six candidates of each run (\ref{tab:structure-error}).
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Structure Error on the 16 Unseen Posters (Mean of Six Candidates per Run)}
 \label{tab:structure-error}
@@ -214,7 +220,7 @@ The framework carried the master's structure into both target formats. The equal
 \clearpage
 \ref{fig:structure-error} presented the structure error of each poster in both conditions.
 
-\begin{figure}[H]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=0.92\textwidth]{figures/fig4_structure_error}
     \caption{Structure Error per Poster, Structure Mapping + GNN Against the Baseline}
@@ -229,15 +235,15 @@ The improvement was consistent across posters and was not driven by a few of the
 
 % =====================================================================
 \clearpage
-\section{Objective 2: Reactive Layout Synthesis}
+\section{Objective 2: Reactive Layout Synthesis Engine}
 
 The second specific objective was to develop a Reactive Layout Synthesis engine that used a Bi-directional State Machine and the Cassowary algorithm to solve Constraint Satisfaction Problems, propagating manual Hard Constraints in real time while preserving the global layout state.
 
-\subsection{Constraint Satisfaction}
+\subsection{Constraint Satisfaction (Cassowary Algorithm)}
 
 \ref{tab:rated-f1} presented the F1-score and text fit of the 64 rated layouts, read from the printed files.
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Structural Accuracy and Text Fit of the 64 Rated Layouts}
 \label{tab:rated-f1}
@@ -262,7 +268,7 @@ The solver kept every layout valid, so designers had no overlaps to fix. Cassowa
 \clearpage
 The synthetic templates were filled with extreme payloads (\ref{tab:stress}): fields at 25\% to 100\% of their maximum length, one character over it, and 1 to 10 signature blocks.
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Stress Test of the Synthetic Templates}
 \label{tab:stress}
@@ -287,7 +293,7 @@ The boxes stayed apart, on the canvas, and in order in every run, and the schema
 The solver held at every length; the limits were in text fitting, since the header's box did not shrink its text. Jiang, Stuerzlinger, Zwicker, and Lutteroth [\citeyear{Jiang2020ORCSolver}] let adaptive layouts switch arrangements with OR-constraints, while ThemeSync's templates were fixed. Long organization names and more than five signatories need handling. The test covered the two synthetic templates. The engine was robust, with two text-fit limits.
 
 \clearpage
-\subsection{Propagation of Manual Hard Constraints}
+\subsection{Manual Hard Constraints (Bi-directional State Machine)}
 
 The Bi-directional State Machine recorded every terminal edit as a new, immutable state in the JSON state chain. Simulated moves, resizes, and locks were kept exactly through every later re-solve, with no overlap among the surrounding elements, and every re-solve of a session's chain was checked against the edits made before it. Undo and redo restored earlier states by appending them as new states, so the chain stayed append-only. Text edits were re-validated against the content schema before they were accepted. Each edit was made on the dashboard's canvas and produced exactly one terminal event, verified in a real browser.
 % Sources: evaluate.py (test_hard_constraints_preserved), layout_report.retention_check (notes §3.28, §3.32).
@@ -295,11 +301,11 @@ The Bi-directional State Machine recorded every terminal edit as a new, immutabl
 The engine propagated manual Hard Constraints without overwriting earlier edits. Because each edit became a required constraint and a new state, a re-solve could move only the elements the designer had not fixed. Generative layout models recalculate the whole layout and can overwrite manual changes \cite{Shi2023Survey}; the state chain instead kept every edit, in line with the human-in-the-loop co-design that He, Huang, and Wang [\citeyear{He2022iPLAN}] demonstrated with iPLAN and with the bi-directional state machine of Liang, McGee, Menassa, and Kamat [\citeyear{Liang2020Bidirectional}]. This addressed the destructive state management identified in Chapter 1. The checks used simulated sessions, not designers' own sessions. The engine met the requirement to preserve manual edits.
 
 \clearpage
-\subsection{Real-Time Performance}
+\subsection{Real-Time Propagation (Algorithmic Latency)}
 
 Latency was measured over 34 editing sessions of 40 edits each (1,360 edits) on the 16 posters in both formats and on the synthetic theme (\ref{tab:latency}). The solver timing was the constraint recalculation, and the full edit was the state synchronization.
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Latency of the Designer's Edits}
 \label{tab:latency}
@@ -324,7 +330,7 @@ The solver responded instantly, and every full edit stayed within the limit for 
 \clearpage
 \ref{fig:latency} presented the cumulative share of edits by time, with the 0.1-second and 1.0-second limits.
 
-\begin{figure}[H]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=0.92\textwidth]{figures/fig4_latency}
     \caption{Cumulative Share of Edits by Time, With the 0.1-Second and 1.0-Second Limits}
@@ -341,11 +347,11 @@ The edits fell into two groups: re-draws, which were instant, and re-solves, whi
 
 The third specific objective was to evaluate the generated layouts with a mathematically calibrated Heuristic Fitness Function that ranked parallel design candidates, followed by a quantitative human-expert validation.
 
-\subsection{Ranking of Parallel Candidates}
+\subsection{Ranking of Parallel Design Candidates (Heuristic Fitness Function)}
 
 \ref{tab:fitness} presented the fitness of the output layouts, each chosen from six candidates solved by Cassowary and scored by Formula 3.11.
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Heuristic Fitness of the Output Layouts on the 16 Unseen Posters (Means)}
 \label{tab:fitness}
@@ -370,7 +376,7 @@ The fitness function slightly favored the baseline. The legibility term penalize
 \clearpage
 In an earlier run in which the fitness function alone chose the output, ``classic centered'' won 14 of the 16 certificates because the top candidates tied exactly, and ``left-aligned'' won all 16 event IDs by a small, steady margin. The master's composition, read from the detected elements, then chose the archetype, and the fitness function ranked the candidates within it (\ref{tab:archetypes}).
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Layout Archetypes Selected From the Masters' Compositions (16 Posters)}
 \label{tab:archetypes}
@@ -390,11 +396,11 @@ The 16 posters received four archetypes in each format, and both conditions rece
 The master's composition, not the fitness function, gave the outputs their variety. The fitness function could not tell the archetypes apart well, since its top candidates tied or differed by small, constant margins. Zhou, Xu, Ma, Ge, Jiang, and Xu [\citeyear{zhou2022cglgan}] conditioned layout generation on the composition of the poster image; ThemeSync applied the same idea by taking the archetype from the master's composition. A fitness function alone was not enough to choose among layout types. Choosing by composition meant accepting some candidates with a higher fitness. Each poster received a layout type that followed its master.
 
 \clearpage
-\subsection{Calibration of the Fitness Weights}
+\subsection{Mathematical Calibration of the Fitness Weights}
 
 The weights of Formula 3.11 were set by the priority rule of Chapter 3 and calibrated on the 64 rated runs with criteria fixed in advance: a change to one weight (by a factor of 0.25 to 4) was kept only if the selected layouts improved on a design rule and worsened on none. \ref{tab:calibration} presented how many selections changed when one weight was scaled.
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Selected Layouts That Changed When One Fitness Weight Was Scaled (of 64)}
 \label{tab:calibration}
@@ -416,11 +422,11 @@ The loop kept no change, which confirmed the deployed weights. Halving or doubli
 The weights were stable. They mattered little because no candidate overlapped, the alignment penalty was near zero, and candidates of one archetype had nearly the same whitespace. O'Donovan, Agarwala, and Hertzmann [\citeyear{ODonovan2014Layouts}] learned the weights of their energy terms from example designs; here, the weights were not the deciding factor. Improving the fitness function would need new terms, not new weights. The calibration used the formula's own terms, not the experts' ratings. The weights were confirmed and robust.
 
 \clearpage
-\subsection{Expert Validation}
+\subsection{Human-Expert Validation (Mean Opinion Score)}
 
 Four professional designers rated the 64 layouts on the three parameters of \ref{tab:mos-rating-scale} without knowing the conditions (768 ratings). The rated pages of ANTI\_HAZING\_LAW carried two extraction defects in both conditions. The analysis followed the statistical treatment of Chapter 3, fixed in advance (\ref{tab:mos}).
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Mean Opinion Score by Format, Condition, and Parameter}
 \label{tab:mos}
@@ -447,7 +453,7 @@ The experts preferred the baseline, mostly for its use of space; keeping the mas
 \clearpage
 \ref{fig:rating-distribution} presented how often each rating was given, by parameter and condition.
 
-\begin{figure}[H]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=\textwidth]{figures/fig4_rating_distribution}
     \caption{Distribution of the Ratings by Parameter and Condition}
@@ -462,7 +468,7 @@ Structure mapping + GNN received twice as many low ratings as the baseline and f
 \clearpage
 \ref{tab:kendall} presented the agreement of the four experts on the order of the 64 layouts.
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Agreement of the Four Experts Over the 64 Layouts (Kendall's $W$)}
 \label{tab:kendall}
@@ -484,7 +490,7 @@ The experts ranked the layouts similarly but used the scale differently. Kendall
 \clearpage
 \ref{tab:wilcoxon} presented the Wilcoxon signed-rank tests on the 32 pairs, at a significance level of 0.05.
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Wilcoxon Signed-Rank Tests on the 32 Pairs}
 \label{tab:wilcoxon}
@@ -509,7 +515,7 @@ The preference for the baseline was significant, large, and robust, the opposite
 \clearpage
 \ref{fig:pairs} presented the overall MOS of each of the 32 pairs.
 
-\begin{figure}[H]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=0.55\textwidth]{figures/fig4_pairs}
     \caption{Overall Mean Opinion Score of the 32 Pairs}
@@ -523,7 +529,7 @@ The preference for the baseline was spread across the pairs and the experts. It 
 \clearpage
 A post hoc comparison measured the spacing of the rated layouts (\ref{tab:spacing}). The largest gap and the stack spread were fractions of the layout's height, and the gap CV was the coefficient of variation of the gaps.
 
-\begin{table}[H]
+\begin{table}[!ht]
 \centering
 \caption{Spacing of the Rated Layouts (Post Hoc)}
 \label{tab:spacing}
@@ -545,7 +551,7 @@ Uneven spacing was the most likely reason for the lower ratings. Structure mappi
 \clearpage
 \ref{fig:spacing-vs-mos} presented the change in the largest gap against the change in overall MOS for the 32 pairs.
 
-\begin{figure}[H]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=0.52\textwidth]{figures/fig4_spacing_vs_mos}
     \caption{Change in the Largest Gap Against the Change in Overall MOS (Exploratory)}
