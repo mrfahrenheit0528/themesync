@@ -208,9 +208,12 @@ Read first: `notes/system_development_progress.md`, then the tail of
       double-spaced the tables and left a gap under the chapter title. No
       separate Results or Discussion headings. After any edit, recompile
       and check that each item still fits its page.
-    - Chapter 5: no subsections. Findings (by objective), Conclusions
-      (each citing its findings) and Recommendations (each citing its
-      conclusion) are numbered lists.
+    - Chapter 4's section headings carry no "Objective #" (TA,
+      2026-10-11, second round).
+    - Chapter 5: no subsections. **No more findings, conclusions, or
+      recommendations than SOs** (TA, second round): three of each,
+      numbered, one per SO. Conclusion n comes from Finding n, and
+      Recommendation n from Conclusion n.
     - Direct statements, "not AI written": short sentences with one point
       each, few numbers per sentence, no stock connectors.
 - **`notes/manuscript_revision_list.md` tracks the manuscript against the
