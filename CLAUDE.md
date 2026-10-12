@@ -223,6 +223,16 @@ Read first: `notes/system_development_progress.md`, then the tail of
       Recommendation n from Conclusion n.
     - Direct statements, "not AI written": short sentences with one point
       each, few numbers per sentence, no stock connectors.
+  - **No hanging lines or gaps in the manuscript** (user, 2026-10-12):
+    - `thesis.tex` sets `\widowpenalty`, `\clubpenalty` and
+      `\displaywidowpenalty` to 10000. The user adds them in Prism.
+    - Chapter 3's Figure 1 floats (`[!ht]`); as `[H]` it left a gap on
+      the page before it.
+    - Chapter 4 and Chapter 5 pages were filled by extending or
+      tightening sentences with real results, not filler.
+    - After edits, rebuild and check each page's fill. Chapter ends
+      before the Notes may stay short; Chapter 2's last page was left as
+      the group wrote it.
 - **`notes/manuscript_revision_list.md` tracks the manuscript against the
   code.** It was re-checked against Manu 0910.1 on 2026-10-09: 26 earlier
   items applied, 27 new (M1–M27, including §3.35's open findings and the
