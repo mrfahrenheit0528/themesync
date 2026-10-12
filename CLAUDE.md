@@ -198,9 +198,16 @@ Read first: `notes/system_development_progress.md`, then the tail of
     language.
   - Chapter 5: Summary, Findings, Conclusions, Recommendations.
   - **The TA's remarks (2026-10-11), applied to the LaTeX:**
-    - Chapter 4: the evaluation setup first, as the chapter's opening
-      paragraphs with no heading of its own (the user kept it), then one
-      section per objective. Each subsection is a part the objective names,
+    - Chapter 4: one section per objective and nothing else; no separate
+      "Evaluation" section (TA, third round: "para saan objective ung
+      evaluation?"). Each SO's opening states its own data and setup:
+      - SO1: the validation split, the held-out CGL layouts, the 16
+        posters, and the three conditions;
+      - SO2: the rated layouts, the stress test, and the RTX 3060
+        workstation;
+      - SO3: the Phase 3 battery on the RTX A5000 server, and the Phase 4
+        experts.
+      The evaluation-sets table was dropped. Each subsection is a part the objective names,
       titled in its own words in Chapter 3's "Topic (Method)" style.
       Each table or figure is followed by its own Results and PIIILS
       discussion, with one table or figure per page: `\clearpage` before
