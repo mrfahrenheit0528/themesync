@@ -22,8 +22,12 @@ Usage:
 import os
 
 import cv2
-import pytesseract
+from PIL import Image
 from ultralytics import YOLO
+
+# poster_text points Tesseract at the English model in assets/tessdata (the
+# Windows install had none, so OCR there returned nothing; notes §3.55)
+from poster_text import pytesseract, prepare_for_ocr
 
 # YOLO class id (0-indexed, matching prepare_yolo_dataset.py's CGL_CATEGORIES - 1)
 # -> ThemeSync structural_class. CGL-Dataset's 4-category taxonomy is finer
@@ -143,9 +147,12 @@ class LayoutExtractor:
         if xi2 <= xi1 or yi2 <= yi1:
             return ""
 
-        crop = rgb_image[yi1:yi2, xi1:xi2]
+        # A margin round the box, then grayscale, light-on-dark text turned
+        # dark-on-light and small crops enlarged; read as a block of lines
+        pad = max(4, int(0.08 * (yi2 - yi1)))
+        crop = rgb_image[max(0, yi1 - pad):min(h_img, yi2 + pad), max(0, xi1 - pad):min(w_img, xi2 + pad)]
         try:
-            text = pytesseract.image_to_string(crop).strip()
+            text = pytesseract.image_to_string(prepare_for_ocr(Image.fromarray(crop)), config="--psm 6").strip()
         except Exception:
             text = ""
         return text

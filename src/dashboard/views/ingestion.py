@@ -42,6 +42,7 @@ from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import components as ui                                              # noqa: E402
 import mail_merge                                                    # noqa: E402
+import poster_text                                                   # noqa: E402
 import pipeline                                                      # noqa: E402
 from aesthetic_renderer import DEFAULT_TYPOGRAPHY, _palette_from_centroids  # noqa: E402
 from schema_validation import FONT_WEIGHTS, validate_content, validate_typography  # noqa: E402
@@ -117,6 +118,16 @@ def _annotated(path: str, nodes: list) -> Image.Image:
 
 
 IMAGE_DROP_TYPES = ["png", "jpg", "jpeg", "webp"]
+
+
+@st.cache_data(show_spinner="Reading the poster's text (OCR)...")
+def _poster_lines(path: str, mtime: float) -> list:
+    """Readable lines of the master's text (poster_text.ocr_lines), from
+    Stage 0b's OCR of its text boxes."""
+    return poster_text.ocr_lines(path, ui.detect(path, mtime))
+
+
+MAX_REPEATS = 5    # the stress test: signature blocks overlap from six (notes §3.42; Chapter 5)
 
 
 def _content_keys(var: str, props: dict) -> list:
@@ -502,7 +513,11 @@ domain = target["meta"].get("domain_context")
 # and instantiated.
 nodes_key = f"nodes_{domain}"
 kept = [v for v in st.session_state.get(nodes_key, list(full_schema)) if v in full_schema] or list(full_schema)
-schema = {k: v for k, v in full_schema.items() if k in kept}
+# How many of each repeating group (signature blocks), 1 to MAX_REPEATS
+counts_key = f"counts_{domain}"
+counts = st.session_state.get(counts_key, {})
+schema = {k: (dict(v, instantiation_count=int(counts[k])) if k in counts else v)
+          for k, v in full_schema.items() if k in kept}
 target_meta = dict(target["meta"], variable_schema=schema)
 
 # ---------------------------------------------------------------------------
@@ -519,10 +534,16 @@ with card_content:
             for var, props in schema.items():
                 if props.get("structural_class") != "image_node":
                     for key in _content_keys(var, props):
-                        st.session_state[f"content_{domain}_{key}"] = str(sample.get(key, ""))
+                        st.session_state[f"content_{domain}_{key}"] = str(sample.get(key, sample.get(f"{key}_0", "")))
 
         st.button("", icon=":material/text_snippet:", key=f"sample_{domain}", on_click=_fill_sample,
                   help="Fill the fields with sample text")
+        lines = _poster_lines(master_path, os.path.getmtime(master_path)) if dna else []
+        with st.popover("", icon=":material/document_scanner:", disabled=not lines,
+                        help="The text read from the poster (OCR), to copy into any field"):
+            st.caption("Read from the master layout by OCR, top to bottom. Copy a line into any field.")
+            for line in lines:
+                st.code(line["text"], language=None)
         with st.popover("", icon=":material/upload_file:", help="Load a JSON payload, or a CSV for a mail merge"):
             payload_upload = st.file_uploader(
                 "A JSON payload fills the fields below. A CSV makes a mail merge: one layout per row, "
@@ -540,13 +561,31 @@ with card_content:
         except (ValueError, UnicodeDecodeError, AttributeError) as e:
             st.error(f"Could not read that JSON: {e}")
     # Fields in two columns: short ones pair up, a long one takes a row
+    # Suggestions from the poster's text (poster_text.suggest_fields): they
+    # fill empty fields once per poster; a new poster replaces the earlier
+    # poster's suggestions the designer hasn't changed
+    filled_key = f"poster_filled_{domain}"
+    if dna and st.session_state.get(f"poster_applied_{domain}") != dna["stem"]:
+        limits = {k: p.get("max_characters") for v, p in schema.items() if p.get("structural_class") == "text_node"
+                  for k in _content_keys(v, p)}
+        for key, old in st.session_state.get(filled_key, {}).items():
+            if st.session_state.get(f"content_{domain}_{key}") == old:
+                st.session_state[f"content_{domain}_{key}"] = ""
+        filled = {}
+        for key, value in poster_text.suggest_fields(lines, domain, limits).items():
+            if not st.session_state.get(f"content_{domain}_{key}"):
+                st.session_state[f"content_{domain}_{key}"] = filled[key] = value
+        st.session_state[filled_key] = filled
+        st.session_state[f"poster_applied_{domain}"] = dna["stem"]
+    from_poster = {k for k, v in st.session_state.get(filled_key, {}).items()
+                   if st.session_state.get(f"content_{domain}_{k}") == v}
     fields = []                                    # (key, label, long?, max_characters)
     base_content = {}                              # every field's value in the form
     examples = {}                                  # the sample text, shown as each field's hint
     for var, props in schema.items():
         count = props.get("instantiation_count", 1)
         for key in _content_keys(var, props):
-            example = examples[key] = str(sample.get(key, ""))
+            example = examples[key] = str(sample.get(key, sample.get(f"{key}_0", "")))
             wkey = f"content_{domain}_{key}"
             if props.get("structural_class") == "image_node":
                 st.session_state.setdefault(wkey, example)
@@ -581,10 +620,15 @@ with card_content:
                         st.markdown(f"**Row {number}:** " + html.escape("; ".join(errors)))
             st.button("", icon=":material/close:", key="merge_clear", type="tertiary", help="Stop the mail merge",
                       on_click=lambda: st.session_state.pop(merge_key, None))
-    if any(not str(base_content.get(k, "")).strip() for k, *_ in fields
-           if not (merge and k in merge["fields"])):
-        st.markdown('<div class="ts-note">An empty field shows as a placeholder, such as «Student Name», on '
-                    'the canvas; fill it in here or in Step 2.</div>', unsafe_allow_html=True)
+    empty = any(not str(base_content.get(k, "")).strip() for k, *_ in fields if not (merge and k in merge["fields"]))
+    note = []
+    if from_poster:
+        note.append(f"<b>{len(from_poster)} field{'s' if len(from_poster) > 1 else ''} filled from the poster's text "
+                    f"(OCR)</b>; check {'them' if len(from_poster) > 1 else 'it'}.")
+    if empty:
+        note.append("An empty field shows as a placeholder, such as «Student Name», on the canvas.")
+    if note:
+        st.markdown(f'<div class="ts-note">{" ".join(note)}</div>', unsafe_allow_html=True)
     rows, pending = [], []
     for field in fields:
         if field[2]:
@@ -609,10 +653,13 @@ with card_content:
                            help=f"Filled from {merge['source']} for each layout")
                     continue
                 hint = f"e.g. {examples[key]}" if examples.get(key) else ""
+                shown = f"{label} · from the poster" if key in from_poster else label
+                tip = "Read from the master layout by OCR; check it." if key in from_poster else None
                 if long:
-                    value = col.text_area(label, key=wkey, height=68, max_chars=max_chars, placeholder=hint)
+                    value = col.text_area(shown, key=wkey, height=68, max_chars=max_chars, placeholder=hint,
+                                          help=tip)
                 else:
-                    value = col.text_input(label, key=wkey, max_chars=max_chars, placeholder=hint)
+                    value = col.text_input(shown, key=wkey, max_chars=max_chars, placeholder=hint, help=tip)
                 # An empty field becomes a placeholder on the canvas, editable in Step 2
                 content[key] = value if value.strip() else mail_merge.placeholder(label, max_chars)
 
@@ -634,12 +681,27 @@ if drawer is not None:
         with st.expander(f"Layout elements · {len(schema)} of {len(full_schema)}", icon=":material/checklist:",
                          expanded=True), st.container(key="node_picks"):
             st.caption("Untick an element to leave it out of the layout.")
+            singles = [(v, p) for v, p in full_schema.items() if p.get("structural_class") != "repeating_group"]
+            groups = [(v, p) for v, p in full_schema.items() if p.get("structural_class") == "repeating_group"]
             cols = st.columns(2, gap="small")
-            for i, (var, props) in enumerate(full_schema.items()):
-                count = props.get("instantiation_count", 1)
-                cols[i % 2].checkbox(f"{_friendly(var)}{f' ×{count}' if count > 1 else ''}", value=var in kept,
-                                     key=f"nodecb_{domain}_{var}", on_change=_pick_nodes, args=(var,),
-                                     disabled=var in kept and len(kept) == 1)
+            for i, (var, props) in enumerate(singles):
+                cols[i % 2].checkbox(_friendly(var), value=var in kept, key=f"nodecb_{domain}_{var}",
+                                     on_change=_pick_nodes, args=(var,), disabled=var in kept and len(kept) == 1)
+
+            def _pick_count(var: str) -> None:
+                st.session_state[counts_key] = dict(st.session_state.get(counts_key, {}),
+                                                    **{var: int(st.session_state[f"nodecount_{domain}_{var}"])})
+
+            for var, props in groups:                  # a repeating group: how many, 1 to MAX_REPEATS
+                with st.container(horizontal=True, key=f"nodegroup_{var.strip('{}')}", vertical_alignment="center",
+                                  gap="small"):
+                    st.checkbox(_friendly(var), value=var in kept, key=f"nodecb_{domain}_{var}",
+                                on_change=_pick_nodes, args=(var,), disabled=var in kept and len(kept) == 1)
+                    st.number_input("How many", min_value=1, max_value=MAX_REPEATS, step=1,
+                                    value=int(counts.get(var, props.get("instantiation_count", 1))),
+                                    key=f"nodecount_{domain}_{var}", on_change=_pick_count, args=(var,),
+                                    disabled=var not in kept, label_visibility="collapsed", width=110,
+                                    help=f"1 to {MAX_REPEATS}: from six, the blocks overlap on the certificate")
 
         def _pick_gnn() -> None:
             st.session_state["use_gnn"] = st.session_state["gnn_toggle"]
@@ -669,7 +731,7 @@ if drawer is not None:
         if clicked:
             out_dir = os.path.join(ui.SESSIONS_DIR, f"{time.strftime('%Y%m%d_%H%M%S')}_{dna['stem']}_{domain}")
             payload_path = target["path"]
-            if len(schema) < len(full_schema):     # the payload cut down to the kept elements
+            if schema != full_schema:              # the payload cut down to the kept elements and counts
                 os.makedirs(out_dir, exist_ok=True)
                 payload_path = os.path.join(out_dir, os.path.basename(target["path"]))
                 with open(payload_path, "w", encoding="utf-8") as f:
