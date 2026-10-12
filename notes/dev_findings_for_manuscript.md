@@ -1101,7 +1101,8 @@ change:**
 - The rated layouts and every Chapter 4 number stand.
 - Without a style, the renderer's output is byte-identical to before.
 
-"p." is Manu 1210.1's page.
+"p." is Manu 1210.1's page unless the table says 1210.2 (`5825b47`, which
+applied H1 and H5).
 
 ### What was added
 
@@ -1134,8 +1135,8 @@ change:**
 
 | Page | Now | Note |
 |---|---|---|
-| p.56 (Figure 2's text) | logos and markers "each of which the designer could keep, remove, or replace" | Replace is now true for every tile. Remove is true for all except the background, which has no tick box. If H5's rewording was applied, it now understates; "kept, removed, or replaced (the background replaced only)" is exact. |
-| p.58 (Figure 3) | the screenshot shows the typography box open, with "Font family stack" | That control is now a font picker, and a Style section sits under the selected element. p.59's text stays true. A retake is optional. |
+| 1210.2 p.56 (Figure 2's text) | logos and markers "each of which the designer could keep or remove, with uploads for missed logos and a replacement title artwork" (H5 applied) | Now every tile can be replaced by dropping an image on it. The background could never be removed: it has no tick box. Exact: "each of which the designer could keep or replace by dropping an image on it, and remove, except the background". |
+| p.58 (Figure 3; 1210.2 p.59) | the screenshot shows the typography box open, with "Font family stack" | That control is now a font picker, and a Style section sits under the selected element. p.59's text stays true. A retake is optional. |
 | p.59 (Figure 3's text) | the right panel's controls | Doesn't mention the Style tools. Optional: "…a control for editing its text, its style (colour, weight, alignment; for pictures, replace, flip and opacity), and the choice between…" |
 | p.44 (Formula 3.9) | e_t "includes" moves, resizes, locks and text edits | A style change is another terminal event; "includes" already allows it. |
 | p.8 (Scope) | "merge … with external administrative datasets … to generate fully populated, variable-driven documents" | The CSV mail merge does this literally. It could be named here or under Phase 2. |
