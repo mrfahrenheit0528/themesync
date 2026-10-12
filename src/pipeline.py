@@ -454,7 +454,9 @@ def stage_gnn_inference(nodes: list, canvas_w: int, canvas_h: int,
     })
     predicted = False
 
-    if graph_data is not None:
+    # One stacked node has no neighbours to relate to (and no edges, which
+    # the model can't take): its start position stands (notes §3.54).
+    if graph_data is not None and len(stack) > 1:
         graph_data = graph_data.to(device)
         with torch.no_grad():
             predicted_coords = model(graph_data)

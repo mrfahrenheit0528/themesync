@@ -119,6 +119,13 @@ def _annotated(path: str, nodes: list) -> Image.Image:
 IMAGE_DROP_TYPES = ["png", "jpg", "jpeg", "webp"]
 
 
+def _content_keys(var: str, props: dict) -> list:
+    """A variable's content keys: {{Name}}, or {{Name}}_0, _1... for a
+    repeating group."""
+    count = props.get("instantiation_count", 1)
+    return [f"{var}_{i}" for i in range(count)] if count > 1 else [var]
+
+
 def _replaced(key: str):
     """The picture the designer dropped on tile `key` (its path), or None."""
     path = st.session_state.get(f"replaced_{key}")
@@ -487,9 +494,16 @@ if drawer is not None:
                  format_func=lambda label: label.split(" (")[0])
 
 target = formats[st.session_state["target_label"]]
-schema = target["meta"].get("variable_schema", {})
+full_schema = target["meta"].get("variable_schema", {})
 canvas_w, canvas_h = _canvas(target["meta"])
 domain = target["meta"].get("domain_context")
+# The elements the layout keeps: the target panel's checkboxes (notes §3.54).
+# The payload is cut down to them, so they are what is validated, filled in
+# and instantiated.
+nodes_key = f"nodes_{domain}"
+kept = [v for v in st.session_state.get(nodes_key, list(full_schema)) if v in full_schema] or list(full_schema)
+schema = {k: v for k, v in full_schema.items() if k in kept}
+target_meta = dict(target["meta"], variable_schema=schema)
 
 # ---------------------------------------------------------------------------
 # Content payload (right, bottom): two columns of fields
@@ -500,6 +514,15 @@ content = {}
 with card_content:
     with st.container(horizontal=True, key="content_head", vertical_alignment="center"):
         ui.card_title("edit_note", "Content Payload", _friendly(domain) if domain else "")
+
+        def _fill_sample() -> None:
+            for var, props in schema.items():
+                if props.get("structural_class") != "image_node":
+                    for key in _content_keys(var, props):
+                        st.session_state[f"content_{domain}_{key}"] = str(sample.get(key, ""))
+
+        st.button("", icon=":material/text_snippet:", key=f"sample_{domain}", on_click=_fill_sample,
+                  help="Fill the fields with sample text")
         with st.popover("", icon=":material/upload_file:", help="Load a JSON payload, or a CSV for a mail merge"):
             payload_upload = st.file_uploader(
                 "A JSON payload fills the fields below. A CSV makes a mail merge: one layout per row, "
@@ -519,19 +542,20 @@ with card_content:
     # Fields in two columns: short ones pair up, a long one takes a row
     fields = []                                    # (key, label, long?, max_characters)
     base_content = {}                              # every field's value in the form
+    examples = {}                                  # the sample text, shown as each field's hint
     for var, props in schema.items():
         count = props.get("instantiation_count", 1)
-        keys = [f"{var}_{i}" for i in range(count)] if count > 1 else [var]
-        for key in keys:
-            default = str(sample.get(key, ""))
+        for key in _content_keys(var, props):
+            example = examples[key] = str(sample.get(key, ""))
             wkey = f"content_{domain}_{key}"
-            st.session_state.setdefault(wkey, default)
-            base_content[key] = st.session_state[wkey]
             if props.get("structural_class") == "image_node":
-                content[key] = st.session_state[wkey]      # alt text only; the image is the logo
+                st.session_state.setdefault(wkey, example)
+                content[key] = base_content[key] = st.session_state[wkey]   # alt text only; the image is the logo
                 continue
+            st.session_state.setdefault(wkey, "")  # fields start empty (notes §3.54)
+            base_content[key] = st.session_state[wkey]
             label = _friendly(key) if count == 1 else f"{_friendly(var)} {int(key.rsplit('_', 1)[1]) + 1}"
-            long = ("\n" in default or props.get("max_characters", 0) > 80
+            long = ("\n" in example or props.get("max_characters", 0) > 80
                     or props.get("structural_class") == "repeating_group")
             fields.append((key, label, long, props.get("max_characters")))
     # A CSV: the mail merge (mail_merge.py), applied once per file
@@ -541,7 +565,7 @@ with card_content:
         try:
             st.session_state[merge_key] = mail_merge.build(
                 payload_upload.getvalue(), {k: (label, mx) for k, label, _, mx in fields}, base_content,
-                target["meta"], payload_upload.name)
+                target_meta, payload_upload.name)
         except ValueError as e:
             st.error(f"Mail merge: {e}")
     merge = st.session_state.get(merge_key)
@@ -557,6 +581,10 @@ with card_content:
                         st.markdown(f"**Row {number}:** " + html.escape("; ".join(errors)))
             st.button("", icon=":material/close:", key="merge_clear", type="tertiary", help="Stop the mail merge",
                       on_click=lambda: st.session_state.pop(merge_key, None))
+    if any(not str(base_content.get(k, "")).strip() for k, *_ in fields
+           if not (merge and k in merge["fields"])):
+        st.markdown('<div class="ts-note">An empty field shows as a placeholder, such as «Student Name», on '
+                    'the canvas; fill it in here or in Step 2.</div>', unsafe_allow_html=True)
     rows, pending = [], []
     for field in fields:
         if field[2]:
@@ -580,14 +608,17 @@ with card_content:
                     widget(label, value=content[key], disabled=True, key=f"merged_{wkey}",
                            help=f"Filled from {merge['source']} for each layout")
                     continue
+                hint = f"e.g. {examples[key]}" if examples.get(key) else ""
                 if long:
-                    content[key] = col.text_area(label, key=wkey, height=68, max_chars=max_chars)
+                    value = col.text_area(label, key=wkey, height=68, max_chars=max_chars, placeholder=hint)
                 else:
-                    content[key] = col.text_input(label, key=wkey, max_chars=max_chars)
+                    value = col.text_input(label, key=wkey, max_chars=max_chars, placeholder=hint)
+                # An empty field becomes a placeholder on the canvas, editable in Step 2
+                content[key] = value if value.strip() else mail_merge.placeholder(label, max_chars)
 
 # Pre-orchestration schema validation (Chapter 3, p.43)
 checks = {"typography": validate_typography(typography, canvas_w, canvas_h),
-          "content": validate_content(content, target["meta"])}
+          "content": validate_content(content, target_meta)}
 problems = [f"{name}: {e}" for name, v in checks.items() for e in v["errors"]]
 ready = dna is not None and not problems
 
@@ -596,11 +627,19 @@ ready = dna is not None and not problems
 # ---------------------------------------------------------------------------
 if drawer is not None:
     with drawer:
-        with st.expander(f"Required structural fields ({len(schema)})", icon=":material/schema:"):
-            st.markdown('<div class="bn-chips">' + "".join(
-                f'<span class="bn-chip">{props.get("instantiation_count", 1)}× {_friendly(var)} '
-                f'<i>{props.get("structural_class")}</i></span>' for var, props in schema.items()) + "</div>",
-                unsafe_allow_html=True)
+        def _pick_nodes(changed: str) -> None:
+            chosen = [v for v in full_schema if st.session_state.get(f"nodecb_{domain}_{v}", v in kept)]
+            st.session_state[nodes_key] = chosen or [changed]     # a layout keeps at least one element
+
+        with st.expander(f"Layout elements · {len(schema)} of {len(full_schema)}", icon=":material/checklist:",
+                         expanded=True), st.container(key="node_picks"):
+            st.caption("Untick an element to leave it out of the layout.")
+            cols = st.columns(2, gap="small")
+            for i, (var, props) in enumerate(full_schema.items()):
+                count = props.get("instantiation_count", 1)
+                cols[i % 2].checkbox(f"{_friendly(var)}{f' ×{count}' if count > 1 else ''}", value=var in kept,
+                                     key=f"nodecb_{domain}_{var}", on_change=_pick_nodes, args=(var,),
+                                     disabled=var in kept and len(kept) == 1)
 
         def _pick_gnn() -> None:
             st.session_state["use_gnn"] = st.session_state["gnn_toggle"]
@@ -629,8 +668,14 @@ if drawer is not None:
                                      "chain) and open Step 2.")
         if clicked:
             out_dir = os.path.join(ui.SESSIONS_DIR, f"{time.strftime('%Y%m%d_%H%M%S')}_{dna['stem']}_{domain}")
+            payload_path = target["path"]
+            if len(schema) < len(full_schema):     # the payload cut down to the kept elements
+                os.makedirs(out_dir, exist_ok=True)
+                payload_path = os.path.join(out_dir, os.path.basename(target["path"]))
+                with open(payload_path, "w", encoding="utf-8") as f:
+                    json.dump(target_meta, f, indent=2)
             session = pipeline.OrchestrationSession(
-                target["path"], template_image=master_path, content_data=content, typography=typography,
+                payload_path, template_image=master_path, content_data=content, typography=typography,
                 use_gnn=st.session_state["use_gnn"], output_dir=out_dir, logo_images=logo_images,
                 use_wordmark=use_wordmark, wordmark_path=wordmark_path, motif_paths=motif_paths,
                 detected_nodes=dna["nodes"], background_path=background_path,

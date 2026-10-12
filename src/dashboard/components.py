@@ -283,11 +283,11 @@ def font_preview_css() -> str:
     rules = []
     for label, (_, folder) in FONTS.items():
         faces = {(weight, style): path for path, weight, style in font_faces(folder)}
-        path = faces.get((600, "normal")) or faces.get((400, "normal"))
+        path = faces.get((400, "normal")) or faces.get((600, "normal"))
         if not path:
             continue
         b64 = base64.b64encode(_woff(path, label)).decode("ascii")
-        rules.append(f'@font-face {{font-family: "TS {folder}"; font-weight: 600; '
+        rules.append(f'@font-face {{font-family: "TS {folder}"; font-weight: 400; '
                      f'src: url(data:font/woff;base64,{b64}) format("woff");}}')
     return "\n".join(rules)
 
@@ -307,12 +307,14 @@ def font_picker(key: str, label: str, current: str) -> str:
     chosen = st.session_state[state_key]
     if chosen not in FONTS:
         chosen = st.session_state[state_key] = font_label(current)
-    css = [f'.st-key-{key}_font_btn button p {{font-family: "TS {FONTS[chosen][1]}", sans-serif; font-weight: 600;}}']
-    css += [f'.st-key-{key}_font_opt_{folder} button p {{font-family: "TS {folder}", sans-serif; font-weight: 600; '
+    css = [f'.st-key-{key}_font_btn button p {{font-family: "TS {FONTS[chosen][1]}", sans-serif;}}']
+    css += [f'.st-key-{key}_font_opt_{folder} button p {{font-family: "TS {folder}", sans-serif; '
             f'font-size: 1rem;}}' for _, folder in FONTS.values()]
-    st.markdown(f"<style>{font_preview_css()}\n{''.join(css)}</style>"
-                f'<div class="ts-wlabel">{html.escape(label)}</div>', unsafe_allow_html=True)
-    with st.container(key=f"{key}_font_btn"):
+    # The label and the button share one gapless container, so the button
+    # sits under its label as a selectbox does
+    with st.container(key=f"{key}_font_btn", gap=None):
+        st.markdown(f"<style>{font_preview_css()}\n{''.join(css)}</style>"
+                    f'<div class="ts-wlabel">{html.escape(label)}</div>', unsafe_allow_html=True)
         with st.popover(chosen, width="stretch", key=f"{key}_font_pop", on_change="rerun"):
             for option, (_, folder) in FONTS.items():
                 st.button(option, key=f"{key}_font_opt_{folder}", width="stretch",
@@ -575,11 +577,23 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
   [data-testid="stMarkdownContainer"]:has(> div[class^="ts-"], > div[class^="bn-"]) {margin-bottom: 0 !important;}
 /* The font picker (ui.font_picker): a label like a widget's, a button like
    a selectbox, and a list where each font is drawn in its own typeface */
-.ts-wlabel {font-size: .875rem; color: #31333f; line-height: 1.4; margin: 0 0 .25rem;}
-.st-key-card_type .ts-wlabel {font-size: .76rem; color: #3c4250; padding-top: .25rem;}
+.ts-wlabel {font-size: .875rem; color: #31333f; line-height: 1.6; margin: 0 0 .25rem;}
+.st-key-card_type .ts-wlabel {font-size: .76rem; color: #3c4250; margin-bottom: 7px; padding-top: 2px;}
+[class*="_font_btn"] [data-testid="stMarkdownContainer"]:has(> .ts-wlabel) {margin-bottom: 0 !important;}
+/* Measured from the selectbox beside it: #f4f5f7, 1px #e0e2e7, 8px corners,
+   40px tall, 14px regular text 8px in, a dark chevron on the right */
+[class*="_font_btn"] button {background: #f4f5f7 !important; border: 1px solid #e0e2e7 !important;
+  border-radius: 8px; height: 40px; min-height: 40px; padding: 0 .4rem 0 .5rem !important;
+  color: #0e1318 !important; box-shadow: none !important;}
+[class*="_font_btn"] button:hover, [class*="_font_btn"] button:focus-visible {border-color: #c3c8d0 !important;
+  color: #0e1318 !important;}
 [class*="_font_btn"] button > div {width: 100%; justify-content: space-between;}
 [class*="_font_btn"] button [data-testid="stMarkdownContainer"] {flex: 1; min-width: 0; text-align: left;}
-[class*="_font_btn"] button p {white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left;}
+[class*="_font_btn"] button p {white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left;
+  font-size: 14px; font-weight: 400;}
+[class*="_font_btn"] button > div > div:first-child {flex: 1; min-width: 0; display: flex;
+  justify-content: flex-start;}
+[class*="_font_btn"] button [data-testid="stIconMaterial"] {color: #31333f; font-size: 1.25rem;}
 [role="dialog"] [data-testid="stImage"] img {max-height: 66vh; object-fit: contain;}
 .ts-legend {display: flex; flex-wrap: wrap; gap: .25rem .6rem; font-size: .72rem; color: #5b6370;}
 .ts-legend i {display: inline-block; width: .6rem; height: .6rem; border-radius: 2px; margin-right: .25rem;}
@@ -591,6 +605,11 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
   scrollbar-width: thin; flex-wrap: nowrap; gap: .85rem; animation: ts-slide .2s ease-out;}
 @keyframes ts-slide {from {transform: translateX(32px); opacity: 0;} to {transform: none; opacity: 1;}}
 .st-key-ts_drawer [data-testid="stRadio"] label p {font-weight: 600;}
+/* The layout's elements (notes §3.54): two compact columns of checkboxes */
+.st-key-node_picks {gap: .3rem !important;}
+.st-key-node_picks [data-testid="stColumn"] > [data-testid="stVerticalBlock"] {gap: .15rem !important;}
+.st-key-node_picks [data-testid="stCheckbox"] label p {font-size: .8rem;}
+.st-key-node_picks [data-testid="stCaptionContainer"] {margin-bottom: -.1rem;}
 .st-key-ts_drawer > [data-testid="stLayoutWrapper"]:has(> .st-key-drawer_cta) {margin-top: auto;}
 .st-key-drawer_cta {border-top: 1px solid #eef0f3; padding-top: .85rem; gap: .5rem;}
 .st-key-drawer_cta button {min-height: 2.9rem; font-size: 1rem; font-weight: 650;}
