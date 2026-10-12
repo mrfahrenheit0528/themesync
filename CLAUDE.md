@@ -29,7 +29,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.55).
+§3.56).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
@@ -91,6 +91,10 @@ Read first: `notes/system_development_progress.md`, then the tail of
     - (§3.55) content suggested from the poster's text (`poster_text.py`,
       OCR) into empty fields, marked "from the poster";
     - (§3.55) signature blocks take a count of 1 to 5.
+    - (§3.56) Step 2: the selected text's own font and weight applied at
+      once (the whole design's typography is the collapsed "All text");
+      add text or a picture, delete with the button or the Delete key
+      (`add_element`, `remove_element`); canvas notes fade.
   - **Step 3:** the evaluated layout is fixed on the left at the window's
     height; the report (intro, headline tiles, cards) scrolls on the right
     in `report_scroll`; the page itself doesn't scroll (§3.39). The
@@ -159,6 +163,8 @@ Read first: `notes/system_development_progress.md`, then the tail of
   - Chapter 4 runs pp.76–103, Chapter 5 pp.104–107, the Appendices from
     p.108.
   - **Pre-oral defense: 2026-10-13.**
+  - **The manuscript is printed** (user, 2026-10-13): no more rewording of
+    its text. Record system changes in the notes only.
   - The TA no longer checks the manuscript (from 2026-10-12), so no more
     "for checking" messages.
   - Checked: no PENDING, `??`, "et al." or placeholder text. SURF appears

@@ -3889,3 +3889,54 @@ poster, and for counts of repeating elements (`7136f92`).
   - this section's browser test (both formats; no page or panel scroll at
     1366×768);
   - §3.54's test and the mail merge again.
+
+### 3.56 Step 2: canvas notes fade; typography per selected text; add and delete elements (2026-10-13)
+
+The user tested Step 2 and asked for three changes (`5f64d6e`). The
+manuscript is printed (user, 2026-10-13), so these are recorded here only.
+
+- **A canvas note stayed over the canvas.** Double-clicking a non-text
+  element showed "… has no text to edit", which stayed until new data
+  arrived. Every canvas message now fades (3.5 s for a note, 8 s for a
+  warning or error), and a new selection clears notes.
+- **Typography per selected text, applied at once.**
+  - The Style section gives the selected text its own font (the font
+    picker) and weight. Both go through `set_style` (keys `font`,
+    `weight`, validated against `FONT_WEIGHTS`), like its colour, italic
+    and alignment. The Bold toggle became the weight.
+  - Size follows the box: resize it and the text refits. A free size could
+    overflow.
+  - The whole design's typography is a collapsed "All text" section,
+    applied at once and still schema-validated (`set_typography`). The
+    "Validate and apply typography" button is gone.
+  - The canvas loads the faces of every family on it, per-element fonts
+    included.
+- **Add and delete elements** (`add_element`, `remove_element`).
+  - **Added text** joins the stack after the format's own elements, Soft,
+    so the solver places it and the others re-flow. Its words are content
+    and stay editable.
+  - **An added picture** floats like a motif, outside the solver, in the
+    largest empty vertical gap (else small, top right). In the stack it
+    had overflowed a full certificate.
+  - **Delete:** the panel's button or the canvas's Delete key; the others
+    re-flow.
+    - Deleting a motif keeps the remaining motifs in place: motif ids
+      follow their placement slot, so re-placing would bring it back.
+    - F1's required list leaves out deleted elements (`layout_report`).
+  - **The session records added and deleted elements** (`added`,
+    `removed`, in each state's `elements`).
+    - `_resolve` builds the stack from the GNN's nodes less the deleted
+      ones, plus the added text. Added pictures are carried as they are.
+    - A candidate switch carries them over and re-solves.
+    - Undo, redo and restore bring them back.
+  - **Without any of it nothing changes:** 12 of 12 candidates rendered
+    byte-identical to the committed renderer, and restoring the opening
+    state gives the opening SVG byte for byte.
+  - Add text uses a form, so the typed words reach the button. The Add
+    popovers close after adding.
+- **Checked:**
+  - the 12 tests;
+  - a session-level test (font and weight, added text and picture without
+    overlaps, deletes, candidate switch, undo, redo, restore, F1 1.0);
+  - the browser test for all of it, plus the fonts and Style-tools tests
+    again; no exceptions.
