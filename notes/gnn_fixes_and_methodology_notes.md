@@ -3700,3 +3700,85 @@ event ID's header doesn't shrink to its box's width, and the signature
 count has no cap. Fixing the header would change how two rated event IDs
 render, against Chapter 4's "the system was not changed after the rating".
 It is left for the group to decide.
+
+### 3.53 Five dashboard features before the pre-oral defense (2026-10-12/13)
+
+The user asked for five changes to the dashboard, evaluated first and then
+built that night. None changes how a layout is generated, solved or scored:
+the rated layouts, the fitness and Chapter 4's numbers stand. Rollback
+point: the tag `pre-oral-demo` (`b18bc6b`).
+
+- **Fonts that exist everywhere** (`95e88d3`).
+  - **The bug:** of Step 1's six fonts, only Montserrat existed. Lato, Open
+    Sans, Playfair Display and Merriweather silently fell back to another
+    font. Times New Roman exists on Windows only and can't be bundled.
+  - **The fix:** five OFL families from Google Fonts' repository, in
+    `assets/fonts/`, built by `src/renderers/build_fonts.py`. Tinos
+    (metrically compatible with Times New Roman) replaces Times New Roman.
+    - Variable fonts are cut into static faces with fontTools' instancer.
+      Every face is subset to Latin script; together they take 4.7 MB.
+    - Every family is at most as wide as Montserrat on certificate text
+      (≤ 1.01×), so text fitting is no worse.
+  - **Linux:** fontconfig reads `assets/fonts/`, as it already did for
+    Montserrat.
+  - **Windows:** Cairo 1.18 reads fonts through DirectWrite, which ignores
+    both fontconfig and process-private fonts (`FR_PRIVATE`; tested).
+    - So `rasterize._register_windows_fonts` adds each family Windows lacks
+      for the signed-in session (`AddFontResourceExW`, flags 0). No copy,
+      no registry entry, no admin rights; it lasts until sign-out.
+    - An installed family (the user's Montserrat) is left alone, and its
+      output is byte-identical.
+    - DirectWrite takes new fonts in a moment late, and Cairo keeps the
+      first list it reads. Rendering at once drew plain Tinos with its
+      italic face. So the first render waits until 2 s after start-up.
+  - **The picker:** `ui.font_picker` (Steps 1 and 2) shows each font in its
+    own typeface. The cut-down faces are a few KB each.
+    - Step 2's free-text "Font family stack" field is gone.
+    - The canvas now loads the chosen family's faces, not only
+      Montserrat's.
+- **Mail merge** (`81cfb95`, `src/dashboard/mail_merge.py`).
+  - **The CSV:** Step 1's content upload takes it. Columns are matched to the
+    format's fields by name (key or label; "Signature Blocks 1" is the
+    first block).
+  - **Row checks:** each row goes through the content schema (p.47); a row
+    that fails is listed and left out.
+  - **One layout to edit:** merged fields show placeholders («Participant
+    Name») and aren't text-editable (`OrchestrationSession.merge`,
+    `canvas_text`).
+  - **The output:** Step 2's Download menu builds a ZIP with one PNG (2×)
+    or PDF per row (`render_merged`). The layout isn't re-solved; the
+    renderer fits each row's words to their boxes.
+- **Style tools** in Step 2's right panel (`5d16326`).
+  - **For text:** the poster's palette as swatches first, then any colour,
+    Bold/Italic and alignment, with a warning under 4.5:1 contrast.
+  - **For a picture** (logos, title artwork, motifs): Replace, Flip and
+    Opacity. Reset style applies to both.
+  - **In the session:** `OrchestrationSession.set_style` makes each change
+    one state (event type `style`), a re-draw like a typography change.
+    Restore, undo and redo bring styles back (`_snapshot_at`). Styles are
+    kept per element, so they survive moves, re-solves and candidate
+    switches.
+  - **In the renderer:** `_apply_style` styles a node after drawing it.
+    Without styles, 12 of 12 candidates (both formats, CTC poster)
+    rendered byte-identical to the committed renderer.
+  - **Not offered:**
+    - rotate, crop and filters: the solver works with upright boxes, and
+      Cairo ignores most filters;
+    - a per-element font size, which can overflow the auto-fit.
+- **Drop an image on a Step 1 tile to replace it** (`f2a26b4`).
+  - **The tiles:** logos, background, title artwork and motifs each carry a
+    transparent upload area over the picture; ↺ restores the extracted
+    image.
+  - **The background:** it goes to the session's new optional
+    `background_path`, and the candidates' legibility is scored against
+    it.
+  - **Layout:** Step 1 still fits 1366×768. Streamlit's uploader has a
+    built-in min-width of 224 px, so the CSS overrides it.
+- **Checked:**
+  - the 12 tests after each feature;
+  - browser tests (Edge, Playwright) for each feature, rerun together on
+    the final code, with §3.52's checks: no exceptions, no page scroll.
+- **For the manuscript** (dev findings, section I):
+  - p.56's "keep, remove, or replace" is now true for every tile (H5);
+  - Figure 3's typography box now shows a font picker, not a text field;
+  - the Style tools and the mail merge aren't described anywhere.

@@ -1,9 +1,11 @@
 # Findings from system development, for the manuscript chat
 
-> **Start here (2026-10-12):** section H, at the end, checks the final
-> manuscript, Manu 1210.1, against the system: five wording items (H1–H5),
-> nothing that changes a result. Section G (2026-10-10) was the list for
-> Manu 1010.1, and it is applied. Sections A–F are the detail behind both.
+> **Start here (2026-10-13):** section I, at the end, lists five dashboard
+> features added after Manu 1210.1 (fonts, mail merge, Style tools,
+> drop-to-replace). Nothing in the manuscript has to change; the table there
+> lists optional touches. Section H (2026-10-12) checks Manu 1210.1 against
+> the system: five wording items (H1–H5). Section G (2026-10-10) was the
+> list for Manu 1010.1, and it is applied. Sections A–F are the detail.
 
 The system-development chat checked the revised manuscript against the
 code on 2026-10-09:
@@ -1087,3 +1089,58 @@ replacement title artwork".
   the 348 re-draws, and 10,788 elements (23% unmapped) all match.
 - **Chapter 5's** numbers are Chapter 4's (0.0879 against 0.0855 is the
   mean of Table 13's two formats).
+
+---
+
+## I. Five dashboard features added after Manu 1210.1 — 2026-10-13
+
+The user asked for five dashboard features the night before the pre-oral
+defense; they're in notes §3.53. **Nothing in the manuscript has to
+change:**
+- None of them changes how a layout is generated, solved or scored.
+- The rated layouts and every Chapter 4 number stand.
+- Without a style, the renderer's output is byte-identical to before.
+
+"p." is Manu 1210.1's page.
+
+### What was added
+
+1. **Fonts that exist everywhere.**
+   - **The bug fixed:** Step 1 offered six fonts, but only Montserrat
+     existed; the other choices silently fell back to another font.
+   - **Now:** Lato, Open Sans, Playfair Display and Merriweather ship with
+     the system, and Tinos replaces Times New Roman. They render the same
+     on the server and on Windows.
+   - **The picker:** in Steps 1 and 2, each font is shown in its own
+     typeface. Step 2's free-text "Font family stack" field is gone.
+2. **Mail merge.**
+   - Step 1 takes a CSV whose columns name content fields (names, roles,
+     anything else).
+   - Each row is checked against the content schema, and failing rows are
+     left out.
+   - The designer edits one layout, with placeholders such as «Participant
+     Name».
+   - Step 2's Download menu gives a ZIP with one PNG or PDF per row.
+3. **Style tools in Step 2's right panel.**
+   - **For text:** colour (the poster's palette first), bold, italic and
+     alignment, with a contrast warning.
+   - **For pictures:** replace, flip and opacity.
+   - **Each change is one state in the chain** (a re-draw, like a
+     typography change), so undo and the State Timeline cover it.
+4. **Drop an image on a Step 1 tile to replace it:** logos, the
+   background, the title artwork and motifs.
+
+### Where the manuscript touches them (all optional)
+
+| Page | Now | Note |
+|---|---|---|
+| p.56 (Figure 2's text) | logos and markers "each of which the designer could keep, remove, or replace" | Replace is now true for every tile. Remove is true for all except the background, which has no tick box. If H5's rewording was applied, it now understates; "kept, removed, or replaced (the background replaced only)" is exact. |
+| p.58 (Figure 3) | the screenshot shows the typography box open, with "Font family stack" | That control is now a font picker, and a Style section sits under the selected element. p.59's text stays true. A retake is optional. |
+| p.59 (Figure 3's text) | the right panel's controls | Doesn't mention the Style tools. Optional: "…a control for editing its text, its style (colour, weight, alignment; for pictures, replace, flip and opacity), and the choice between…" |
+| p.44 (Formula 3.9) | e_t "includes" moves, resizes, locks and text edits | A style change is another terminal event; "includes" already allows it. |
+| p.8 (Scope) | "merge … with external administrative datasets … to generate fully populated, variable-driven documents" | The CSV mail merge does this literally. It could be named here or under Phase 2. |
+| H1 (sent 2026-10-12) | edits survive "global theme updates" | Styles, like typography, now survive candidate switches. Moves and resizes still don't carry over to another candidate. |
+
+**For the defense:** these features came after the evaluation. If the
+panel asks why the manuscript doesn't describe them, that's the answer.
+The experts rated layouts made without them.

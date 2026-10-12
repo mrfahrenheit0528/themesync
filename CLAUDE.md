@@ -29,7 +29,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.52).
+§3.53).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
@@ -74,6 +74,16 @@ Read first: `notes/system_development_progress.md`, then the tail of
     - The canvas renders in a shadow DOM: test it with Playwright locators,
       not `document.querySelector`.
   - The top bar is pinned, with Streamlit's » and ⋮ inside it.
+  - **Added 2026-10-13, after the evaluation** (§3.53, dev findings I;
+    rollback tag `pre-oral-demo`). None changes generation or scoring:
+    - a font picker that shows each font in its typeface (Steps 1 and 2),
+      over six bundled families;
+    - a CSV mail merge: `mail_merge.py`, `OrchestrationSession.merge`,
+      a ZIP from Step 2's Download menu;
+    - Style tools in Step 2's right panel (`set_style`, event type
+      `style`);
+    - drop an image on a Step 1 tile to replace it (`background_path` for
+      the background).
   - **Step 3:** the evaluated layout is fixed on the left at the window's
     height; the report (intro, headline tiles, cards) scrolls on the right
     in `report_scroll`; the page itself doesn't scroll (§3.39). The
@@ -341,6 +351,16 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
   `decor._decoded`, `_covered`; §3.47). A file rewritten in place is read
   again. The output is byte-identical to the uncached code (checked on the
   64 rated runs and 1,360 edits).
+- **Fonts live in `assets/fonts/`** (Montserrat plus five OFL families
+  built by `src/renderers/build_fonts.py`; §3.53).
+  - Linux reads them through fontconfig.
+  - On Windows, Cairo reads fonts through DirectWrite, so `rasterize`
+    registers the families Windows lacks for the session at import. It
+    skips installed ones, and the first render waits 2 s for DirectWrite.
+  - Add a family to `ui.FONTS` and rebuild with the script.
+- **Browser tests upload a copy of the poster from outside
+  `data/raw/dashboard_uploads/`.** Re-uploading a file from there saves a
+  duplicate (`X_hash_hash.jpg`). Delete any that appear.
 - **Cairo runs on one thread** (`rasterize.on_cairo_thread`).
   - On Windows, Tesseract's Cairo DLL segfaults when a second thread
     renders, and Streamlit runs every rerun on a new thread. The dashboard
