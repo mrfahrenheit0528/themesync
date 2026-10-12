@@ -613,6 +613,13 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
   height: calc(100vh - 110px); min-height: 520px; overflow-y: auto; scrollbar-width: thin;
   flex: none !important; flex-wrap: nowrap; gap: .55rem;}
 .st-key-ts_panel > * {flex-shrink: 0;}
+/* Style tools (notes §3.53): colour swatches as round buttons */
+[class*="st-key-swatches_"] {flex-wrap: wrap !important; gap: .4rem !important;}
+[class*="st-key-sw_"] button {width: 1.75rem; height: 1.75rem; min-height: 1.75rem !important; padding: 0;
+  border-radius: 50%; border: 1.5px solid #d0d5dd;}
+[class*="st-key-sw_"] button p {font-size: 0 !important;}
+[class*="st-key-sw_"] button:hover {box-shadow: 0 0 0 2px #fff, 0 0 0 4px #e8735a;}
+[class*="st-key-swatches_"] [data-testid="stColorPicker"] {width: auto;}
 .st-key-sel_head {flex-wrap: nowrap !important; align-items: center;}
 .st-key-sel_head button {min-height: 2.1rem; padding: .15rem .5rem;}
 .st-key-sel_head > :last-child {flex: 1 1 auto; min-width: 0;}

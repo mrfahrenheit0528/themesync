@@ -4,6 +4,7 @@ import functools
 import io
 import json
 import os
+import re
 import textwrap
 from xml.sax.saxutils import escape
 
@@ -347,6 +348,7 @@ class AestheticSVGRenderer:
         logo_row_paths: list = None,
         style_kit: dict = None,
         typography: dict = None,
+        styles: dict = None,
     ):
         self.canvas_w = float(canvas_width)
         self.canvas_h = float(canvas_height)
@@ -387,6 +389,12 @@ class AestheticSVGRenderer:
 
         # Content mapping
         self.mock_data = mock_data or default_content(domain_context)
+
+        # The designer's per-element styles from Step 2 (node id → {fill,
+        # bold, italic, align, opacity, flip, image}); applied after a node
+        # is drawn, so an unstyled node renders as before (notes §3.53).
+        self.styles = styles or {}
+        self.style_contrast = {}   # node id → its styled text colour's contrast, per render
 
     def _clean_node_id(self, node_id: str) -> str:
         return self.mock_data.get(
@@ -767,6 +775,65 @@ class AestheticSVGRenderer:
     # Output
     # ------------------------------------------------------------------
 
+    # ------------------------------------------------------------------
+    # The designer's styles (Step 2's Style tools)
+    # ------------------------------------------------------------------
+
+    def _apply_style(self, node: dict, elements: list) -> list:
+        """A node's drawn elements with the designer's style: a replacement
+        picture; colour, bold, italic and alignment on its text (the shadow
+        copies keep their colour); opacity and a horizontal flip on the
+        group. A node without a style comes back unchanged."""
+        style = self.styles.get(node["node_id"])
+        if not style:
+            return elements
+        x, y, w, h = (float(v) for v in node["bbox"])
+        if style.get("image"):
+            uri = _load_image(style["image"], max_side=1024)[0]
+            if uri:
+                elements = [f'<image x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
+                            f'preserveAspectRatio="xMidYMid meet" xlink:href="{uri}" />']
+        if any(k in style for k in ("fill", "bold", "italic", "align")):
+            shaped = any(e.startswith("<rect") for e in elements)          # a pill or band behind the text
+            elements = [self._style_text(e, style, x, w, shaped) if e.startswith("<text") else e
+                        for e in elements]
+            if style.get("fill"):
+                nid = node["node_id"]
+                under = (self.palette["card_bg"] if "Participant_Name" in nid
+                         else self.palette["band"] if "Participant_Role" in nid
+                         else _hex_mean(self._raster, [x, y, w, h]) if self._raster is not None
+                         else self.palette["background"])
+                self.style_contrast[nid] = round(_contrast_ratio(style["fill"], under), 2)
+        wrap = []
+        if style.get("flip"):
+            wrap.append(f'transform="translate({2 * x + w:.1f},0) scale(-1,1)"')
+        if style.get("opacity") is not None and float(style["opacity"]) < 1:
+            wrap.append(f'opacity="{float(style["opacity"]):.2f}"')
+        return [f'<g {" ".join(wrap)}>'] + elements + ["</g>"] if wrap else elements
+
+    _ATTR = re.compile(r'\s([a-z-]+)="([^"]*)"')
+    _ANCHOR = {"left": "start", "center": "middle", "right": "end"}
+
+    def _style_text(self, element: str, style: dict, x: float, w: float, shaped: bool) -> str:
+        head, rest = element.split(">", 1)
+        attrs = dict(self._ATTR.findall(head))
+        shadow = attrs.get("fill") == "#000000" and attrs.get("fill-opacity") == "0.45"
+        if style.get("fill") and not shadow:
+            attrs["fill"] = style["fill"]
+        if "bold" in style:
+            attrs["font-weight"] = "700" if style["bold"] else "400"
+        if "italic" in style:
+            attrs["font-style"] = "italic" if style["italic"] else "normal"
+        anchor = self._ANCHOR.get(style.get("align"))
+        if anchor:
+            pad = 0.06 * w if shaped else 0.0
+            at = {"start": x + pad, "middle": x + w / 2.0, "end": x + w - pad}
+            old = attrs.get("text-anchor", "start")
+            old_at = {"start": x if not shaped else x + pad, "middle": x + w / 2.0, "end": x + w}[old]
+            attrs["x"] = f"{float(attrs['x']) + at[anchor] - old_at:.1f}"
+            attrs["text-anchor"] = anchor
+        return "<text " + " ".join(f'{k}="{v}"' for k, v in attrs.items()) + ">" + rest
+
     def render_nodes(self, nodes: list, output_path: str, with_border: bool = True,
                      archetype: dict = None) -> str:
         """
@@ -792,7 +859,7 @@ class AestheticSVGRenderer:
                     if elements else [])
 
         for node in decor:
-            svg_elements.extend(group(node, self._render_decor(node)))
+            svg_elements.extend(group(node, self._apply_style(node, self._render_decor(node))))
 
         for node in content_nodes:
             x, y, w, h = node['bbox']
@@ -805,7 +872,7 @@ class AestheticSVGRenderer:
                 elements = self._render_signature_block(x, y, w, h, content)
             else:
                 elements = self._render_text_node(x, y, w, h, node_id, content)
-            svg_elements.extend(group(node, elements))
+            svg_elements.extend(group(node, self._apply_style(node, elements)))
 
         svg_content = (
             f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '

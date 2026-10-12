@@ -138,6 +138,85 @@ def _candidate(session, cand: dict, rank: int, png: str, active: bool) -> None:
 # ---------------------------------------------------------------------------
 
 actions = ui.enter_step(2, ui.design_name(st.session_state.get("orch")))   # no layout: back to Step 1
+ALIGN_ICONS = {"left": ":material/format_align_left:", "center": ":material/format_align_center:",
+               "right": ":material/format_align_right:"}
+
+
+def _style_tools(session, node: dict, state: dict) -> None:
+    """The selected element's Style tools (notes §3.53): a text colour (the
+    poster's palette first), bold, italic and alignment for text; replace,
+    flip and opacity for a picture. Each change is one state in the chain
+    and only re-draws the canvas, like a typography change."""
+    nid, sid = node["node_id"], state["state_id"]
+    kind = node.get("structural_class", "text_node")
+    style = session.styles.get(nid, {})
+    picture = kind in ("image_node", "decor") or ("Event_Title" in nid and bool(session.style_kit.get("wordmark")))
+    _section("Style")
+
+    def apply(changes: dict) -> None:
+        try:
+            new = session.set_style(nid, changes)
+        except (KeyError, ValueError) as e:
+            st.session_state["style_error"] = str(e.args[0]) if e.args else str(e)
+            return
+        st.session_state["flash"] = f"{new['state_id']}: {new['event']['summary']}"
+
+    if picture:
+        c1, c2 = st.columns(2, gap="small")
+        with c1.popover("Replace", icon=":material/add_photo_alternate:", width="stretch"):
+            up = st.file_uploader("A picture for this element (transparent PNGs look best)",
+                                  type=["png", "jpg", "jpeg", "webp"], key=f"img_{sid}")
+        c2.button("Flip", icon=":material/flip:", width="stretch", key=f"flip_{sid}",
+                  type="primary" if style.get("flip") else "secondary", help="Mirror it left to right",
+                  on_click=apply, args=({"flip": not style.get("flip")},))
+        st.slider("Opacity", 0.1, 1.0, float(style.get("opacity", 1.0)), 0.05, key=f"op_{sid}",
+                  on_change=lambda: apply({"opacity": st.session_state[f"op_{sid}"]
+                                           if st.session_state[f"op_{sid}"] < 1 else None}))
+        if up is not None:
+            apply({"image": ui.save_upload(up, prefix="element_")})
+            st.rerun()
+    else:
+        palette = session.palette
+        extracted = (session.ingestion or {}).get("palette_hex") or []
+        swatches = list(dict.fromkeys(c.upper() for c in [palette["primary"], palette["accent"], palette["muted"],
+                                                          *extracted, "#FFFFFF", "#000000"]))[:8]
+        css = "".join(f".st-key-sw_{sid}_{i} button {{background: {c} !important;}}" for i, c in enumerate(swatches))
+        st.markdown(f'<style>{css}</style><div class="ts-wlabel">Text colour · the poster’s palette first</div>',
+                    unsafe_allow_html=True)
+        with st.container(horizontal=True, key=f"swatches_{sid}", gap="small", vertical_alignment="center"):
+            for i, c in enumerate(swatches):
+                st.button(c, key=f"sw_{sid}_{i}", help=c, on_click=apply, args=({"fill": c},))
+            st.color_picker("Custom colour", value=style.get("fill") or palette["primary"], key=f"cp_{sid}",
+                            label_visibility="collapsed", help="Any colour",
+                            on_change=lambda: apply({"fill": st.session_state[f"cp_{sid}"].upper()}))
+
+        def bold_italic() -> None:
+            chosen = set(st.session_state[f"bi_{sid}"] or [])
+            changes = {key: name in chosen for name, key in (("Bold", "bold"), ("Italic", "italic"))
+                       if (name in chosen) != bool(style.get(key))}
+            if changes:
+                apply(changes)
+
+        b_col, a_col = st.columns([1, 1.15], gap="small")
+        with b_col:
+            st.segmented_control("Text style", ["Bold", "Italic"], selection_mode="multi", key=f"bi_{sid}",
+                                 default=[n for n, k in (("Bold", "bold"), ("Italic", "italic")) if style.get(k)],
+                                 on_change=bold_italic)
+        with a_col:
+            st.segmented_control("Alignment", list(ALIGN_ICONS), format_func=ALIGN_ICONS.get, key=f"al_{sid}",
+                                 default=style.get("align"),
+                                 on_change=lambda: apply({"align": st.session_state[f"al_{sid}"]}))
+        ratio = session.style_contrast.get(nid)
+        if style.get("fill") and ratio is not None and ratio < 4.5:
+            st.caption(f":material/warning: Contrast {ratio:.1f}:1 with what's behind it; "
+                       "text needs 4.5:1 to read well (WCAG 2.1).")
+    if style:
+        st.button("Reset style", icon=":material/format_color_reset:", key=f"rs_{sid}", width="stretch",
+                  help="Back to the layout's own style", on_click=apply, args=({k: None for k in style},))
+    if "style_error" in st.session_state:
+        st.error(st.session_state.pop("style_error"))
+
+
 def _mail_merge_download(session, state: dict) -> None:
     """The Download menu's mail merge: the current layout once per CSV row
     (mail_merge.py), as PNG or PDF files in a ZIP, built on request."""
@@ -212,7 +291,7 @@ with canvas_col:
     # The thumbnails are drawn with the canvas's current words and typography,
     # so a text edit, undo or restore that changes either redraws them.
     thumbs_key = (id(session), json.dumps(session.typography, sort_keys=True),
-                  json.dumps(session.content(), sort_keys=True))
+                  json.dumps(session.content(), sort_keys=True), json.dumps(session.styles, sort_keys=True))
     cached = st.session_state.get("orch_thumbs")
     if not cached or cached["key"] != thumbs_key or "uris" not in cached:
         with st.spinner("Rendering the candidates..."):
@@ -284,6 +363,8 @@ with panel_col, st.container(key="ts_panel"):
             _flash(session.apply_event("lock-toggle", node["node_id"], hard=not hard))
     st.caption("A moved or resized element becomes Hard: the solver keeps it exactly there and re-flows "
                "the Soft ones around it (Formula 3.10).")
+    if node:
+        _style_tools(session, node, state)
 
     _section("Typography")
     t = session.typography

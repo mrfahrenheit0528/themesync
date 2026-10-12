@@ -49,6 +49,7 @@ import copy
 import functools
 import json
 import os
+import re
 import sys
 import time
 import torch
@@ -652,6 +653,11 @@ class OrchestrationSession:
         # canvas, aren't text-editable, and take each row's words in
         # render_merged. None: no merge (notes §3.53).
         self.merge = None
+        # The designer's per-element styles (Step 2's Style tools): node id →
+        # {fill, bold, italic, align, opacity, flip, image}. Each change is a
+        # state; restore, undo and redo bring the styles back with it.
+        self.styles = {}
+        self.style_contrast = {}          # styled text's contrast in the last render
         self.rendered_path = os.path.join(output_dir, f"ThemeSync_{self.stem}_populated.svg")
         self.chain_path = os.path.join(output_dir, f"ThemeSync_{self.stem}_state_chain.json")
 
@@ -831,6 +837,7 @@ class OrchestrationSession:
             logo_row_paths=self.logos.get("row"),
             style_kit=self.style_kit,
             typography=self.typography,
+            styles=self.styles,
         )
 
     @staticmethod
@@ -839,7 +846,10 @@ class OrchestrationSession:
 
     def render(self, nodes: list, path: str, variation: dict = None) -> str:
         variation = variation or (self.chain.current or {}).get("variation")
-        return self.renderer().render_nodes(nodes, path, archetype=self.archetype_of(variation))
+        renderer = self.renderer()
+        out = renderer.render_nodes(nodes, path, archetype=self.archetype_of(variation))
+        self.style_contrast = renderer.style_contrast
+        return out
 
     def render_merged(self, values: dict, path: str) -> str:
         """The current layout with one mail-merge row's words in its merged
@@ -986,8 +996,8 @@ class OrchestrationSession:
         old = self.chain.states[index]
         if _label is None:
             self._mark()
-        self.content_data, self.typography = self._snapshot_at(index)
-        extra = {"typography": dict(self.typography)}
+        self.content_data, self.typography, self.styles = self._snapshot_at(index)
+        extra = {"typography": dict(self.typography), "styles": copy.deepcopy(self.styles)}
         if self.content_data is not None:
             extra["content"] = dict(self.content_data)
         state = self.chain.append(_label or f"Restored {old['state_id']}",
@@ -1000,20 +1010,22 @@ class OrchestrationSession:
         return state
 
     def _snapshot_at(self, index: int) -> tuple:
-        """(content, typography) in effect at state `index`: the latest text
-        edit, typography change or restore at or before it, else the
-        session's initial values."""
-        content = typography = None
+        """(content, typography, styles) in effect at state `index`: the
+        latest text edit, typography change, style change or restore at or
+        before it, else the session's initial values."""
+        content = typography = styles = None
         for s in reversed(self.chain.states[:index + 1]):
             if content is None and s.get("content") is not None:
                 content = s["content"]
             if typography is None:
                 typography = s.get("typography") or (s["event"].get("typography")
                                                      if s["event"].get("type") == "typography" else None)
-            if content is not None and typography is not None:
+            if styles is None and s.get("styles") is not None:
+                styles = s["styles"]
+            if content is not None and typography is not None and styles is not None:
                 break
         return (copy.deepcopy(content if content is not None else self._initial_content),
-                dict(typography or self._initial_typography))
+                dict(typography or self._initial_typography), copy.deepcopy(styles or {}))
 
     # -- undo / redo (Figure 3's canvas: Ctrl+Z, Ctrl+Shift+Z) -------------
 
@@ -1092,6 +1104,56 @@ class OrchestrationSession:
                                   current["nodes"], fitness=current.get("fitness"),
                                   candidate_id=current.get("candidate_id"),
                                   variation=current.get("variation"))
+        self.render(current["nodes"], self.rendered_path, current.get("variation"))
+        self.chain.save(self.chain_path)
+        return state
+
+    STYLE_KEYS = ("fill", "bold", "italic", "align", "opacity", "flip", "image")
+
+    @_timed_event
+    def set_style(self, node_id: str, changes: dict) -> dict:
+        """Applies the designer's style to one element (Step 2's Style tools):
+        a text colour (#RRGGBB), bold, italic, alignment (left, center,
+        right); for a picture, a replacement image file, a horizontal flip,
+        an opacity (0.1-1). A value of None removes that setting. The layout
+        isn't re-solved; the canvas re-renders, and the change is one state
+        in the chain (notes §3.53)."""
+        if node_id not in {n["node_id"] for n in self.chain.current["nodes"]}:
+            raise KeyError(f"No node '{node_id}' on the canvas")
+        before = dict(self.styles.get(node_id, {}))
+        after = dict(before)
+        for key, value in changes.items():
+            if key not in self.STYLE_KEYS:
+                raise ValueError(f"Unknown style '{key}'")
+            if value is None:
+                after.pop(key, None)
+            elif key == "fill" and not re.fullmatch(r"#[0-9A-Fa-f]{6}", str(value)):
+                raise ValueError(f"'{value}' is not a #RRGGBB colour")
+            elif key == "align" and value not in ("left", "center", "right"):
+                raise ValueError("Alignment is left, center or right")
+            elif key == "opacity" and not 0.1 <= float(value) <= 1.0:
+                raise ValueError("Opacity is between 0.1 and 1")
+            elif key == "image" and not os.path.exists(str(value)):
+                raise ValueError(f"No image at '{value}'")
+            else:
+                after[key] = float(value) if key == "opacity" else bool(value) if key in (
+                    "bold", "italic", "flip") else value
+        if after == before:
+            raise ValueError("The style is unchanged.")
+        self._mark()
+        styles = copy.deepcopy(self.styles)
+        if after:
+            styles[node_id] = after
+        else:
+            styles.pop(node_id, None)
+        self.styles = styles
+        current = self.chain.current
+        state = self.chain.append(f"Style [{node_id}]",
+                                  {"type": "style", "node_id": node_id, "before": before, "after": after,
+                                   "summary": f"Styled {node_id}" if after else f"Reset the style of {node_id}"},
+                                  current["nodes"], fitness=current.get("fitness"),
+                                  candidate_id=current.get("candidate_id"), variation=current.get("variation"),
+                                  styles=copy.deepcopy(styles))
         self.render(current["nodes"], self.rendered_path, current.get("variation"))
         self.chain.save(self.chain_path)
         return state
