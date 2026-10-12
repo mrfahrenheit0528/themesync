@@ -259,7 +259,7 @@ with panel_col, st.container(key="ts_panel"):
     family = t["family"].split(",")[0].strip("'\" ")
     st.markdown(f"**{family}** · weight {t['weight']} · {t['base_size']:g} px base")
     with st.expander("Administrative typography (schema-validated)", icon=":material/text_fields:"):
-        fam = st.text_input("Font family stack", value=t["family"], key=f"fam_{state['state_id']}")
+        fam = ui.font_picker(f"fam_{state['state_id']}", "Font", t["family"])
         wt = st.selectbox("Font weight", FONT_WEIGHTS, index=FONT_WEIGHTS.index(int(t["weight"])),
                           format_func=lambda v: f"{v} — {WEIGHT_NAMES[v]}", key=f"wt_{state['state_id']}")
         bs = st.number_input("Base size (px)", value=float(t["base_size"]), step=1.0,

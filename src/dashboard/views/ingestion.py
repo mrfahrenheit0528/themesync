@@ -57,14 +57,6 @@ _CONTENT_DATA_BY_DOMAIN = {
     "identification_card":  os.path.join(_ROOT, "data", "raw", "sample_content_id.json"),
 }
 
-FONT_OPTIONS = {
-    "Montserrat (default)": DEFAULT_TYPOGRAPHY["family"],
-    "Lato":                 "Lato, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-    "Open Sans":            "'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-    "Playfair Display":     "'Playfair Display', Georgia, 'Times New Roman', serif",
-    "Merriweather":         "Merriweather, Georgia, serif",
-    "Times New Roman":      "'Times New Roman', Times, serif",
-}
 WEIGHT_NAMES = {100: "Thin", 200: "Extra Light", 300: "Light", 400: "Regular", 500: "Medium",
                 600: "Semibold", 700: "Bold", 800: "Extra Bold", 900: "Black"}
 CATEGORY_COLOURS = {"logo": (0, 200, 90), "text": (40, 120, 255), "underlay": (255, 170, 0),
@@ -395,13 +387,14 @@ with markers_col, st.container(key="assets_markers"):
 with card_type:
     ui.card_title("text_fields", "Administrative Typography")
     font_col, weight_col, size_col = st.columns([1.5, 1.15, 1], gap="small")
-    font_label = font_col.selectbox("Primary Font", list(FONT_OPTIONS.keys()))
+    with font_col:
+        family = ui.font_picker("type", "Primary Font", DEFAULT_TYPOGRAPHY["family"])
     weight = weight_col.selectbox("Font Weight", FONT_WEIGHTS, index=FONT_WEIGHTS.index(700),
                                   format_func=lambda w: f"{w} — {WEIGHT_NAMES[w]}")
     base = size_col.number_input("Base Size (px)", min_value=1.0, max_value=400.0, value=48.0, step=1.0,
                                  help="The certificate title's size; the whole type scale is built on it. "
                                       "Checked against its JSON Schema before orchestration (p.43).")
-    typography = {"family": FONT_OPTIONS[font_label], "weight": int(weight), "base_size": float(base)}
+    typography = {"family": family, "weight": int(weight), "base_size": float(base)}
 
 # ---------------------------------------------------------------------------
 # The target: chosen in the panel, remembered while the panel is closed

@@ -121,10 +121,12 @@ class CanvasEditor {
 
   update(data) {
     this.data = data;
-    if (data.fonts && !document.getElementById("themesync-fonts")) {
+    // One <style> per font family, sent the first time the typography uses it
+    for (const [family, css] of Object.entries(data.fonts || {})) {
+      if (document.getElementById(`themesync-fonts-${family}`)) continue;
       const style = document.createElement("style");
-      style.id = "themesync-fonts";
-      style.textContent = data.fonts;
+      style.id = `themesync-fonts-${family}`;
+      style.textContent = css;
       document.head.appendChild(style);
     }
     Object.assign(assetCache, data.assets || {});
@@ -139,7 +141,7 @@ class CanvasEditor {
     } else if (acked) {
       this.clearPreviews();      // the event was rejected or changed nothing
     }
-    if (!data.fonts && !document.getElementById("themesync-fonts")) this.requestAssets();
+    if (data.fontFamily && !document.getElementById(`themesync-fonts-${data.fontFamily}`)) this.requestAssets();
 
     if (data.selected !== this.remoteSel) {        // changed in the Constraint Editor
       this.remoteSel = data.selected;

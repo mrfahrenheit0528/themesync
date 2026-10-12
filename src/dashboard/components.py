@@ -10,6 +10,7 @@ steps), and the editor styling every page shares.
 """
 
 import base64
+import functools
 import hashlib
 import html
 import io
@@ -199,6 +200,125 @@ def reader(path: str):
         with open(path, "rb") as f:
             return f.read()
     return read
+
+
+# ---------------------------------------------------------------------------
+# Fonts: the bundled families, each shown in its own typeface (notes §3.53)
+# ---------------------------------------------------------------------------
+
+FONT_DIR = os.path.join(ROOT, "assets", "fonts")
+# label → (the family stack the renderer writes into the SVG, its folder in
+# assets/fonts/). Every family ships in the repo (src/renderers/
+# build_fonts.py), so the canvas, the thumbnails and the PNG/PDF exports
+# draw the same typeface on the server and on Windows. Tinos, metrically
+# compatible with Times New Roman, replaces it: Times New Roman can't be
+# bundled and isn't on the server.
+FONTS = {
+    "Montserrat (default)": (pipeline.DEFAULT_TYPOGRAPHY["family"], "montserrat"),
+    "Lato":                 ("Lato, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "lato"),
+    "Open Sans":            ("'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                             "opensans"),
+    "Playfair Display":     ("'Playfair Display', Georgia, 'Times New Roman', serif", "playfairdisplay"),
+    "Merriweather":         ("Merriweather, Georgia, serif", "merriweather"),
+    "Tinos":                ("Tinos, 'Times New Roman', Times, serif", "tinos"),
+}
+FONT_FACES = {"Regular": (400, "normal"), "Italic": (400, "italic"), "SemiBold": (600, "normal"),
+              "Bold": (700, "normal"), "BoldItalic": (700, "italic"), "ExtraBold": (800, "normal"),
+              "Black": (900, "normal")}
+
+
+def first_family(stack: str) -> str:
+    """'Open Sans' from "'Open Sans', -apple-system, ..."."""
+    return (stack or "").split(",")[0].strip().strip("'\" ")
+
+
+def font_folder(stack: str):
+    """The assets/fonts/ folder of a stack's first family, or None."""
+    folder = first_family(stack).replace(" ", "").lower()
+    return folder if folder and os.path.isdir(os.path.join(FONT_DIR, folder)) else None
+
+
+def font_label(stack: str) -> str:
+    """The picker's label for a family stack (its first family otherwise)."""
+    for label, (s, folder) in FONTS.items():
+        if s == stack or folder == font_folder(stack):
+            return label
+    return first_family(stack) or "Montserrat (default)"
+
+
+def font_faces(folder: str) -> list:
+    """[(ttf path, weight, style)] of a bundled family's faces, which are
+    named <Family>-<Face>.ttf (Montserrat-BoldItalic.ttf)."""
+    directory = os.path.join(FONT_DIR, folder)
+    files = {f.rsplit("-", 1)[-1][:-4]: os.path.join(directory, f)
+             for f in os.listdir(directory) if f.lower().endswith(".ttf")} if os.path.isdir(directory) else {}
+    return [(files[name], weight, style) for name, (weight, style) in FONT_FACES.items() if name in files]
+
+
+def _woff(ttf: str, text: str = None) -> bytes:
+    """A WOFF of `ttf` cut down to `text` (or to Latin script)."""
+    from fontTools import subset
+    from fontTools.ttLib import TTFont
+
+    options = subset.Options()
+    options.flavor = "woff"
+    options.layout_features = ["kern", "liga"]
+    font = TTFont(ttf)
+    subsetter = subset.Subsetter(options)
+    if text:
+        subsetter.populate(text=text)
+    else:
+        subsetter.populate(unicodes=[*range(0x20, 0x7F), *range(0xA0, 0x250), *range(0x1E00, 0x1F00),
+                                     *range(0x2000, 0x2070), 0x20AC, 0x2122])
+    subsetter.subset(font)
+    buf = io.BytesIO()
+    font.save(buf)
+    return buf.getvalue()
+
+
+@functools.lru_cache(maxsize=1)
+def font_preview_css() -> str:
+    """@font-face rules that draw each picker label in its own family: one
+    face per family, cut down to the label's letters (a few KB each)."""
+    rules = []
+    for label, (_, folder) in FONTS.items():
+        faces = {(weight, style): path for path, weight, style in font_faces(folder)}
+        path = faces.get((600, "normal")) or faces.get((400, "normal"))
+        if not path:
+            continue
+        b64 = base64.b64encode(_woff(path, label)).decode("ascii")
+        rules.append(f'@font-face {{font-family: "TS {folder}"; font-weight: 600; '
+                     f'src: url(data:font/woff;base64,{b64}) format("woff");}}')
+    return "\n".join(rules)
+
+
+def _pick_font(state_key: str, label: str, popover_key: str) -> None:
+    st.session_state[state_key] = label
+    st.session_state[popover_key] = False          # close the list
+
+
+def font_picker(key: str, label: str, current: str) -> str:
+    """A dropdown that shows every font in its own typeface (Streamlit's
+    selectbox can't style its options one by one). `current` is a family
+    stack; returns the chosen one. Picking a font closes the list through
+    the popover's keyed open state."""
+    state_key = f"{key}_font"
+    st.session_state.setdefault(state_key, font_label(current))
+    chosen = st.session_state[state_key]
+    if chosen not in FONTS:
+        chosen = st.session_state[state_key] = font_label(current)
+    css = [f'.st-key-{key}_font_btn button p {{font-family: "TS {FONTS[chosen][1]}", sans-serif; font-weight: 600;}}']
+    css += [f'.st-key-{key}_font_opt_{folder} button p {{font-family: "TS {folder}", sans-serif; font-weight: 600; '
+            f'font-size: 1rem;}}' for _, folder in FONTS.values()]
+    st.markdown(f"<style>{font_preview_css()}\n{''.join(css)}</style>"
+                f'<div class="ts-wlabel">{html.escape(label)}</div>', unsafe_allow_html=True)
+    with st.container(key=f"{key}_font_btn"):
+        with st.popover(chosen, width="stretch", key=f"{key}_font_pop", on_change="rerun"):
+            for option, (_, folder) in FONTS.items():
+                st.button(option, key=f"{key}_font_opt_{folder}", width="stretch",
+                          type="primary" if option == chosen else "tertiary",
+                          on_click=_pick_font, args=(state_key, option, f"{key}_font_pop"))
+    return FONTS[chosen][0]
 
 
 # ---------------------------------------------------------------------------
@@ -422,8 +542,15 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
   padding-right: .3rem; gap: .35rem;}
 /* Streamlit pulls the element after a markdown block up by 1rem (its
    paragraphs' margin); the page's HTML blocks have none, so it overlapped */
-:is(.st-key-card_master, .st-key-card_assets, .st-key-ts_drawer, [role="dialog"])
+:is(.st-key-card_master, .st-key-card_assets, .st-key-card_type, .st-key-ts_drawer, [role="dialog"])
   [data-testid="stMarkdownContainer"]:has(> div[class^="ts-"], > div[class^="bn-"]) {margin-bottom: 0 !important;}
+/* The font picker (ui.font_picker): a label like a widget's, a button like
+   a selectbox, and a list where each font is drawn in its own typeface */
+.ts-wlabel {font-size: .875rem; color: #31333f; line-height: 1.4; margin: 0 0 .25rem;}
+.st-key-card_type .ts-wlabel {font-size: .76rem; color: #3c4250;}
+[class*="_font_btn"] button > div {width: 100%; justify-content: space-between;}
+[class*="_font_btn"] button [data-testid="stMarkdownContainer"] {flex: 1; min-width: 0; text-align: left;}
+[class*="_font_btn"] button p {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 [role="dialog"] [data-testid="stImage"] img {max-height: 66vh; object-fit: contain;}
 .ts-legend {display: flex; flex-wrap: wrap; gap: .25rem .6rem; font-size: .72rem; color: #5b6370;}
 .ts-legend i {display: inline-block; width: .6rem; height: .6rem; border-radius: 2px; margin-right: .25rem;}

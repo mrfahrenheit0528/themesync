@@ -94,11 +94,9 @@ def _component():
 # Fonts
 # ---------------------------------------------------------------------------
 
-FONT_FACES = (("Montserrat-Regular", 400, "normal"), ("Montserrat-Italic", 400, "italic"),
-              ("Montserrat-SemiBold", 600, "normal"), ("Montserrat-Bold", 700, "normal"),
-              ("Montserrat-BoldItalic", 700, "italic"), ("Montserrat-Black", 900, "normal"))
-LATIN = [*range(0x20, 0x7F), *range(0xA0, 0x250), *range(0x2000, 0x2070), 0x20AC, 0x2122]
-UNICODE_RANGE = "U+0020-007E, U+00A0-024F, U+2000-206F, U+20AC, U+2122"
+LATIN = [*range(0x20, 0x7F), *range(0xA0, 0x250), *range(0x1E00, 0x1F00), *range(0x2000, 0x2070),
+         0x20AC, 0x2122]
+UNICODE_RANGE = "U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2000-206F, U+20AC, U+2122"
 
 
 def _subset(ttf: str, out: str) -> None:
@@ -119,20 +117,19 @@ def _subset(ttf: str, out: str) -> None:
     os.replace(tmp, out)
 
 
-@functools.lru_cache(maxsize=1)
-def font_css() -> str:
-    """@font-face rules for the bundled Montserrat as data: URIs. Each face
-    is cut down to Latin text as WOFF (~75 KB instead of ~450 KB of TTF),
-    made once and kept in the temp directory; without fontTools the full
-    TTF is used."""
-    src_dir = os.path.join(ui.ROOT, "assets", "fonts", "montserrat")
+@functools.lru_cache(maxsize=8)
+def font_css(folder: str = "montserrat") -> str:
+    """@font-face rules for one bundled family (assets/fonts/<folder>) as
+    data: URIs. Each face is cut down to Latin text as WOFF (~75 KB instead
+    of ~450 KB of TTF), made once and kept in the temp directory; without
+    fontTools the full TTF is used. The canvas gets a family the first time
+    the typography uses it (notes §3.53)."""
+    family = next((ui.first_family(stack) for stack, f in ui.FONTS.values() if f == folder), folder)
     cache = os.path.join(tempfile.gettempdir(), "themesync_webfonts")
     rules = []
-    for stem, weight, style in FONT_FACES:
-        ttf = os.path.join(src_dir, f"{stem}.ttf")
-        if not os.path.exists(ttf):
-            continue
-        path = os.path.join(cache, f"{stem}-latin-{int(os.path.getmtime(ttf))}.woff")
+    for ttf, weight, style in ui.font_faces(folder):
+        stem = os.path.splitext(os.path.basename(ttf))[0]
+        path = os.path.join(cache, f"{stem}-latin2-{int(os.path.getmtime(ttf))}.woff")
         if not os.path.exists(path):
             try:
                 _subset(ttf, path)
@@ -142,7 +139,7 @@ def font_css() -> str:
             b64 = base64.b64encode(f.read()).decode("ascii")
         subsetted = path.endswith(".woff")
         mime, fmt = ("font/woff", "woff") if subsetted else ("font/ttf", "truetype")
-        rules.append(f'@font-face {{ font-family: "Montserrat"; font-weight: {weight}; '
+        rules.append(f'@font-face {{ font-family: "{family}"; font-weight: {weight}; '
                      f'font-style: {style}; font-display: swap; '
                      f'src: url(data:{mime};base64,{b64}) format("{fmt}");'
                      + (f" unicode-range: {UNICODE_RANGE};" if subsetted else "") + " }")
@@ -283,13 +280,15 @@ def active_canvas(session, friendly, key: str = KEY) -> None:
     sent = st.session_state.setdefault(_SENT, set())
     new_assets = {h: uri for h, uri in assets.items() if h not in sent}
     sent.update(new_assets)
+    family = ui.font_folder(session.typography.get("family")) or "montserrat"
+    fonts_sent = st.session_state.setdefault(_FONTS_SENT, set())
     fonts = None
-    if not st.session_state.get(_FONTS_SENT):
-        fonts = font_css()
-        st.session_state[_FONTS_SENT] = True
+    if family not in fonts_sent:
+        fonts = {family: font_css(family)}
+        fonts_sent.add(family)
     data = {
         "version": f"{state['state_id']}:{mtime_ns}",
-        "svg": markup, "assets": new_assets, "fonts": fonts,
+        "svg": markup, "assets": new_assets, "fonts": fonts, "fontFamily": family,
         "width": session.canvas_w, "height": session.canvas_h,
         "nodes": _nodes(session, friendly),
         "selected": st.session_state.get("sel_node"),
