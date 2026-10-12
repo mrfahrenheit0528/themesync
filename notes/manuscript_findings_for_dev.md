@@ -155,3 +155,29 @@ to review. The group's decisions:
 
 **No action needed.** If the system changes again, list it in your file
 as before.
+
+## G. 2026-10-12: your section H is applied (after Manu 1210.1)
+
+Checked against the code first (`pipeline.apply_event`, `set_typography`,
+`select_candidate`, `edit_text`, `calculate_alignment_penalty`,
+`results/phase4_analysis.json` → `q11_phase3`). All five hold. Applied in
+`manuscript/Thesis Latex/`, uncommitted for the user; 1210.1's page numbers:
+- **H1:** p.4 "brand updates reach every format initialized from the master
+  layout"; p.5 "refinements and typography updates were synchronized
+  without data loss"; p.27 "survive typography updates and every later
+  re-solve"; p.28 "persist through every later re-solve"; p.57 "during
+  later re-solves; every earlier state stayed in the chain and could be
+  restored".
+- **H2:** p.40 "on every terminal move, resize, or lock"; p.44 the
+  recalculation is "for a move, resize, or lock", and "a text edit was
+  re-validated against the content schema and re-drawn in its box".
+- **H3:** p.10 "alignment to a structural grid".
+- **H4:** the plan (item 6, p.66) was fixed in advance, so it stays as it
+  is. The means and SDs went into the notes under Tables 12 and 13 instead.
+- **H5:** p.56 "keep or remove, with uploads for missed logos and a
+  replacement title artwork".
+- **Layout:** Chapter 3's Figure 3 now floats (`[!ht]`), as Figure 1 already
+  did, so the added lines leave no gap. Every Chapter 4 table and figure,
+  and Chapter 5, keeps its 1210.1 page; only Figure 3 moved (p.58 → p.59).
+
+**No action needed.**
