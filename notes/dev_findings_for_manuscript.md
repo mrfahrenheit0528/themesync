@@ -1,8 +1,9 @@
 # Findings from system development, for the manuscript chat
 
-> **Start here (2026-10-10):** section G, at the end, is the consolidated list
-> of what the manuscript still needs (errors, wording, missing content, open
-> decisions), checked against Manu 1010.1. Sections A–F are the detail behind it.
+> **Start here (2026-10-12):** section H, at the end, checks the final
+> manuscript, Manu 1210.1, against the system: five wording items (H1–H5),
+> nothing that changes a result. Section G (2026-10-10) was the list for
+> Manu 1010.1, and it is applied. Sections A–F are the detail behind both.
 
 The system-development chat checked the revised manuscript against the
 code on 2026-10-09:
@@ -924,3 +925,165 @@ Both test files pass. Details are in the sections referenced; "p." is Manu
 - **Appendix B** is identical to the system's payload.
 - **Chapter 4:** every number in Tables 3–21 and the text matches the
   results files (E, "Checked and correct").
+
+---
+
+## H. Manu 1210.1 checked against the system — 2026-10-12
+
+**Start here for 1210.1.** The development chat checked the final
+manuscript, `manuscript/Manu 1210.1.pdf` (111 pages), against the code and
+`results/`. The code is unchanged since `f97d897` (2026-10-10); later
+commits touched only notes, PDFs and two dashboard uploads.
+- **Chapter 3:** read in full.
+- **Chapters 1, 2 and 5:** read for system claims.
+- **Chapter 4:** every number new since 1010.1 recomputed from the
+  results files. Tables 5, 9 and 12 rechecked in full; the rest were
+  checked on 1010.1 and haven't changed.
+- **Both test files pass** (12 tests).
+
+"p." is Manu 1210.1's page. Nothing below changes a result; all five are
+wording.
+
+### H1 🟡 "Manual edits survive global theme updates" is only partly true
+
+**Where:**
+- p.4: "brand updates propagate across publication formats";
+- p.5: "global theme updates were mathematically synchronized without data
+  loss";
+- p.27: "refinements survive global theme updates";
+- p.28: "persist through global synchronization events";
+- p.57: "during automated global updates".
+
+**Fact:**
+- **Typography changes keep every manual edit.** `set_typography`
+  re-renders the current layout, Hard nodes included.
+- **Selecting another candidate opens that candidate's layout.** Earlier
+  edits aren't carried over to it. They stay in the chain, and undo or the
+  State Timeline restores them.
+- **Palette, logos, markers and the target format are set in Step 1.**
+  Changing them means a new Initialize, so a new layout and a new chain.
+  The old one stays saved in its session folder.
+- **One format is open at a time.** A brand change reaches each format
+  when that format is initialized.
+
+**Fix (suggested):** name what the system did.
+- p.5: "typography updates and manual refinements were synchronized
+  without data loss".
+- p.27: "survive typography updates and every later re-solve".
+- p.28: "persist through every later re-solve".
+- p.57: "during later re-solves".
+- p.4: "brand updates reach every format initialized from the master".
+- **Anywhere it fits:** no update erased an edit, since every earlier
+  state stayed in the chain and could be restored.
+
+**Not changed in the code:** carrying Hard nodes onto a newly selected
+candidate would add a re-solve to candidate selections. Chapter 4 timed
+those as re-draws (Table 12, Figure 7).
+
+**For a demo:** move an element, then change the typography. The edit
+stays.
+
+### H2 🟡 p.40 and p.44: a re-solve "on every terminal user event"
+
+**Now:**
+- p.40: "the whole layout was re-solved on every terminal user event";
+- p.44: e_t includes "direct text edits", and δ triggers "the Cassowary
+  recalculation".
+
+**Fact:**
+- **Only moves, resizes and locks re-solve** (`pipeline.apply_event`).
+- **Text edits, typography changes, undo, redo, restore and candidate
+  selections only re-draw.** The boxes don't change; the renderer fits the
+  new words to their box (`edit_text`).
+- p.59 and p.89 already say so.
+
+**Fix:**
+- p.40: "on every terminal move, resize, or lock".
+- p.44: "… to trigger the Cassowary recalculation for a move, resize, or
+  lock; a text edit was re-validated against the content schema and
+  re-drawn in its box".
+
+### H3 🟡 p.10, the Project Dictionary: "the rule of thirds"
+
+**Now:** the Fitness Function checks "design rules such as the rule of
+thirds and the ratio of whitespace".
+
+**Fact:** Formula 3.13's grid is the content area's margins, quarters and
+centre (p.48, `optimization_engine.calculate_alignment_penalty`). No term
+uses thirds.
+
+**Fix:** "such as alignment to a structural grid and the ratio of
+whitespace to other elements".
+
+### H4 🟡 p.66 promises mean ± SD for fitness and latency; Chapter 4 no longer gives them
+
+**Now:** Statistical Treatment item 6 says the fitness, latency, F1 and
+IoU "were summarized by their mean and standard deviation". 1010.1's
+Chapter 4 reported all of them; 1210.1's rewrite dropped those for the
+fitness (Table 13 gives means only) and the latency (Table 12 gives
+medians).
+
+**The numbers** (`results/phase4_analysis.json`, `q11_phase3`):
+
+| Measure | Structure mapping + GNN | Baseline |
+|---|---|---|
+| Fitness, both formats | 0.0879 (SD 0.0791) | 0.0855 (SD 0.0766) |
+| Fitness, certificate | 0.0125 (SD 0.0250) | 0.0126 (SD 0.0251) |
+| Fitness, event ID | 0.1633 (SD 0.0133) | 0.1583 (SD 0.0135) |
+
+- **Latency:**
+  - constraint recalculation: 0.53 ms (SD 3.01, inflated by the one solve
+    the operating system paused);
+  - full edit: 90.6 ms (SD 57.5).
+- **F1:** 1.0 (SD 0).
+- **IoU:** 0.644 (SD 0.351), already on p.79.
+
+**Fix:** either add the mean ± SD as a note line under Tables 12 and 13
+(no extra page), or reword item 6: "the fitness was summarized by its mean
+and SD, the latency by its median and 95th percentile".
+
+### H5 ⚪ p.56: logos and markers "each of which the designer could keep, remove, or replace"
+
+**Fact:**
+- Logos can be added by upload, and the title artwork replaced.
+- The background and the motifs can only be kept or removed.
+
+**Fix (optional):** "kept or removed, with uploads for missed logos and a
+replacement title artwork".
+
+### Checked and correct
+
+- **Sections E–G are applied:**
+  - E1 (p.80, "except on ANTI HAZING LAW");
+  - E3 (RTX A5000, p.90);
+  - E5 and E6 (pp.27–28);
+  - E7, E8 and E9;
+  - SIFT only, the CNN removed, c_i and s_i per layout;
+  - the cover month, October 2026.
+- **The text is clean:** no raw citation keys, "PENDING", "??" or "et al.".
+- **Chapter 3 matches the code:**
+  - **Extraction:** K-Means (k = 2 to 6, best of five seeded runs, the
+    elbow); SIFT's ranking and saliency map; the background rebuilt from
+    the borders.
+  - **The GNN and the state chain:** Formulas 3.6–3.8 (MLP message, mean
+    aggregation, GRU update, four edge features); the append-only chain
+    with undo and redo as new states; Formula 3.10.
+  - **Validation and scoring:** the schema (Draft 2020-12, weights 100 to
+    900, 8 px to 15% of the shorter side, max_characters); Formulas
+    3.11–3.15 with their exclusions, the content region and R_target 0.65.
+  - **Candidates:** six per format (archetype, margin, gap, motif
+    arrangement); the archetype from the master's composition, and the
+    lowest fitness without a master.
+  - **The dashboard:** Figures 2–4's descriptions, apart from H5; the
+    Step 3 report's six items.
+  - **Phase 4:** the packets (random codes, a page order per expert, no
+    two pages of one poster adjacent); the statistical treatment,
+    including the identical-pair check and the fitness Wilcoxon.
+  - **Appendices:** A (the record's fields) and B (identical to
+    `data/raw/academic_payload.json`); the event ID's A6 page and indices
+    0 to 5.
+- **Chapter 4:** Figure 6's ranges (0.023–0.037 and 0.043–0.087 reduction;
+  0.008–0.118 and 0.000–0.115 remaining), Table 9's means, Tables 5 and 12,
+  the 348 re-draws, and 10,788 elements (23% unmapped) all match.
+- **Chapter 5's** numbers are Chapter 4's (0.0879 against 0.0855 is the
+  mean of Table 13's two formats).

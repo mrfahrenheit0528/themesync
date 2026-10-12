@@ -146,6 +146,10 @@ Read first: `notes/system_development_progress.md`, then the tail of
     "for checking" messages.
   - Checked: no PENDING, `??`, "et al." or placeholder text. SURF appears
     only in Chapter 2's literature and a reference title.
+  - **Checked against the system** (2026-10-12, dev findings section H):
+    ~98% of what it describes runs and is measured. Five wording items
+    remain (H1–H5); none changes a result. The main one is H1: manual
+    edits survive typography updates, not every "global theme update".
 - **Manuscript (2026-10-10):** the latest build was
   `manuscript/Manu 1010.1.pdf`. `manuscript/Thesis Latex/` holds Chapters
   1–5.

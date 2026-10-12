@@ -7,7 +7,33 @@ consultation. Re-run this assessment (re-check code + `results/` + this file)
 before citing the percentage anywhere final like Chapter 4 — it will go stale
 as work continues.
 
-## Overall (re-assessed 2026-10-10): ~95% of what Manu 0910.1 describes runs and is measured
+## Overall (re-assessed 2026-10-12): ~98% of what the final manuscript, Manu 1210.1, describes runs and is measured
+
+**Re-assessed 2026-10-12** against Manu 1210.1 (the final manuscript), the
+code at `f97d897` and `results/` (dev findings, section H):
+- **Every component and metric** Chapters 3–5 describe runs and is
+  measured. The 12 tests pass, and every Chapter 4 number checked matches
+  the results files.
+- **The 2026-10-10 gaps are closed:**
+  - **On the manuscript side:** SURF, the CNN and Appendix A were
+    reworded to the system. The two renderer limits are reported as
+    limitations, with a recommendation each.
+  - **On the system side:** the checkbox bug is fixed, and the notebook
+    is updated.
+- **What remains is wording, with no code to write:**
+  - **One claim is met only in part:** that manual edits survive "global
+    theme updates" (H1). Typography updates keep them. A candidate switch
+    or a new Initialize starts a fresh layout, and the earlier edits stay
+    restorable in the chain or the session folder.
+  - **Four small mismatches (H2–H5):**
+    - a re-solve "on every terminal event";
+    - "the rule of thirds";
+    - mean ± SD promised but not given;
+    - markers that can't be "replaced".
+- **Completeness isn't the result:** Phase 4 found the baseline rated
+  higher than structure mapping + GNN (§3.49).
+
+### Re-assessed 2026-10-10: ~95% of what Manu 0910.1 describes
 
 **Re-assessed 2026-10-10** against Manu 0910.1, the code, and `results/`:
 - **What runs and is measured:** every component Chapter 3 describes,
