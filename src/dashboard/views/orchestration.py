@@ -176,6 +176,21 @@ def _style_tools(session, node: dict, state: dict) -> None:
             apply({"image": ui.save_upload(up, prefix="element_")})
             st.rerun()
     else:
+        # This element's own typography, applied at once (notes §3.56); size
+        # follows the box: drag its handles and the text refits
+        own_font = style.get("font") or session.typography["family"]
+        f_col, w_col = st.columns([1.3, 1], gap="small")
+        with f_col:
+            picked = ui.font_picker(f"elfont_{sid}", "Font", own_font)
+        with w_col:
+            weights = [0, *FONT_WEIGHTS]
+            st.selectbox("Weight", weights, key=f"elwt_{sid}",
+                         index=weights.index(int(style["weight"])) if style.get("weight") else 0,
+                         format_func=lambda v: "Layout's own" if not v else f"{v} — {WEIGHT_NAMES[v]}",
+                         on_change=lambda: apply({"weight": st.session_state[f"elwt_{sid}"] or None}))
+        if picked != own_font:
+            apply({"font": picked})
+            st.rerun()
         palette = session.palette
         extracted = (session.ingestion or {}).get("palette_hex") or []
         swatches = list(dict.fromkeys(c.upper() for c in [palette["primary"], palette["accent"], palette["muted"],
@@ -190,18 +205,11 @@ def _style_tools(session, node: dict, state: dict) -> None:
                             label_visibility="collapsed", help="Any colour",
                             on_change=lambda: apply({"fill": st.session_state[f"cp_{sid}"].upper()}))
 
-        def bold_italic() -> None:
-            chosen = set(st.session_state[f"bi_{sid}"] or [])
-            changes = {key: name in chosen for name, key in (("Bold", "bold"), ("Italic", "italic"))
-                       if (name in chosen) != bool(style.get(key))}
-            if changes:
-                apply(changes)
-
-        b_col, a_col = st.columns([1, 1.15], gap="small")
-        with b_col:
-            st.segmented_control("Text style", ["Bold", "Italic"], selection_mode="multi", key=f"bi_{sid}",
-                                 default=[n for n, k in (("Bold", "bold"), ("Italic", "italic")) if style.get(k)],
-                                 on_change=bold_italic)
+        i_col, a_col = st.columns([1, 1.15], gap="small")
+        with i_col:
+            st.segmented_control("Text style", ["Italic"], key=f"it_{sid}",
+                                 default="Italic" if style.get("italic") else None,
+                                 on_change=lambda: apply({"italic": st.session_state[f"it_{sid}"] == "Italic"}))
         with a_col:
             st.segmented_control("Alignment", list(ALIGN_ICONS), format_func=ALIGN_ICONS.get, key=f"al_{sid}",
                                  default=style.get("align"),
@@ -291,7 +299,8 @@ with canvas_col:
     # The thumbnails are drawn with the canvas's current words and typography,
     # so a text edit, undo or restore that changes either redraws them.
     thumbs_key = (id(session), json.dumps(session.typography, sort_keys=True),
-                  json.dumps(session.content(), sort_keys=True), json.dumps(session.styles, sort_keys=True))
+                  json.dumps(session.content(), sort_keys=True), json.dumps(session.styles, sort_keys=True),
+                  json.dumps([sorted(session.added), session.removed]))
     cached = st.session_state.get("orch_thumbs")
     if not cached or cached["key"] != thumbs_key or "uris" not in cached:
         with st.spinner("Rendering the candidates..."):
@@ -324,6 +333,40 @@ with canvas_col:
 # RIGHT — the selected element, typography, and (collapsed) canvas details
 # ---------------------------------------------------------------------------
 with panel_col, st.container(key="ts_panel"):
+    _section("Add an element")
+    sid_add = state["state_id"]
+
+    def _added(new: dict, popover_key: str) -> None:
+        st.session_state["sel_node"] = new["event"]["node_id"]
+        st.session_state["flash"] = f"{new['state_id']}: {new['event']['summary']}"
+        st.session_state[popover_key] = False                   # close the popover
+
+    def _add_text() -> None:
+        words = st.session_state.get(f"addtext_{sid_add}", "")
+        if words.strip():
+            _added(session.add_element("text", words), "add_text_pop")
+        else:
+            st.session_state["add_error"] = "Type the text to add first."
+
+    def _add_picture() -> None:
+        picture = st.session_state.get(f"addpic_{sid_add}")
+        if picture is not None:
+            _added(session.add_element("picture", ui.save_upload(picture, prefix="added_")), "add_pic_pop")
+
+    add_text, add_pic = st.columns(2, gap="small")
+    with add_text.popover("Text", icon=":material/title:", width="stretch", key="add_text_pop", on_change="rerun"):
+        # A form, so the words typed reach the button with the click (or Enter)
+        with st.form(f"addtext_form_{sid_add}", border=False):
+            st.text_input("Text to add", max_chars=120, placeholder="e.g. With highest honors",
+                          key=f"addtext_{sid_add}")
+            st.form_submit_button("Add to the layout", type="primary", width="stretch", on_click=_add_text)
+        if "add_error" in st.session_state:
+            st.warning(st.session_state.pop("add_error"))
+    with add_pic.popover("Picture", icon=":material/add_photo_alternate:", width="stretch", key="add_pic_pop",
+                         on_change="rerun"):
+        st.file_uploader("A picture (transparent PNGs look best); it goes in the largest empty space",
+                         type=["png", "jpg", "jpeg", "webp"], key=f"addpic_{sid_add}", on_change=_add_picture)
+
     _section("Selected element")
     sel = st.session_state.get("sel_node")
     node = node_by_id.get(sel)
@@ -350,7 +393,16 @@ with panel_col, st.container(key="ts_panel"):
             + '<span class="ts-unit">px</span></div>', unsafe_allow_html=True)
         has_text = node["node_id"] in session.canvas_text()
         merged = node["node_id"] in (session.merge or {}).get("fields", ())
-        e_col, l_col = st.columns(2, gap="small")
+        e_col, l_col, d_col = st.columns([1, 1, 0.38], gap="small")
+        if d_col.button("", icon=":material/delete:", key=f"del_{state['state_id']}", width="stretch",
+                        help="Delete this element (Delete key); undo brings it back"):
+            try:
+                removed = session.remove_element(node["node_id"])
+            except ValueError as e:
+                st.error(str(e))
+            else:
+                st.session_state.pop("sel_node", None)
+                _flash(removed)
         if e_col.button("Edit text", icon=":material/edit:", width="stretch", disabled=not has_text,
                         help="Edit its words on the canvas (or double-click it)" if has_text
                         else "Filled from the CSV for each layout (mail merge)" if merged
@@ -366,24 +418,34 @@ with panel_col, st.container(key="ts_panel"):
     if node:
         _style_tools(session, node, state)
 
-    _section("Typography")
+    _section("All text")
     t = session.typography
     family = t["family"].split(",")[0].strip("'\" ")
     st.markdown(f"**{family}** · weight {t['weight']} · {t['base_size']:g} px base")
+    sid_all = state["state_id"]
+
+    def set_all(changes: dict) -> None:
+        """The whole design's typography, checked against its schema first."""
+        try:
+            new = session.set_typography(changes)
+        except ValueError as e:
+            st.session_state["typo_error"] = str(e)
+        else:
+            st.session_state["flash"] = f"{new['state_id']}: typography of all text (schema validation passed)"
+
     with st.expander("Administrative typography (schema-validated)", icon=":material/text_fields:"):
-        fam = ui.font_picker(f"fam_{state['state_id']}", "Font", t["family"])
-        wt = st.selectbox("Font weight", FONT_WEIGHTS, index=FONT_WEIGHTS.index(int(t["weight"])),
-                          format_func=lambda v: f"{v} — {WEIGHT_NAMES[v]}", key=f"wt_{state['state_id']}")
-        bs = st.number_input("Base size (px)", value=float(t["base_size"]), step=1.0,
-                             key=f"bs_{state['state_id']}")
-        if st.button("Validate and apply typography"):
-            try:
-                new = session.set_typography({"family": fam, "weight": int(wt), "base_size": float(bs)})
-            except ValueError as e:
-                st.error(str(e))
-            else:
-                st.session_state.pop("orch_thumbs", None)
-                _flash(new, " (schema validation passed)")
+        st.caption("Changes every text element at once, unless it has its own font or weight above.")
+        fam = ui.font_picker(f"fam_{sid_all}", "Font", t["family"])
+        st.selectbox("Font weight", FONT_WEIGHTS, index=FONT_WEIGHTS.index(int(t["weight"])),
+                     format_func=lambda v: f"{v} — {WEIGHT_NAMES[v]}", key=f"wt_{sid_all}",
+                     on_change=lambda: set_all({"weight": int(st.session_state[f"wt_{sid_all}"])}))
+        st.number_input("Base size (px)", value=float(t["base_size"]), step=1.0, key=f"bs_{sid_all}",
+                        on_change=lambda: set_all({"base_size": float(st.session_state[f"bs_{sid_all}"])}))
+        if fam != t["family"]:
+            set_all({"family": fam})
+            st.rerun()
+        if "typo_error" in st.session_state:
+            st.error(st.session_state.pop("typo_error"))
 
     with st.expander("Canvas details", icon=":material/info:"):
         fit = state.get("fitness") or {}

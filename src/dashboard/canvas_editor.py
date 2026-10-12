@@ -184,6 +184,7 @@ def _nodes(session, friendly) -> list:
         note = None
         if nid not in text:
             note = ("filled from the CSV for each layout (mail merge)" if nid in merged
+                    else "a picture you added" if nid.startswith("Added_Picture")
                     else "a motif from the master layout" if kind == "decor"
                     else "drawn with the event's title artwork from the master layout"
                     if artwork and "Event_Title" in nid
@@ -246,6 +247,10 @@ def _on_event(session, key: str, friendly) -> None:
             new = session.apply_event(kind, node_id, hard=bool(event.get("hard")))
         elif kind == "text-edit":
             new = session.edit_text(node_id, str(event.get("text", "")))
+        elif kind == "remove":
+            new = session.remove_element(node_id)
+            st.session_state.pop("sel_node", None)
+            node_id = None
         elif kind == "undo":
             new = session.undo()
         elif kind == "redo":
@@ -282,15 +287,14 @@ def active_canvas(session, friendly, key: str = KEY) -> None:
     sent = st.session_state.setdefault(_SENT, set())
     new_assets = {h: uri for h, uri in assets.items() if h not in sent}
     sent.update(new_assets)
-    family = ui.font_folder(session.typography.get("family")) or "montserrat"
+    families = {ui.font_folder(session.typography.get("family")) or "montserrat"}
+    families |= {ui.font_folder(s["font"]) for s in session.styles.values() if s.get("font")} - {None}
     fonts_sent = st.session_state.setdefault(_FONTS_SENT, set())
-    fonts = None
-    if family not in fonts_sent:
-        fonts = {family: font_css(family)}
-        fonts_sent.add(family)
+    fonts = {f: font_css(f) for f in sorted(families - fonts_sent)} or None
+    fonts_sent |= families
     data = {
         "version": f"{state['state_id']}:{mtime_ns}",
-        "svg": markup, "assets": new_assets, "fonts": fonts, "fontFamily": family,
+        "svg": markup, "assets": new_assets, "fonts": fonts, "fontFamilies": sorted(families),
         "width": session.canvas_w, "height": session.canvas_h,
         "nodes": _nodes(session, friendly),
         "selected": st.session_state.get("sel_node"),

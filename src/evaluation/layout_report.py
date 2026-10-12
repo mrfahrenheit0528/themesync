@@ -218,7 +218,9 @@ def build_report(session) -> dict:
     }
 
     # Structural accuracy and retention of the manual edits
-    mandated = [n["node_id"] for n in session.base_nodes]
+    # The format's elements, less any the designer deleted (notes §3.56)
+    removed = set(getattr(session, "removed", ()))
+    mandated = [n["node_id"] for n in session.base_nodes if n["node_id"] not in removed]
     accuracy = structural_accuracy(current["nodes"], session.canvas_w, session.canvas_h,
                                    mandated, history[-1])
     retention = retention_check(states, history)

@@ -113,6 +113,7 @@ class CanvasEditor {
     for (const [el, type, fn] of this.listeners) el.removeEventListener(type, fn);
     this.resizeObserver.disconnect();
     clearTimeout(this.pendingTimer);
+    clearTimeout(this.msgTimer);
     if (this.nudge) clearTimeout(this.nudge.timer);
     delete this.root.__ts;
   }
@@ -141,7 +142,7 @@ class CanvasEditor {
     } else if (acked) {
       this.clearPreviews();      // the event was rejected or changed nothing
     }
-    if (data.fontFamily && !document.getElementById(`themesync-fonts-${data.fontFamily}`)) this.requestAssets();
+    if ((data.fontFamilies || []).some((f) => !document.getElementById(`themesync-fonts-${f}`))) this.requestAssets();
 
     if (data.selected !== this.remoteSel) {        // changed in the Constraint Editor
       this.remoteSel = data.selected;
@@ -425,6 +426,7 @@ class CanvasEditor {
   select(id) {
     if (id === this.sel) return;
     this.sel = id;
+    if (!this.msg.classList.contains("error")) this.showMessage("", "");   // a new selection clears notes
     this.updateToolbar();
     this.redrawOverlay();
   }
@@ -456,6 +458,12 @@ class CanvasEditor {
     if (arrows[key]) { e.preventDefault(); this.nudgeBy(...arrows[key]); return; }
     if (key === "l" || key === "L") { e.preventDefault(); this.action("lock"); return; }
     if (key === "Enter" || key === "F2") { e.preventDefault(); this.openEditor(this.sel); return; }
+    if ((key === "Delete" || key === "Backspace") && !this.pending) {   // delete the element (undo brings it back)
+      e.preventDefault();
+      this.flushNudge();
+      this.send({ type: "remove", node_id: this.sel });
+      return;
+    }
     if (key === "Escape") { e.preventDefault(); this.flushNudge(); this.select(null); }
   }
 
@@ -610,11 +618,15 @@ class CanvasEditor {
   }
 
   showMessage(text, kind) {
-    // kind: "error", "warn", or "" (a plain note); true means "error"
+    // kind: "error", "warn", or "" (a plain note); true means "error".
+    // Every message fades by itself, a note sooner, so none stays over
+    // the canvas (a "no text to edit" note used to stay until new data).
     const k = kind === true ? "error" : kind || "";
+    clearTimeout(this.msgTimer);
     this.msg.textContent = text;
     this.msg.classList.toggle("error", k === "error");
     this.msg.classList.toggle("warn", k === "warn");
+    if (text) this.msgTimer = setTimeout(() => this.showMessage("", ""), k ? 8000 : 3500);
   }
 
   updateToolbar() {

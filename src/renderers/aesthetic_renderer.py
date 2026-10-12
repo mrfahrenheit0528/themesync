@@ -781,9 +781,9 @@ class AestheticSVGRenderer:
 
     def _apply_style(self, node: dict, elements: list) -> list:
         """A node's drawn elements with the designer's style: a replacement
-        picture; colour, bold, italic and alignment on its text (the shadow
-        copies keep their colour); opacity and a horizontal flip on the
-        group. A node without a style comes back unchanged."""
+        picture; font, weight, colour, italic and alignment on its text (the
+        shadow copies keep their colour); opacity and a horizontal flip on
+        the group. A node without a style comes back unchanged."""
         style = self.styles.get(node["node_id"])
         if not style:
             return elements
@@ -793,7 +793,7 @@ class AestheticSVGRenderer:
             if uri:
                 elements = [f'<image x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
                             f'preserveAspectRatio="xMidYMid meet" xlink:href="{uri}" />']
-        if any(k in style for k in ("fill", "bold", "italic", "align")):
+        if any(k in style for k in ("fill", "bold", "italic", "align", "font", "weight")):
             shaped = any(e.startswith("<rect") for e in elements)          # a pill or band behind the text
             elements = [self._style_text(e, style, x, w, shaped) if e.startswith("<text") else e
                         for e in elements]
@@ -820,7 +820,11 @@ class AestheticSVGRenderer:
         shadow = attrs.get("fill") == "#000000" and attrs.get("fill-opacity") == "0.45"
         if style.get("fill") and not shadow:
             attrs["fill"] = style["fill"]
-        if "bold" in style:
+        if style.get("font"):
+            attrs["font-family"] = style["font"].replace('"', "'")
+        if style.get("weight"):
+            attrs["font-weight"] = str(int(style["weight"]))
+        elif "bold" in style:
             attrs["font-weight"] = "700" if style["bold"] else "400"
         if "italic" in style:
             attrs["font-style"] = "italic" if style["italic"] else "normal"

@@ -73,7 +73,7 @@ import structure_mapping
 from optimization_engine import HeuristicEvaluator
 from aesthetic_renderer import AestheticSVGRenderer, DEFAULT_TYPOGRAPHY, _palette_from_centroids, default_content
 from state_manager import StateChain, StateManager
-from schema_validation import content_schema, validate_content, validate_typography
+from schema_validation import FONT_WEIGHTS, content_schema, validate_content, validate_typography
 from stylistic_markers import build_style_kit, cut_out
 from template_ingestor import TemplateIngestor
 from layout_extractor import LayoutExtractor
@@ -661,6 +661,11 @@ class OrchestrationSession:
         # state; restore, undo and redo bring the styles back with it.
         self.styles = {}
         self.style_contrast = {}          # styled text's contrast in the last render
+        # Elements the designer added (id → node) and deleted (ids), in
+        # effect at the current state; restore, undo and redo bring them
+        # back with it (notes §3.56)
+        self.added = {}
+        self.removed = []
         self.rendered_path = os.path.join(output_dir, f"ThemeSync_{self.stem}_populated.svg")
         self.chain_path = os.path.join(output_dir, f"ThemeSync_{self.stem}_state_chain.json")
 
@@ -887,7 +892,11 @@ class OrchestrationSession:
         from decor import place_motifs
 
         hard = {n["node_id"]: n for n in nodes if n.get("constraint_type") == "Hard"}
-        content = copy.deepcopy(self.guided_nodes)
+        removed = set(self.removed)
+        content = [n for n in copy.deepcopy(self.guided_nodes) if n["node_id"] not in removed]
+        current = {n["node_id"]: n for n in nodes}
+        content += [copy.deepcopy(current.get(nid, spec)) for nid, spec in self.added.items()
+                    if nid not in removed and spec.get("structural_class") != "decor"]   # added text (§3.56)
         for n in content:
             if n["node_id"] in hard:
                 n["bbox"] = [float(v) for v in hard[n["node_id"]]["bbox"]]
@@ -895,11 +904,17 @@ class OrchestrationSession:
         engine = solver_for(variation, self.canvas_w, self.canvas_h, self.structure_guided)
         content = engine.execute_relational_logic(content)
 
-        decor = [copy.deepcopy(n) for n in nodes if n.get("structural_class") == "decor"]
-        if self.style_kit.get("motifs") and not any(n.get("constraint_type") == "Hard" for n in decor):
+        decor = [copy.deepcopy(n) for n in nodes if n.get("structural_class") == "decor"
+                 and n["node_id"] not in removed and n["node_id"] not in self.added]
+        pictures = [copy.deepcopy(n) for n in nodes if n["node_id"] in self.added   # added pictures float
+                    and n.get("structural_class") == "decor" and n["node_id"] not in removed]
+        # A deleted motif keeps the others where they are (motif ids follow
+        # their placement, so re-placing them would bring it back)
+        if (self.style_kit.get("motifs") and not any(n.get("constraint_type") == "Hard" for n in decor)
+                and not any(r.startswith("decor_") for r in removed)):
             decor = place_motifs(self.canvas_w, self.canvas_h, [n["bbox"] for n in content],
                                  self.style_kit["motifs"], variation.get("arrangement", 0))
-        return content + decor
+        return content + decor + pictures
 
     @_timed_event
     def apply_event(self, event_type: str, node_id: str, bbox: list = None, hard: bool = None) -> dict:
@@ -987,12 +1002,19 @@ class OrchestrationSession:
         """Makes a ranked candidate the active canvas (Recommendation Engine)."""
         cand = next(c for c in self.candidates if c["candidate_id"] == candidate_id)
         rank = self.candidates.index(cand) + 1
+        nodes, fitness = cand["nodes"], cand["metrics"]
+        if self.added or self.removed:       # the designer's added and deleted elements carry over (§3.56)
+            current = {n["node_id"]: n for n in self.chain.current["nodes"]}
+            keep = [n for n in cand["nodes"] if n["node_id"] not in set(self.removed)]
+            keep += [copy.deepcopy(current[nid]) for nid in self.added if nid in current]
+            nodes = self._resolve(keep, cand["variation"])
+            fitness = self._fitness(nodes, cand["variation"])
         self._mark()
         state = self.chain.append(f"Candidate {candidate_id} (rank {rank})",
                                   {"type": "candidate", "candidate_id": candidate_id, "rank": rank},
-                                  cand["nodes"], fitness=cand["metrics"], candidate_id=candidate_id,
+                                  nodes, fitness=fitness, candidate_id=candidate_id,
                                   variation=dict(cand["variation"]))
-        self.render(cand["nodes"], self.rendered_path, cand["variation"])
+        self.render(nodes, self.rendered_path, cand["variation"])
         self.chain.save(self.chain_path)
         return state
 
@@ -1003,8 +1025,10 @@ class OrchestrationSession:
         old = self.chain.states[index]
         if _label is None:
             self._mark()
-        self.content_data, self.typography, self.styles = self._snapshot_at(index)
-        extra = {"typography": dict(self.typography), "styles": copy.deepcopy(self.styles)}
+        self.content_data, self.typography, self.styles, elements = self._snapshot_at(index)
+        self.added, self.removed = elements["added"], elements["removed"]
+        extra = {"typography": dict(self.typography), "styles": copy.deepcopy(self.styles),
+                 "elements": copy.deepcopy(elements)}
         if self.content_data is not None:
             extra["content"] = dict(self.content_data)
         state = self.chain.append(_label or f"Restored {old['state_id']}",
@@ -1017,11 +1041,14 @@ class OrchestrationSession:
         return state
 
     def _snapshot_at(self, index: int) -> tuple:
-        """(content, typography, styles) in effect at state `index`: the
-        latest text edit, typography change, style change or restore at or
-        before it, else the session's initial values."""
-        content = typography = styles = None
+        """(content, typography, styles, elements) in effect at state
+        `index`: the latest text edit, typography change, style change,
+        added or deleted element, or restore at or before it, else the
+        session's initial values."""
+        content = typography = styles = elements = None
         for s in reversed(self.chain.states[:index + 1]):
+            if elements is None and s.get("elements") is not None:
+                elements = s["elements"]
             if content is None and s.get("content") is not None:
                 content = s["content"]
             if typography is None:
@@ -1032,7 +1059,8 @@ class OrchestrationSession:
             if content is not None and typography is not None and styles is not None:
                 break
         return (copy.deepcopy(content if content is not None else self._initial_content),
-                dict(typography or self._initial_typography), copy.deepcopy(styles or {}))
+                dict(typography or self._initial_typography), copy.deepcopy(styles or {}),
+                copy.deepcopy(elements or {"added": {}, "removed": []}))
 
     # -- undo / redo (Figure 3's canvas: Ctrl+Z, Ctrl+Shift+Z) -------------
 
@@ -1115,7 +1143,7 @@ class OrchestrationSession:
         self.chain.save(self.chain_path)
         return state
 
-    STYLE_KEYS = ("fill", "bold", "italic", "align", "opacity", "flip", "image")
+    STYLE_KEYS = ("fill", "bold", "italic", "align", "opacity", "flip", "image", "font", "weight")
 
     @_timed_event
     def set_style(self, node_id: str, changes: dict) -> dict:
@@ -1142,9 +1170,13 @@ class OrchestrationSession:
                 raise ValueError("Opacity is between 0.1 and 1")
             elif key == "image" and not os.path.exists(str(value)):
                 raise ValueError(f"No image at '{value}'")
+            elif key == "font" and not (isinstance(value, str) and 0 < len(value) <= 200):
+                raise ValueError("A font is a family name of 1 to 200 characters")
+            elif key == "weight" and int(value) not in FONT_WEIGHTS:
+                raise ValueError(f"Font weight {value} isn't one of {FONT_WEIGHTS}")
             else:
-                after[key] = float(value) if key == "opacity" else bool(value) if key in (
-                    "bold", "italic", "flip") else value
+                after[key] = float(value) if key == "opacity" else int(value) if key == "weight" else bool(
+                    value) if key in ("bold", "italic", "flip") else value
         if after == before:
             raise ValueError("The style is unchanged.")
         self._mark()
@@ -1162,6 +1194,94 @@ class OrchestrationSession:
                                   candidate_id=current.get("candidate_id"), variation=current.get("variation"),
                                   styles=copy.deepcopy(styles))
         self.render(current["nodes"], self.rendered_path, current.get("variation"))
+        self.chain.save(self.chain_path)
+        return state
+
+    # -- the designer's own elements (notes §3.56) ---------------------------
+
+    def _elements(self) -> dict:
+        return {"added": copy.deepcopy(self.added), "removed": list(self.removed)}
+
+    @_timed_event
+    def add_element(self, kind: str, value: str) -> dict:
+        """Adds an element to the layout: kind "text" (value: its words)
+        joins the stack after the format's own elements, Soft, so the solver
+        places it and the others re-flow; kind "picture" (value: an image
+        file) floats like a motif, in the largest empty gap. Either can then
+        be moved, resized, styled or deleted."""
+        if kind not in ("text", "picture"):
+            raise ValueError("An added element is text or a picture")
+        if kind == "text" and not 0 < len(value.strip()) <= 120:
+            raise ValueError("Added text is 1 to 120 characters")
+        if kind == "picture" and not os.path.exists(value):
+            raise ValueError(f"No image at '{value}'")
+        n = 1 + sum(1 for k in self.added if k.startswith(f"Added_{kind.title()}_"))
+        nid = f"Added_{kind.title()}_{n}"
+        W, H = self.canvas_w, self.canvas_h
+        current = self.chain.current
+        if kind == "text":
+            node = {"node_id": nid, "semantic_category": "added", "structural_class": "text_node",
+                    "spatial_hierarchy": 50 + len(self.added), "bbox": [W * 0.2, H * 0.5, W * 0.6, H * 0.05],
+                    "constraint_type": "Soft"}
+        else:
+            # A picture floats like a motif, outside the solver, in the
+            # layout's largest empty gap (else small, top right)
+            with Image.open(value) as im:
+                aspect = im.width / max(1, im.height)
+            boxes = sorted((n["bbox"] for n in current["nodes"] if n.get("structural_class") != "decor"),
+                           key=lambda b: b[1])
+            gaps = [(a[1] + a[3], b[1]) for a, b in zip(boxes, boxes[1:]) if b[1] - (a[1] + a[3]) >= 0.06 * H]
+            if gaps:
+                top, bottom = max(gaps, key=lambda g: g[1] - g[0])
+                h = min((bottom - top) * 0.8, W * 0.5 / aspect)
+                box = [(W - h * aspect) / 2.0, top + ((bottom - top) - h) / 2.0, h * aspect, h]
+            else:
+                w = min(W, H) * 0.14 * max(1.0, aspect)
+                box = [W - w - 0.06 * W, 0.06 * H, w, w / aspect]
+            node = {"node_id": nid, "semantic_category": "added", "structural_class": "decor", "motif_path": value,
+                    "spatial_hierarchy": 200 + len(self.added), "bbox": [round(v, 2) for v in box],
+                    "constraint_type": "Soft"}
+        variation = current.get("variation") or dict(variations_for(self.domain)[0])
+        self._mark()
+        self.added = dict(self.added, **{nid: node})
+        extra = {"elements": self._elements()}
+        if kind == "text":
+            self.content_data = dict(self.content(), **{nid: value.strip()})
+            extra["content"] = dict(self.content_data)
+            resolved = self._resolve(current["nodes"] + [node], variation)
+        else:
+            resolved = copy.deepcopy(current["nodes"]) + [node]
+        state = self.chain.append(f"Added [{nid}]", {"type": "add", "node_id": nid, "kind": kind,
+                                                     "summary": f"Added {nid}"},
+                                  resolved, fitness=self._fitness(resolved, variation),
+                                  candidate_id=current.get("candidate_id"), variation=variation, **extra)
+        self.render(resolved, self.rendered_path, variation)
+        self.chain.save(self.chain_path)
+        return state
+
+    @_timed_event
+    def remove_element(self, node_id: str) -> dict:
+        """Deletes an element from the layout; the others re-flow. A
+        format's own element is no longer asked for (F1 leaves it out);
+        undo or the State Timeline brings it back."""
+        current = self.chain.current
+        if node_id not in {n["node_id"] for n in current["nodes"]}:
+            raise KeyError(f"No node '{node_id}' on the canvas")
+        if sum(1 for n in current["nodes"] if n.get("structural_class") != "decor") <= 1 \
+                and not node_id.startswith("decor_"):
+            raise ValueError("A layout keeps at least one element")
+        variation = current.get("variation") or dict(variations_for(self.domain)[0])
+        self._mark()
+        self.removed = list(self.removed) + [node_id]
+        target = next(n for n in current["nodes"] if n["node_id"] == node_id)
+        rest = [n for n in current["nodes"] if n["node_id"] != node_id]
+        resolved = rest if target.get("structural_class") == "decor" else self._resolve(rest, variation)
+        state = self.chain.append(f"Removed [{node_id}]", {"type": "remove", "node_id": node_id,
+                                                           "summary": f"Removed {node_id}"},
+                                  resolved, fitness=self._fitness(resolved, variation),
+                                  candidate_id=current.get("candidate_id"), variation=variation,
+                                  elements=self._elements())
+        self.render(resolved, self.rendered_path, variation)
         self.chain.save(self.chain_path)
         return state
 
