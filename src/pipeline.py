@@ -603,7 +603,7 @@ class OrchestrationSession:
                  output_dir: str = "data/rendered/", logo_images: list = None, population: int = 6,
                  canvas_w: int = None, canvas_h: int = None, font_family: str = None,
                  use_wordmark: bool = True, wordmark_path: str = None, motif_paths: list = None,
-                 detected_nodes: list = None, use_structure: bool = None):
+                 detected_nodes: list = None, use_structure: bool = None, background_path: str = None):
         if not os.path.exists(payload_path):
             raise FileNotFoundError(f"Payload not found at '{payload_path}'")
         self.payload_path = payload_path
@@ -627,6 +627,7 @@ class OrchestrationSession:
         self.use_wordmark = use_wordmark
         self.wordmark_path = wordmark_path
         self.motif_paths = motif_paths
+        self.background_path = background_path   # a picture the designer put in place of the text-free background
         self.canvas_w, self.canvas_h = _derive_canvas(self.payload_meta, canvas_w, canvas_h)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -701,6 +702,10 @@ class OrchestrationSession:
                 self.template_image, self.detected_nodes, self.output_dir, self.stem,
                 use_wordmark=self.use_wordmark, wordmark_path=self.wordmark_path,
                 motif_paths=self.motif_paths)
+            if self.background_path:
+                # Step 1's replacement for the text-free background; the
+                # candidates' legibility is scored against it (notes §3.53)
+                self.style_kit = dict(self.style_kit, background=self.background_path)
             if self.detected_nodes:
                 with Image.open(self.template_image) as img:
                     mw, mh = img.size

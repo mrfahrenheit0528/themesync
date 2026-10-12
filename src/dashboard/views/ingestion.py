@@ -116,13 +116,54 @@ def _annotated(path: str, nodes: list) -> Image.Image:
                                CATEGORY_COLOURS.get(n["semantic_category"], (255, 255, 255))) for n in nodes])
 
 
+IMAGE_DROP_TYPES = ["png", "jpg", "jpeg", "webp"]
+
+
+def _replaced(key: str):
+    """The picture the designer dropped on tile `key` (its path), or None."""
+    path = st.session_state.get(f"replaced_{key}")
+    return path if path and os.path.exists(path) else None
+
+
+def _drop_zone(key: str) -> None:
+    """An invisible upload area over tile `key`'s picture (notes §3.53):
+    drop an image on it, or click it, to replace the extracted one; the ↺
+    button goes back to the extracted image."""
+    n = st.session_state.get(f"replace_n_{key}", 0)
+    up = st.file_uploader("Drop an image here to replace it", type=IMAGE_DROP_TYPES, key=f"drop_{key}_{n}",
+                          label_visibility="collapsed")
+    if up is not None:
+        path = ui.save_upload(up, prefix="replace_")
+        if st.session_state.get(f"replaced_{key}") != path:
+            st.session_state[f"replaced_{key}"] = path
+            st.rerun()                                     # show the new picture on the tile
+    if _replaced(key):
+        def revert() -> None:
+            st.session_state.pop(f"replaced_{key}", None)
+            st.session_state[f"replace_n_{key}"] = n + 1   # a fresh, empty upload area
+
+        st.button("", icon=":material/undo:", key=f"revert_{key}", type="tertiary", on_click=revert,
+                  help="Back to the extracted image")
+
+
+def _shown(image: Image.Image, key: str) -> Image.Image:
+    """The tile's picture: the designer's replacement, if any."""
+    path = _replaced(key)
+    if not path:
+        return image
+    with Image.open(path) as im:
+        return im.copy()
+
+
 def _tile(image: Image.Image, key: str, label: str, default: bool, size: int = 60, kind: str = "mark") -> bool:
-    """One pickable tile: the image (coral ring when picked), and the
-    checkbox under it that picks it. Returns whether it's picked."""
+    """One pickable tile: the image (coral ring when picked), an image
+    dropped on it replaces it, and the checkbox under it picks it. Returns
+    whether it's picked."""
     picked = st.session_state.get(key, default)
     with st.container(key=f"tile_{key}", width="content", gap=None):
-        st.markdown(ui.thumbs([{"image": image, "kind": kind, "state": "on" if picked else "off"}], size=size),
-                    unsafe_allow_html=True)
+        st.markdown(ui.thumbs([{"image": _shown(image, key), "kind": kind, "state": "on" if picked else "off"}],
+                              size=size), unsafe_allow_html=True)
+        _drop_zone(key)
         return st.checkbox(label, value=default, key=key)
 
 
@@ -208,7 +249,7 @@ drawer = st.container(key="ts_drawer") if st.session_state["target_panel"] else 
 
 dna = None
 typography = dict(DEFAULT_TYPOGRAPHY)
-logo_images, motif_paths, use_wordmark, wordmark_path = None, [], False, None
+logo_images, motif_paths, use_wordmark, wordmark_path, background_path = None, [], False, None, None
 
 # ---------------------------------------------------------------------------
 # The Master Layout (left)
@@ -316,9 +357,9 @@ with logos_col, st.container(key="assets_logos"):
         else:
             with st.container(horizontal=True, key="logo_tiles", gap="small"):
                 for c in cands:
-                    if _tile(c["image"], f"logo_{dna['stem']}_{c['id']}", f"{c['label']} · {c['conf']:.2f}",
-                             c["auto"]):
-                        ticked.append(c)
+                    key = f"logo_{dna['stem']}_{c['id']}"
+                    if _tile(c["image"], key, f"{c['label']} · {c['conf']:.2f}", c["auto"]):
+                        ticked.append(dict(c, replaced=_replaced(key)))
         note_slot = st.empty()
     with st.container(key="logos_btn"):
         with st.popover("Add Logos", icon=":material/add_photo_alternate:", width="stretch", disabled=not dna):
@@ -332,12 +373,16 @@ with logos_col, st.container(key="assets_logos"):
         if dna:
             uploads = [ui.save_upload(f, prefix="logo_") for f in extra or []]
             auto_ids = {c["id"] for c in cands if c["auto"]}
-            if cands and {c["id"] for c in ticked} == auto_ids and not uploads:
+            if (cands and {c["id"] for c in ticked} == auto_ids and not uploads
+                    and not any(c["replaced"] for c in ticked)):
                 note = "✓ ThemeSync's automatic pick"
             elif ticked or uploads:
                 os.makedirs(os.path.join(ui.UPLOAD_DIR, "logos"), exist_ok=True)
                 logo_images = []
                 for c in sorted(ticked, key=lambda c: (not c["primary"], c["x"])):
+                    if c["replaced"]:                      # an image dropped on the tile
+                        logo_images.append(c["replaced"])
+                        continue
                     path = os.path.join(ui.UPLOAD_DIR, "logos", f"{dna['stem']}_{c['id']}.png")
                     c["image"].save(path)
                     logo_images.append(path)
@@ -356,17 +401,24 @@ with markers_col, st.container(key="assets_markers"):
         else:
             # One row: the background, the title artwork, the motifs
             with st.container(horizontal=True, key="marker_tiles", gap="small"):
+                bg_key = f"background_{dna['stem']}"
                 with Image.open(kit["background"]) as bg, st.container(key="tile_background", width="content",
                                                                         gap=None):
-                    st.markdown(ui.thumbs([{"image": bg.convert("RGB"), "kind": "photo",
-                                            "caption": "Text-free background"}], size=60), unsafe_allow_html=True)
+                    st.markdown(ui.thumbs([{"image": _shown(bg.convert("RGB"), bg_key).convert("RGB"),
+                                            "kind": "photo", "caption": "Text-free background"}], size=60),
+                                unsafe_allow_html=True)
+                    _drop_zone(bg_key)
+                background_path = _replaced(bg_key)
                 if kit["wordmark"]:
+                    wm_key = f"wordmark_{dna['stem']}"
                     with Image.open(kit["wordmark"]["path"]) as wm:
-                        use_wordmark = _tile(wm.copy(), f"wordmark_{dna['stem']}", "Title artwork", True)
+                        use_wordmark = _tile(wm.copy(), wm_key, "Title artwork", True)
+                    wordmark_path = _replaced(wm_key) or wordmark_path
                 for i, m in enumerate(kit["motifs"]):
+                    m_key = f"motif_{dna['stem']}_{i}"
                     with Image.open(m["path"]) as im:
-                        if _tile(im.copy(), f"motif_{dna['stem']}_{i}", f"M{i + 1} · {m['confidence']:.2f}", True):
-                            motif_paths.append(m["path"])
+                        if _tile(im.copy(), m_key, f"M{i + 1} · {m['confidence']:.2f}", True):
+                            motif_paths.append(_replaced(m_key) or m["path"])
         marker_note = st.empty()
     with st.container(key="markers_btn"):
         with st.popover("Upload Title Artwork", icon=":material/upload:", width="stretch", disabled=not dna):
@@ -581,7 +633,7 @@ if drawer is not None:
                 target["path"], template_image=master_path, content_data=content, typography=typography,
                 use_gnn=st.session_state["use_gnn"], output_dir=out_dir, logo_images=logo_images,
                 use_wordmark=use_wordmark, wordmark_path=wordmark_path, motif_paths=motif_paths,
-                detected_nodes=dna["nodes"],
+                detected_nodes=dna["nodes"], background_path=background_path,
             )
             session.merge = merge or None          # the merged fields keep their placeholders on the canvas
             try:

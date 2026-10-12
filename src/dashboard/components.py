@@ -530,6 +530,30 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
 [class*="st-key-tile_"] {align-items: center; gap: .15rem !important;}
 [class*="st-key-tile_"] .ts-thumbs {margin: 0;}
 [class*="st-key-tile_"] [data-testid="stCheckbox"] label p {font-size: .72rem; color: #3c4250;}
+/* Drop an image on a tile to replace it (notes §3.53): a transparent upload
+   area over the picture, shown on hover; the ↺ button on the tile's corner */
+[class*="st-key-tile_"] {position: relative; --tile-w: 60px;}
+.st-key-tile_background {--tile-w: 96px;}
+[class*="st-key-tile_"] [data-testid="stElementContainer"]:has([data-testid="stFileUploader"]) {
+  position: absolute !important; top: .1rem; left: calc(50% - var(--tile-w) / 2); width: var(--tile-w) !important;
+  min-width: 0 !important; max-width: var(--tile-w); height: 60px; z-index: 4; margin: 0; overflow: hidden;}
+[class*="st-key-tile_"] [data-testid="stFileUploader"],
+[class*="st-key-tile_"] [data-testid="stFileUploader"] > section {height: 100%; width: 100%; min-width: 0;}
+[class*="st-key-tile_"] [data-testid="stFileUploaderDropzone"] {width: 100%; min-width: 0;}
+[class*="st-key-tile_"] [data-testid="stFileUploaderDropzone"] {position: relative; height: 100%; min-height: 0;
+  padding: 0; border-radius: 12px; border: 2px dashed #e8735a; background: rgba(255, 246, 243, .9);
+  opacity: 0; transition: opacity .12s; cursor: copy;}
+[class*="st-key-tile_"] [data-testid="stFileUploaderDropzone"]:hover {opacity: 1;}
+[class*="st-key-tile_"] [data-testid="stFileUploaderDropzone"] > * {opacity: 0;}
+[class*="st-key-tile_"] [data-testid="stFileUploaderDropzone"]::after {content: "Drop or click to replace";
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center;
+  font-size: .6rem; font-weight: 650; line-height: 1.15; color: #b5452c; padding: .2rem; pointer-events: none;}
+[class*="st-key-tile_"] [data-testid="stFileUploader"] > :not(section),
+[class*="st-key-tile_"] [data-testid="stFileUploaderFile"] {display: none !important;}
+[class*="st-key-tile_"] [class*="st-key-revert_"] {position: absolute !important; top: -.35rem;
+  left: calc(50% - var(--tile-w) / 2 - .45rem); z-index: 5; width: auto !important; margin: 0;}
+[class*="st-key-revert_"] button {min-height: 1.5rem; height: 1.5rem; width: 1.5rem; padding: 0; border-radius: 50%;
+  background: #fff !important; border: 1px solid #e4e7ec !important; box-shadow: 0 1px 3px rgba(16, 24, 40, .18);}
 .ts-thumb figcaption:empty {display: none;}
 .ts-thumb.photo figcaption {max-width: none; white-space: nowrap;}
 .ts-note {font-size: .74rem; color: #5b6370;}
