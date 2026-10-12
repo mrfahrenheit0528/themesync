@@ -3819,3 +3819,73 @@ a layout with the same elements is generated or scored.
   1780×880:
   - this section's features, plus fonts, mail merge and Style tools;
   - no page scroll, no target-panel scroll, no exceptions.
+
+### 3.55 Text from the poster for the content payload; signature-block counts; OCR fixed on Windows (2026-10-13)
+
+The user asked whether the content payload could take its text from the
+poster, and for counts of repeating elements (`7136f92`).
+
+- **OCR had returned nothing on Windows.**
+  - The user's Tesseract install had no language data (no
+    `eng.traineddata`, no `TESSDATA_PREFIX`). `layout_extractor._ocr_region`
+    swallowed the error, so every `ocr_text` was empty: the node graph's
+    snippets on Windows, and the latency benchmark's Stage 0b.
+  - On the server OCR worked: `data/phase4/preview/*/pipeline.log` shows
+    lines such as `ocr="CAMARINES SUR POLYTECHNIC COLLEGES…"`.
+  - **Fix:** the English model ships in `assets/tessdata` (tessdata_best,
+    Apache 2.0). `poster_text` points `TESSDATA_PREFIX` at it on every
+    machine.
+  - Stage 0b now reads each text box with a margin, in grayscale, with
+    light-on-dark text inverted and small crops enlarged (`--psm 6`). OCR
+    text is only displayed, so layouts don't change.
+  - **Cost on the RTX 3060 workstation** (16 Phase 4 posters): Stage 0b's
+    median went from 0.32 s (OCR failing) to 1.41 s (max 2.24 s).
+    - The latency benchmark's "opening a layout", median 3.4 s (Chapter 4,
+      p.89), ran Stage 0b inside `run()` with OCR failing. With OCR it
+      would be about 1.1 s longer.
+    - The edit latencies (Table 12) don't include Stage 0b and stand.
+    - In the dashboard, Stage 0b runs at Step 1's extraction, not at
+      Initialize.
+- **Reading the structure mapping's role boxes failed.** OCR of the header,
+  title and details boxes scored 0.21–0.32 similarity to the manifest's
+  typed text. Titles are stylised artwork, and the group below the title is
+  often a tagline, not the date.
+- **`src/data_preprocessing/poster_text.py`** works line by line instead.
+  - `ocr_lines` gives each detected text box's readable lines. It reuses
+    Stage 0b's text and drops artwork noise: at least three in four tokens
+    must be words, numbers, dates or acronyms.
+  - `suggest_fields` fills a field only when a line clearly fits it:
+    - the header: institution lines in the top half;
+    - the details: a dated line plus a venue line next to it;
+    - the certificate's date. Titles are left out.
+  - **On the 16 posters against the manifest:**
+
+    | Field | Filled | Close (≥ 0.8) |
+    |---|---|---|
+    | ID header | 11 | 6 |
+    | ID details | 8 | 5 |
+    | Certificate organisation | 11 | 7 |
+    | Certificate date | 8 | 6 |
+
+    The misses are partial or differently worded but real poster text.
+    E.g. CMET's "Mapua-PTC College of Maritime Education", where the
+    manifest's own line is an unconfirmed guess. No field held noise.
+- **Step 1:**
+  - suggestions fill empty fields once per poster, labelled "· from the
+    poster";
+  - a note counts them;
+  - a new poster replaces the earlier poster's unchanged suggestions;
+  - the Poster text popover lists every line read, each copyable.
+- **Counts:** a repeating group (Signature Blocks) takes a count of 1 to 5
+  in the target panel.
+  - Five is the cap: the stress test's blocks overlap from six (§3.42),
+    and Chapter 5's Recommendation 2 is to limit the certificate to five.
+  - A group of one is named without a suffix, consistently across the
+    schema, instantiation and the renderer.
+  - 1, 2, 4 and 5 blocks: F1 1.0 and no overlaps in both conditions; the
+    blocks narrow to 241 px (4) and 193 px (5).
+- **Checked:**
+  - the 12 tests;
+  - this section's browser test (both formats; no page or panel scroll at
+    1366×768);
+  - §3.54's test and the mail merge again.

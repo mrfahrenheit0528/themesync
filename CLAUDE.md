@@ -29,7 +29,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.54).
+§3.55).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
@@ -87,7 +87,10 @@ Read first: `notes/system_development_progress.md`, then the tail of
     - (§3.54) content fields start empty, with the sample text as hints,
       and an empty field becomes a placeholder on the canvas;
     - (§3.54) the target panel's element checkboxes: unticked elements
-      leave the payload (a cut-down copy in the session folder).
+      leave the payload (a cut-down copy in the session folder);
+    - (§3.55) content suggested from the poster's text (`poster_text.py`,
+      OCR) into empty fields, marked "from the poster";
+    - (§3.55) signature blocks take a count of 1 to 5.
   - **Step 3:** the evaluated layout is fixed on the left at the window's
     height; the report (intro, headline tiles, cards) scrolls on the right
     in `report_scroll`; the page itself doesn't scroll (§3.39). The
@@ -362,6 +365,11 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
     registers the families Windows lacks for the session at import. It
     skips installed ones, and the first render waits 2 s for DirectWrite.
   - Add a family to `ui.FONTS` and rebuild with the script.
+- **Tesseract's English model ships in `assets/tessdata`** (§3.55). The
+  Windows install had none, so OCR silently returned nothing there before
+  2026-10-13; `poster_text` sets `TESSDATA_PREFIX` to that folder on every
+  machine. OCR text is displayed and suggested, never used by layout
+  generation.
 - **Browser tests upload a copy of the poster from outside
   `data/raw/dashboard_uploads/`.** Re-uploading a file from there saves a
   duplicate (`X_hash_hash.jpg`). Delete any that appear.

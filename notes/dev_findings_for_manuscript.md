@@ -1,11 +1,12 @@
 # Findings from system development, for the manuscript chat
 
-> **Start here (2026-10-13):** section I, at the end, lists five dashboard
-> features added after Manu 1210.1 (fonts, mail merge, Style tools,
-> drop-to-replace). Nothing in the manuscript has to change; the table there
-> lists optional touches. Section H (2026-10-12) checks Manu 1210.1 against
-> the system: five wording items (H1–H5). Section G (2026-10-10) was the
-> list for Manu 1010.1, and it is applied. Sections A–F are the detail.
+> **Start here (2026-10-13):** sections I, I2 and I3, at the end, list the
+> dashboard features added after Manu 1210.1. **I3 has one finding for
+> Chapter 4:** p.89's "opening a layout, 3.4 s" was measured while OCR was
+> failing on that workstation (about 1.1 s more with OCR). Everything else
+> is optional. Section H (2026-10-12) checks Manu 1210.1 against the system
+> (H1–H5). Section G (2026-10-10) was the list for Manu 1010.1, and it is
+> applied. Sections A–F are the detail.
 
 The system-development chat checked the revised manuscript against the
 code on 2026-10-09:
@@ -1165,3 +1166,43 @@ elements is generated and scored as before.
 |---|---|---|
 | p.56 (Figure 2) | the screenshot shows filled content fields | The fields now start empty, with hints. The text ("the content payload for the target format") stays true. |
 | p.56 (Figure 2's text) | "The target format was chosen in a Target Initialization panel … which also held the command that initialized the orchestration" | Optional: "…in which the designer also chose which of the format's elements the layout included, and which held the command…". This also fits Dynamic Node Instantiation (p.8: payloads containing "specific names, titles, or signature counts"). |
+
+### I3. Text from the poster, signature-block counts, and an OCR finding — 2026-10-13 (notes §3.55)
+
+**One finding touches Chapter 4** (p.89 of Manus 1210.1 and 1210.2, "Opening a layout,
+which ran every stage of the pipeline, took a median of 3.4 seconds"):
+- On the RTX 3060 workstation where the latency was measured, Tesseract had
+  no English language data. OCR failed silently, so Stage 0b's OCR took
+  almost no time.
+- With OCR working (fixed now), Stage 0b's median there is 1.41 s instead
+  of 0.32 s, so opening a layout would take about 1.1 s longer.
+- The edit latencies (Table 12, Figure 7) don't include Stage 0b and stand.
+- On the server (the Phase 3 battery), OCR worked.
+
+**Suggested wording:** "Opening a layout, which ran every stage of the
+pipeline, took a median of 3.4 seconds; on that workstation Tesseract
+lacked its English data, so the OCR of the detected text, which adds about
+1.1 seconds, was not included." Or simply drop "which ran every stage of
+the pipeline".
+
+**What was added** (nothing else in the manuscript has to change):
+- **Content suggested from the poster.** After extraction, Step 1 fills
+  empty fields only where a line of the poster clearly fits:
+  - an institution line → the header or organisation;
+  - a dated line with a venue → the event details;
+  - the date → the certificate's date.
+  - Suggested fields are marked "from the poster", and every line read is
+    listed.
+  - On the 16 Phase 4 posters, every filled field held real poster text,
+    and about two in three matched the typed text. Titles aren't
+    suggested: stylised artwork doesn't read.
+- **Signature blocks take a count of 1 to 5** in the target panel. This
+  carries out Chapter 5's Recommendation 2 ("limit the certificate to five
+  signature blocks").
+
+**Optional touches** ("p." is Manu 1210.2's page):
+
+| Page | Now | Note |
+|---|---|---|
+| p.55 (Phase 1) | Tesseract OCR "labelled the detected text regions …; the words placed in the generated layouts came from the user's validated content payload" | Still true. Optional: "…and suggested the poster's header, date and venue for the content payload, which the user confirmed or edited". |
+| p.107 (Chapter 5, Recommendation 2) | "limit the certificate to five signature blocks" | Now done in the system (1 to 5). The recommendation still stands as written for the study's evaluated version. |
