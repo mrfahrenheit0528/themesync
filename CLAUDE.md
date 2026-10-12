@@ -29,7 +29,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.53).
+§3.54).
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
@@ -84,6 +84,10 @@ Read first: `notes/system_development_progress.md`, then the tail of
       `style`);
     - drop an image on a Step 1 tile to replace it (`background_path` for
       the background).
+    - (§3.54) content fields start empty, with the sample text as hints,
+      and an empty field becomes a placeholder on the canvas;
+    - (§3.54) the target panel's element checkboxes: unticked elements
+      leave the payload (a cut-down copy in the session folder).
   - **Step 3:** the evaluated layout is fixed on the left at the window's
     height; the report (intro, headline tiles, cards) scrolls on the right
     in `report_scroll`; the page itself doesn't scroll (§3.39). The

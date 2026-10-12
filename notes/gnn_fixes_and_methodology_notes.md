@@ -3782,3 +3782,40 @@ point: the tag `pre-oral-demo` (`b18bc6b`).
   - p.56's "keep, remove, or replace" is now true for every tile (H5);
   - Figure 3's typography box now shows a font picker, not a text field;
   - the Style tools and the mail merge aren't described anywhere.
+
+### 3.54 Step 1: font dropdown look, empty content fields, choosing the layout's elements (2026-10-13)
+
+The user asked for three changes on 2026-10-13 (`219cef7`). None changes how
+a layout with the same elements is generated or scored.
+
+- **The font picker looks like the selectbox beside it.** Its style was
+  measured from the weight dropdown: #f4f5f7 fill, a 1px #e0e2e7 border,
+  8px corners, 40px tall, 14px regular text 8px in, a dark chevron.
+  - The label and the button share one gapless container, so they line up
+    with the neighbouring widgets.
+  - The previews use each family's regular face.
+- **Content fields start empty.**
+  - Before, Step 1 pre-filled them from `data/raw/sample_content.json` and
+    `sample_content_id.json`. That sample text is now each field's grey
+    hint ("e.g. Maria Angela Santos"), and a button fills it in.
+  - An empty field reaches the canvas as a placeholder in the mail merge's
+    form («Student Name»). Unlike a merged field, it stays text-editable in
+    Step 2.
+  - The schema always allowed empty strings: it sets no minLength.
+- **The Target Initialization panel lists the format's elements as
+  checkboxes** (two columns, so the panel still fits 1366×768).
+  - Unticked elements leave the payload. Initialize writes a cut-down copy
+    of it to the session folder and passes that to the session, so the
+    removed elements aren't asked for, validated, instantiated or counted
+    in F1 (whose mandated list comes from the payload).
+  - At least one element stays.
+  - **Tested on 20 subsets** of both formats in both conditions, among them
+    no logo, no title, no mapped header/details, title + name only and name
+    only. Every run gave six candidates and F1 1.0.
+  - **One fix:** a single stacked node crashed the GNN (a graph with no
+    edges). It now keeps its start position, since it has no neighbours to
+    relate to. Two or more nodes, as in every rated layout, are unchanged.
+- **Checked:** the 12 tests, and the browser tests at 1366×768 and
+  1780×880:
+  - this section's features, plus fonts, mail merge and Style tools;
+  - no page scroll, no target-panel scroll, no exceptions.

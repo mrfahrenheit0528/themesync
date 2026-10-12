@@ -1145,3 +1145,23 @@ applied H1 and H5).
 **For the defense:** these features came after the evaluation. If the
 panel asks why the manuscript doesn't describe them, that's the answer.
 The experts rated layouts made without them.
+
+### I2. Three more Step 1 changes — 2026-10-13 (notes §3.54)
+
+Again, **nothing in the manuscript has to change**: a layout with the same
+elements is generated and scored as before.
+
+- **The font dropdown** now looks like the other Step 1 dropdowns.
+- **Content fields start empty,** with the sample text as a grey hint. An
+  empty field appears on the canvas as a placeholder (e.g. «Student Name»)
+  that can be filled in during Step 2. A button fills the sample text.
+- **The Target Initialization panel lists the format's elements as
+  checkboxes.** Unticked elements are left out of the layout: not asked
+  for, validated, instantiated or counted in F1.
+
+**Optional touches** ("p." is Manu 1210.2's page):
+
+| Page | Now | Note |
+|---|---|---|
+| p.56 (Figure 2) | the screenshot shows filled content fields | The fields now start empty, with hints. The text ("the content payload for the target format") stays true. |
+| p.56 (Figure 2's text) | "The target format was chosen in a Target Initialization panel … which also held the command that initialized the orchestration" | Optional: "…in which the designer also chose which of the format's elements the layout included, and which held the command…". This also fits Dynamic Node Instantiation (p.8: payloads containing "specific names, titles, or signature counts"). |
