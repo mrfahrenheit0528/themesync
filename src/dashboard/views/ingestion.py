@@ -41,6 +41,7 @@ from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import components as ui                                              # noqa: E402
+import mail_merge                                                    # noqa: E402
 import pipeline                                                      # noqa: E402
 from aesthetic_renderer import DEFAULT_TYPOGRAPHY, _palette_from_centroids  # noqa: E402
 from schema_validation import FONT_WEIGHTS, validate_content, validate_typography  # noqa: E402
@@ -447,10 +448,14 @@ content = {}
 with card_content:
     with st.container(horizontal=True, key="content_head", vertical_alignment="center"):
         ui.card_title("edit_note", "Content Payload", _friendly(domain) if domain else "")
-        with st.popover("", icon=":material/upload_file:", help="Load a JSON payload"):
-            payload_upload = st.file_uploader("Content payload (JSON); it fills the fields below",
-                                              type=["json"], key=f"payload_{domain}")
-    if payload_upload is not None and st.session_state.get("payload_applied") != payload_upload.file_id:
+        with st.popover("", icon=":material/upload_file:", help="Load a JSON payload, or a CSV for a mail merge"):
+            payload_upload = st.file_uploader(
+                "A JSON payload fills the fields below. A CSV makes a mail merge: one layout per row, "
+                "its columns named after the fields (e.g. Participant Name, Participant Role).",
+                type=["json", "csv"], key=f"payload_{domain}")
+    upload_is_csv = payload_upload is not None and payload_upload.name.lower().endswith(".csv")
+    if (payload_upload is not None and not upload_is_csv
+            and st.session_state.get("payload_applied") != payload_upload.file_id):
         # applied once per file, so edits made afterwards aren't overwritten on rerun
         try:
             loaded = json.loads(payload_upload.getvalue().decode("utf-8"))
@@ -461,6 +466,7 @@ with card_content:
             st.error(f"Could not read that JSON: {e}")
     # Fields in two columns: short ones pair up, a long one takes a row
     fields = []                                    # (key, label, long?, max_characters)
+    base_content = {}                              # every field's value in the form
     for var, props in schema.items():
         count = props.get("instantiation_count", 1)
         keys = [f"{var}_{i}" for i in range(count)] if count > 1 else [var]
@@ -468,6 +474,7 @@ with card_content:
             default = str(sample.get(key, ""))
             wkey = f"content_{domain}_{key}"
             st.session_state.setdefault(wkey, default)
+            base_content[key] = st.session_state[wkey]
             if props.get("structural_class") == "image_node":
                 content[key] = st.session_state[wkey]      # alt text only; the image is the logo
                 continue
@@ -475,6 +482,29 @@ with card_content:
             long = ("\n" in default or props.get("max_characters", 0) > 80
                     or props.get("structural_class") == "repeating_group")
             fields.append((key, label, long, props.get("max_characters")))
+    # A CSV: the mail merge (mail_merge.py), applied once per file
+    merge_key = f"merge_{domain}"
+    if upload_is_csv and st.session_state.get("payload_applied") != payload_upload.file_id:
+        st.session_state["payload_applied"] = payload_upload.file_id
+        try:
+            st.session_state[merge_key] = mail_merge.build(
+                payload_upload.getvalue(), {k: (label, mx) for k, label, _, mx in fields}, base_content,
+                target["meta"], payload_upload.name)
+        except ValueError as e:
+            st.error(f"Mail merge: {e}")
+    merge = st.session_state.get(merge_key)
+    if merge:
+        with st.container(horizontal=True, key="merge_note", vertical_alignment="center", gap="small"):
+            left_out = f' · <b>{len(merge["invalid"])} left out</b>' if merge["invalid"] else ""
+            st.markdown(f'<div class="ts-note"><b>Mail merge</b> · {len(merge["rows"])} of {merge["total"]} rows '
+                        f'from {html.escape(merge["source"])} · {html.escape(", ".join(merge["labels"].values()))}'
+                        f'{left_out}</div>', unsafe_allow_html=True)
+            if merge["invalid"]:
+                with st.popover("", icon=":material/warning:", help="The rows left out, and why"):
+                    for number, errors in merge["invalid"]:
+                        st.markdown(f"**Row {number}:** " + html.escape("; ".join(errors)))
+            st.button("", icon=":material/close:", key="merge_clear", type="tertiary", help="Stop the mail merge",
+                      on_click=lambda: st.session_state.pop(merge_key, None))
     rows, pending = [], []
     for field in fields:
         if field[2]:
@@ -491,6 +521,13 @@ with card_content:
             cols = st.columns(2, gap="small") if len(row) == 2 or not row[0][2] else [st.container()]
             for (key, label, long, max_chars), col in zip(row, cols):
                 wkey = f"content_{domain}_{key}"
+                if merge and key in merge["fields"]:
+                    # One layout to edit: the merged field shows its placeholder
+                    content[key] = merge["placeholders"][key]
+                    widget = col.text_area if long else col.text_input
+                    widget(label, value=content[key], disabled=True, key=f"merged_{wkey}",
+                           help=f"Filled from {merge['source']} for each layout")
+                    continue
                 if long:
                     content[key] = col.text_area(label, key=wkey, height=68, max_chars=max_chars)
                 else:
@@ -546,6 +583,7 @@ if drawer is not None:
                 use_wordmark=use_wordmark, wordmark_path=wordmark_path, motif_paths=motif_paths,
                 detected_nodes=dna["nodes"],
             )
+            session.merge = merge or None          # the merged fields keep their placeholders on the canvas
             try:
                 with notice, st.spinner("Running Stages 1-6..."):
                     session.run()

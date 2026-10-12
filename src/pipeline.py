@@ -647,6 +647,11 @@ class OrchestrationSession:
         self._initial_typography = dict(self.typography)
         self._undo, self._redo = [], []   # state indices (undo / redo)
         self.event_ms = {}                # state id → that event's latency (ms)
+        # A mail merge (the dashboard's mail_merge.py): {"fields": [...],
+        # "rows": [{field: value}], ...}. Its fields show placeholders on the
+        # canvas, aren't text-editable, and take each row's words in
+        # render_merged. None: no merge (notes §3.53).
+        self.merge = None
         self.rendered_path = os.path.join(output_dir, f"ThemeSync_{self.stem}_populated.svg")
         self.chain_path = os.path.join(output_dir, f"ThemeSync_{self.stem}_state_chain.json")
 
@@ -813,12 +818,14 @@ class OrchestrationSession:
                                        content_region=tuple(r * self.canvas_w for r in solver.region))
         return evaluator.evaluate_layout(nodes)
 
-    def renderer(self) -> AestheticSVGRenderer:
+    def renderer(self, content: dict = None) -> AestheticSVGRenderer:
+        """The session's renderer; `content` replaces the canvas's words
+        (a mail-merge row)."""
         return AestheticSVGRenderer(
             canvas_width=self.canvas_w, canvas_height=self.canvas_h,
             original_filename=f"ThemeSync_{self.stem}",
             color_centroids=self.color_centroids,
-            mock_data=self.content_data,
+            mock_data=self.content_data if content is None else content,
             domain_context=self.domain,
             logo_image_path=self.logos.get("primary"),
             logo_row_paths=self.logos.get("row"),
@@ -833,6 +840,14 @@ class OrchestrationSession:
     def render(self, nodes: list, path: str, variation: dict = None) -> str:
         variation = variation or (self.chain.current or {}).get("variation")
         return self.renderer().render_nodes(nodes, path, archetype=self.archetype_of(variation))
+
+    def render_merged(self, values: dict, path: str) -> str:
+        """The current layout with one mail-merge row's words in its merged
+        fields (the layout itself isn't re-solved). Returns the SVG path."""
+        state = self.chain.current
+        content = dict(self.content(), **values)
+        return self.renderer(content).render_nodes(state["nodes"], path,
+                                                   archetype=self.archetype_of(state.get("variation")))
 
     def render_candidates(self, directory: str = None) -> list:
         """Renders every ranked candidate (Figure 3's Recommendation Engine
@@ -1050,8 +1065,10 @@ class OrchestrationSession:
         title while it is drawn with the master's title artwork."""
         kinds = {n["node_id"]: n.get("structural_class") for n in (self.chain.current or {}).get("nodes", [])}
         artwork = bool(self.style_kit.get("wordmark"))
+        merged = set((self.merge or {}).get("fields", ()))      # filled from the CSV, per row
         return {k: v for k, v in self.content().items()
-                if kinds.get(k) in ("text_node", "repeating_group") and not (artwork and "Event_Title" in k)}
+                if kinds.get(k) in ("text_node", "repeating_group") and not (artwork and "Event_Title" in k)
+                and k not in merged}
 
     def text_limits(self) -> dict:
         """node id → max characters, from the format's content schema (p.44)."""

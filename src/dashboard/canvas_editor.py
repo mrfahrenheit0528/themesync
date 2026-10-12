@@ -175,6 +175,7 @@ def _nodes(session, friendly) -> list:
     limits = session.text_limits()
     schema = session.payload_meta.get("variable_schema", {})
     artwork = bool(session.style_kit.get("wordmark"))
+    merged = set((session.merge or {}).get("fields", ()))
     out = []
     for n in session.chain.current["nodes"]:
         nid = n["node_id"]
@@ -182,7 +183,8 @@ def _nodes(session, friendly) -> list:
         base = nid.rsplit("_", 1)[0] if kind == "repeating_group" else nid
         note = None
         if nid not in text:
-            note = ("a motif from the master layout" if kind == "decor"
+            note = ("filled from the CSV for each layout (mail merge)" if nid in merged
+                    else "a motif from the master layout" if kind == "decor"
                     else "drawn with the event's title artwork from the master layout"
                     if artwork and "Event_Title" in nid
                     else "a logo" if kind == "image_node" else "")

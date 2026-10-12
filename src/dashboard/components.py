@@ -538,19 +538,24 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
 /* Typography in one row; the content payload in two columns */
 .st-key-card_type [data-testid="stWidgetLabel"] p, .st-key-card_content [data-testid="stWidgetLabel"] p {
   font-size: .76rem; color: #3c4250;}
+.st-key-merge_note {gap: .35rem !important; flex: none !important; background: #fff6f3; border-radius: 8px;
+  padding: .15rem .2rem .15rem .55rem;}
+.st-key-merge_note [data-testid="stElementContainer"]:has([data-testid="stMarkdownContainer"]) {flex: 1;}
+.st-key-merge_note button {min-height: 1.7rem; padding: 0 .35rem;}
 .st-key-content_fields {height: 100%; overflow-y: auto; scrollbar-width: thin;
   padding-right: .3rem; gap: .35rem;}
 /* Streamlit pulls the element after a markdown block up by 1rem (its
    paragraphs' margin); the page's HTML blocks have none, so it overlapped */
-:is(.st-key-card_master, .st-key-card_assets, .st-key-card_type, .st-key-ts_drawer, [role="dialog"])
+:is(.st-key-card_master, .st-key-card_assets, .st-key-card_type, .st-key-card_content, .st-key-ts_drawer,
+     [role="dialog"])
   [data-testid="stMarkdownContainer"]:has(> div[class^="ts-"], > div[class^="bn-"]) {margin-bottom: 0 !important;}
 /* The font picker (ui.font_picker): a label like a widget's, a button like
    a selectbox, and a list where each font is drawn in its own typeface */
 .ts-wlabel {font-size: .875rem; color: #31333f; line-height: 1.4; margin: 0 0 .25rem;}
-.st-key-card_type .ts-wlabel {font-size: .76rem; color: #3c4250;}
+.st-key-card_type .ts-wlabel {font-size: .76rem; color: #3c4250; padding-top: .25rem;}
 [class*="_font_btn"] button > div {width: 100%; justify-content: space-between;}
 [class*="_font_btn"] button [data-testid="stMarkdownContainer"] {flex: 1; min-width: 0; text-align: left;}
-[class*="_font_btn"] button p {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+[class*="_font_btn"] button p {white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left;}
 [role="dialog"] [data-testid="stImage"] img {max-height: 66vh; object-fit: contain;}
 .ts-legend {display: flex; flex-wrap: wrap; gap: .25rem .6rem; font-size: .72rem; color: #5b6370;}
 .ts-legend i {display: inline-block; width: .6rem; height: .6rem; border-radius: 2px; margin-right: .25rem;}
