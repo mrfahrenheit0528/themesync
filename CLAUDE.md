@@ -137,7 +137,16 @@ Read first: `notes/system_development_progress.md`, then the tail of
 - **Consultant's remarks** (received 2026-10-07) and their status are in
   `notes/system_development_progress.md`. All three are done: the steps
   (§3.32), a report on the user's layout (§3.32), the dataset (v5).
-- **Manuscript (2026-10-10):** the latest build is
+- **Final manuscript: `manuscript/Manu 1210.1.pdf`** (2026-10-12; 111
+  pages).
+  - Chapter 4 runs pp.76–103, Chapter 5 pp.104–107, the Appendices from
+    p.108.
+  - **Pre-oral defense: 2026-10-13.**
+  - The TA no longer checks the manuscript (from 2026-10-12), so no more
+    "for checking" messages.
+  - Checked: no PENDING, `??`, "et al." or placeholder text. SURF appears
+    only in Chapter 2's literature and a reference title.
+- **Manuscript (2026-10-10):** the latest build was
   `manuscript/Manu 1010.1.pdf`. `manuscript/Thesis Latex/` holds Chapters
   1–5.
   - Everything in the dev findings' section G is applied there,
