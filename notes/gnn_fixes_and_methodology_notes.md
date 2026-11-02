@@ -3940,3 +3940,115 @@ manuscript is printed (user, 2026-10-13), so these are recorded here only.
     overlaps, deletes, candidate switch, undo, redo, restore, F1 1.0);
   - the browser test for all of it, plus the fonts and Style-tools tests
     again; no exceptions.
+
+### 3.57 Cut-outs with SAM 2.1; even gaps after anchoring; two elements on one line (2026-11-03)
+
+The pre-oral defense was postponed (user, 2026-10-29), and the user asked
+to make the system usable by school organisations. Their two complaints:
+the cut-outs (poster background left around logos and title artwork), and
+layouts that all look like one template. They chose "small improvements"
+over generative layout proposals, which their own Statement of the Problem
+argues against. **This changes layout generation after the evaluation.**
+The rated layouts come from tag `phase4-rated` (commit `8422282`, created
+today); the MOS describes that version. The manuscript is printed, so this
+is recorded here only.
+
+- **Cut-outs: SAM 2.1 tiny, prompted with the YOLO box**
+  (`stylistic_markers.segment_mask`, `_segmented_cut`).
+  - Why: the flood-fill cleared only background close to the crop edge's
+    colour. Photos and textures stayed (KAINANG_PAMILYA's title kept the
+    food and hands), edges were hard (halos), and a title that touched
+    artwork kept growing (DONATION_PROGRAM's took in the header row; drawn
+    as the certificate's 8% watermark, it was the "ghost" behind the
+    title).
+  - The model: `assets/models/sam2.1_t.pt` (Meta, Apache 2.0, 75 MB),
+    loaded through Ultralytics' `SAM2Predictor`; no new package. MobileSAM
+    was compared on the 16 Phase 4 posters' 88 elements and was a little
+    worse (busier title masks).
+  - The poster is encoded once; each box is one prompt. RTX 3060: about
+    0.9 s to encode, 0.02–0.2 s per element. CPU: about 1.5 s, then
+    0.05 s.
+  - Only mask parts whose centre lies in the box are kept (a tight box's
+    overflow stays, a neighbour reaching into the 15% margin doesn't),
+    and specks go.
+  - Soft edges, with the poster's colour taken out of the edge pixels
+    (`_soft_edges`), so no fringe shows on a dark or light target.
+  - Where the element sits on a plain colour, pixels of that colour
+    connected to the outside are cleared too (`_clear_plain_surround`):
+    DONATION's ship-wheel logo kept the poster's white between its
+    spokes.
+  - A mask that misses (under 5% of its box) falls back to the flood-fill;
+    so does a missing model file.
+  - Still imperfect: a logo on a brushstroke keeps the stroke
+    (CHS_BIRISTUHAN's Red Cross badge), and detection mistakes ("2026"
+    taken as a logo) are cut out cleanly but are still mistakes.
+- **Title grouping:** a squarish text box under a fifth of the other's
+  width no longer merges into the title group (`_merge_text_groups`). It
+  was a logo YOLO read as text; DONATION's title group reached up over
+  its logo row. Of the 32 saved detections, only DONATION's two changed.
+- **Even gaps after anchoring** (Chapter 5, Recommendation 3; Chapter 4's
+  "redistributing the gaps after anchoring").
+  - `cassowary_engine.EVEN` (0, 100, 0), above `ANCHOR` (0, 10, 0) and
+    below `strong`: every gap in the stack equals one rhythm variable, the
+    signature row's included. Pairs with a Hard node are left out, so a
+    designer's move still wins.
+  - Stage 2 is unchanged: the GNN's output is still registered to the
+    anchors exactly. The solver now uses the anchors to place and spread
+    the stack, not to size each gap.
+  - Every condition (`solver_for`). With anchors only, a GNN run on a
+    poster whose title YOLO missed (SHARE_KO_LANG) stayed uneven. The
+    baseline's layouts came out the same (8 of 8 checked).
+- **Two elements on one line** (`row` on a node; `pipeline._arrange_rows`).
+  - The organisation text beside the logo row, when the master has it so
+    (`structure_mapping.header_beside_logos`): 6 of the 16 posters
+    (DONATION, GUESS_THE_TEACHER, JFINEX, KAINANG, SHARE_KO_LANG,
+    SIGN_LANGUAGE_DAY). Squarish text next to the row counts as a logo
+    YOLO read as text. The logos' box takes their natural width; the text
+    sits against it, left-aligned and wrapped to its box.
+  - The certificate number beside the date, one at each margin (`split`),
+    as on printed certificates.
+  - The solver aligns the pair as one unit, centres the second element on
+    its partner's line, and stacks the taller of the two. A node whose
+    partner is deleted stacks again.
+  - Logos YOLO missed as logos: squarish text on the row's line extends the
+    row before the test (DONATION: one of its three logos found as a logo).
+  - The order didn't change: all 16 posters put logos, header, title and
+    details in that order, so following the poster's order would have
+    changed nothing.
+- **Certificate content stays inside the panel's double border**
+  (`inside_frame` on the certificate variations; `solver_for`): margin at
+  least the panel inset + 30 px (88 px on the 1200 × 900 canvas). The art
+  column's 44 px and classic A's 72 px margins let the seal and the last
+  signature line cross the border; the rated GUESS_THE_TEACHER certificate
+  shows both.
+- **Measured** (`src/evaluation/refinement_check.py`, analysis only: the
+  16 posters, both formats, regenerated the way the packet made them, and
+  measured like the rated set):
+
+  | Mean over 32 layouts | Rated GNN | Rated baseline | Current code, before | After: GNN | After: baseline |
+  |---|---|---|---|---|---|
+  | Largest gap (of the height) | 0.072 | 0.020 | 0.071 | 0.035 (max 0.073) | 0.020 |
+  | Gap CV | 0.47 | 0.00 | 0.45 | 0.00 | 0.00 |
+  | Spread | 0.82 | 0.75 | 0.81 | 0.77 | 0.70 |
+
+  "Before" is today's code with the new cut-outs and the old solver
+  (`results/refinement_check_before.json`); it reproduces the rated
+  set's figures. "After": `results/refinement_check_after.json`. The
+  GNN condition's gaps are now even, but its largest gap is still about
+  twice the baseline's: the anchors still spread the stack (KAINANG's ID:
+  0.071). The baseline's spread fell because the date and number share
+  a line and certificate content keeps inside the frame.
+
+  - F1 1.0 on all 64; no ink clashes or reading-order faults. The two
+    overflowing headers (ARANTABAYAN, RXEADY event IDs, 5.9 and 19.4 px)
+    overflowed the same before.
+  - The stress test (p.55) gave the same summary as
+    `results/stress_test.json` (passes, breaking points, the 5-block
+    signature limit) except one count: with 4 signature blocks, 4 of 6
+    candidates come out clean instead of 5, as the frame margin narrows
+    the signature row. The recorded file is left as it was (Chapter 4's
+    result).
+  - Session-level: header beside the logos and date beside the number
+    through candidate switches, deleting the logos, undo, dragging and
+    releasing the header, and added text; no overlaps.
+  - The 12 tests pass.

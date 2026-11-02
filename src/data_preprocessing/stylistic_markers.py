@@ -21,12 +21,15 @@ K-Means palette and the logos:
      otherwise the renderer types the title in the administrative font.
 
 Also home to the cut-out helpers shared with logo extraction (pipeline.py)
-and the dashboard pages.
+and the dashboard pages. Since 2026-11-03 an element is cut out with SAM 2.1
+prompted with its YOLO box, with the flood-fill as the fallback (§3.57).
 
 See notes/gnn_fixes_and_methodology_notes.md §3.23.
 """
 
+import hashlib
 import os
+import threading
 
 import cv2
 import numpy as np
@@ -87,9 +90,136 @@ def clear_crop_background(crop: Image.Image, thresh: int = 48,
     return Image.fromarray(out, "RGBA")
 
 
-def cut_out(img: Image.Image, bbox: list, pad: float = 0.04) -> Image.Image:
-    """A detected element cut from the master layout: its [x, y, w, h] box
-    plus `pad` padding, with the surrounding poster background cleared."""
+# Segmentation: SAM 2.1 tiny (Meta, Apache 2.0, through Ultralytics) with the
+# element's YOLO box as the prompt. YOLO still decides what an element is;
+# the mask decides which pixels belong to it, so photo backgrounds, textures
+# and gradients come off too, where the flood-fill kept them. Bundled so
+# nothing is downloaded at run time; without it the flood-fill is used.
+_SAM_MODEL = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                          "assets", "models", "sam2.1_t.pt")
+_SAM = {"predictor": None, "image": None, "failed": False}
+_SAM_LOCK = threading.Lock()
+SEGMENT_REACH = 0.15   # a mask may run past a tight YOLO box by this share of its size
+SEGMENT_MIN = 0.05     # a mask covering less of its box than this missed the element
+
+
+def _predictor():
+    """SAM 2.1's predictor, loaded once; None when it can't be."""
+    if _SAM["predictor"] is None and not _SAM["failed"]:
+        try:
+            if not os.path.exists(_SAM_MODEL):
+                raise FileNotFoundError(_SAM_MODEL)
+            from ultralytics.models.sam import SAM2Predictor
+            _SAM["predictor"] = SAM2Predictor(overrides=dict(task="segment", mode="predict", imgsz=1024,
+                                                             model=_SAM_MODEL, verbose=False, save=False))
+        except Exception:
+            _SAM["failed"] = True
+    return _SAM["predictor"]
+
+
+def segment_mask(img: Image.Image, bbox: list):
+    """Full-image boolean mask of the element in the [x, y, w, h] box, or
+    None. The poster is encoded once; each further box costs one prompt."""
+    with _SAM_LOCK:
+        predictor = _predictor()
+        if predictor is None:
+            return None
+        rgb = np.asarray(img.convert("RGB"))
+        key = (rgb.shape, hashlib.md5(rgb.tobytes()).hexdigest())
+        x, y, w, h = [float(v) for v in bbox]
+        try:
+            if _SAM["image"] != key:
+                predictor.set_image(cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR))
+                _SAM["image"] = key
+            result = predictor(bboxes=[[x, y, x + w, y + h]])[0]
+        except Exception:
+            return None
+        if result.masks is None or not len(result.masks.data):
+            return None
+        return result.masks.data[0].cpu().numpy().astype(bool)
+
+
+def _soft_edges(rgb: np.ndarray, mask: np.ndarray) -> np.ndarray:
+    """RGBA from a hard mask: an anti-aliased edge, and the poster's colour
+    taken out of the edge pixels (F = (I - (1 - a)·B) / a, B the colour just
+    outside the mask), so no light or dark fringe is left around it."""
+    m = mask.astype(np.float32)
+    alpha = np.clip((cv2.GaussianBlur(m, (0, 0), 0.8) - 0.35) / 0.5, 0.0, 1.0)
+    f = rgb.astype(np.float32)
+    outside = 1.0 - m
+    bg = (cv2.GaussianBlur(f * outside[..., None], (0, 0), 3.0)
+          / np.maximum(cv2.GaussianBlur(outside, (0, 0), 3.0), 1e-3)[..., None])
+    a = np.maximum(alpha, 0.25)[..., None]
+    edge = ((alpha > 0) & (alpha < 1))[..., None]
+    fg = np.where(edge, np.clip((f - (1.0 - a) * bg) / a, 0, 255), f)
+    return np.dstack([fg, alpha * 255.0]).astype(np.uint8)
+
+
+def _clear_plain_surround(rgb: np.ndarray, mask: np.ndarray, thresh: int = 48) -> np.ndarray:
+    """SAM's mask with the gaps opened where the element sits on a plain
+    background: pixels within `thresh` (summed over channels, as in the
+    flood-fill) of the surrounding colour and connected to the outside are
+    cleared, e.g. the poster's white between a ship's wheel's spokes. Around
+    busy surroundings (a photo, a texture) the mask is trusted as it is."""
+    ring = cv2.dilate(mask.astype(np.uint8), np.ones((9, 9), np.uint8)).astype(bool) & ~mask
+    if ring.sum() < 20:
+        return mask
+    colours = rgb[ring].astype(np.float32)
+    surround = np.median(colours, axis=0)
+    # plain: most of the ring is that one colour (the element's anti-aliased
+    # edge pixels just outside the mask make up the rest)
+    if (np.abs(colours - surround).sum(axis=1) < thresh).mean() < 0.8:
+        return mask
+    close = np.abs(rgb.astype(np.float32) - surround).sum(axis=2) < thresh
+    _, labels = cv2.connectedComponents((close | ~mask).astype(np.uint8), connectivity=8)
+    outside = np.unique(labels[~mask])
+    cleared = np.isin(labels, outside[outside > 0]) & mask & close
+    kept = mask & ~cleared
+    return kept if kept.sum() >= 0.5 * mask.sum() else mask
+
+
+def _segmented_cut(img: Image.Image, bbox: list, pad: float):
+    """(cut-out, crop [x, y, w, h]) from SAM's mask, or None when there is
+    no mask or it missed the element. Only parts of the mask whose centre
+    lies in the box are kept: lettering running past a tight box stays, a
+    neighbour reaching into the margin doesn't, and specks go."""
+    mask = segment_mask(img, bbox)
+    if mask is None:
+        return None
+    x, y, w, h = [float(v) for v in bbox]
+    H, W = mask.shape
+    rx, ry = max(w * SEGMENT_REACH, w * pad), max(h * SEGMENT_REACH, h * pad)
+    x0, y0 = max(0, int(x - rx)), max(0, int(y - ry))
+    x1, y1 = min(W, int(x + w + rx) + 1), min(H, int(y + h + ry) + 1)
+    region = mask[y0:y1, x0:x1].astype(np.uint8)
+    n, labels, stats, centres = cv2.connectedComponentsWithStats(region, connectivity=8)
+    keep = np.zeros(n, dtype=bool)
+    for i in range(1, n):
+        cx, cy = centres[i][0] + x0, centres[i][1] + y0
+        keep[i] = (stats[i, cv2.CC_STAT_AREA] >= 0.0005 * w * h
+                   and x <= cx <= x + w and y <= cy <= y + h)
+    region = keep[labels]
+    inside = region[int(y) - y0:int(y + h) - y0, int(x) - x0:int(x + w) - x0]
+    if inside.size == 0 or inside.mean() < SEGMENT_MIN:
+        return None
+    # the box plus `pad`, grown to wherever the kept mask reaches
+    ys, xs = np.nonzero(region)
+    cx0 = max(0, min(int(x - w * pad), x0 + int(xs.min())))
+    cy0 = max(0, min(int(y - h * pad), y0 + int(ys.min())))
+    cx1 = min(W, max(int(x + w + w * pad), x0 + int(xs.max()) + 1))
+    cy1 = min(H, max(int(y + h + h * pad), y0 + int(ys.max()) + 1))
+    full = np.zeros((cy1 - cy0, cx1 - cx0), dtype=bool)
+    sy0, sx0 = max(y0, cy0), max(x0, cx0)
+    sy1, sx1 = min(y1, cy1), min(x1, cx1)
+    full[sy0 - cy0:sy1 - cy0, sx0 - cx0:sx1 - cx0] = region[sy0 - y0:sy1 - y0, sx0 - x0:sx1 - x0]
+    rgb = np.asarray(img.convert("RGB"))[cy0:cy1, cx0:cx1]
+    full = _clear_plain_surround(rgb, full)
+    return Image.fromarray(_soft_edges(rgb, full), "RGBA"), [cx0, cy0, cx1 - cx0, cy1 - cy0]
+
+
+def _flood_cut(img: Image.Image, bbox: list, pad: float = 0.04) -> Image.Image:
+    """The box plus `pad`, with the background connected to its edges
+    cleared (clear_crop_background)."""
     x, y, w, h = bbox
     pad_x, pad_y = w * pad, h * pad
     box = (max(0, int(x - pad_x)), max(0, int(y - pad_y)),
@@ -97,19 +227,31 @@ def cut_out(img: Image.Image, bbox: list, pad: float = 0.04) -> Image.Image:
     return clear_crop_background(img.convert("RGBA").crop(box))
 
 
+def cut_out(img: Image.Image, bbox: list, pad: float = 0.04) -> Image.Image:
+    """A detected element cut from the master layout: segmented from its
+    [x, y, w, h] box (SAM 2.1), or, without a usable mask, the box plus
+    `pad` padding with the surrounding poster background cleared."""
+    segmented = _segmented_cut(img, bbox, pad)
+    return segmented[0] if segmented else _flood_cut(img, bbox, pad)
+
+
 def grow_cut_out(img: Image.Image, bbox: list, max_steps: int = 8, step: float = 0.06,
                  touch: float = 0.02) -> tuple:
     """
-    cut_out() that grows the box on any side where the cut-out still runs
-    into artwork (more than `touch` of that edge's pixels left uncleared),
-    by `step` of the box size per side and step, up to `max_steps` times —
-    YOLO's boxes are often a little tight on stylised lettering (e.g. a
-    three-line wordmark whose last line got clipped). Returns (cut-out,
-    final [x, y, w, h]).
+    cut_out() for title artwork and motifs. A segmented cut-out already
+    reaches past a tight box (SEGMENT_REACH). The flood-fill fallback grows
+    the box on any side where the cut-out still runs into artwork (more
+    than `touch` of that edge's pixels left uncleared), by `step` of the box
+    size per side and step, up to `max_steps` times — YOLO's boxes are often
+    a little tight on stylised lettering (e.g. a three-line wordmark whose
+    last line got clipped). Returns (cut-out, final [x, y, w, h]).
     """
+    segmented = _segmented_cut(img, bbox, 0.04)
+    if segmented:
+        return segmented
     x, y, w, h = [float(v) for v in bbox]
     for attempt in range(max_steps + 1):
-        rgba = cut_out(img, [x, y, w, h])
+        rgba = _flood_cut(img, [x, y, w, h])
         visible = np.asarray(rgba)[:, :, 3] > 0
         sides = {"top": visible[0].mean(), "bottom": visible[-1].mean(),
                  "left": visible[:, 0].mean(), "right": visible[:, -1].mean()}
@@ -289,9 +431,16 @@ def _merge_text_groups(nodes: list, image_h: float, gap: float = 0.015,
     often splits a stacked wordmark into lines (e.g. SIKLAB / CSPC
     INTRAMURALS and a separate, low-confidence "2025"), and a cut through
     the last line leaves the title art clipped; the height rule keeps a
-    small tagline under a big title out of it. Confidence is the group's
-    highest.
+    small tagline under a big title out of it. A squarish box under a fifth
+    of the other's width isn't a line of the same title: it is usually a
+    logo YOLO read as text, and merging it pulled the logo row (and the
+    organisation lines beside it) into the title artwork. Confidence is the
+    group's highest.
     """
+    def line_like(a, b):
+        narrow, wide = (a, b) if a[2] <= b[2] else (b, a)
+        return narrow[2] >= 0.2 * wide[2] or narrow[2] >= 1.5 * narrow[3]
+
     groups = [dict(n, bbox=list(n["bbox"]), line_h=float(n["bbox"][3])) for n in nodes]
     merged = True
     while merged:
@@ -303,7 +452,7 @@ def _merge_text_groups(nodes: list, image_h: float, gap: float = 0.015,
                 h_overlap = min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0])
                 la, lb = groups[i]["line_h"], groups[j]["line_h"]
                 if (v_gap <= gap * image_h and h_overlap >= 0.5 * min(a[2], b[2])
-                        and min(la, lb) >= min_line_ratio * max(la, lb)):
+                        and min(la, lb) >= min_line_ratio * max(la, lb) and line_like(a, b)):
                     x0, y0 = min(a[0], b[0]), min(a[1], b[1])
                     x1, y1 = max(a[0] + a[2], b[0] + b[2]), max(a[1] + a[3], b[1] + b[3])
                     groups[i]["bbox"] = [x0, y0, x1 - x0, y1 - y0]

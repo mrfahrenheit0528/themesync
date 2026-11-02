@@ -11,6 +11,7 @@ for _sub in ('models', 'renderers', 'data_preprocessing'):
 
 from optimization_engine import HeuristicEvaluator
 from cassowary_engine import ConstraintSolverEngine
+from decor import PANEL_INSET
 
 
 # Layout archetypes (notes §3.27): how a candidate frames and aligns its
@@ -29,15 +30,16 @@ ARCHETYPES = {
 # archetype with its own page margin, vertical rhythm (the stack's minimum
 # gap) and motif arrangement (decor.ARRANGEMENTS, by index; 6 = hero). Every
 # variation is solved by the Cassowary engine from the same GNN-guided
-# nodes, so none can overlap.
+# nodes, so none can overlap. `inside_frame`: the certificate's content stays
+# inside its panel's double border (see solver_for).
 VARIATIONS = {
     "academic_certificate": [
-        {"name": "Candidate_A", "archetype": "classic", "margin": 72.0,  "vgap": 18.0, "arrangement": 0},
-        {"name": "Candidate_B", "archetype": "split",   "margin": 44.0,  "vgap": 16.0, "arrangement": 5},
-        {"name": "Candidate_C", "archetype": "banner",  "margin": 76.0,  "vgap": 16.0, "arrangement": 4},
-        {"name": "Candidate_D", "archetype": "left",    "margin": 104.0, "vgap": 18.0, "arrangement": 3},
-        {"name": "Candidate_E", "archetype": "classic", "margin": 84.0,  "vgap": 24.0, "arrangement": 2},
-        {"name": "Candidate_F", "archetype": "split",   "margin": 44.0,  "vgap": 22.0, "arrangement": 1},
+        {"name": "Candidate_A", "archetype": "classic", "margin": 72.0,  "vgap": 18.0, "arrangement": 0, "inside_frame": True},
+        {"name": "Candidate_B", "archetype": "split",   "margin": 44.0,  "vgap": 16.0, "arrangement": 5, "inside_frame": True},
+        {"name": "Candidate_C", "archetype": "banner",  "margin": 76.0,  "vgap": 16.0, "arrangement": 4, "inside_frame": True},
+        {"name": "Candidate_D", "archetype": "left",    "margin": 104.0, "vgap": 18.0, "arrangement": 3, "inside_frame": True},
+        {"name": "Candidate_E", "archetype": "classic", "margin": 84.0,  "vgap": 24.0, "arrangement": 2, "inside_frame": True},
+        {"name": "Candidate_F", "archetype": "split",   "margin": 44.0,  "vgap": 22.0, "arrangement": 1, "inside_frame": True},
     ],
     "identification_card": [
         {"name": "Candidate_A", "archetype": "classic", "margin": 60.0, "vgap": 20.0, "arrangement": 6},
@@ -78,14 +80,26 @@ def solver_for(variation: dict, canvas_w: float, canvas_h: float, structure_guid
     positions carry the master's composition (`structure_guided`), the
     vertical-balance rule drops to `weak` and single gaps may reach 30% of
     the height, so the master's arrangement — a title low on the page, room
-    above it for the hero — survives the solve (notes §3.26)."""
+    above it for the hero — survives the solve (notes §3.26). Since §3.57
+    the gaps are also evened out after anchoring (Recommendation 3): the
+    anchors place and spread the stack, one rhythm spaces it. Every
+    condition: a GNN run on a poster whose title YOLO missed has no anchors,
+    and its own positions spaced the stack unevenly (SHARE_KO_LANG); the
+    baseline's gaps were even already."""
     arch = ARCHETYPES[variation.get("archetype", "classic")]
+    margin = variation["margin"]
+    if variation.get("inside_frame"):
+        # clear of the certificate panel's double border (decor.frame_layers:
+        # the panel inset, then rules 10 and 17 px in); before §3.57 a 44 or
+        # 72 px margin let the seal and the last signature line cross it
+        margin = max(margin, min(canvas_w, canvas_h) * PANEL_INSET + 30.0)
     return ConstraintSolverEngine(
         canvas_width=canvas_w, canvas_height=canvas_h,
-        margin=variation["margin"], default_vgap=variation["vgap"],
+        margin=margin, default_vgap=variation["vgap"],
         region=arch["region"], align=arch["align"],
         balance="weak" if structure_guided else "strong",
         max_gap_frac=0.30 if structure_guided else 0.10,
+        even_gaps=True,
     )
 
 
@@ -189,7 +203,7 @@ class MetaheuristicStateExplorer:
             scores = evaluator.evaluate_layout(nodes)
             results.append({
                 "candidate_id": candidate_id,
-                "label": (f"{arch['label']} · margin {var_cfg['margin']:.0f}px · "
+                "label": (f"{arch['label']} · margin {solver_engine.margin_x:.0f}px · "
                           f"gap {var_cfg['vgap']:.0f}px · {arrangement}"),
                 "variation": dict(var_cfg),
                 "archetype": dict(arch, name=var_cfg.get("archetype", "classic")),

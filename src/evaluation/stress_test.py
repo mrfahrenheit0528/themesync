@@ -289,6 +289,9 @@ def reading_order(nodes: list) -> list:
                    key=lambda n: n["spatial_hierarchy"])
     bad = []
     for prev, cur in zip(stack, stack[1:]):
+        # two nodes on one line (cassowary_engine's `row`) read left to right
+        if (cur.get("row") or {}).get("with") == prev["node_id"]:
+            continue
         if cur["bbox"][1] < prev["bbox"][1] - 1.0:
             bad.append(f"{cur['node_id']} above {prev['node_id']}")
     if stack:
