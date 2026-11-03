@@ -4247,3 +4247,45 @@ recommendations re-solved around the designer's Hard edits of the format's
 own elements, and re-ranked (keeping the archetype rule of p.58; solved
 when the thumbnails refresh, so a candidate selection stays a re-draw,
 p.89). See the discussion of 2026-11-03.
+
+### 3.60 Step 2: boxes push only what shares their columns; released pictures are placed (2026-11-04)
+
+The user's two findings after §3.59:
+1. **Three logos wouldn't sit side by side:** each added picture joined
+   the stack as a step of its own, so whatever came after it had to go
+   below it even when nothing overlapped side to side; the format's own
+   logo (Soft) was pushed under the added ones.
+2. **Releasing an added picture changed nothing:** §3.59 held every added
+   picture where it was, so "Soft" meant nothing for it, and its fitness
+   didn't change.
+
+**Changes** (`cassowary_engine._stack_around_boxes`, `pipeline`):
+- When a designer's box changes the stack, the Soft nodes form the chain
+  and each Hard box (a moved or locked element, a locked picture) pushes
+  only the nearest Soft node above and below it that shares its columns
+  (a Soft node's columns are where it will sit: the region's axis or its
+  left edge). What sits beside a box can share its height; a gap a box
+  sits in may stretch by the box.
+- An added picture is Hard where it was dropped, and Soft when added from
+  the panel or released. A Soft picture is placed like the format's own
+  elements: in the stack where it is, on the axis, with the stack's
+  rhythm. It keeps its proportions and gives way first (down to 40% of its
+  size, `PICTURE_SIZE` below `TEXT_HEIGHT`) when the page is full; then
+  text may give way to 60%. Releasing it re-solves and re-scores the
+  layout like releasing the format's own logo.
+- Ties in position put the box after the element (a Soft picture at the
+  same height as a locked one goes after it, not above it).
+
+**Measured** (4 posters × 2 formats): no overlap and nothing past the
+margins after 32 text drops, 24 picture drops, 8 releases, and 8 runs
+with two large Soft pictures in a full layout. Two logo-sized pictures
+either side of DONATION's seal left the seal in the same row. Against the
+pre-§3.59 code, the generated candidates and evaluate.py's simulated
+edits agree to 0.01 px (the solver's run-to-run float noise; the old code
+differs from itself by as much) and every score is identical. The 12
+tests pass; in Edge, a dragged picture released from Hard to Soft moved
+onto the axis in the stack.
+
+**A full certificate leaves little room:** DONATION's has about 50 px of
+height to spare, so a released 198 px picture is placed at 79 px. To keep
+a picture large, resize or lock it; the text re-flows around it.

@@ -17,6 +17,10 @@ ANCHOR = kiwi.strength.create(0.0, 10.0, 0.0)
 # (the renderer fits the words to the box) rather than overlapping.
 TEXT_HEIGHT = kiwi.strength.create(0.0, 100.0, 0.0)
 MIN_TEXT_SCALE = 0.6
+# A Soft picture the designer added (§3.59) shrinks first, keeping its
+# proportions, down to MIN_PICTURE_SCALE of its size.
+PICTURE_SIZE = kiwi.strength.create(0.0, 50.0, 0.0)
+MIN_PICTURE_SCALE = 0.4
 
 
 class ConstraintSolverEngine:
@@ -52,7 +56,7 @@ class ConstraintSolverEngine:
         self.solver = kiwi.Solver()
         self.variables = {}
 
-    def _initialize_node_variables(self, node_id, width, height, elastic=False):
+    def _initialize_node_variables(self, node_id, width, height, elastic=False, picture=False):
         v = {
             'left': kiwi.Variable(f"{node_id}_left"),
             'top': kiwi.Variable(f"{node_id}_top"),
@@ -63,12 +67,17 @@ class ConstraintSolverEngine:
 
         # Dimensions are exact for the given tensor (an elastic text box's
         # height may give way, see TEXT_HEIGHT)
-        self.solver.addConstraint(v['right'] == v['left'] + width)
-        if elastic:
-            self.solver.addConstraint(v['bottom'] >= v['top'] + MIN_TEXT_SCALE * height)
-            self.solver.addConstraint((v['bottom'] == v['top'] + height) | TEXT_HEIGHT)
+        if picture:      # a Soft picture: its width follows its height
+            self.solver.addConstraint(v['right'] - v['left'] == (width / height) * (v['bottom'] - v['top']))
+            self.solver.addConstraint(v['bottom'] >= v['top'] + MIN_PICTURE_SCALE * height)
+            self.solver.addConstraint((v['bottom'] == v['top'] + height) | PICTURE_SIZE)
         else:
-            self.solver.addConstraint(v['bottom'] == v['top'] + height)
+            self.solver.addConstraint(v['right'] == v['left'] + width)
+            if elastic:
+                self.solver.addConstraint(v['bottom'] >= v['top'] + MIN_TEXT_SCALE * height)
+                self.solver.addConstraint((v['bottom'] == v['top'] + height) | TEXT_HEIGHT)
+            else:
+                self.solver.addConstraint(v['bottom'] == v['top'] + height)
 
         # Margins & boundary containment (within the content region)
         self.solver.addConstraint((v['left'] >= self.left_bound) | kiwi.strength.strong)
@@ -84,7 +93,10 @@ class ConstraintSolverEngine:
         the size the designer gave them."""
         width = float(node['bbox'][2])
         if node.get('constraint_type') != "Hard":
-            width = min(width, max(8.0, self.right_bound - self.left_bound))
+            fit = min(width, max(8.0, self.right_bound - self.left_bound))
+            if node.get('structural_class') == 'decor' and fit < width:     # a picture keeps its proportions
+                node['bbox'][3] = round(float(node['bbox'][3]) * fit / width, 2)
+            width = fit
             node['bbox'][2] = round(width, 2)
         return width
 
@@ -94,16 +106,15 @@ class ConstraintSolverEngine:
         that sit below the signature row (notes §3.58).
 
         Soft nodes keep their reading order (spatial_hierarchy). A Hard node
-        (moved, resized or locked by the designer) and a fixed box (a
-        picture the designer added) join it where they are on the canvas:
+        (moved, resized or locked by the designer) and a picture the
+        designer added (Hard or Soft) join it where they are on the canvas:
         after the last node that starts above them (in `reference`, the
         canvas before the event). Before, a Hard node kept its reading-
         order slot wherever it was put, so a text added at the end and
         dragged up the page squeezed everything above its slot into the
         space above it. A Hard node that stays in its slot gives the same
-        order as before, so small moves solve exactly as they did. A fixed
-        box clear of the stack's columns, or anything below the signature
-        row, stays out of the stack.
+        order as before, so small moves solve exactly as they did. Anything
+        below the signature row stays out of the stack.
         """
         hard = [n for n in singular_nodes if n.get('constraint_type') == "Hard"]
         if not hard and not fixed:
@@ -111,10 +122,7 @@ class ConstraintSolverEngine:
         box = lambda n: reference.get(n['node_id'], n['bbox'])
         top = lambda n: float(box(n)[1])
         order = [n for n in singular_nodes if n.get('constraint_type') != "Hard"]
-        spans = [(float(box(n)[0]), float(box(n)[0]) + float(box(n)[2])) for n in order + hard]
-        placed = hard + [f for f in fixed
-                         if any(min(a1, float(f['bbox'][0]) + float(f['bbox'][2])) - max(a0, float(f['bbox'][0])) > 1
-                                for a0, a1 in spans)]
+        placed = hard + list(fixed)
         row_top = min((float(box(n)[1]) for n in repeating_nodes), default=None)
         below_row = []
         gap = self.default_vgap
@@ -138,7 +146,7 @@ class ConstraintSolverEngine:
             # was dropped onto stays above it), unless the nodes it overlaps
             # fit better on the other side of it
             y0, y1 = float(node['bbox'][1]), float(node['bbox'][1]) + float(node['bbox'][3])
-            k = max((i for i, n in enumerate(order) if top(n) < top(node)), default=-1)
+            k = max((i for i, n in enumerate(order) if top(n) <= top(node)), default=-1)   # ties: after
             lo = max((i for i, n in enumerate(order) if top(n) + float(box(n)[3]) <= y0), default=-1)
             hi = max((i for i, n in enumerate(order) if top(n) < y1), default=-1)
             if overflow(k, node) > 0:
@@ -149,15 +157,17 @@ class ConstraintSolverEngine:
     def execute_relational_logic(self, instantiated_nodes, reference=None, fixed=None):
         """
         Solves the stack. reference: {node_id: bbox} of the canvas before a
-        designer event, and fixed: the designer's added pictures (boxes
-        held where they are); both only order the stack around Hard boxes
-        (see _stack_order). Without Hard nodes or fixed boxes the solve is
-        the same as before them.
+        designer event; fixed: the pictures the designer added, held where
+        they are when Hard, placed in the stack like the format's own
+        elements when Soft (their boxes are updated in place). Both only
+        order the stack around the designer's boxes (see _stack_order).
+        Without Hard nodes or added pictures the solve is the same as
+        before them.
         """
         self.solver = kiwi.Solver()
         self.variables = {}
         reference = reference or {}
-        fixed = [dict(f, constraint_type="Hard") for f in (fixed or [])]
+        fixed = list(fixed or [])
 
         # The candidate's vertical rhythm is the *minimum* gap between stacked
         # elements, held at `strong` like the other design rules, so the
@@ -197,7 +207,9 @@ class ConstraintSolverEngine:
 
             elastic = (has_hard and node.get('constraint_type') != "Hard"
                        and node.get('structural_class', 'text_node') == 'text_node')
-            current_var = self._initialize_node_variables(node_id, tensor_w, tensor_h, elastic=elastic)
+            picture = node.get('structural_class') == 'decor' and node.get('constraint_type') != "Hard"
+            current_var = self._initialize_node_variables(node_id, tensor_w, tensor_h, elastic=elastic,
+                                                          picture=picture)
             human_x, human_y = float(node['bbox'][0]), float(node['bbox'][1])
             coord_key = f"{human_x}_{human_y}"
 
@@ -213,6 +225,9 @@ class ConstraintSolverEngine:
                 # outranks the GNN's `medium` preferences below.
                 if self.align == "left":
                     self.solver.addConstraint((current_var['left'] == self.left_bound) | kiwi.strength.strong)
+                elif picture:    # centred whatever size it shrinks to
+                    self.solver.addConstraint((current_var['left'] + current_var['right'] == 2.0 * region_centre)
+                                              | kiwi.strength.strong)
                 else:
                     target_x = max(self.left_bound, region_centre - tensor_w / 2.0)
                     self.solver.addConstraint((current_var['left'] == target_x) | kiwi.strength.strong)
@@ -227,8 +242,15 @@ class ConstraintSolverEngine:
                     strength = ANCHOR if node.get('structure_anchor', False) else kiwi.strength.medium
                     self.solver.addConstraint((current_var['top'] == human_y) | strength)
 
-        # 2. Strict Top-to-Bottom Stacking (Non-Overlap)
-        for i in range(1, len(singular_nodes)):
+        # 2. Strict Top-to-Bottom Stacking (Non-Overlap). Around a designer's
+        # boxes (notes §3.59) the Soft nodes form the chain, and each Hard box
+        # pushes only the nearest Soft node above and below it that shares
+        # its columns: what sits beside a box can share its height (a logo
+        # beside the logos the designer placed).
+        chain = [n for n in singular_nodes if n.get('constraint_type') != "Hard"] if has_hard else singular_nodes
+        if has_hard:
+            self._stack_around_boxes(singular_nodes, chain, region_centre)
+        for i in range(1, len(singular_nodes)) if not has_hard else ():
             curr_var = self.variables[singular_nodes[i]['node_id']]
             prev_var = self.variables[singular_nodes[i-1]['node_id']]
             self.solver.addConstraint((curr_var['top'] >= prev_var['bottom'] + self.v_gap) | kiwi.strength.strong)
@@ -276,12 +298,24 @@ class ConstraintSolverEngine:
                     self.solver.addConstraint((current_var['bottom'] <= self.canvas_h - self.margin_y) | kiwi.strength.strong)
                 cursor += tensor_w + gap
 
-                # Must be strictly below the last singular element
-                if singular_nodes:
-                    last_singular_var = self.variables[singular_nodes[-1]['node_id']]
+                # Must be strictly below the last singular element (the last
+                # Soft one around a designer's boxes; the boxes after it are
+                # kept above the row in _stack_around_boxes' terms below)
+                if chain:
+                    last_singular_var = self.variables[chain[-1]['node_id']]
                     self.solver.addConstraint((current_var['top'] >= last_singular_var['bottom'] + self.v_gap) | kiwi.strength.strong)
                     self.solver.addConstraint((current_var['top'] == last_singular_var['bottom'] + self.v_gap) | kiwi.strength.weak)
                     self.solver.addConstraint((current_var['top'] <= last_singular_var['bottom'] + self.max_gap) | kiwi.strength.strong)
+
+            # A box after the last Soft element, still above the row: the
+            # signatures stay below it
+            if has_hard and chain:
+                last = singular_nodes.index(chain[-1])
+                for node in singular_nodes[last + 1:]:
+                    hv = self.variables[node['node_id']]
+                    for rep in repeating_nodes:
+                        rv = self.variables[rep['node_id']]
+                        self.solver.addConstraint((rv['top'] >= hv['bottom'] + self.v_gap) | kiwi.strength.strong)
 
             # A Hard box below the row (a picture at the foot of the page):
             # the signatures stay above it where they share columns
@@ -302,9 +336,9 @@ class ConstraintSolverEngine:
         # the top margin); `weak` when the GNN's structure-mapped positions
         # carry the master's own composition (notes §3.26), so they decide
         # instead. Hard (manual) constraints stay `required` either way.
-        if (singular_nodes or repeating_nodes) and self.balance:
-            first_var = self.variables[(singular_nodes or repeating_nodes)[0]['node_id']]
-            last_var = self.variables[(repeating_nodes or singular_nodes)[-1]['node_id']]
+        if (chain or repeating_nodes) and self.balance:
+            first_var = self.variables[(chain or repeating_nodes)[0]['node_id']]
+            last_var = self.variables[(repeating_nodes or chain)[-1]['node_id']]
             self.solver.addConstraint(
                 (first_var['top'] + last_var['bottom'] == self.canvas_h) | _BALANCE[self.balance]
             )
@@ -321,5 +355,50 @@ class ConstraintSolverEngine:
             node['bbox'][1] = round(v['top'].value(), 2)
             node['bbox'][3] = round(v['bottom'].value() - v['top'].value(), 2)
             resolved_nodes.append(node)
+        for node in fixed:                             # the designer's pictures, updated in place
+            if node['node_id'] in self.variables and node.get('constraint_type') != "Hard":
+                v = self.variables[node['node_id']]
+                node['bbox'] = [round(v['left'].value(), 2), round(v['top'].value(), 2),
+                                round(v['right'].value() - v['left'].value(), 2),
+                                round(v['bottom'].value() - v['top'].value(), 2)]
 
         return resolved_nodes
+
+    def _stack_around_boxes(self, order, chain, region_centre):
+        """
+        The stacking constraints when a designer's box changed the stack
+        (notes §3.59). `order` is the whole stack top to bottom; `chain` its
+        Soft nodes, which stack one under the next as before. Each Hard box
+        keeps clear of the nearest Soft node above and below it that shares
+        its columns (where a Soft node will sit across: the region's axis,
+        or its left edge); a gap that a box sits in may stretch by the box.
+        """
+        def span(n):
+            x, _, w, _ = (float(v) for v in n['bbox'])
+            if n.get('constraint_type') == "Hard":
+                return x, x + w
+            x0 = self.left_bound if self.align == "left" else max(self.left_bound, region_centre - w / 2.0)
+            return x0, x0 + w
+
+        def shares(a, b):
+            (a0, a1), (b0, b1) = span(a), span(b)
+            return min(a1, b1) - max(a0, b0) > 1
+
+        pos = {n['node_id']: i for i, n in enumerate(order)}
+        for prev, curr in zip(chain, chain[1:]):
+            pv, cv = self.variables[prev['node_id']], self.variables[curr['node_id']]
+            between = order[pos[prev['node_id']] + 1:pos[curr['node_id']]]
+            room = sum(float(b['bbox'][3]) + self.default_vgap for b in between)
+            self.solver.addConstraint((cv['top'] >= pv['bottom'] + self.v_gap) | kiwi.strength.strong)
+            self.solver.addConstraint((cv['top'] == pv['bottom'] + self.v_gap) | kiwi.strength.weak)
+            self.solver.addConstraint((cv['top'] <= pv['bottom'] + self.max_gap + room) | kiwi.strength.strong)
+        for box in (n for n in order if n.get('constraint_type') == "Hard"):
+            i, bv = pos[box['node_id']], self.variables[box['node_id']]
+            above = next((n for n in reversed(chain) if pos[n['node_id']] < i and shares(n, box)), None)
+            below = next((n for n in chain if pos[n['node_id']] > i and shares(n, box)), None)
+            if above is not None:
+                self.solver.addConstraint((self.variables[above['node_id']]['bottom'] + self.v_gap <= bv['top'])
+                                          | kiwi.strength.strong)
+            if below is not None:
+                self.solver.addConstraint((self.variables[below['node_id']]['top'] >= bv['bottom'] + self.v_gap)
+                                          | kiwi.strength.strong)

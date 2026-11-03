@@ -918,7 +918,8 @@ class OrchestrationSession:
                     and n.get("structural_class") == "decor" and n["node_id"] not in removed]
         # The stack is ordered around the Hard boxes and the added pictures
         # where they are on the canvas, so the Soft nodes re-flow around
-        # them (notes §3.58); the pictures themselves stay where they are
+        # them (notes §3.58); a Hard picture stays where it is, a Soft one
+        # is placed in the stack (§3.59)
         engine = solver_for(variation, self.canvas_w, self.canvas_h, self.structure_guided)
         content = engine.execute_relational_logic(content, reference={n["node_id"]: n["bbox"] for n in nodes},
                                                   fixed=pictures)
@@ -1221,9 +1222,10 @@ class OrchestrationSession:
         """Adds an element to the layout: kind "text" (value: its words)
         joins the stack after the format's own elements, Soft, so the solver
         places it and the others re-flow; kind "picture" (value: an image
-        file) floats like a motif, in the largest empty gap, or centred on
-        `at` (x, y on the canvas) when it was dropped there. Either can then
-        be moved, resized, styled or deleted."""
+        file) goes in the stack, Soft, where the layout's largest empty gap
+        is, or is held (Hard) centred on `at` (x, y on the canvas) when it
+        was dropped there. Either can then be moved, resized, styled,
+        locked, released or deleted."""
         if kind not in ("text", "picture"):
             raise ValueError("An added element is text or a picture")
         if kind == "text" and not 0 < len(value.strip()) <= 120:
@@ -1260,9 +1262,11 @@ class OrchestrationSession:
             else:
                 w = min(W, H) * 0.14 * max(1.0, aspect)
                 box = [W - w - 0.06 * W, 0.06 * H, w, w / aspect]
+            # Dropped on the canvas it is Hard there; added from the panel it
+            # is Soft, so the solver places it in the stack (§3.59)
             node = {"node_id": nid, "semantic_category": "added", "structural_class": "decor", "motif_path": value,
                     "spatial_hierarchy": 200 + len(self.added), "bbox": [round(v, 2) for v in box],
-                    "constraint_type": "Soft"}
+                    "constraint_type": "Hard" if at is not None else "Soft"}
         variation = current.get("variation") or dict(variations_for(self.domain)[0])
         self._mark()
         self.added = dict(self.added, **{nid: node})
