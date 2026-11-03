@@ -41,7 +41,7 @@ Read first: `notes/system_development_progress.md`, then the tail of
   defense.
 - **Merging:** `main` undid §3.57 with a revert commit, so a plain merge
   would keep the revert and drop §3.57. First revert that revert on `main`
-  (`git revert <the revert's hash>`), then `git merge refinements`.
+  (`git revert 008dbcb`), then `git merge refinements`.
 
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
