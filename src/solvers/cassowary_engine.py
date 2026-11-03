@@ -166,6 +166,7 @@ class ConstraintSolverEngine:
         """
         self.solver = kiwi.Solver()
         self.variables = {}
+        self._last_rep = None          # the lowest signature row's lead (§3.63)
         reference = reference or {}
         fixed = list(fixed or [])
 
@@ -294,16 +295,20 @@ class ConstraintSolverEngine:
                     n['bbox'][2] = round(w, 2)
             gap = max(15.0, (avail_w - sum(widths)) / (count + 1))
 
-            # A signature block the designer moved holds its place; the others
-            # spread evenly in the space either side of it, at its height
-            # (notes §3.61). Without one, the row is as before.
-            spread = self._spread_row(repeating_nodes, widths, reference) if any(
-                n.get('constraint_type') == "Hard" for n in repeating_nodes) else None
+            # Signature blocks the designer moved form rows, as the logos do
+            # (notes §3.63): blocks at about one height are a row; a block
+            # moved well above or below the others is a row of its own, and
+            # stays one when released. Without a moved block, or rows from
+            # earlier moves, the single row is as before.
+            sig_rows = self._signature_rows(repeating_nodes, reference)
+            self._last_rep = None
+            sequence = [] if (len(sig_rows) > 1 or any(n.get('constraint_type') == "Hard" for n in repeating_nodes)) \
+                else list(enumerate(repeating_nodes))
+            if not sequence:
+                self._place_signature_rows(sig_rows, {n['node_id']: w for n, w in zip(repeating_nodes, widths)},
+                                           chain, reference)
             first_rep_var = None
             cursor = self.left_bound + gap
-            sequence = list(enumerate(repeating_nodes))
-            if spread:
-                sequence.sort(key=lambda item: item[1].get('constraint_type') != "Hard")   # a Hard one leads
             for i, node in sequence:
                 node_id = node['node_id']
                 tensor_w = widths[i]
@@ -322,8 +327,7 @@ class ConstraintSolverEngine:
                     self.solver.addConstraint(current_var['top'] == human_y)
                 else:
                     # Distribute repeating nodes evenly across the region
-                    x = spread[node_id] if spread else cursor
-                    self.solver.addConstraint((current_var['left'] == x) | kiwi.strength.strong)
+                    self.solver.addConstraint((current_var['left'] == cursor) | kiwi.strength.strong)
                     self.solver.addConstraint((current_var['bottom'] <= self.canvas_h - self.margin_y) | kiwi.strength.strong)
                 cursor += tensor_w + gap
 
@@ -367,7 +371,7 @@ class ConstraintSolverEngine:
         # instead. Hard (manual) constraints stay `required` either way.
         if (chain or repeating_nodes) and self.balance:
             first_var = self.variables[(chain or repeating_nodes)[0]['node_id']]
-            last_var = self.variables[(repeating_nodes or chain)[-1]['node_id']]
+            last_var = self.variables[getattr(self, '_last_rep', None) or (repeating_nodes or chain)[-1]['node_id']]
             self.solver.addConstraint(
                 (first_var['top'] + last_var['bottom'] == self.canvas_h) | _BALANCE[self.balance]
             )
@@ -484,6 +488,57 @@ class ConstraintSolverEngine:
                 if nxt is not None:
                     self.solver.addConstraint((var(nxt)['top'] >= var(f)['bottom'] + self.v_gap)
                                               | kiwi.strength.strong)
+
+    @staticmethod
+    def _signature_rows(reps, reference):
+        """The signature blocks in rows, top to bottom (notes §3.63): blocks
+        sharing at least half their height (on the canvas before the event)
+        are one row."""
+        box = lambda n: [float(v) for v in reference.get(n['node_id'], n['bbox'])]
+        rows = []
+        for n in sorted(reps, key=lambda n: box(n)[1]):
+            _, y, _, h = box(n)
+            for row in rows:
+                _, ry, _, rh = box(row[0])
+                if min(y + h, ry + rh) - max(y, ry) >= 0.5 * min(h, rh):
+                    row.append(n)
+                    break
+            else:
+                rows.append([n])
+        return [sorted(row, key=lambda n: box(n)[0]) for row in rows]
+
+    def _place_signature_rows(self, rows, width, chain, reference):
+        """Places signature rows (notes §3.63). In a row, a Hard block holds
+        its place and the Soft ones spread evenly beside it (_spread_row), at
+        its height; a row of Soft blocks spreads across the region. The first
+        row sits below the content, each next row below the one above."""
+        prev, prev_lead = [], None
+        for row in rows:
+            xs = self._spread_row(row, [width[n['node_id']] for n in row], reference)
+            ordered = ([n for n in row if n.get('constraint_type') == "Hard"]
+                       + [n for n in row if n.get('constraint_type') != "Hard"])
+            lead = None
+            for n in ordered:
+                v = self._initialize_node_variables(n['node_id'], width[n['node_id']], float(n['bbox'][3]))
+                if n.get('constraint_type') == "Hard":
+                    self.solver.addConstraint(v['left'] == float(n['bbox'][0]))
+                    self.solver.addConstraint(v['top'] == float(n['bbox'][1]))
+                else:
+                    self.solver.addConstraint((v['left'] == xs[n['node_id']]) | kiwi.strength.strong)
+                    if lead is not None:
+                        self.solver.addConstraint((v['top'] == lead['top']) | kiwi.strength.strong)
+                lead = lead or v
+            above = prev or ([self.variables[chain[-1]['node_id']]] if chain else [])
+            for n in ordered:
+                v = self.variables[n['node_id']]
+                for a in above:
+                    self.solver.addConstraint((v['top'] >= a['bottom'] + self.v_gap) | kiwi.strength.strong)
+            ref = prev_lead or (above[0] if above else None)
+            if ref is not None:
+                self.solver.addConstraint((lead['top'] == ref['bottom'] + self.v_gap) | kiwi.strength.weak)
+                self.solver.addConstraint((lead['top'] <= ref['bottom'] + self.max_gap) | kiwi.strength.strong)
+            prev, prev_lead = [self.variables[n['node_id']] for n in ordered], lead
+            self._last_rep = ordered[0]['node_id']
 
     def _spread_row(self, reps, widths, reference):
         """{node_id: left} of the Soft signature blocks when the designer

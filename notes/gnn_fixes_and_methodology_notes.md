@@ -4367,3 +4367,29 @@ the pre-§3.59 code: candidates and evaluate.py's simulated edits identical
 (0.000 px), every score identical; the simulated resize now also scales
 that node's text in the rendered SVG, which no Chapter 4 measure reads.
 The 12 tests pass.
+
+### 3.63 Step 2: signature blocks in rows, like the logos (2026-11-04)
+
+The user's request: signature blocks should behave like the logos, so a
+certificate can have one, two or three rows of them: a block moved well
+away from the others gets a row of its own.
+
+**Change** (`cassowary_engine._signature_rows`, `_place_signature_rows`):
+blocks that share at least half their height on the canvas before the
+event are one row; rows go top to bottom. In a row, a moved (Hard) block
+holds its place and the Soft ones spread evenly in the stretches beside it
+(§3.61's `_spread_row`), at its height; a row of Soft blocks spreads
+across the region. The first row sits below the content, each next row
+below the one above; a released block keeps its row. Without a moved
+block, or rows left by earlier moves, the single row is solved exactly as
+before.
+
+**Measured** (DONATION certificate): block 2 moved up 110 px became its
+own row, blocks 1 and 3 respread evenly below it (176 px gaps); released,
+block 2 kept its row under the content; block 3 moved beside block 2
+joined it (block 2 spread in the stretch left of it), and block 1 alone
+centred in the row below; block 3 released, the pair spread across the
+region. No overlap. The drops and releases of §3.60: no overlap, nothing
+past the margins. Against the pre-§3.59 code: candidates and evaluate.py's
+simulated edits identical (0.000 px), every score identical. The 12 tests
+pass.
