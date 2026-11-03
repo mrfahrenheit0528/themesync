@@ -260,21 +260,23 @@ The synthetic templates were filled with extreme payloads (\ref{tab:stress}): fi
 \begin{tabular}{>{\raggedright\arraybackslash}p{0.32\textwidth} >{\raggedright\arraybackslash}p{0.28\textwidth} >{\raggedright\arraybackslash}p{0.28\textwidth}}
 \hline
 \textbf{Condition} & \textbf{Academic Certificate} & \textbf{Event ID} \\ \hline
-Every field at its maximum (real words) & All text fit & The organization header overflowed \\
-First failure (real words) & None & Organization header from 49 of 90 characters \\
-First failure (one unbroken string) & Citation from 98 of 150 characters & Event details from 51 of 80 characters \\
+Every field at its maximum (real words) & The issuing organization overflowed & The event details overflowed \\
+First failure (real words) & Issuing organization from 64 of 150 characters & Organization header from 49 of 150 characters \\
+First failure (one unbroken string) & Issuing organization from 59 of 150; citation from 98 of 300 & Event details from 51 of 160 characters \\
 Maximum + 1 character & Rejected (all 7 fields) & Rejected (all 5 fields) \\
 Reading order & Held in every run & Held in every run \\
 F1-score & 1.0 in every length run & 1.0 in every run \\
 Signature blocks & Clean up to 5; overlapping from 6 (F1 0.92) & --- \\ \hline
 \end{tabular}
 \end{table}
-% Source: results/stress_test.json (notes §3.42). Text fit used the font's actual glyph widths.
-% Smallest text at print size (event ID at A6, certificate at US Letter landscape): 7.8 pt and 6.5 pt.
+% Source: results/stress_test.json, re-run 2026-11-04 at the raised limits (dev findings J1; notes §3.42, §3.66).
+% Clean runs: certificate 19 of 33, event ID 11 of 19. Smallest text at print size: certificate 7.5 pt;
+% event ID 3.3 pt (unbroken title); a 60-character name 3.5 pt, a 48-character role 3.8 pt. At 150 characters the
+% event-ID header wraps onto three lines at 4.7 pt and fits; between about 60 and 112 it overflows on two lines.
 
-The boxes stayed apart, on the canvas, and in order in every run, and the schema rejected every over-length field. The certificate's name shrank from 31.3 to 13.5 points to fit 60 characters, while event ID header lines over 48 characters overflowed, and from about 56 characters they ran past the canvas edge. From six signature blocks, the blocks overlapped (F1-score 0.92), and from seven, the names spilled onto their neighbors. A long unbroken string spilled 3 to 48 pixels into the margin without covering another element. Overflowing runs still scored an F1-score of 1.0.
+The boxes stayed apart, on the canvas, and in order in every run, and the schema rejected every over-length field. The certificate's name shrank from 31.3 to 9.9 points to fit 80 characters, while event ID header lines over 48 characters overflowed, and from about 56 characters they ran past the canvas edge. From six signature blocks, the blocks overlapped (F1-score 0.92), and from seven, the names spilled onto their neighbors. A long unbroken string spilled 3 to 48 pixels into the margin without covering another element. Overflowing runs still scored an F1-score of 1.0.
 
-The solver held at every length; the limits were in text fitting, since the header's box did not shrink its text. Jiang, Stuerzlinger, Zwicker, and Lutteroth [\citeyear{Jiang2020ORCSolver}] let adaptive layouts switch arrangements with OR-constraints, while ThemeSync's templates were fixed. Long organization names and more than five signatories need handling. The test covered the two synthetic templates. The engine was robust, with two text-fit limits.
+The solver held at every length; the limits were in text fitting, since the header's box did not shrink its text. Jiang, Stuerzlinger, Zwicker, and Lutteroth [\citeyear{Jiang2020ORCSolver}] let adaptive layouts switch arrangements with OR-constraints, while ThemeSync's templates were fixed. Long names, fitted only by shrinking, and more than five signatories need handling. The test covered the two synthetic templates. The engine was robust, with two text-fit limits.
 
 \clearpage
 \subsection{Manual Hard Constraints (Bi-directional State Machine)}
@@ -296,18 +298,20 @@ Latency was measured over 34 editing sessions of 40 edits each (1,360 edits) on 
 \begin{tabular}{l c c c c c c}
 \hline
 \textbf{Timing} & \textbf{Edits} & \textbf{Median} & \textbf{95th Pct.} & \textbf{Max} & \textbf{$\leq$ 0.1 s} & \textbf{$\leq$ 1.0 s} \\ \hline
-Solver & 1,012 & 0.4 ms & 0.8 ms & 95.9 ms$^{a}$ & 100\% & 100\% \\
-Full edit & 1,360 & 90 ms & 176 ms & 206 ms & 61\% & 100\% \\
-\quad Certificate & 680 & 146 ms & 182 ms & 206 ms & 29\% & 100\% \\
-\quad Event ID & 680 & 86 ms & 103 ms & 159 ms & 93\% & 100\% \\ \hline
-\multicolumn{7}{p{0.80\textwidth}}{\footnotesize Solver: the constraint recalculation. Full edit: the state synchronization (re-solve, re-score, re-draw, and save). $^{a}$One solve paused by the operating system; every other solve took at most 1.9 ms. The browser's redraw of the page is not included. Means: solver 0.53 ms (SD 3.01, raised by the paused solve); full edit 90.6 ms (SD 57.5).}
+Solver & 1,012 & 0.5 ms & 1.2 ms & 2.1 ms & 100\% & 100\% \\
+Full edit & 1,360 & 91 ms & 175 ms & 226 ms & 61\% & 100\% \\
+\quad Certificate & 680 & 149 ms & 181 ms & 226 ms & 29\% & 100\% \\
+\quad Event ID & 680 & 86 ms & 103 ms & 127 ms & 92\% & 100\% \\ \hline
+\multicolumn{7}{p{0.80\textwidth}}{\footnotesize Solver: the constraint recalculation. Full edit: the state synchronization (re-solve, re-score, re-draw, and save). The browser's redraw of the page is not included. Means: solver 0.55 ms (SD 0.30); full edit 91.0 ms (SD 57.9).}
 \end{tabular}
 \end{table}
 % Source: results/latency_benchmark.json (notes §3.43, §3.47), measured after the renderer's image
 % cache (§3.47), which left every output byte-identical. Before it: full-edit median 157 ms, 22% within 0.1 s.
-% Means: solver 0.53 ms (SD 3.01), full edit 90.6 ms (SD 57.5).
+% Re-run 2026-11-04 on the same RTX 3060 workstation (dev findings J2), with editing re-flowing around Hard
+% boxes and working OCR. Means: solver 0.55 ms (SD 0.30), full edit 91.0 ms (SD 57.9). The 1210.2 run had one
+% solve paused by the operating system (95.9 ms).
 
-Every recalculation finished within 0.1 seconds, and all but one, paused by the operating system, within 1.9 milliseconds. Every full edit finished within 1.0 second, and 61\% within 0.1 seconds. Full edits took longer on certificates than on event IDs (median 146 against 86 milliseconds).
+Every recalculation finished within 2.1 milliseconds, far inside the 0.1-second limit. Every full edit finished within 1.0 second, and 61\% within 0.1 seconds. Full edits took longer on certificates than on event IDs (median 149 against 86 milliseconds).
 
 The solver responded instantly, and every full edit stayed within the limit for uninterrupted work. Most of a full edit's time went to re-scoring legibility against the poster's background, and certificates have more elements and a larger canvas. Against the limits of Nielsen [\citeyear{nielsen1993usability}], the solver was instantaneous and the full edit did not interrupt the task, in line with the interactive purpose of Cassowary \cite{Badros2001Cassowary} and the real-time constraint-based layout of Li, Li, Fu, and Cai [\citeyear{Li2024SMT}]. A designer could edit without waiting. Latency was measured on one workstation, without the browser's redraw. The engine met the real-time requirement.
 
@@ -321,7 +325,7 @@ The solver responded instantly, and every full edit stayed within the limit for 
     \label{fig:latency}
 \end{figure}
 
-Edits that only re-drew the canvas (text edits, typography changes, undo, redo, restore, and candidate selections) all finished within 0.1 seconds, with a median of 12 milliseconds. Edits that re-solved the layout (moves, resizes, and locks) had a median of 105 milliseconds, and 48\% of them finished within 0.1 seconds. Opening a layout, which ran every stage of the pipeline, took a median of 3.4 seconds. The timings included an image cache that left the layouts byte-identical.
+Edits that only re-drew the canvas (text edits, typography changes, undo, redo, restore, and candidate selections) all finished within 0.1 seconds, with a median of 12 milliseconds. Edits that re-solved the layout (moves, resizes, and locks) had a median of 104 milliseconds, and 47\% of them finished within 0.1 seconds. Opening a layout, which ran every stage of the pipeline, took a median of 4.6 seconds. The timings included an image cache that left the layouts byte-identical.
 
 The edits fell into two groups: re-draws, which were instant, and re-solves, which met the 0.1-second limit about half the time. A full edit on the synthetic theme took about 4 milliseconds, so re-scoring legibility against the poster's background, not the solver, set the time of the re-solves. Nielsen [\citeyear{nielsen1993usability}] placed the limit for a response that feels instantaneous at 0.1 seconds; about half of the re-solves fell just above it. Cheaper legibility scoring would bring most of them under 0.1 seconds. Opening a layout took seconds, but only once per layout. Real-time editing was achieved, with room to make re-solves faster.
 
