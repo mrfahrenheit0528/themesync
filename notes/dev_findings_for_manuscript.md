@@ -1317,3 +1317,104 @@ Citation_Body **300** (150), Date_Issued **60** (30), Certificate_ID
 
 **Pages to reprint: 86, 88, 89, 106, 110, 111.** Check after the edit that
 each still fits its page (Table 11's cells grow by a few words).
+
+## K. Everything the system changed since Manu 1210.2, for the reprint — 2026-11-04
+
+**Start here (with section J).** The user will edit the manuscript now and
+**reprint only the pages that change**, so:
+- **Keep each edit page-neutral:** replace words rather than add lines, and
+  rebuild to check that every changed page still breaks where 1210.2 does.
+  A line pushed to the next page forces reprinting every page after it.
+- "p." is **Manu 1210.2's printed page**. `manuscript/Thesis Latex/` may
+  lag 1210.2 (the group edits in Prism); compare before editing.
+- Past tense, as everywhere. Dev notes §3.56–3.68 hold the details.
+
+### K0. What the reprint must cover, and what it must not
+
+- **Must:** the result pages in section J (pp.86, 88, 89, 106, 110–111).
+  Nothing in K1–K3 below makes a result wrong.
+- **Must not describe** what is only on branch `refinements` (dev notes
+  §3.57): SAM 2.1 cut-outs, even gaps after anchoring, the header beside the
+  logos, the certificate's frame margin. `main` (what the defense runs)
+  doesn't have them; they return after the defense.
+- **Unchanged:** layout generation, the 64 rated layouts and their scores,
+  the Phase 3 battery, Phase 4. Every change below is in the editing
+  session (Step 2) or the dashboard, and each was checked against the code
+  the experts rated: the candidates and evaluate.py's simulated edits are
+  identical, and untouched layouts render pixel-identical.
+
+### K1. 🟡 Wording that is no longer exact (worth fixing on pages being reprinted anyway, else optional)
+
+| Page | Now | What the system does | Suggested words (page-neutral) |
+|---|---|---|---|
+| p.47 (Formula 3.13) | "signature blocks and decorative motifs, which are placed off-grid by design, are excluded" | The master's motifs are still excluded; a picture the designer adds on the canvas is scored as content (collision, alignment, whitespace; §3.61). Generated layouts have none, so no result changes. | "…signature blocks and the master's decorative motifs, which are placed off-grid by design, are excluded" |
+| p.56 (Figure 2's text) | "each of which the designer could keep or remove, with uploads for missed logos and a replacement title artwork" | Every tile can be replaced by dropping a picture on it (section I). | "…keep, remove, or replace by dropping a picture on it" |
+| p.58 (Figure 3's text) | "the Recommendation Engine displayed the generated candidates as a strip of thumbnails ranked by the heuristic fitness function" | Still ranked the same way. The thumbnails now show each candidate with the designer's added and deleted elements (as selecting it opens it), and the candidate on the canvas shows the canvas itself. | Optional: "…ranked by the heuristic fitness function and drawn with the designer's added and deleted elements" |
+
+### K2. ⚪ New editing behaviour the manuscript doesn't describe (all optional; none contradicts it)
+
+These strengthen what Chapter 3 already claims (Formula 3.10: Hard
+elements stay, Soft ones are placed by the solver; p.58: each move,
+resize or lock triggers one re-solve):
+- **Soft elements re-flow around the designer's Hard elements by
+  position** (§3.59–3.60). Before, a Hard element kept its reading-order
+  slot wherever it was put, so an added text dragged up the page squeezed
+  the stack and overlapped it (28 of 32 test drops); now none overlap. A
+  Hard box pushes only what shares its columns, so elements can sit side
+  by side.
+- **Rows** (§3.61, §3.63): logos and pictures beside each other stay one
+  row with even gaps; signature blocks form rows (one, two or three), and a
+  moved block's row-mates spread evenly.
+- **A resize outlasts a release** and scales the text with its box
+  (§3.62); Style has a font size (§3.65).
+- **A placed text keeps its place when released** (§3.68).
+- **Added pictures**: dropped on the canvas or dragged from an Images
+  sidebar; Soft ones are placed by the solver; one can be sent to the
+  background, outside the solver and the score (§3.58, §3.64).
+- **The background layer is editable** (§3.64): the panel, the faint title
+  artwork, the art column and the background image (move, resize,
+  replace, fade, hide), re-scoring legibility against the edited
+  background.
+- **Event IDs** (§3.67): the logo row splits into separate logo elements
+  after Initialize (in the session; the generated layout is unchanged); the
+  name's pill and the role's band are their own underlays (colour, shape,
+  border, shadow, opacity).
+- **Live text editing, deselect, resize shortcuts** (§3.65–3.66): the
+  editor shows the text in its own font, size and colour while typing;
+  Shift keeps proportions, Alt resizes about the centre.
+- **Mail merge** (§3.58, §3.67): its own "one per person" button with a CSV
+  template of the per-person fields, and a download on Step 3 as well. This
+  is what p.8's "variable-driven documents" describes, if the group wants
+  to name it there.
+- **Step 1** (§3.58): typography as a Canva/Word-style toolbar (font,
+  weight drawn in each weight, size); Tab completes a field from its
+  sample text.
+
+If any of this goes in, the natural places are Figure 3's text (p.58–59:
+the canvas and the right-hand panel) and Figure 2's (p.56). The Figure 3
+screenshot shows the older panel; a retake is optional and changes no
+text.
+
+### K3. ⚪ Settled, no edit needed
+
+- **p.46, the schema check:** still exactly as written ("did not exceed its
+  predefined max characters limit"); only the limits rose (J5 prints them).
+- **p.45, Formula 3.10:** holds as written.
+- **p.43, 51, 53, 54, "logo row":** generation still produces one logo-row
+  element; the split into separate logos happens only in the editing
+  session.
+- **H1–H5 (section H):** applied in 1210.2 and still true.
+
+### K4. For the defense (not the manuscript)
+
+- **The rated system and the demo:** the experts rated tag `phase4-rated`.
+  The demo runs `main`, whose generation is the same; every K2 change is in
+  editing, after the evaluation. If the panel asks why the manuscript
+  doesn't describe a feature: it came after the evaluation, and the
+  evaluated results don't depend on it.
+- **Still waiting for after the defense:** branch `refinements` (§3.57),
+  and recommendations re-solved around the designer's Hard edits and
+  re-ranked (§3.59, discussed 2026-11-03).
+- **Known text-fit limit (J1):** at the raised limits, very long event-ID
+  names shrink to about 3.5 pt; the templates fit text by shrinking. The
+  manuscript already names long names as a limitation.

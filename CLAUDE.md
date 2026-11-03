@@ -27,6 +27,11 @@ code; notes go stale.
 
 ## Where things stand (2026-10-10)
 
+**Next (user, 2026-11-04):** the manuscript chat edits the manuscript from
+`notes/dev_findings_for_manuscript.md` sections J and K (only the changed
+pages are reprinted, so edits stay page-neutral); then a discussion of the
+whole system and defense preparation.
+
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
 §3.68).
