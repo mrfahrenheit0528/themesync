@@ -45,7 +45,8 @@ import canvas_editor                                          # noqa: E402
 import mail_merge                                             # noqa: E402
 import rasterize                                              # noqa: E402
 
-SHORTCUTS = ("Drag to move · handles resize (Shift keeps proportions) · double-click text to edit · "
+SHORTCUTS = ("Drag to move · handles resize (Shift keeps proportions, Alt resizes from the centre, Alt+Shift "
+             "both) · double-click text to edit · "
              "arrows nudge 1 px (Shift: 10 px) · L locks / releases · Tab cycles · Ctrl+Z / Ctrl+Shift+Z "
              "undo / redo · hold Alt to move without snapping")
 PENALTIES = (("Collision", "P_collision", "3.12"), ("Alignment", "P_align", "3.13"),

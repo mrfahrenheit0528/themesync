@@ -4471,3 +4471,20 @@ rendered text hidden; "Maria Santos" saved on Enter. Font size 30 drew
 the name at 30 px, still Soft. A click outside cleared the panel; the
 panel's Lock kept the selection. The brand opened and closed the sidebar;
 no » shown; Step 1 doesn't scroll. The 12 tests pass.
+
+### 3.66 Step 2: resize shortcuts; the grey around the page deselects (2026-11-04)
+
+- **Resizing as in a design tool** (`canvas_editor.js` `resizeBox`):
+  Shift keeps the proportions on every handle (an edge handle scales the
+  other side to match), Alt resizes about the box's centre, Alt+Shift
+  does both; a picture's corners keep its proportions without Shift, as
+  before. The canvas swallows Alt's keydown and keyup so the browser
+  doesn't move focus to its menu. The shortcuts line in Canvas details
+  says so.
+- **The grey around the page deselects:** it belongs to the canvas
+  component but not to its page, so §3.65's outside-click rule skipped it.
+- **Checked in Edge** (Student Name, the south-east handle dragged 120 px
+  left and 30 px down): plain 900 × 76 → 780 × 106 from the top-left;
+  Shift 780 × 66 (ratio 11.84 → 11.82); Alt 660 × 136 about the centre
+  (centre unchanged); Alt+Shift 660 × 56 about the centre, ratio kept. A
+  click on the grey left of the page cleared the selection.

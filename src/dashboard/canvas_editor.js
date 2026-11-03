@@ -87,6 +87,9 @@ class CanvasEditor {
 
     this.listeners = [];
     this.on(root, "keydown", (e) => this.onKey(e));
+    // Alt resizes about the centre: keep the browser from taking focus to
+    // its menu when Alt is released over the canvas
+    this.on(root, "keyup", (e) => { if (e.key === "Alt") e.preventDefault(); });
     this.on(this.stage, "pointerdown", (e) => this.onDown(e));
     this.on(this.stage, "pointermove", (e) => this.onMove(e));
     this.on(this.stage, "pointerup", (e) => this.onUp(e));
@@ -107,7 +110,10 @@ class CanvasEditor {
     // top bar) (notes §3.65)
     this.on(document, "pointerdown", (e) => {
       const path = e.composedPath ? e.composedPath() : [];
-      if (path.includes(this.root)) return;
+      // inside the canvas: the page handles its own clicks; the grey around
+      // it deselects like the rest of the workspace
+      if (path.includes(this.stage) || path.includes(this.textarea)) return;
+      if (path.includes(this.root)) { this.deselect(); return; }
       if (path.some((el) => el.matches && el.matches(KEEP_SELECTION))) return;
       this.deselect();
     }, true);
@@ -304,22 +310,30 @@ class CanvasEditor {
     return [nx, ny, w, h];
   }
 
-  resizeBox(d, dx, dy, keepRatio) {
+  resizeBox(d, dx, dy, keepRatio, fromCentre) {
+    // As in a design tool (notes §3.66): Shift keeps the proportions (on
+    // every handle), Alt resizes about the box's centre, Alt+Shift both. A
+    // picture's corners keep its proportions without Shift.
     const node = this.nodes.get(d.id);
     const [x, y, w, h] = d.orig;
     const hd = d.handle;
-    let l = x, t = y, r = x + w, b = y + h;
-    if (hd.includes("w")) l = Math.min(x + dx, r - MIN_SIZE);
-    if (hd.includes("e")) r = Math.max(r + dx, l + MIN_SIZE);
-    if (hd.includes("n")) t = Math.min(y + dy, b - MIN_SIZE);
-    if (hd.includes("s")) b = Math.max(b + dy, t + MIN_SIZE);
-    if ((keepRatio || node.lockAspect) && hd.length === 2) {
+    const k = fromCentre ? 2 : 1;
+    let nw = w, nh = h;
+    if (hd.includes("e")) nw = w + k * dx;
+    if (hd.includes("w")) nw = w - k * dx;
+    if (hd.includes("s")) nh = h + k * dy;
+    if (hd.includes("n")) nh = h - k * dy;
+    nw = Math.max(MIN_SIZE, nw); nh = Math.max(MIN_SIZE, nh);
+    if (keepRatio || (node.lockAspect && hd.length === 2)) {
       const ratio = w / h;
-      let nw = r - l, nh = b - t;
-      if (nw / nh > ratio) nw = nh * ratio; else nh = nw / ratio;
-      if (hd.includes("w")) l = r - nw; else r = l + nw;
-      if (hd.includes("n")) t = b - nh; else b = t + nh;
+      if (hd.length === 2) { if (nw / nh > ratio) nw = nh * ratio; else nh = nw / ratio; }
+      else if (hd === "e" || hd === "w") nh = nw / ratio;
+      else nw = nh * ratio;
     }
+    const cx = x + w / 2, cy = y + h / 2;
+    let l = fromCentre ? cx - nw / 2 : hd.includes("w") ? x + w - nw : hd.includes("e") ? x : cx - nw / 2;
+    let t = fromCentre ? cy - nh / 2 : hd.includes("n") ? y + h - nh : hd.includes("s") ? y : cy - nh / 2;
+    let r = l + nw, b = t + nh;
     if (!LOOSE.has(node.kind)) {
       l = Math.max(0, l); t = Math.max(0, t);
       r = Math.min(this.data.width, r); b = Math.min(this.data.height, b);
@@ -385,7 +399,8 @@ class CanvasEditor {
     const dx = p.x - d.start.x, dy = p.y - d.start.y;
     if (!d.moved && Math.hypot(dx, dy) < 3 * this.unitsPerPx()) return;
     d.moved = true;
-    d.box = d.mode === "move" ? this.moveBox(d, dx, dy, !e.altKey) : this.resizeBox(d, dx, dy, e.shiftKey);
+    d.box = d.mode === "move" ? this.moveBox(d, dx, dy, !e.altKey)
+                              : this.resizeBox(d, dx, dy, e.shiftKey, e.altKey);
     this.preview(d.id, d.orig, d.box);
     this.redrawOverlay();
   }
@@ -476,6 +491,7 @@ class CanvasEditor {
   // ---- keyboard -------------------------------------------------------------
 
   onKey(e) {
+    if (e.key === "Alt") { e.preventDefault(); return; }
     if (this.editing || !this.data) return;
     const mod = e.ctrlKey || e.metaKey;
     const key = e.key;

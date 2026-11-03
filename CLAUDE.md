@@ -29,7 +29,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.65).
+§3.66).
 
 **Branches (user, 2026-11-03):**
 - **`main` is the version the printed manuscript describes:** the 13

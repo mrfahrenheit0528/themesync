@@ -5,7 +5,8 @@ The active canvas edited in place, like a design tool:
 
   click              select a node (the right-hand panel follows)
   drag               move it                          → on-drop
-  handles            resize it (Shift keeps the ratio) → on-resize-complete
+  handles            resize it (Shift keeps the ratio, Alt from the centre,
+                     Alt+Shift both)                   → on-resize-complete
   double-click       edit its words (Enter saves)     → text-edit
   arrow keys         nudge 1 px (Shift: 10 px), sent as one on-drop
   L                  lock where it is / release       → lock-toggle
