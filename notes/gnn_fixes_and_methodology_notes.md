@@ -4540,3 +4540,23 @@ renders). In Edge: two logo elements on the canvas; a click on the pill
 selected the underlay and Square redrew it; a click on the letters
 selected the name with the underlay's section; a click on a logo selected
 it; a two-person mail merge downloaded from Step 3. The 12 tests pass.
+
+### 3.68 Step 2: a placed text keeps its place when released (2026-11-04)
+
+The user's finding: an added text moved to a spot and then released (Soft)
+jumped to the bottom. A Soft element goes to its reading-order slot, and an
+added text's slot is the end of the stack (`spatial_hierarchy` 50+).
+
+**Change:** once an added element has been moved or resized
+(`apply_event` marks it `by_position`), it takes its place in the stack
+by position when Soft, as a released picture does (§3.60): after the last
+element that starts above it on the canvas, then aligned to the axis and
+spaced with the stack's rhythm. The format's own elements still go back
+to their reading-order slot, so generation and evaluate.py's simulated
+edits are unchanged.
+
+**Checked:** a text dropped between two elements and released stayed
+between them, aligned and with no overlap, on KAINANG's event ID (between
+the title and the name), DONATION's certificate (between the title and
+the presentation line) and CMET's event ID (between the header and the
+title). The 12 tests pass.

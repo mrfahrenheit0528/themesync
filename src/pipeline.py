@@ -976,6 +976,8 @@ class OrchestrationSession:
         before = list(target["bbox"])
         if bbox is not None:
             target["bbox"] = [round(float(v), 2) for v in bbox]
+        if node_id in self.added and event_type in ("on-drop", "on-resize-complete"):
+            target["by_position"] = True     # released, it stays where it was put in the stack (§3.68)
         if event_type == "on-resize-complete":
             # The designer's size outlasts a release (the solver places the
             # element, at this size), and a text's type scales with its box

@@ -117,12 +117,15 @@ class ConstraintSolverEngine:
         below the signature row stays out of the stack.
         """
         hard = [n for n in singular_nodes if n.get('constraint_type') == "Hard"]
-        if not hard and not fixed:
+        # a text the designer added and placed keeps its place by position
+        # when released, Soft: it has no reading-order slot of its own (§3.68)
+        positioned = [n for n in singular_nodes if n.get('constraint_type') != "Hard" and n.get('by_position')]
+        if not hard and not fixed and not positioned:
             return list(singular_nodes), []
         box = lambda n: reference.get(n['node_id'], n['bbox'])
         top = lambda n: float(box(n)[1])
-        order = [n for n in singular_nodes if n.get('constraint_type') != "Hard"]
-        placed = hard + list(fixed)
+        order = [n for n in singular_nodes if n.get('constraint_type') != "Hard" and not n.get('by_position')]
+        placed = hard + positioned + list(fixed)
         row_top = min((float(box(n)[1]) for n in repeating_nodes), default=None)
         below_row = []
         gap = self.default_vgap
