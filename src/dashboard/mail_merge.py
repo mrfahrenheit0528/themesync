@@ -64,6 +64,15 @@ def placeholder(label: str, max_chars: int = None) -> str:
     return text
 
 
+def template(fields: dict) -> bytes:
+    """A CSV with one column per text field, named by its label (content
+    key → (label, max_characters)), to fill in one row per layout. UTF-8
+    with Excel's BOM, so Excel opens accented names correctly."""
+    buf = io.StringIO()
+    csv.writer(buf).writerow([label for label, _ in fields.values()])
+    return buf.getvalue().encode("utf-8-sig")
+
+
 def build(data: bytes, fields: dict, base_content: dict, meta: dict, source: str) -> dict:
     """The merge for one CSV file.
 
@@ -77,10 +86,14 @@ def build(data: bytes, fields: dict, base_content: dict, meta: dict, source: str
     # first block (its key ends in _0).
     names = {_norm(key): key for key in fields}
     names.update({_norm(label): key for key, (label, _) in fields.items()})
-    mapping = {h: names[_norm(h)] for h in headers if _norm(h) in names}
-    if not mapping:
+    # A column blank in every row (the template's fields the designer left
+    # alone) isn't merged: the form's value stands
+    mapping = {h: names[_norm(h)] for h in headers
+               if _norm(h) in names and any(row.get(h) for row in rows)}
+    if not mapping and rows:
         wanted = ", ".join(label for label, _ in fields.values())
-        raise ValueError(f"No column matches a content field. Name the columns after the fields: {wanted}.")
+        raise ValueError(f"No filled column matches a content field. Name the columns after the fields "
+                         f"(or start from the template): {wanted}.")
     if not rows:
         raise ValueError("The CSV has no data rows.")
     merged = list(dict.fromkeys(mapping.values()))

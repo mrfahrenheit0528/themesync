@@ -45,7 +45,7 @@ import mail_merge                                                    # noqa: E40
 import poster_text                                                   # noqa: E402
 import pipeline                                                      # noqa: E402
 from aesthetic_renderer import DEFAULT_TYPOGRAPHY, _palette_from_centroids  # noqa: E402
-from schema_validation import FONT_WEIGHTS, validate_content, validate_typography  # noqa: E402
+from schema_validation import validate_content, validate_typography  # noqa: E402
 from stylistic_markers import build_style_kit                        # noqa: E402
 from template_ingestor import TemplateIngestor                       # noqa: E402
 
@@ -59,8 +59,6 @@ _CONTENT_DATA_BY_DOMAIN = {
     "identification_card":  os.path.join(_ROOT, "data", "raw", "sample_content_id.json"),
 }
 
-WEIGHT_NAMES = {100: "Thin", 200: "Extra Light", 300: "Light", 400: "Regular", 500: "Medium",
-                600: "Semibold", 700: "Bold", 800: "Extra Bold", 900: "Black"}
 CATEGORY_COLOURS = {"logo": (0, 200, 90), "text": (40, 120, 255), "underlay": (255, 170, 0),
                     "embellishment": (220, 60, 220), "illustration": (0, 190, 200)}
 
@@ -457,14 +455,14 @@ with markers_col, st.container(key="assets_markers"):
 # ---------------------------------------------------------------------------
 with card_type:
     ui.card_title("text_fields", "Administrative Typography")
-    font_col, weight_col, size_col = st.columns([1.5, 1.15, 1], gap="small")
-    with font_col:
-        family = ui.font_picker("type", "Primary Font", DEFAULT_TYPOGRAPHY["family"])
-    weight = weight_col.selectbox("Font Weight", FONT_WEIGHTS, index=FONT_WEIGHTS.index(700),
-                                  format_func=lambda w: f"{w} — {WEIGHT_NAMES[w]}")
-    base = size_col.number_input("Base Size (px)", min_value=1.0, max_value=400.0, value=48.0, step=1.0,
-                                 help="The certificate title's size; the whole type scale is built on it. "
-                                      "Checked against its JSON Schema before orchestration (p.43).")
+    # One toolbar, as in Canva or Word: the font and its weight, each drawn
+    # in its own face, then the size with − and +
+    with st.container(horizontal=True, key="type_bar", gap=None, vertical_alignment="center"):
+        family = ui.font_picker("type", "Primary font", DEFAULT_TYPOGRAPHY["family"], show_label=False)
+        weight = ui.weight_picker("type", family, 700, help="Font weight: the weights this font has")
+        base = ui.size_stepper("type", 48.0, help="Base size (px): the certificate title's size; the whole "
+                                                  "type scale is built on it. Checked against its JSON Schema "
+                                                  "before orchestration (p.43).")
     typography = {"family": family, "weight": int(weight), "base_size": float(base)}
 
 # ---------------------------------------------------------------------------
@@ -529,25 +527,19 @@ content = {}
 with card_content:
     with st.container(horizontal=True, key="content_head", vertical_alignment="center"):
         ui.card_title("edit_note", "Content Payload", _friendly(domain) if domain else "")
-
-        def _fill_sample() -> None:
-            for var, props in schema.items():
-                if props.get("structural_class") != "image_node":
-                    for key in _content_keys(var, props):
-                        st.session_state[f"content_{domain}_{key}"] = str(sample.get(key, sample.get(f"{key}_0", "")))
-
-        st.button("", icon=":material/text_snippet:", key=f"sample_{domain}", on_click=_fill_sample,
-                  help="Fill the fields with sample text")
         lines = _poster_lines(master_path, os.path.getmtime(master_path)) if dna else []
         with st.popover("", icon=":material/document_scanner:", disabled=not lines,
                         help="The text read from the poster (OCR), to copy into any field"):
             st.caption("Read from the master layout by OCR, top to bottom. Copy a line into any field.")
             for line in lines:
                 st.code(line["text"], language=None)
-        with st.popover("", icon=":material/upload_file:", help="Load a JSON payload, or a CSV for a mail merge"):
+        with st.popover("", icon=":material/upload_file:",
+                        help="Load a JSON payload, or a CSV for a mail merge (a template is inside)"):
+            st.caption("A CSV makes a mail merge: one layout per row. The template has a column for every "
+                       "field; fill in the ones that change per layout and leave the others blank.")
+            template_slot = st.empty()             # filled once the fields are known, below
             payload_upload = st.file_uploader(
-                "A JSON payload fills the fields below. A CSV makes a mail merge: one layout per row, "
-                "its columns named after the fields (e.g. Participant Name, Participant Role).",
+                "A JSON payload fills the fields below; a CSV starts a mail merge.",
                 type=["json", "csv"], key=f"payload_{domain}")
     upload_is_csv = payload_upload is not None and payload_upload.name.lower().endswith(".csv")
     if (payload_upload is not None and not upload_is_csv
@@ -597,6 +589,10 @@ with card_content:
             long = ("\n" in example or props.get("max_characters", 0) > 80
                     or props.get("structural_class") == "repeating_group")
             fields.append((key, label, long, props.get("max_characters")))
+    template_slot.download_button(
+        "Download the CSV template", mail_merge.template({k: (label, mx) for k, label, _, mx in fields}),
+        file_name=f"ThemeSync_{domain}_mail_merge.csv", mime="text/csv", icon=":material/download:",
+        width="stretch", on_click="ignore")
     # A CSV: the mail merge (mail_merge.py), applied once per file
     merge_key = f"merge_{domain}"
     if upload_is_csv and st.session_state.get("payload_applied") != payload_upload.file_id:

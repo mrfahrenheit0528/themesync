@@ -4059,3 +4059,42 @@ is recorded here only.
     through candidate switches, deleting the logos, undo, dragging and
     releasing the header, and added text; no overlaps.
   - The 12 tests pass.
+
+### 3.58 Step 1: typography as a toolbar; a CSV template; heavier cards (2026-11-03)
+
+Dashboard only, on `main` (the user's request; see §3.57's branch note).
+Nothing here changes how a layout is generated, solved or scored.
+
+- **Administrative Typography is a toolbar, as in Canva or Word.** One
+  strip, split by thin rules, with no labels above it (each control's name
+  is its tooltip):
+  - the font (`ui.font_picker`, each font in its own typeface, as before);
+  - the weight (`ui.weight_picker`): a dropdown of the weights the font
+    ships in `assets/fonts/`, each drawn in that weight (Montserrat:
+    Regular, Semibold, Bold, Black; Tinos: Regular, Bold). Before, the
+    selectbox offered all nine weights, and the five a font lacked were
+    drawn in the nearest face anyway. A weight the newly picked font
+    lacks moves to its nearest one;
+  - the size (`ui.size_stepper`): − and + on either side (1 px steps),
+    the value a dropdown of common sizes (12–120) with a box for any
+    other. The JSON Schema check (1–400 px) is unchanged.
+  - The three dropdowns' lists read like a menu (compact, left-aligned,
+    the current choice tinted). The font lists in Step 2 share that look.
+- **The upload popover in Content Payload has a CSV template:** a
+  download with one column per text field of the current format and
+  element choices, named by the field labels (UTF-8 with Excel's BOM;
+  `mail_merge.template`).
+  - `mail_merge.build` now ignores a column that is blank in every row,
+    so a template whose unused columns were left blank keeps the form's
+    values there. Before, every matched column was merged and a blank
+    cell failed validation.
+- **The "Fill the fields with sample text" button is gone** (the user's
+  request). The sample text still shows as each field's hint.
+- **Cards:** a 1.5 px border (#d3d8e0) and a soft two-layer shadow, on
+  every `card_*` container (Steps 1 and 3).
+- **Checked** in Edge with Playwright at 1780×880 and 1366×768: no page
+  scroll; weight and size changes keep each other and survive a font
+  change (a first version reset the size, from the closed list's number
+  box; that box now starts empty); the template downloads with the
+  certificate's ten columns; a template filled in the name column only
+  merges two rows with the form's date.

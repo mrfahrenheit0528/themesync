@@ -297,11 +297,12 @@ def _pick_font(state_key: str, label: str, popover_key: str) -> None:
     st.session_state[popover_key] = False          # close the list
 
 
-def font_picker(key: str, label: str, current: str) -> str:
+def font_picker(key: str, label: str, current: str, show_label: bool = True) -> str:
     """A dropdown that shows every font in its own typeface (Streamlit's
     selectbox can't style its options one by one). `current` is a family
     stack; returns the chosen one. Picking a font closes the list through
-    the popover's keyed open state."""
+    the popover's keyed open state. Without its label (a toolbar), the
+    label is the button's tooltip."""
     state_key = f"{key}_font"
     st.session_state.setdefault(state_key, font_label(current))
     chosen = st.session_state[state_key]
@@ -314,13 +315,104 @@ def font_picker(key: str, label: str, current: str) -> str:
     # sits under its label as a selectbox does
     with st.container(key=f"{key}_font_btn", gap=None):
         st.markdown(f"<style>{font_preview_css()}\n{''.join(css)}</style>"
-                    f'<div class="ts-wlabel">{html.escape(label)}</div>', unsafe_allow_html=True)
-        with st.popover(chosen, width="stretch", key=f"{key}_font_pop", on_change="rerun"):
+                    + (f'<div class="ts-wlabel">{html.escape(label)}</div>' if show_label else ""),
+                    unsafe_allow_html=True)
+        with st.popover(chosen, width="stretch", key=f"{key}_font_pop", on_change="rerun",
+                        help=None if show_label else label):
             for option, (_, folder) in FONTS.items():
                 st.button(option, key=f"{key}_font_opt_{folder}", width="stretch",
                           type="primary" if option == chosen else "tertiary",
                           on_click=_pick_font, args=(state_key, option, f"{key}_font_pop"))
     return FONTS[chosen][0]
+
+
+WEIGHT_NAMES = {100: "Thin", 200: "Extra Light", 300: "Light", 400: "Regular", 500: "Medium",
+                600: "Semibold", 700: "Bold", 800: "Extra Bold", 900: "Black"}
+
+
+def font_weights(stack: str) -> list:
+    """The upright weights a family ships in assets/fonts/, ascending (as
+    Canva lists only the weights a font has); Montserrat's for an unknown
+    family."""
+    folder = font_folder(stack) or "montserrat"
+    return sorted({weight for _, weight, style in font_faces(folder) if style == "normal"}) or [400, 700]
+
+
+@functools.lru_cache(maxsize=None)
+def weight_preview_css(folder: str) -> str:
+    """@font-face rules that draw each weight's name in that weight of the
+    family: one face per weight, cut down to the names' letters."""
+    text = "".join(WEIGHT_NAMES.values()) + "0123456789"
+    return "\n".join(
+        f'@font-face {{font-family: "TSW {folder}"; font-weight: {weight}; '
+        f'src: url(data:font/woff;base64,{base64.b64encode(_woff(path, text)).decode("ascii")}) format("woff");}}'
+        for path, weight, style in font_faces(folder) if style == "normal")
+
+
+def _pick_value(state_key: str, value, popover_key: str) -> None:
+    st.session_state[state_key] = value
+    st.session_state[popover_key] = False          # close the list
+
+
+def weight_picker(key: str, stack: str, current: int = 700, help: str = None) -> int:
+    """A dropdown of the family's weights, each drawn in its own weight.
+    A weight the newly picked family lacks moves to its nearest one."""
+    state_key = f"{key}_weight"
+    available = font_weights(stack)
+    weight = int(st.session_state.get(state_key, current))
+    if weight not in available:
+        weight = min(available, key=lambda w: (abs(w - weight), -w))
+    st.session_state[state_key] = weight
+    folder = font_folder(stack) or "montserrat"
+    css = [f'.st-key-{key}_weight_btn button p {{font-family: "TSW {folder}", sans-serif; '
+           f'font-weight: {weight} !important;}}']
+    css += [f'.st-key-{key}_weight_opt_{w} button p {{font-family: "TSW {folder}", sans-serif; '
+            f'font-weight: {w} !important; font-size: 1rem;}}' for w in available]
+    with st.container(key=f"{key}_weight_btn", gap=None):
+        st.markdown(f"<style>{weight_preview_css(folder)}\n{''.join(css)}</style>", unsafe_allow_html=True)
+        with st.popover(WEIGHT_NAMES[weight], width="stretch", key=f"{key}_weight_pop", on_change="rerun",
+                        help=help):
+            for w in available:
+                st.button(WEIGHT_NAMES[w], key=f"{key}_weight_opt_{w}", width="stretch",
+                          type="primary" if w == weight else "tertiary",
+                          on_click=_pick_value, args=(state_key, w, f"{key}_weight_pop"))
+    return weight
+
+
+SIZE_PRESETS = [12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80, 96, 120]
+
+
+def size_stepper(key: str, current: float = 48.0, lo: float = 1.0, hi: float = 400.0, help: str = None) -> float:
+    """A font size as Canva and Word set it: − and + on either side, and
+    the value a dropdown of common sizes with a box for any other."""
+    state_key, custom_key = f"{key}_size", f"{key}_size_custom"
+    size = float(st.session_state.setdefault(state_key, float(current)))
+
+    def _step(delta: float) -> None:
+        st.session_state[state_key] = min(hi, max(lo, st.session_state[state_key] + delta))
+
+    def _custom() -> None:
+        # the box starts empty each time: a closed list's box would otherwise
+        # send back a stale size on the next rerun
+        if st.session_state[custom_key] is not None:
+            st.session_state[state_key] = float(st.session_state[custom_key])
+            st.session_state[custom_key] = None
+            st.session_state[f"{key}_size_pop"] = False
+
+    with st.container(horizontal=True, key=f"{key}_size_box", gap=None, vertical_alignment="center"):
+        st.button("", icon=":material/remove:", key=f"{key}_size_dn", type="tertiary", help="Smaller",
+                  on_click=_step, args=(-1.0,), disabled=size <= lo)
+        with st.popover(f"{size:g}", key=f"{key}_size_pop", on_change="rerun", help=help):
+            st.session_state.setdefault(custom_key, None)
+            st.number_input("Other size (px)", min_value=lo, max_value=hi, step=1.0, format="%g",
+                            placeholder="Type a size", key=custom_key, on_change=_custom)
+            for preset in SIZE_PRESETS:
+                st.button(str(preset), key=f"{key}_size_opt_{preset}", width="stretch",
+                          type="primary" if preset == size else "tertiary",
+                          on_click=_pick_value, args=(state_key, float(preset), f"{key}_size_pop"))
+        st.button("", icon=":material/add:", key=f"{key}_size_up", type="tertiary", help="Larger",
+                  on_click=_step, args=(1.0,), disabled=size >= hi)
+    return size
 
 
 # ---------------------------------------------------------------------------
@@ -404,8 +496,9 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
 
 /* Bento cards: any container keyed card_*, white on the grey page. In a
    .st-key-bento_grid row the cards share the row's height. */
-[class*="st-key-card_"] {background: #fff; border: 1px solid #e4e7ec !important; border-radius: 16px !important;
-  padding: 14px 16px 12px !important; box-shadow: 0 1px 2px rgba(16, 24, 40, .05);}
+[class*="st-key-card_"] {background: #fff; border: 1.5px solid #d3d8e0 !important; border-radius: 16px !important;
+  padding: 14px 16px 12px !important;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 4px 14px rgba(16, 24, 40, .08);}
 [class*="st-key-card_m_"] [data-testid="stMetricValue"] {font-size: 2rem; font-weight: 650; color: #13294b;}
 [class*="st-key-bento_"] [data-testid="stColumn"] > [data-testid="stVerticalBlock"] {height: 100%;}
 [class*="st-key-bento_"] [data-testid="stColumn"] > [data-testid="stVerticalBlock"]
@@ -594,6 +687,52 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
 [class*="_font_btn"] button > div > div:first-child {flex: 1; min-width: 0; display: flex;
   justify-content: flex-start;}
 [class*="_font_btn"] button [data-testid="stIconMaterial"] {color: #31333f; font-size: 1.25rem;}
+/* Step 1's typography as a toolbar, as in Canva or Word: the font, its
+   weight and the size in one strip, split by thin rules, each a dropdown
+   (ui.font_picker, weight_picker, size_stepper) */
+.st-key-type_bar {flex-wrap: nowrap !important; align-items: center; background: #f4f5f7;
+  border: 1px solid #d9dde3; border-radius: 10px; padding: 3px; gap: 0 !important;}
+.st-key-type_bar > * {min-width: 0;}
+.st-key-type_bar > :has(.st-key-type_font_btn) {flex: 1.7 1 0 !important;}
+.st-key-type_bar > :has(.st-key-type_weight_btn) {flex: 1 1 0 !important; border-left: 1px solid #d9dde3;
+  margin-left: 3px; padding-left: 3px;}
+.st-key-type_bar > :has(.st-key-type_size_box) {flex: none !important; width: auto !important;
+  border-left: 1px solid #d9dde3; margin-left: 3px; padding-left: 3px;}
+.st-key-type_size_box {width: auto !important;}
+.st-key-type_bar :is([class*="_font_btn"], [class*="_weight_btn"]) button {background: transparent !important;
+  border: 1px solid transparent !important; height: 36px; min-height: 36px; border-radius: 7px;}
+.st-key-type_bar :is([class*="_font_btn"], [class*="_weight_btn"], [class*="_size_box"]) button:hover {
+  background: #fff !important; border-color: #d9dde3 !important;}
+[class*="_weight_btn"] button {padding: 0 .4rem 0 .6rem !important; color: #0e1318 !important;
+  box-shadow: none !important;}
+[class*="_weight_btn"] button > div {width: 100%; justify-content: space-between;}
+[class*="_weight_btn"] button [data-testid="stMarkdownContainer"] {flex: 1; min-width: 0; text-align: left;}
+[class*="_weight_btn"] button p {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  text-align: left; font-size: 14px;}
+[class*="_weight_btn"] button > div > div:first-child {flex: 1; min-width: 0; display: flex;
+  justify-content: flex-start;}
+[class*="_weight_btn"] button [data-testid="stIconMaterial"] {color: #31333f; font-size: 1.25rem;}
+[class*="_weight_btn"] [data-testid="stMarkdownContainer"]:has(> style:only-child),
+[class*="_font_btn"] [data-testid="stMarkdownContainer"]:has(> style:only-child) {display: none;}
+[class*="_size_box"] {flex-wrap: nowrap !important; align-items: center;}
+[class*="_size_box"] button {height: 36px; min-height: 36px; border-radius: 7px; color: #0e1318 !important;
+  border: 1px solid transparent !important; box-shadow: none !important; background: transparent !important;}
+[class*="_size_box"] [data-testid="stPopover"] button {min-width: 4.4rem; padding: 0 .3rem 0 .55rem !important;
+  font-variant-numeric: tabular-nums;}
+[class*="_size_box"] [data-testid="stPopover"] button p {font-size: 14px; font-weight: 600;}
+[class*="_size_box"] > :not(:has([data-testid="stPopover"])) button {width: 34px; padding: 0 !important;}
+/* Their lists read like a menu: compact rows, left-aligned, the current
+   choice tinted rather than filled */
+[data-testid="stPopoverBody"]:has(:is([class*="_font_opt_"], [class*="_weight_opt_"], [class*="_size_opt_"]))
+  > [data-testid="stVerticalBlock"] {gap: 2px !important;}
+[data-testid="stPopoverBody"]:has([class*="_size_opt_"]) {max-height: min(360px, 60vh) !important;
+  overflow-y: auto !important; scrollbar-width: thin; min-width: 9rem;}
+:is([class*="_font_opt_"], [class*="_weight_opt_"], [class*="_size_opt_"]) button {min-height: 2.1rem;
+  padding: .2rem .75rem !important; justify-content: flex-start; border-radius: 7px;}
+:is([class*="_font_opt_"], [class*="_weight_opt_"], [class*="_size_opt_"]) button > div {justify-content: flex-start;}
+:is([class*="_font_opt_"], [class*="_weight_opt_"], [class*="_size_opt_"]) button:hover {background: #f1f3f6;}
+:is([class*="_font_opt_"], [class*="_weight_opt_"], [class*="_size_opt_"]) button[kind="primary"] {
+  background: #fdecea; color: #b8392a; border-color: transparent;}
 [role="dialog"] [data-testid="stImage"] img {max-height: 66vh; object-fit: contain;}
 .ts-legend {display: flex; flex-wrap: wrap; gap: .25rem .6rem; font-size: .72rem; color: #5b6370;}
 .ts-legend i {display: inline-block; width: .6rem; height: .6rem; border-radius: 2px; margin-right: .25rem;}

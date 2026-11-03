@@ -29,7 +29,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.57).
+§3.58).
 
 **Branches (user, 2026-11-03):**
 - **`main` is the version the printed manuscript describes:** the 13
@@ -120,7 +120,8 @@ Read first: `notes/system_development_progress.md`, then the tail of
         SIFT/SURF beneath;
     - right: logos + stylistic markers in one card (tick a tile to use
       it; markers in one row), sized to its contents up to 42% of the
-      column; typography in one row; the content payload in two columns,
+      column; typography as a Canva/Word-style toolbar (font, weight drawn
+      in each weight, − size +; §3.58); the content payload in two columns,
       taking the rest;
     - **Target Initialization** is a fixed overlay opened from the top
       bar. It moves nothing, and **Initialize** is at its foot (only
