@@ -29,13 +29,19 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.58).
+§3.59).
 
 **Branches (user, 2026-11-03):**
 - **`main` is the version the printed manuscript describes:** the 13
   October generation (unchanged from tag `phase4-rated`) plus the dashboard
   features. Until the defense, only **dashboard** changes go on `main`:
   nothing that changes how a layout is generated, solved or scored.
+  - One exception, at the user's request (§3.59): re-solves after a
+    designer's event re-flow around Hard boxes and added pictures. It was
+    checked against the old code: generation and evaluate.py's simulated
+    edits are unchanged.
+  - Waiting for `refinements` (not built): recommendations re-solved
+    around Hard edits and re-ranked (§3.59).
 - **`refinements`** holds §3.57 (SAM 2.1 cut-outs, even gaps after
   anchoring, two elements on one line). It is merged into `main` after the
   defense.

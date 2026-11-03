@@ -4189,3 +4189,61 @@ Nothing here changes how a layout is generated, solved or scored.
     the first and second where they were dropped; the active thumbnail
     changed after the drop and after a nudge; no exceptions. The 12
     pipeline tests pass (`add_element` changed).
+
+### 3.59 Step 2: Soft elements re-flow around the designer's boxes; added pictures join the re-flow (2026-11-04)
+
+On `main`, at the user's request ("a major flaw"). Generation and scoring
+are unchanged; only re-solves after a designer's event differ, and only
+where they were wrong.
+
+**The flaw.** The solver stacks the Soft elements top to bottom in reading
+order (`spatial_hierarchy`), and a Hard element kept its reading-order slot
+wherever the designer put it. An added text sits at the end of that order
+(just before the signatures), so dragging it up the page squeezed every
+element above its slot into the space above it, and the signatures still
+had to come after it. Added pictures floated outside the solver, so
+everything could overlap them. On 4 posters × 2 formats, 28 of 32 drops of
+an added text and 24 of 24 drops of an added picture left an overlap. That
+contradicted Formula 3.10 ("the Soft ones re-flow around it").
+
+**The fix** (`cassowary_engine._stack_order`, `pipeline._resolve`):
+- A Hard element, and each added picture that shares a column with the
+  stack, joins the order where it is on the canvas: after the last element
+  that starts above it (on the canvas before the event). If those
+  elements wouldn't fit on that side, the side with room is taken (a
+  picture dropped onto the event ID's 263 px title puts the title below
+  it). A box below the signature row stays out of the stack, and the
+  signatures stay above it.
+- Only when a box changes the order, or a picture is present, may Soft
+  text boxes give way down to 60% of their height (`TEXT_HEIGHT`, between
+  ANCHOR and strong) rather than overlap; the renderer fits the words to
+  the box.
+- Adding a picture, or moving one the designer added, now re-solves the
+  layout around it (the poster's own motifs still sit outside the solver).
+- The recommendations are drawn as selecting them opens them: with the
+  designer's added and deleted elements, re-solved (`render_candidates`
+  through `_carried`, shared with `select_candidate`).
+
+**Measured:**
+- Overlaps after the same drops: text 0 of 32 (was 28), pictures 0 of 24
+  (was 24).
+- **Unchanged, against the previous code in a separate worktree** (4
+  posters × 2 formats × GNN and baseline): the six candidates as generated
+  (15–16 of 16 identical; the old code differs from itself by 0.01 px in
+  one baseline candidate between runs, the solver's float noise), and the
+  layouts, F1 and fitness after evaluate.py's simulated move, resize and
+  lock (16 of 16 identical). A Hard element left in its slot gives the
+  same constraints as before, so Chapter 4's edit results stand.
+- The 12 tests pass; in Edge, a real mouse drag from the Images sidebar
+  and a click each added a picture, the header and title re-flowed below
+  the clicked one, and all six thumbnails showed both.
+
+**Also (dashboard):** the top bar is fixed to the window and the sidebar
+opens below it, so the bar no longer moves or shortens its labels when
+the sidebar opens.
+
+**Left for `refinements` (the user, 2026-11-04; not implemented):** the
+recommendations re-solved around the designer's Hard edits of the format's
+own elements, and re-ranked (keeping the archetype rule of p.58; solved
+when the thumbnails refresh, so a candidate selection stays a re-draw,
+p.89). See the discussion of 2026-11-03.

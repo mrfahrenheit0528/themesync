@@ -873,12 +873,25 @@ class OrchestrationSession:
 
     def render_candidates(self, directory: str = None) -> list:
         """Renders every ranked candidate (Figure 3's Recommendation Engine
-        thumbnails). Returns [(candidate, svg_path), ...] in rank order."""
+        thumbnails), as selecting it would open it: with the designer's
+        added and deleted elements (§3.58; before, the thumbnails showed the
+        candidates as generated). Returns [(candidate, svg_path), ...] in
+        rank order."""
         directory = directory or os.path.join(self.output_dir, "candidates")
         renderer = self.renderer()
-        return [(c, renderer.render_nodes(c["nodes"], os.path.join(directory, f"{c['candidate_id']}.svg"),
+        return [(c, renderer.render_nodes(self._carried(c), os.path.join(directory, f"{c['candidate_id']}.svg"),
                                           archetype=self.archetype_of(c["variation"])))
                 for c in self.candidates]
+
+    def _carried(self, cand: dict) -> list:
+        """A candidate's nodes with the designer's added and deleted
+        elements carried over (§3.56), re-solved around them."""
+        if not (self.added or self.removed):
+            return cand["nodes"]
+        current = {n["node_id"]: n for n in self.chain.current["nodes"]}
+        keep = [n for n in cand["nodes"] if n["node_id"] not in set(self.removed)]
+        keep += [copy.deepcopy(current[nid]) for nid in self.added if nid in current]
+        return self._resolve(keep, cand["variation"])
 
     # -- human-in-the-loop events -----------------------------------------
 
@@ -901,13 +914,17 @@ class OrchestrationSession:
             if n["node_id"] in hard:
                 n["bbox"] = [float(v) for v in hard[n["node_id"]]["bbox"]]
                 n["constraint_type"] = "Hard"
+        pictures = [copy.deepcopy(n) for n in nodes if n["node_id"] in self.added   # added pictures
+                    and n.get("structural_class") == "decor" and n["node_id"] not in removed]
+        # The stack is ordered around the Hard boxes and the added pictures
+        # where they are on the canvas, so the Soft nodes re-flow around
+        # them (notes §3.58); the pictures themselves stay where they are
         engine = solver_for(variation, self.canvas_w, self.canvas_h, self.structure_guided)
-        content = engine.execute_relational_logic(content)
+        content = engine.execute_relational_logic(content, reference={n["node_id"]: n["bbox"] for n in nodes},
+                                                  fixed=pictures)
 
         decor = [copy.deepcopy(n) for n in nodes if n.get("structural_class") == "decor"
                  and n["node_id"] not in removed and n["node_id"] not in self.added]
-        pictures = [copy.deepcopy(n) for n in nodes if n["node_id"] in self.added   # added pictures float
-                    and n.get("structural_class") == "decor" and n["node_id"] not in removed]
         # A deleted motif keeps the others where they are (motif ids follow
         # their placement, so re-placing them would bring it back)
         if (self.style_kit.get("motifs") and not any(n.get("constraint_type") == "Hard" for n in decor)
@@ -943,9 +960,9 @@ class OrchestrationSession:
 
         variation = current.get("variation") or dict(variations_for(self.domain)[0])
         t0 = time.perf_counter()
-        if target.get("structural_class") == "decor":
-            resolved = nodes          # motifs sit outside the solver
-        else:
+        if target.get("structural_class") == "decor" and node_id not in self.added:
+            resolved = nodes          # the poster's motifs sit outside the solver
+        else:                         # an added picture re-flows the stack around it (§3.58)
             resolved = self._resolve(nodes, variation)
         t1 = time.perf_counter()
         verb = {"on-drop": "Moved", "on-resize-complete": "Resized",
@@ -1004,10 +1021,7 @@ class OrchestrationSession:
         rank = self.candidates.index(cand) + 1
         nodes, fitness = cand["nodes"], cand["metrics"]
         if self.added or self.removed:       # the designer's added and deleted elements carry over (§3.56)
-            current = {n["node_id"]: n for n in self.chain.current["nodes"]}
-            keep = [n for n in cand["nodes"] if n["node_id"] not in set(self.removed)]
-            keep += [copy.deepcopy(current[nid]) for nid in self.added if nid in current]
-            nodes = self._resolve(keep, cand["variation"])
+            nodes = self._carried(cand)
             fitness = self._fitness(nodes, cand["variation"])
         self._mark()
         state = self.chain.append(f"Candidate {candidate_id} (rank {rank})",
@@ -1258,7 +1272,8 @@ class OrchestrationSession:
             extra["content"] = dict(self.content_data)
             resolved = self._resolve(current["nodes"] + [node], variation)
         else:
-            resolved = copy.deepcopy(current["nodes"]) + [node]
+            # the stack re-flows around the new picture (§3.58)
+            resolved = self._resolve(copy.deepcopy(current["nodes"]) + [node], variation)
         state = self.chain.append(f"Added [{nid}]", {"type": "add", "node_id": nid, "kind": kind,
                                                      "summary": f"Added {nid}"},
                                   resolved, fitness=self._fitness(resolved, variation),

@@ -527,12 +527,15 @@ h1, h2, h3 {letter-spacing: -0.01em;}
 [data-testid="stStatusWidget"], [data-testid="stStatusWidget"] * {color: #fff !important;}
 [data-testid="stExpandSidebarButton"]:hover, [data-testid="stMainMenuButton"]:hover {
   background: rgba(255, 255, 255, .16) !important;}
-[data-testid="stLayoutWrapper"]:has(> .st-key-ts_topbar) {position: sticky; top: 0; z-index: 1000;
-  margin: 0 -1.75rem 1rem; width: calc(100% + 3.5rem) !important; max-width: none;}
-.st-key-ts_topbar {background: linear-gradient(90deg, #13294b 0%, #1d3f6e 55%, #2a5a8c 100%);
-  min-height: 60px; padding: 0 3.6rem 0 3.4rem; justify-content: center;
+/* The bar spans the window and stays put when the sidebar (Step 2's
+   Images) opens: it is fixed to the window, its wrapper keeps its place in
+   the page, and the sidebar opens below it (the user's request, §3.58) */
+[data-testid="stLayoutWrapper"]:has(> .st-key-ts_topbar) {height: 60px; margin: 0 0 1rem; flex: none;}
+.st-key-ts_topbar {position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 60px;
+  background: linear-gradient(90deg, #13294b 0%, #1d3f6e 55%, #2a5a8c 100%);
+  padding: 0 3.6rem 0 3.4rem; justify-content: center;
   box-shadow: 0 2px 12px rgba(19, 41, 75, .28);}
-body:has([data-testid="stSidebar"][aria-expanded="true"]) .st-key-ts_topbar {padding-left: 1.4rem;}
+[data-testid="stSidebar"] {top: 60px !important; height: calc(100vh - 60px) !important;}
 .st-key-ts_topbar [data-testid="stMarkdownContainer"] p {margin: 0;}
 .st-key-ts_topbar [data-testid="stElementContainer"] {overflow: visible;}
 .st-key-ts_topbar button {background: rgba(255, 255, 255, .14) !important; color: #fff !important;
@@ -565,10 +568,8 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .st-key-ts_topbar {pad
 .ts-active .ts-label {font-weight: 700;}
 .ts-done .ts-num {background: #fff; color: #0f9d74;}
 .ts-todo {opacity: .55;}
-/* When the sidebar is open, or the window is narrow, the steps other than
-   the current one show only their number (their name is the tooltip). */
-body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-active) .ts-label {display: none;}
-body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-active) {padding-right: .26rem;}
+/* When the window is narrow, the steps other than the current one show
+   only their number (their name is the tooltip). */
 @media (max-width: 1380px) {
   .ts-step:not(.ts-active) .ts-label {display: none;}
   .ts-step:not(.ts-active) {padding-right: .26rem;}
@@ -964,10 +965,6 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
   .st-key-s2_actions button:not([data-testid="stBaseButton-primary"]) [data-testid="stMarkdownContainer"] {
     display: none;}
 }
-/* ...and so they do while the sidebar (Images) is open and narrows the page */
-body:has([data-testid="stSidebar"][aria-expanded="true"])
-  .st-key-s2_actions button:not([data-testid="stBaseButton-primary"]) [data-testid="stMarkdownContainer"] {
-  display: none;}
 :is(.st-key-reco_strip, .st-key-ts_panel) [data-testid="stMarkdownContainer"]:has(> div[class^="ts-"]) {
   margin-bottom: 0 !important;}
 .ts-section {font-size: .7rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;

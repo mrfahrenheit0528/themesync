@@ -12,6 +12,11 @@ _BALANCE = {"strong": kiwi.strength.strong, "medium": kiwi.strength.medium,
 # positions (`medium`), below the design rules (`strong`) — when they can't
 # all be met, the inferred nodes give way before the master's composition.
 ANCHOR = kiwi.strength.create(0.0, 10.0, 0.0)
+# A Soft text box's height around a designer's Hard box (notes §3.58): kept
+# unless the stack can't otherwise fit, then down to MIN_TEXT_SCALE of it
+# (the renderer fits the words to the box) rather than overlapping.
+TEXT_HEIGHT = kiwi.strength.create(0.0, 100.0, 0.0)
+MIN_TEXT_SCALE = 0.6
 
 
 class ConstraintSolverEngine:
@@ -47,7 +52,7 @@ class ConstraintSolverEngine:
         self.solver = kiwi.Solver()
         self.variables = {}
 
-    def _initialize_node_variables(self, node_id, width, height):
+    def _initialize_node_variables(self, node_id, width, height, elastic=False):
         v = {
             'left': kiwi.Variable(f"{node_id}_left"),
             'top': kiwi.Variable(f"{node_id}_top"),
@@ -56,9 +61,14 @@ class ConstraintSolverEngine:
         }
         self.variables[node_id] = v
 
-        # Dimensions are exact for the given tensor
+        # Dimensions are exact for the given tensor (an elastic text box's
+        # height may give way, see TEXT_HEIGHT)
         self.solver.addConstraint(v['right'] == v['left'] + width)
-        self.solver.addConstraint(v['bottom'] == v['top'] + height)
+        if elastic:
+            self.solver.addConstraint(v['bottom'] >= v['top'] + MIN_TEXT_SCALE * height)
+            self.solver.addConstraint((v['bottom'] == v['top'] + height) | TEXT_HEIGHT)
+        else:
+            self.solver.addConstraint(v['bottom'] == v['top'] + height)
 
         # Margins & boundary containment (within the content region)
         self.solver.addConstraint((v['left'] >= self.left_bound) | kiwi.strength.strong)
@@ -78,9 +88,76 @@ class ConstraintSolverEngine:
             node['bbox'][2] = round(width, 2)
         return width
 
-    def execute_relational_logic(self, instantiated_nodes):
+    def _stack_order(self, singular_nodes, repeating_nodes, reference, fixed):
+        """
+        The top-to-bottom order the stack is solved in, and the Hard boxes
+        that sit below the signature row (notes §3.58).
+
+        Soft nodes keep their reading order (spatial_hierarchy). A Hard node
+        (moved, resized or locked by the designer) and a fixed box (a
+        picture the designer added) join it where they are on the canvas:
+        after the last node that starts above them (in `reference`, the
+        canvas before the event). Before, a Hard node kept its reading-
+        order slot wherever it was put, so a text added at the end and
+        dragged up the page squeezed everything above its slot into the
+        space above it. A Hard node that stays in its slot gives the same
+        order as before, so small moves solve exactly as they did. A fixed
+        box clear of the stack's columns, or anything below the signature
+        row, stays out of the stack.
+        """
+        hard = [n for n in singular_nodes if n.get('constraint_type') == "Hard"]
+        if not hard and not fixed:
+            return list(singular_nodes), []
+        box = lambda n: reference.get(n['node_id'], n['bbox'])
+        top = lambda n: float(box(n)[1])
+        order = [n for n in singular_nodes if n.get('constraint_type') != "Hard"]
+        spans = [(float(box(n)[0]), float(box(n)[0]) + float(box(n)[2])) for n in order + hard]
+        placed = hard + [f for f in fixed
+                         if any(min(a1, float(f['bbox'][0]) + float(f['bbox'][2])) - max(a0, float(f['bbox'][0])) > 1
+                                for a0, a1 in spans)]
+        row_top = min((float(box(n)[1]) for n in repeating_nodes), default=None)
+        below_row = []
+        gap = self.default_vgap
+        least = lambda n: float(n['bbox'][3]) * (MIN_TEXT_SCALE if n.get('constraint_type') != "Hard" and
+                                                  n.get('structural_class', 'text_node') == 'text_node' else 1.0)
+        row_h = max((float(n['bbox'][3]) + gap for n in repeating_nodes), default=0.0)
+
+        def overflow(k, node):
+            # how far the stack would run past the margins with `node` after
+            # order[k]: the least the nodes above and below it need
+            y0, y1 = float(node['bbox'][1]), float(node['bbox'][1]) + float(node['bbox'][3])
+            above = self.margin_y + sum(least(n) + gap for n in order[:k + 1])
+            below = y1 + sum(gap + least(n) for n in order[k + 1:]) + row_h
+            return max(0.0, above - y0) + max(0.0, below - (self.canvas_h - self.margin_y))
+
+        for node in sorted(placed, key=top):
+            if row_top is not None and top(node) + float(node['bbox'][3]) / 2.0 > row_top:
+                below_row.append(node)
+                continue
+            # after the last node that starts above it (a tall title the box
+            # was dropped onto stays above it), unless the nodes it overlaps
+            # fit better on the other side of it
+            y0, y1 = float(node['bbox'][1]), float(node['bbox'][1]) + float(node['bbox'][3])
+            k = max((i for i, n in enumerate(order) if top(n) < top(node)), default=-1)
+            lo = max((i for i, n in enumerate(order) if top(n) + float(box(n)[3]) <= y0), default=-1)
+            hi = max((i for i, n in enumerate(order) if top(n) < y1), default=-1)
+            if overflow(k, node) > 0:
+                k = min(range(lo, max(lo, hi) + 1), key=lambda j: (overflow(j, node), abs(j - k)))
+            order.insert(k + 1, node)
+        return order, below_row
+
+    def execute_relational_logic(self, instantiated_nodes, reference=None, fixed=None):
+        """
+        Solves the stack. reference: {node_id: bbox} of the canvas before a
+        designer event, and fixed: the designer's added pictures (boxes
+        held where they are); both only order the stack around Hard boxes
+        (see _stack_order). Without Hard nodes or fixed boxes the solve is
+        the same as before them.
+        """
         self.solver = kiwi.Solver()
         self.variables = {}
+        reference = reference or {}
+        fixed = [dict(f, constraint_type="Hard") for f in (fixed or [])]
 
         # The candidate's vertical rhythm is the *minimum* gap between stacked
         # elements, held at `strong` like the other design rules, so the
@@ -102,16 +179,25 @@ class ConstraintSolverEngine:
         singular_nodes = [n for n in sorted_nodes if n.get('structural_class') != 'repeating_group']
         repeating_nodes = [n for n in sorted_nodes if n.get('structural_class') == 'repeating_group']
 
+        reading = [n['node_id'] for n in singular_nodes]
+        singular_nodes, below_row = self._stack_order(singular_nodes, repeating_nodes, reference, fixed)
+        # Text heights give way only when a designer's box changed the stack
+        # (a box out of its reading-order slot, or an added picture): a Hard
+        # node left in its slot solves exactly as before (notes §3.58)
+        has_hard = bool(fixed) or bool(below_row) or [n['node_id'] for n in singular_nodes] != reading
+
         locked_coordinates = set()
         region_centre = (self.left_bound + self.right_bound) / 2.0
 
         # 1. Singular Nodes Initialization and Alignment
-        for node in singular_nodes:
+        for node in singular_nodes + below_row:
             node_id = node['node_id']
             tensor_w = self._fit_width(node)
             tensor_h = float(node['bbox'][3])
 
-            current_var = self._initialize_node_variables(node_id, tensor_w, tensor_h)
+            elastic = (has_hard and node.get('constraint_type') != "Hard"
+                       and node.get('structural_class', 'text_node') == 'text_node')
+            current_var = self._initialize_node_variables(node_id, tensor_w, tensor_h, elastic=elastic)
             human_x, human_y = float(node['bbox'][0]), float(node['bbox'][1])
             coord_key = f"{human_x}_{human_y}"
 
@@ -196,6 +282,17 @@ class ConstraintSolverEngine:
                     self.solver.addConstraint((current_var['top'] >= last_singular_var['bottom'] + self.v_gap) | kiwi.strength.strong)
                     self.solver.addConstraint((current_var['top'] == last_singular_var['bottom'] + self.v_gap) | kiwi.strength.weak)
                     self.solver.addConstraint((current_var['top'] <= last_singular_var['bottom'] + self.max_gap) | kiwi.strength.strong)
+
+            # A Hard box below the row (a picture at the foot of the page):
+            # the signatures stay above it where they share columns
+            for node in below_row:
+                hv = self.variables[node['node_id']]
+                hx0, hx1 = float(node['bbox'][0]), float(node['bbox'][0]) + float(node['bbox'][2])
+                for rep in repeating_nodes:
+                    rx0 = float(rep['bbox'][0]) if rep.get('constraint_type') == "Hard" else None
+                    rv = self.variables[rep['node_id']]
+                    if rx0 is None or min(hx1, rx0 + float(rep['bbox'][2])) - max(hx0, rx0) > 1:
+                        self.solver.addConstraint((rv['bottom'] + self.v_gap <= hv['top']) | kiwi.strength.strong)
 
         # 4. Vertical balance — equal top and bottom margins for the whole
         # stack (top_gap == bottom_gap, i.e. first.top + last.bottom == H).
