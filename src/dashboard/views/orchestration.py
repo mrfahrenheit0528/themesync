@@ -318,33 +318,6 @@ def _style_tools(session, node: dict, state: dict) -> None:
         st.error(st.session_state.pop("style_error"))
 
 
-def _mail_merge_download(session, state: dict) -> None:
-    """The Download menu's mail merge: the current layout once per CSV row
-    (mail_merge.py), as PNG or PDF files in a ZIP, built on request."""
-    merge = session.merge
-    if not merge or not merge.get("rows"):
-        return
-    st.divider()
-    st.caption(f"Mail merge: {len(merge['rows'])} layouts from {merge['source']}, with "
-               f"{', '.join(merge['labels'].values())} filled in from each row.")
-    fmt = st.segmented_control("Format", ["PNG", "PDF"], default="PNG", key="merge_fmt",
-                               label_visibility="collapsed") or "PNG"
-    stamp = (id(session), state["state_id"], fmt, json.dumps(session.typography, sort_keys=True))
-    built = st.session_state.get("merge_zip")
-    if not (built and built[0] == stamp and os.path.exists(built[1])):
-        if not st.button(f"Build {len(merge['rows'])} layouts ({fmt})", icon=":material/folder_zip:",
-                         width="stretch", key="merge_build"):
-            return
-        bar = st.progress(0.0, text="Rendering…")
-        path = mail_merge.zip_layouts(session, fmt.lower(),
-                                      progress=lambda done, total: bar.progress(done / total,
-                                                                                text=f"{done} of {total}"))
-        built = st.session_state["merge_zip"] = (stamp, path)
-    st.download_button(f"Download the ZIP ({os.path.getsize(built[1]) / 1e6:.1f} MB)", data=ui.reader(built[1]),
-                       file_name=os.path.basename(built[1]), mime="application/zip", type="primary",
-                       icon=":material/download:", width="stretch")
-
-
 session = st.session_state["orch"]
 state = session.chain.current
 ui.images_panel(session)                                # the left sidebar's Images, as in Canva
@@ -371,7 +344,7 @@ with actions, st.container(key="s2_actions"):
         st.download_button("PDF", data=lambda: open(rasterize.svg_to_pdf(svg), "rb").read(),
                            file_name=os.path.basename(svg).replace(".svg", ".pdf"), mime="application/pdf",
                            icon=":material/picture_as_pdf:", width="stretch")
-        _mail_merge_download(session, state)
+        ui.mail_merge_download(session, state)
     if next_col.button("Evaluate", icon=":material/arrow_forward:", type="primary", width="stretch",
                        help="Step 3: the layout's report against Chapter 3's evaluation metrics."):
         ui.go_to_step(3)

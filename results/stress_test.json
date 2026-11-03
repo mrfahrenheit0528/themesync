@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-09T04:15:24",
+  "generated": "2026-11-04T04:50:33",
   "settings": {
     "theme": "synthetic (no master layout); GNN on; default typography (Montserrat 700, 48 px base)",
     "fractions_of_max_characters": [
@@ -29,13 +29,13 @@
   "formats": {
     "certificate": {
       "fields": {
-        "Issuing_Organization": 60,
-        "Certificate_Title": 40,
-        "Presentation_Line": 30,
-        "Student_Name": 60,
-        "Citation_Body": 150,
-        "Date_Issued": 30,
-        "Certificate_ID": 20
+        "Issuing_Organization": 150,
+        "Certificate_Title": 80,
+        "Presentation_Line": 60,
+        "Student_Name": 80,
+        "Citation_Body": 300,
+        "Date_Issued": 60,
+        "Certificate_ID": 40
       },
       "runs": [
         {
@@ -159,7 +159,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 226.83,
+          "latency_ms": 221.89,
           "passes": true,
           "problems": []
         },
@@ -284,7 +284,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 20.4,
+          "latency_ms": 19.97,
           "passes": true,
           "problems": []
         },
@@ -304,18 +304,18 @@
               {
                 "node_id": "{{Issuing_Organization}}",
                 "lines": 1,
-                "min_size_px": 17.3,
-                "min_size_pt": 11.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
+                "min_size_px": 15.9,
+                "min_size_pt": 10.5,
+                "overflow_px": 50.3,
+                "worst_side": "left",
                 "overwrites": [],
                 "off_canvas": false
               },
               {
                 "node_id": "{{Certificate_Title}}",
                 "lines": 1,
-                "min_size_px": 52.8,
-                "min_size_pt": 34.8,
+                "min_size_px": 35.2,
+                "min_size_pt": 23.2,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -334,8 +334,8 @@
               {
                 "node_id": "{{Student_Name}}",
                 "lines": 1,
-                "min_size_px": 42.0,
-                "min_size_pt": 27.7,
+                "min_size_px": 31.2,
+                "min_size_pt": 20.6,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -343,7 +343,7 @@
               },
               {
                 "node_id": "{{Citation_Body}}",
-                "lines": 1,
+                "lines": 2,
                 "min_size_px": 17.3,
                 "min_size_pt": 11.4,
                 "overflow_px": 0.0,
@@ -402,16 +402,20 @@
                 "off_canvas": false
               }
             ],
-            "fits": true,
-            "overflowing": [],
+            "fits": false,
+            "overflowing": [
+              "{{Issuing_Organization}}"
+            ],
             "overwriting": [],
             "min_size_px": 11.8,
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 24.7,
-          "passes": true,
-          "problems": []
+          "latency_ms": 22.18,
+          "passes": false,
+          "problems": [
+            "text overflows: {{Issuing_Organization}} by 50.3 px (left)"
+          ]
         },
         {
           "format": "certificate",
@@ -428,144 +432,19 @@
             "nodes": [
               {
                 "node_id": "{{Issuing_Organization}}",
-                "lines": 1,
-                "min_size_px": 17.3,
-                "min_size_pt": 11.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
+                "lines": 2,
+                "min_size_px": 14.6,
+                "min_size_pt": 9.6,
+                "overflow_px": 59.5,
+                "worst_side": "left",
                 "overwrites": [],
                 "off_canvas": false
               },
               {
                 "node_id": "{{Certificate_Title}}",
                 "lines": 1,
-                "min_size_px": 47.5,
-                "min_size_pt": 31.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Presentation_Line}}",
-                "lines": 1,
-                "min_size_px": 15.8,
-                "min_size_pt": 10.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Student_Name}}",
-                "lines": 1,
-                "min_size_px": 27.6,
-                "min_size_pt": 18.2,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Citation_Body}}",
-                "lines": 2,
-                "min_size_px": 17.3,
-                "min_size_pt": 11.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Date_Issued}}",
-                "lines": 1,
-                "min_size_px": 13.5,
-                "min_size_pt": 8.9,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Certificate_ID}}",
-                "lines": 1,
-                "min_size_px": 13.5,
-                "min_size_pt": 8.9,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Signature_Blocks}}_0",
-                "lines": 2,
-                "min_size_px": 11.8,
-                "min_size_pt": 7.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Signature_Blocks}}_1",
-                "lines": 2,
-                "min_size_px": 11.8,
-                "min_size_pt": 7.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Signature_Blocks}}_2",
-                "lines": 2,
-                "min_size_px": 11.8,
-                "min_size_pt": 7.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              }
-            ],
-            "fits": true,
-            "overflowing": [],
-            "overwriting": [],
-            "min_size_px": 11.8,
-            "min_size_pt": 7.8,
-            "small_text": []
-          },
-          "latency_ms": 20.21,
-          "passes": true,
-          "problems": []
-        },
-        {
-          "format": "certificate",
-          "case": "all at 100% words",
-          "folder": "data\\rendered\\stress_test\\certificate\\all_at_100pct_words",
-          "output_candidate": "Candidate_A",
-          "f1": 1.0,
-          "tp": 11,
-          "fp": 0,
-          "fn": 0,
-          "candidates_with_fp_or_fn": [],
-          "reading_order_violations": [],
-          "text": {
-            "nodes": [
-              {
-                "node_id": "{{Issuing_Organization}}",
-                "lines": 1,
-                "min_size_px": 17.3,
-                "min_size_pt": 11.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Certificate_Title}}",
-                "lines": 1,
-                "min_size_px": 35.2,
-                "min_size_pt": 23.2,
+                "min_size_px": 22.9,
+                "min_size_pt": 15.1,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -593,7 +472,7 @@
               },
               {
                 "node_id": "{{Citation_Body}}",
-                "lines": 2,
+                "lines": 3,
                 "min_size_px": 17.3,
                 "min_size_pt": 11.4,
                 "overflow_px": 0.0,
@@ -652,16 +531,149 @@
                 "off_canvas": false
               }
             ],
-            "fits": true,
-            "overflowing": [],
+            "fits": false,
+            "overflowing": [
+              "{{Issuing_Organization}}"
+            ],
             "overwriting": [],
             "min_size_px": 11.8,
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 20.48,
-          "passes": true,
-          "problems": []
+          "latency_ms": 26.84,
+          "passes": false,
+          "problems": [
+            "text overflows: {{Issuing_Organization}} by 59.5 px (left)"
+          ]
+        },
+        {
+          "format": "certificate",
+          "case": "all at 100% words",
+          "folder": "data\\rendered\\stress_test\\certificate\\all_at_100pct_words",
+          "output_candidate": "Candidate_A",
+          "f1": 1.0,
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "candidates_with_fp_or_fn": [],
+          "reading_order_violations": [],
+          "text": {
+            "nodes": [
+              {
+                "node_id": "{{Issuing_Organization}}",
+                "lines": 2,
+                "min_size_px": 14.6,
+                "min_size_pt": 9.6,
+                "overflow_px": 59.5,
+                "worst_side": "left",
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Certificate_Title}}",
+                "lines": 1,
+                "min_size_px": 16.8,
+                "min_size_pt": 11.1,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Presentation_Line}}",
+                "lines": 1,
+                "min_size_px": 15.8,
+                "min_size_pt": 10.4,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Student_Name}}",
+                "lines": 1,
+                "min_size_px": 15.0,
+                "min_size_pt": 9.9,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Citation_Body}}",
+                "lines": 3,
+                "min_size_px": 15.9,
+                "min_size_pt": 10.5,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Date_Issued}}",
+                "lines": 1,
+                "min_size_px": 11.4,
+                "min_size_pt": 7.5,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Certificate_ID}}",
+                "lines": 1,
+                "min_size_px": 13.5,
+                "min_size_pt": 8.9,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Signature_Blocks}}_0",
+                "lines": 2,
+                "min_size_px": 11.8,
+                "min_size_pt": 7.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Signature_Blocks}}_1",
+                "lines": 2,
+                "min_size_px": 11.8,
+                "min_size_pt": 7.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Signature_Blocks}}_2",
+                "lines": 2,
+                "min_size_px": 11.8,
+                "min_size_pt": 7.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              }
+            ],
+            "fits": false,
+            "overflowing": [
+              "{{Issuing_Organization}}"
+            ],
+            "overwriting": [],
+            "min_size_px": 11.4,
+            "min_size_pt": 7.5,
+            "small_text": []
+          },
+          "latency_ms": 21.45,
+          "passes": false,
+          "problems": [
+            "text overflows: {{Issuing_Organization}} by 59.5 px (left)"
+          ]
         },
         {
           "format": "certificate",
@@ -784,7 +796,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 23.61,
+          "latency_ms": 20.64,
           "passes": true,
           "problems": []
         },
@@ -804,264 +816,10 @@
               {
                 "node_id": "{{Issuing_Organization}}",
                 "lines": 1,
-                "min_size_px": 17.3,
-                "min_size_pt": 11.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Certificate_Title}}",
-                "lines": 1,
-                "min_size_px": 52.8,
-                "min_size_pt": 34.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Presentation_Line}}",
-                "lines": 1,
-                "min_size_px": 15.8,
-                "min_size_pt": 10.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Student_Name}}",
-                "lines": 1,
-                "min_size_px": 42.0,
-                "min_size_pt": 27.7,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Citation_Body}}",
-                "lines": 1,
-                "min_size_px": 17.3,
-                "min_size_pt": 11.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Date_Issued}}",
-                "lines": 1,
-                "min_size_px": 13.5,
-                "min_size_pt": 8.9,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Certificate_ID}}",
-                "lines": 1,
-                "min_size_px": 13.5,
-                "min_size_pt": 8.9,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Signature_Blocks}}_0",
-                "lines": 2,
-                "min_size_px": 11.8,
-                "min_size_pt": 7.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Signature_Blocks}}_1",
-                "lines": 2,
-                "min_size_px": 11.8,
-                "min_size_pt": 7.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Signature_Blocks}}_2",
-                "lines": 2,
-                "min_size_px": 11.8,
-                "min_size_pt": 7.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              }
-            ],
-            "fits": true,
-            "overflowing": [],
-            "overwriting": [],
-            "min_size_px": 11.8,
-            "min_size_pt": 7.8,
-            "small_text": []
-          },
-          "latency_ms": 20.36,
-          "passes": true,
-          "problems": []
-        },
-        {
-          "format": "certificate",
-          "case": "all at 75% unbroken",
-          "folder": "data\\rendered\\stress_test\\certificate\\all_at_75pct_unbroken",
-          "output_candidate": "Candidate_A",
-          "f1": 1.0,
-          "tp": 11,
-          "fp": 0,
-          "fn": 0,
-          "candidates_with_fp_or_fn": [],
-          "reading_order_violations": [],
-          "text": {
-            "nodes": [
-              {
-                "node_id": "{{Issuing_Organization}}",
-                "lines": 1,
-                "min_size_px": 17.3,
-                "min_size_pt": 11.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Certificate_Title}}",
-                "lines": 1,
-                "min_size_px": 47.5,
-                "min_size_pt": 31.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Presentation_Line}}",
-                "lines": 1,
-                "min_size_px": 15.8,
-                "min_size_pt": 10.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Student_Name}}",
-                "lines": 1,
-                "min_size_px": 27.6,
-                "min_size_pt": 18.2,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Citation_Body}}",
-                "lines": 2,
-                "min_size_px": 17.3,
-                "min_size_pt": 11.4,
-                "overflow_px": 14.6,
+                "min_size_px": 15.9,
+                "min_size_pt": 10.5,
+                "overflow_px": 71.3,
                 "worst_side": "left",
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Date_Issued}}",
-                "lines": 1,
-                "min_size_px": 13.5,
-                "min_size_pt": 8.9,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Certificate_ID}}",
-                "lines": 1,
-                "min_size_px": 13.5,
-                "min_size_pt": 8.9,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Signature_Blocks}}_0",
-                "lines": 2,
-                "min_size_px": 11.8,
-                "min_size_pt": 7.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Signature_Blocks}}_1",
-                "lines": 2,
-                "min_size_px": 11.8,
-                "min_size_pt": 7.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Signature_Blocks}}_2",
-                "lines": 2,
-                "min_size_px": 11.8,
-                "min_size_pt": 7.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              }
-            ],
-            "fits": false,
-            "overflowing": [
-              "{{Citation_Body}}"
-            ],
-            "overwriting": [],
-            "min_size_px": 11.8,
-            "min_size_pt": 7.8,
-            "small_text": []
-          },
-          "latency_ms": 24.62,
-          "passes": false,
-          "problems": [
-            "text overflows: {{Citation_Body}} by 14.6 px (left)"
-          ]
-        },
-        {
-          "format": "certificate",
-          "case": "all at 100% unbroken",
-          "folder": "data\\rendered\\stress_test\\certificate\\all_at_100pct_unbroken",
-          "output_candidate": "Candidate_A",
-          "f1": 1.0,
-          "tp": 11,
-          "fp": 0,
-          "fn": 0,
-          "candidates_with_fp_or_fn": [],
-          "reading_order_violations": [],
-          "text": {
-            "nodes": [
-              {
-                "node_id": "{{Issuing_Organization}}",
-                "lines": 1,
-                "min_size_px": 17.3,
-                "min_size_pt": 11.4,
-                "overflow_px": 8.7,
-                "worst_side": "right",
                 "overwrites": [],
                 "off_canvas": false
               },
@@ -1088,8 +846,8 @@
               {
                 "node_id": "{{Student_Name}}",
                 "lines": 1,
-                "min_size_px": 20.4,
-                "min_size_pt": 13.5,
+                "min_size_px": 31.2,
+                "min_size_pt": 20.6,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -1166,10 +924,272 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 20.18,
+          "latency_ms": 20.73,
           "passes": false,
           "problems": [
-            "text overflows: {{Issuing_Organization}} by 8.7 px (right)",
+            "text overflows: {{Issuing_Organization}} by 71.3 px (left)",
+            "text overflows: {{Citation_Body}} by 14.6 px (left)"
+          ]
+        },
+        {
+          "format": "certificate",
+          "case": "all at 75% unbroken",
+          "folder": "data\\rendered\\stress_test\\certificate\\all_at_75pct_unbroken",
+          "output_candidate": "Candidate_A",
+          "f1": 1.0,
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "candidates_with_fp_or_fn": [],
+          "reading_order_violations": [],
+          "text": {
+            "nodes": [
+              {
+                "node_id": "{{Issuing_Organization}}",
+                "lines": 2,
+                "min_size_px": 14.6,
+                "min_size_pt": 9.6,
+                "overflow_px": 114.1,
+                "worst_side": "right",
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Certificate_Title}}",
+                "lines": 1,
+                "min_size_px": 22.9,
+                "min_size_pt": 15.1,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Presentation_Line}}",
+                "lines": 1,
+                "min_size_px": 15.8,
+                "min_size_pt": 10.4,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Student_Name}}",
+                "lines": 1,
+                "min_size_px": 20.4,
+                "min_size_pt": 13.5,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Citation_Body}}",
+                "lines": 3,
+                "min_size_px": 17.3,
+                "min_size_pt": 11.4,
+                "overflow_px": 14.6,
+                "worst_side": "left",
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Date_Issued}}",
+                "lines": 1,
+                "min_size_px": 13.5,
+                "min_size_pt": 8.9,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Certificate_ID}}",
+                "lines": 1,
+                "min_size_px": 13.5,
+                "min_size_pt": 8.9,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Signature_Blocks}}_0",
+                "lines": 2,
+                "min_size_px": 11.8,
+                "min_size_pt": 7.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Signature_Blocks}}_1",
+                "lines": 2,
+                "min_size_px": 11.8,
+                "min_size_pt": 7.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Signature_Blocks}}_2",
+                "lines": 2,
+                "min_size_px": 11.8,
+                "min_size_pt": 7.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              }
+            ],
+            "fits": false,
+            "overflowing": [
+              "{{Issuing_Organization}}",
+              "{{Citation_Body}}"
+            ],
+            "overwriting": [],
+            "min_size_px": 11.8,
+            "min_size_pt": 7.8,
+            "small_text": []
+          },
+          "latency_ms": 20.7,
+          "passes": false,
+          "problems": [
+            "text overflows: {{Issuing_Organization}} by 114.1 px (right)",
+            "text overflows: {{Citation_Body}} by 14.6 px (left)"
+          ]
+        },
+        {
+          "format": "certificate",
+          "case": "all at 100% unbroken",
+          "folder": "data\\rendered\\stress_test\\certificate\\all_at_100pct_unbroken",
+          "output_candidate": "Candidate_A",
+          "f1": 1.0,
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "candidates_with_fp_or_fn": [],
+          "reading_order_violations": [],
+          "text": {
+            "nodes": [
+              {
+                "node_id": "{{Issuing_Organization}}",
+                "lines": 2,
+                "min_size_px": 14.6,
+                "min_size_pt": 9.6,
+                "overflow_px": 114.1,
+                "worst_side": "right",
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Certificate_Title}}",
+                "lines": 1,
+                "min_size_px": 16.8,
+                "min_size_pt": 11.1,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Presentation_Line}}",
+                "lines": 1,
+                "min_size_px": 15.8,
+                "min_size_pt": 10.4,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Student_Name}}",
+                "lines": 1,
+                "min_size_px": 15.0,
+                "min_size_pt": 9.9,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Citation_Body}}",
+                "lines": 3,
+                "min_size_px": 17.3,
+                "min_size_pt": 11.4,
+                "overflow_px": 14.6,
+                "worst_side": "left",
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Date_Issued}}",
+                "lines": 1,
+                "min_size_px": 11.4,
+                "min_size_pt": 7.5,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Certificate_ID}}",
+                "lines": 1,
+                "min_size_px": 13.5,
+                "min_size_pt": 8.9,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Signature_Blocks}}_0",
+                "lines": 2,
+                "min_size_px": 11.8,
+                "min_size_pt": 7.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Signature_Blocks}}_1",
+                "lines": 2,
+                "min_size_px": 11.8,
+                "min_size_pt": 7.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Signature_Blocks}}_2",
+                "lines": 2,
+                "min_size_px": 11.8,
+                "min_size_pt": 7.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              }
+            ],
+            "fits": false,
+            "overflowing": [
+              "{{Issuing_Organization}}",
+              "{{Citation_Body}}"
+            ],
+            "overwriting": [],
+            "min_size_px": 11.4,
+            "min_size_pt": 7.5,
+            "small_text": []
+          },
+          "latency_ms": 20.97,
+          "passes": false,
+          "problems": [
+            "text overflows: {{Issuing_Organization}} by 114.1 px (right)",
             "text overflows: {{Citation_Body}} by 14.6 px (left)"
           ]
         },
@@ -1188,11 +1208,11 @@
             "nodes": [
               {
                 "node_id": "{{Issuing_Organization}}",
-                "lines": 1,
-                "min_size_px": 17.3,
-                "min_size_pt": 11.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
+                "lines": 2,
+                "min_size_px": 14.6,
+                "min_size_pt": 9.6,
+                "overflow_px": 59.5,
+                "worst_side": "left",
                 "overwrites": [],
                 "off_canvas": false
               },
@@ -1287,16 +1307,20 @@
                 "off_canvas": false
               }
             ],
-            "fits": true,
-            "overflowing": [],
+            "fits": false,
+            "overflowing": [
+              "{{Issuing_Organization}}"
+            ],
             "overwriting": [],
             "min_size_px": 11.8,
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 20.46,
-          "passes": true,
-          "problems": []
+          "latency_ms": 21.26,
+          "passes": false,
+          "problems": [
+            "text overflows: {{Issuing_Organization}} by 59.5 px (left)"
+          ]
         },
         {
           "format": "certificate",
@@ -1324,8 +1348,8 @@
               {
                 "node_id": "{{Certificate_Title}}",
                 "lines": 1,
-                "min_size_px": 35.2,
-                "min_size_pt": 23.2,
+                "min_size_px": 16.8,
+                "min_size_pt": 11.1,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -1419,7 +1443,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 20.22,
+          "latency_ms": 20.34,
           "passes": true,
           "problems": []
         },
@@ -1544,7 +1568,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 20.14,
+          "latency_ms": 20.73,
           "passes": true,
           "problems": []
         },
@@ -1594,8 +1618,8 @@
               {
                 "node_id": "{{Student_Name}}",
                 "lines": 1,
-                "min_size_px": 20.4,
-                "min_size_pt": 13.5,
+                "min_size_px": 15.0,
+                "min_size_pt": 9.9,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -1606,6 +1630,131 @@
                 "lines": 1,
                 "min_size_px": 17.3,
                 "min_size_pt": 11.4,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Date_Issued}}",
+                "lines": 1,
+                "min_size_px": 13.5,
+                "min_size_pt": 8.9,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Certificate_ID}}",
+                "lines": 1,
+                "min_size_px": 13.5,
+                "min_size_pt": 8.9,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Signature_Blocks}}_0",
+                "lines": 2,
+                "min_size_px": 11.8,
+                "min_size_pt": 7.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Signature_Blocks}}_1",
+                "lines": 2,
+                "min_size_px": 11.8,
+                "min_size_pt": 7.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Signature_Blocks}}_2",
+                "lines": 2,
+                "min_size_px": 11.8,
+                "min_size_pt": 7.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              }
+            ],
+            "fits": true,
+            "overflowing": [],
+            "overwriting": [],
+            "min_size_px": 11.8,
+            "min_size_pt": 7.8,
+            "small_text": []
+          },
+          "latency_ms": 25.77,
+          "passes": true,
+          "problems": []
+        },
+        {
+          "format": "certificate",
+          "case": "one at max words Citation_Body",
+          "folder": "data\\rendered\\stress_test\\certificate\\one_at_max_words_Citation_Body",
+          "output_candidate": "Candidate_A",
+          "f1": 1.0,
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "candidates_with_fp_or_fn": [],
+          "reading_order_violations": [],
+          "text": {
+            "nodes": [
+              {
+                "node_id": "{{Issuing_Organization}}",
+                "lines": 1,
+                "min_size_px": 17.3,
+                "min_size_pt": 11.4,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Certificate_Title}}",
+                "lines": 1,
+                "min_size_px": 52.8,
+                "min_size_pt": 34.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Presentation_Line}}",
+                "lines": 1,
+                "min_size_px": 15.8,
+                "min_size_pt": 10.4,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Student_Name}}",
+                "lines": 1,
+                "min_size_px": 47.4,
+                "min_size_pt": 31.3,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Citation_Body}}",
+                "lines": 3,
+                "min_size_px": 15.9,
+                "min_size_pt": 10.5,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -1675,131 +1824,6 @@
         },
         {
           "format": "certificate",
-          "case": "one at max words Citation_Body",
-          "folder": "data\\rendered\\stress_test\\certificate\\one_at_max_words_Citation_Body",
-          "output_candidate": "Candidate_A",
-          "f1": 1.0,
-          "tp": 11,
-          "fp": 0,
-          "fn": 0,
-          "candidates_with_fp_or_fn": [],
-          "reading_order_violations": [],
-          "text": {
-            "nodes": [
-              {
-                "node_id": "{{Issuing_Organization}}",
-                "lines": 1,
-                "min_size_px": 17.3,
-                "min_size_pt": 11.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Certificate_Title}}",
-                "lines": 1,
-                "min_size_px": 52.8,
-                "min_size_pt": 34.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Presentation_Line}}",
-                "lines": 1,
-                "min_size_px": 15.8,
-                "min_size_pt": 10.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Student_Name}}",
-                "lines": 1,
-                "min_size_px": 47.4,
-                "min_size_pt": 31.3,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Citation_Body}}",
-                "lines": 2,
-                "min_size_px": 17.3,
-                "min_size_pt": 11.4,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Date_Issued}}",
-                "lines": 1,
-                "min_size_px": 13.5,
-                "min_size_pt": 8.9,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Certificate_ID}}",
-                "lines": 1,
-                "min_size_px": 13.5,
-                "min_size_pt": 8.9,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Signature_Blocks}}_0",
-                "lines": 2,
-                "min_size_px": 11.8,
-                "min_size_pt": 7.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Signature_Blocks}}_1",
-                "lines": 2,
-                "min_size_px": 11.8,
-                "min_size_pt": 7.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Signature_Blocks}}_2",
-                "lines": 2,
-                "min_size_px": 11.8,
-                "min_size_pt": 7.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              }
-            ],
-            "fits": true,
-            "overflowing": [],
-            "overwriting": [],
-            "min_size_px": 11.8,
-            "min_size_pt": 7.8,
-            "small_text": []
-          },
-          "latency_ms": 20.01,
-          "passes": true,
-          "problems": []
-        },
-        {
-          "format": "certificate",
           "case": "one at max words Date_Issued",
           "folder": "data\\rendered\\stress_test\\certificate\\one_at_max_words_Date_Issued",
           "output_candidate": "Candidate_A",
@@ -1864,8 +1888,8 @@
               {
                 "node_id": "{{Date_Issued}}",
                 "lines": 1,
-                "min_size_px": 13.5,
-                "min_size_pt": 8.9,
+                "min_size_px": 11.4,
+                "min_size_pt": 7.5,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -1915,8 +1939,8 @@
             "fits": true,
             "overflowing": [],
             "overwriting": [],
-            "min_size_px": 11.8,
-            "min_size_pt": 7.8,
+            "min_size_px": 11.4,
+            "min_size_pt": 7.5,
             "small_text": []
           },
           "latency_ms": 20.0,
@@ -2044,7 +2068,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 20.57,
+          "latency_ms": 21.58,
           "passes": true,
           "problems": []
         },
@@ -2063,10 +2087,10 @@
             "nodes": [
               {
                 "node_id": "{{Issuing_Organization}}",
-                "lines": 1,
-                "min_size_px": 17.3,
-                "min_size_pt": 11.4,
-                "overflow_px": 8.7,
+                "lines": 2,
+                "min_size_px": 14.6,
+                "min_size_pt": 9.6,
+                "overflow_px": 114.1,
                 "worst_side": "right",
                 "overwrites": [],
                 "off_canvas": false
@@ -2171,10 +2195,10 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 20.21,
+          "latency_ms": 20.52,
           "passes": false,
           "problems": [
-            "text overflows: {{Issuing_Organization}} by 8.7 px (right)"
+            "text overflows: {{Issuing_Organization}} by 114.1 px (right)"
           ]
         },
         {
@@ -2203,8 +2227,8 @@
               {
                 "node_id": "{{Certificate_Title}}",
                 "lines": 1,
-                "min_size_px": 35.2,
-                "min_size_pt": 23.2,
+                "min_size_px": 16.8,
+                "min_size_pt": 11.1,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -2298,7 +2322,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 20.67,
+          "latency_ms": 19.89,
           "passes": true,
           "problems": []
         },
@@ -2423,7 +2447,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 20.27,
+          "latency_ms": 19.97,
           "passes": true,
           "problems": []
         },
@@ -2473,8 +2497,8 @@
               {
                 "node_id": "{{Student_Name}}",
                 "lines": 1,
-                "min_size_px": 20.4,
-                "min_size_pt": 13.5,
+                "min_size_px": 15.0,
+                "min_size_pt": 9.9,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -2548,7 +2572,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 24.62,
+          "latency_ms": 20.77,
           "passes": true,
           "problems": []
         },
@@ -2607,7 +2631,7 @@
               },
               {
                 "node_id": "{{Citation_Body}}",
-                "lines": 2,
+                "lines": 3,
                 "min_size_px": 17.3,
                 "min_size_pt": 11.4,
                 "overflow_px": 14.6,
@@ -2675,7 +2699,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 20.68,
+          "latency_ms": 20.45,
           "passes": false,
           "problems": [
             "text overflows: {{Citation_Body}} by 14.6 px (left)"
@@ -2747,8 +2771,8 @@
               {
                 "node_id": "{{Date_Issued}}",
                 "lines": 1,
-                "min_size_px": 13.5,
-                "min_size_pt": 8.9,
+                "min_size_px": 11.4,
+                "min_size_pt": 7.5,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -2798,11 +2822,11 @@
             "fits": true,
             "overflowing": [],
             "overwriting": [],
-            "min_size_px": 11.8,
-            "min_size_pt": 7.8,
+            "min_size_px": 11.4,
+            "min_size_pt": 7.5,
             "small_text": []
           },
-          "latency_ms": 19.69,
+          "latency_ms": 20.12,
           "passes": true,
           "problems": []
         },
@@ -2927,7 +2951,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 20.17,
+          "latency_ms": 30.15,
           "passes": true,
           "problems": []
         },
@@ -3032,7 +3056,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 16.31,
+          "latency_ms": 16.73,
           "passes": true,
           "problems": []
         },
@@ -3147,7 +3171,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 17.61,
+          "latency_ms": 18.37,
           "passes": true,
           "problems": []
         },
@@ -3272,7 +3296,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 21.08,
+          "latency_ms": 23.91,
           "passes": true,
           "problems": []
         },
@@ -3409,7 +3433,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 22.65,
+          "latency_ms": 23.87,
           "passes": true,
           "problems": []
         },
@@ -3557,7 +3581,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 25.78,
+          "latency_ms": 28.63,
           "passes": true,
           "problems": []
         },
@@ -3719,7 +3743,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 27.3,
+          "latency_ms": 37.17,
           "passes": false,
           "problems": [
             "F1 0.92 (Signature Blocks 4: overlaps Signature Blocks 5 by 673 px\u00b2, Signature Blocks 5: overlaps Signature Blocks 4 by 673 px\u00b2)"
@@ -3905,7 +3929,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 29.63,
+          "latency_ms": 30.64,
           "passes": false,
           "problems": [
             "F1 0.93 (Signature Blocks 5: overlaps Signature Blocks 6 by 1,844 px\u00b2, Signature Blocks 6: overlaps Signature Blocks 5 by 1,844 px\u00b2)",
@@ -4115,7 +4139,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 32.35,
+          "latency_ms": 30.87,
           "passes": false,
           "problems": [
             "F1 0.93 (Signature Blocks 6: overlaps Signature Blocks 7 by 2,992 px\u00b2, Signature Blocks 7: overlaps Signature Blocks 6 by 2,992 px\u00b2)",
@@ -4347,7 +4371,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 35.41,
+          "latency_ms": 35.01,
           "passes": false,
           "problems": [
             "F1 0.94 (Signature Blocks 7: overlaps Signature Blocks 8 by 4,126 px\u00b2, Signature Blocks 8: overlaps Signature Blocks 7 by 4,126 px\u00b2)",
@@ -4599,7 +4623,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 37.82,
+          "latency_ms": 36.71,
           "passes": false,
           "problems": [
             "F1 0.94 (Signature Blocks 8: overlaps Signature Blocks 9 by 5,248 px\u00b2, Signature Blocks 9: overlaps Signature Blocks 8 by 5,248 px\u00b2)",
@@ -4619,8 +4643,18 @@
       "breaking_points": [
         {
           "field": "Issuing_Organization",
+          "kind": "words",
+          "max_characters": 150,
+          "longest_passing": 63,
+          "shortest_failing": 64,
+          "problems": [
+            "text overflows: {{Issuing_Organization}} by 7.7 px (right)"
+          ]
+        },
+        {
+          "field": "Issuing_Organization",
           "kind": "unbroken",
-          "max_characters": 60,
+          "max_characters": 150,
           "longest_passing": 58,
           "shortest_failing": 59,
           "problems": [
@@ -4630,7 +4664,7 @@
         {
           "field": "Citation_Body",
           "kind": "unbroken",
-          "max_characters": 150,
+          "max_characters": 300,
           "longest_passing": 97,
           "shortest_failing": 98,
           "problems": [
@@ -4641,52 +4675,52 @@
       "over_max_rejected": [
         {
           "field": "{{Issuing_Organization}}",
-          "length": 61,
-          "max_characters": 60,
-          "rejected": true,
-          "error": "{{Issuing_Organization}}: 'Camarines Sur Polytechnic Colleges Department of Informationx' is too long"
-        },
-        {
-          "field": "{{Certificate_Title}}",
-          "length": 41,
-          "max_characters": 40,
-          "rejected": true,
-          "error": "{{Certificate_Title}}: 'Camarines Sur Polytechnic Colleges Depart' is too long"
-        },
-        {
-          "field": "{{Presentation_Line}}",
-          "length": 31,
-          "max_characters": 30,
-          "rejected": true,
-          "error": "{{Presentation_Line}}: 'Camarines Sur Polytechnic Colle' is too long"
-        },
-        {
-          "field": "{{Student_Name}}",
-          "length": 61,
-          "max_characters": 60,
-          "rejected": true,
-          "error": "{{Student_Name}}: 'Maria Angela Santos Dela Cruz Juan Miguel Reyes Kristine Joyx' is too long"
-        },
-        {
-          "field": "{{Citation_Body}}",
           "length": 151,
           "max_characters": 150,
           "rejected": true,
-          "error": "{{Citation_Body}}: 'Camarines Sur Polytechnic Colleges Department of Information Technology Leadership Development Excellence Outstanding Participation Recognition Academi' is too long"
+          "error": "{{Issuing_Organization}}: 'Camarines Sur Polytechnic Colleges Department of Information Technology Leadership Development Excellence Outstanding Participation Recognition Academi' is too long"
+        },
+        {
+          "field": "{{Certificate_Title}}",
+          "length": 81,
+          "max_characters": 80,
+          "rejected": true,
+          "error": "{{Certificate_Title}}: 'Camarines Sur Polytechnic Colleges Department of Information Technology Leadershi' is too long"
+        },
+        {
+          "field": "{{Presentation_Line}}",
+          "length": 61,
+          "max_characters": 60,
+          "rejected": true,
+          "error": "{{Presentation_Line}}: 'Camarines Sur Polytechnic Colleges Department of Informationx' is too long"
+        },
+        {
+          "field": "{{Student_Name}}",
+          "length": 81,
+          "max_characters": 80,
+          "rejected": true,
+          "error": "{{Student_Name}}: 'Maria Angela Santos Dela Cruz Juan Miguel Reyes Kristine Joy Bautista Christopher' is too long"
+        },
+        {
+          "field": "{{Citation_Body}}",
+          "length": 301,
+          "max_characters": 300,
+          "rejected": true,
+          "error": "{{Citation_Body}}: 'Camarines Sur Polytechnic Colleges Department of Information Technology Leadership Development Excellence Outstanding Participation Recognition Academic International Conference Celebration Foundation Organization Association Camarines Sur Polytechnic Colleges Department of Information Technology Lea' is too long"
         },
         {
           "field": "{{Date_Issued}}",
-          "length": 31,
-          "max_characters": 30,
+          "length": 61,
+          "max_characters": 60,
           "rejected": true,
-          "error": "{{Date_Issued}}: 'Camarines Sur Polytechnic Colle' is too long"
+          "error": "{{Date_Issued}}: 'Camarines Sur Polytechnic Colleges Department of Informationx' is too long"
         },
         {
           "field": "{{Certificate_ID}}",
-          "length": 21,
-          "max_characters": 20,
+          "length": 41,
+          "max_characters": 40,
           "rejected": true,
-          "error": "{{Certificate_ID}}: 'Camarines Sur Polytec' is too long"
+          "error": "{{Certificate_ID}}: 'Camarines Sur Polytechnic Colleges Depart' is too long"
         }
       ],
       "signatures": [
@@ -4791,7 +4825,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 16.31,
+          "latency_ms": 16.73,
           "passes": true,
           "problems": []
         },
@@ -4906,7 +4940,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 17.61,
+          "latency_ms": 18.37,
           "passes": true,
           "problems": []
         },
@@ -5031,7 +5065,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 21.08,
+          "latency_ms": 23.91,
           "passes": true,
           "problems": []
         },
@@ -5168,7 +5202,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 22.65,
+          "latency_ms": 23.87,
           "passes": true,
           "problems": []
         },
@@ -5316,7 +5350,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 25.78,
+          "latency_ms": 28.63,
           "passes": true,
           "problems": []
         },
@@ -5478,7 +5512,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 27.3,
+          "latency_ms": 37.17,
           "passes": false,
           "problems": [
             "F1 0.92 (Signature Blocks 4: overlaps Signature Blocks 5 by 673 px\u00b2, Signature Blocks 5: overlaps Signature Blocks 4 by 673 px\u00b2)"
@@ -5664,7 +5698,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 29.63,
+          "latency_ms": 30.64,
           "passes": false,
           "problems": [
             "F1 0.93 (Signature Blocks 5: overlaps Signature Blocks 6 by 1,844 px\u00b2, Signature Blocks 6: overlaps Signature Blocks 5 by 1,844 px\u00b2)",
@@ -5874,7 +5908,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 32.35,
+          "latency_ms": 30.87,
           "passes": false,
           "problems": [
             "F1 0.93 (Signature Blocks 6: overlaps Signature Blocks 7 by 2,992 px\u00b2, Signature Blocks 7: overlaps Signature Blocks 6 by 2,992 px\u00b2)",
@@ -6106,7 +6140,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 35.41,
+          "latency_ms": 35.01,
           "passes": false,
           "problems": [
             "F1 0.94 (Signature Blocks 7: overlaps Signature Blocks 8 by 4,126 px\u00b2, Signature Blocks 8: overlaps Signature Blocks 7 by 4,126 px\u00b2)",
@@ -6358,7 +6392,7 @@
             "min_size_pt": 7.8,
             "small_text": []
           },
-          "latency_ms": 37.82,
+          "latency_ms": 36.71,
           "passes": false,
           "problems": [
             "F1 0.94 (Signature Blocks 8: overlaps Signature Blocks 9 by 5,248 px\u00b2, Signature Blocks 9: overlaps Signature Blocks 8 by 5,248 px\u00b2)",
@@ -6378,11 +6412,11 @@
     },
     "event_id": {
       "fields": {
-        "Organization_Header": 90,
-        "Event_Title": 40,
-        "Event_Details": 80,
-        "Participant_Name": 30,
-        "Participant_Role": 24
+        "Organization_Header": 150,
+        "Event_Title": 80,
+        "Event_Details": 160,
+        "Participant_Name": 60,
+        "Participant_Role": 48
       },
       "runs": [
         {
@@ -6456,7 +6490,7 @@
             "min_size_pt": 6.5,
             "small_text": []
           },
-          "latency_ms": 14.66,
+          "latency_ms": 13.91,
           "passes": true,
           "problems": []
         },
@@ -6464,81 +6498,6 @@
           "format": "event_id",
           "case": "all at 25% words",
           "folder": "data\\rendered\\stress_test\\event_id\\all_at_25pct_words",
-          "output_candidate": "Candidate_D",
-          "f1": 1.0,
-          "tp": 6,
-          "fp": 0,
-          "fn": 0,
-          "candidates_with_fp_or_fn": [],
-          "reading_order_violations": [],
-          "text": {
-            "nodes": [
-              {
-                "node_id": "{{Organization_Header}}",
-                "lines": 1,
-                "min_size_px": 16.3,
-                "min_size_pt": 6.5,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Event_Title}}",
-                "lines": 1,
-                "min_size_px": 74.8,
-                "min_size_pt": 29.9,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Event_Details}}",
-                "lines": 1,
-                "min_size_px": 18.2,
-                "min_size_pt": 7.3,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Participant_Name}}",
-                "lines": 1,
-                "min_size_px": 64.8,
-                "min_size_pt": 25.9,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Participant_Role}}",
-                "lines": 1,
-                "min_size_px": 47.3,
-                "min_size_pt": 18.9,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              }
-            ],
-            "fits": true,
-            "overflowing": [],
-            "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
-            "small_text": []
-          },
-          "latency_ms": 14.64,
-          "passes": true,
-          "problems": []
-        },
-        {
-          "format": "event_id",
-          "case": "all at 50% words",
-          "folder": "data\\rendered\\stress_test\\event_id\\all_at_50pct_words",
           "output_candidate": "Candidate_D",
           "f1": 1.0,
           "tp": 6,
@@ -6606,93 +6565,14 @@
             "min_size_pt": 6.5,
             "small_text": []
           },
-          "latency_ms": 14.1,
+          "latency_ms": 13.96,
           "passes": true,
           "problems": []
         },
         {
           "format": "event_id",
-          "case": "all at 75% words",
-          "folder": "data\\rendered\\stress_test\\event_id\\all_at_75pct_words",
-          "output_candidate": "Candidate_D",
-          "f1": 1.0,
-          "tp": 6,
-          "fp": 0,
-          "fn": 0,
-          "candidates_with_fp_or_fn": [],
-          "reading_order_violations": [],
-          "text": {
-            "nodes": [
-              {
-                "node_id": "{{Organization_Header}}",
-                "lines": 2,
-                "min_size_px": 16.3,
-                "min_size_pt": 6.5,
-                "overflow_px": 143.2,
-                "worst_side": "right",
-                "overwrites": [],
-                "off_canvas": true
-              },
-              {
-                "node_id": "{{Event_Title}}",
-                "lines": 2,
-                "min_size_px": 46.2,
-                "min_size_pt": 18.5,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Event_Details}}",
-                "lines": 2,
-                "min_size_px": 18.2,
-                "min_size_pt": 7.3,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Participant_Name}}",
-                "lines": 1,
-                "min_size_px": 28.7,
-                "min_size_pt": 11.5,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Participant_Role}}",
-                "lines": 1,
-                "min_size_px": 34.6,
-                "min_size_pt": 13.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              }
-            ],
-            "fits": false,
-            "overflowing": [
-              "{{Organization_Header}}"
-            ],
-            "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
-            "small_text": []
-          },
-          "latency_ms": 14.5,
-          "passes": false,
-          "problems": [
-            "text overflows: {{Organization_Header}} by 143.2 px (right)"
-          ]
-        },
-        {
-          "format": "event_id",
-          "case": "all at 100% words",
-          "folder": "data\\rendered\\stress_test\\event_id\\all_at_100pct_words",
+          "case": "all at 50% words",
+          "folder": "data\\rendered\\stress_test\\event_id\\all_at_50pct_words",
           "output_candidate": "Candidate_D",
           "f1": 1.0,
           "tp": 6,
@@ -6762,7 +6642,7 @@
             "min_size_pt": 6.5,
             "small_text": []
           },
-          "latency_ms": 14.11,
+          "latency_ms": 13.84,
           "passes": false,
           "problems": [
             "text overflows: {{Organization_Header}} by 143.2 px (right)"
@@ -6770,8 +6650,8 @@
         },
         {
           "format": "event_id",
-          "case": "all at 25% unbroken",
-          "folder": "data\\rendered\\stress_test\\event_id\\all_at_25pct_unbroken",
+          "case": "all at 75% words",
+          "folder": "data\\rendered\\stress_test\\event_id\\all_at_75pct_words",
           "output_candidate": "Candidate_D",
           "f1": 1.0,
           "tp": 6,
@@ -6783,19 +6663,19 @@
             "nodes": [
               {
                 "node_id": "{{Organization_Header}}",
-                "lines": 1,
+                "lines": 2,
                 "min_size_px": 16.3,
                 "min_size_pt": 6.5,
-                "overflow_px": 0.0,
-                "worst_side": null,
+                "overflow_px": 143.2,
+                "worst_side": "right",
                 "overwrites": [],
-                "off_canvas": false
+                "off_canvas": true
               },
               {
                 "node_id": "{{Event_Title}}",
-                "lines": 1,
-                "min_size_px": 74.8,
-                "min_size_pt": 29.9,
+                "lines": 2,
+                "min_size_px": 21.1,
+                "min_size_pt": 8.4,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -6803,9 +6683,9 @@
               },
               {
                 "node_id": "{{Event_Details}}",
-                "lines": 1,
-                "min_size_px": 18.2,
-                "min_size_pt": 7.3,
+                "lines": 2,
+                "min_size_px": 15.4,
+                "min_size_pt": 6.2,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -6814,8 +6694,8 @@
               {
                 "node_id": "{{Participant_Name}}",
                 "lines": 1,
-                "min_size_px": 64.8,
-                "min_size_pt": 25.9,
+                "min_size_px": 12.7,
+                "min_size_pt": 5.1,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -6824,29 +6704,120 @@
               {
                 "node_id": "{{Participant_Role}}",
                 "lines": 1,
-                "min_size_px": 47.3,
-                "min_size_pt": 18.9,
+                "min_size_px": 14.5,
+                "min_size_pt": 5.8,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
                 "off_canvas": false
               }
             ],
-            "fits": true,
-            "overflowing": [],
+            "fits": false,
+            "overflowing": [
+              "{{Organization_Header}}"
+            ],
             "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
-            "small_text": []
+            "min_size_px": 12.7,
+            "min_size_pt": 5.1,
+            "small_text": [
+              "{{Participant_Name}}",
+              "{{Participant_Role}}"
+            ]
           },
-          "latency_ms": 23.79,
-          "passes": true,
-          "problems": []
+          "latency_ms": 13.87,
+          "passes": false,
+          "problems": [
+            "text overflows: {{Organization_Header}} by 143.2 px (right)"
+          ]
         },
         {
           "format": "event_id",
-          "case": "all at 50% unbroken",
-          "folder": "data\\rendered\\stress_test\\event_id\\all_at_50pct_unbroken",
+          "case": "all at 100% words",
+          "folder": "data\\rendered\\stress_test\\event_id\\all_at_100pct_words",
+          "output_candidate": "Candidate_D",
+          "f1": 1.0,
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "candidates_with_fp_or_fn": [],
+          "reading_order_violations": [],
+          "text": {
+            "nodes": [
+              {
+                "node_id": "{{Organization_Header}}",
+                "lines": 3,
+                "min_size_px": 11.7,
+                "min_size_pt": 4.7,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Event_Title}}",
+                "lines": 2,
+                "min_size_px": 15.6,
+                "min_size_pt": 6.2,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Event_Details}}",
+                "lines": 3,
+                "min_size_px": 14.2,
+                "min_size_pt": 5.7,
+                "overflow_px": 36.6,
+                "worst_side": "right",
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Participant_Name}}",
+                "lines": 1,
+                "min_size_px": 8.8,
+                "min_size_pt": 3.5,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Participant_Role}}",
+                "lines": 1,
+                "min_size_px": 9.5,
+                "min_size_pt": 3.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              }
+            ],
+            "fits": false,
+            "overflowing": [
+              "{{Event_Details}}"
+            ],
+            "overwriting": [],
+            "min_size_px": 8.8,
+            "min_size_pt": 3.5,
+            "small_text": [
+              "{{Organization_Header}}",
+              "{{Event_Details}}",
+              "{{Participant_Name}}",
+              "{{Participant_Role}}"
+            ]
+          },
+          "latency_ms": 13.8,
+          "passes": false,
+          "problems": [
+            "text overflows: {{Event_Details}} by 36.6 px (right)"
+          ]
+        },
+        {
+          "format": "event_id",
+          "case": "all at 25% unbroken",
+          "folder": "data\\rendered\\stress_test\\event_id\\all_at_25pct_unbroken",
           "output_candidate": "Candidate_D",
           "f1": 1.0,
           "tp": 6,
@@ -6914,95 +6885,14 @@
             "min_size_pt": 6.5,
             "small_text": []
           },
-          "latency_ms": 16.79,
+          "latency_ms": 17.98,
           "passes": true,
           "problems": []
         },
         {
           "format": "event_id",
-          "case": "all at 75% unbroken",
-          "folder": "data\\rendered\\stress_test\\event_id\\all_at_75pct_unbroken",
-          "output_candidate": "Candidate_D",
-          "f1": 1.0,
-          "tp": 6,
-          "fp": 0,
-          "fn": 0,
-          "candidates_with_fp_or_fn": [],
-          "reading_order_violations": [],
-          "text": {
-            "nodes": [
-              {
-                "node_id": "{{Organization_Header}}",
-                "lines": 2,
-                "min_size_px": 16.3,
-                "min_size_pt": 6.5,
-                "overflow_px": 189.9,
-                "worst_side": "right",
-                "overwrites": [],
-                "off_canvas": true
-              },
-              {
-                "node_id": "{{Event_Title}}",
-                "lines": 1,
-                "min_size_px": 24.0,
-                "min_size_pt": 9.6,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Event_Details}}",
-                "lines": 2,
-                "min_size_px": 18.2,
-                "min_size_pt": 7.3,
-                "overflow_px": 47.6,
-                "worst_side": "right",
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Participant_Name}}",
-                "lines": 1,
-                "min_size_px": 28.7,
-                "min_size_pt": 11.5,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              },
-              {
-                "node_id": "{{Participant_Role}}",
-                "lines": 1,
-                "min_size_px": 34.6,
-                "min_size_pt": 13.8,
-                "overflow_px": 0.0,
-                "worst_side": null,
-                "overwrites": [],
-                "off_canvas": false
-              }
-            ],
-            "fits": false,
-            "overflowing": [
-              "{{Organization_Header}}",
-              "{{Event_Details}}"
-            ],
-            "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
-            "small_text": []
-          },
-          "latency_ms": 14.49,
-          "passes": false,
-          "problems": [
-            "text overflows: {{Organization_Header}} by 189.9 px (right)",
-            "text overflows: {{Event_Details}} by 47.6 px (right)"
-          ]
-        },
-        {
-          "format": "event_id",
-          "case": "all at 100% unbroken",
-          "folder": "data\\rendered\\stress_test\\event_id\\all_at_100pct_unbroken",
+          "case": "all at 50% unbroken",
+          "folder": "data\\rendered\\stress_test\\event_id\\all_at_50pct_unbroken",
           "output_candidate": "Candidate_D",
           "f1": 1.0,
           "tp": 6,
@@ -7073,11 +6963,181 @@
             "min_size_pt": 6.5,
             "small_text": []
           },
-          "latency_ms": 14.44,
+          "latency_ms": 13.63,
           "passes": false,
           "problems": [
             "text overflows: {{Organization_Header}} by 189.9 px (right)",
             "text overflows: {{Event_Details}} by 47.6 px (right)"
+          ]
+        },
+        {
+          "format": "event_id",
+          "case": "all at 75% unbroken",
+          "folder": "data\\rendered\\stress_test\\event_id\\all_at_75pct_unbroken",
+          "output_candidate": "Candidate_D",
+          "f1": 1.0,
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "candidates_with_fp_or_fn": [],
+          "reading_order_violations": [],
+          "text": {
+            "nodes": [
+              {
+                "node_id": "{{Organization_Header}}",
+                "lines": 2,
+                "min_size_px": 16.3,
+                "min_size_pt": 6.5,
+                "overflow_px": 189.9,
+                "worst_side": "right",
+                "overwrites": [],
+                "off_canvas": true
+              },
+              {
+                "node_id": "{{Event_Title}}",
+                "lines": 1,
+                "min_size_px": 11.4,
+                "min_size_pt": 4.6,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Event_Details}}",
+                "lines": 2,
+                "min_size_px": 15.4,
+                "min_size_pt": 6.2,
+                "overflow_px": 47.8,
+                "worst_side": "right",
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Participant_Name}}",
+                "lines": 1,
+                "min_size_px": 12.7,
+                "min_size_pt": 5.1,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Participant_Role}}",
+                "lines": 1,
+                "min_size_px": 14.5,
+                "min_size_pt": 5.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              }
+            ],
+            "fits": false,
+            "overflowing": [
+              "{{Organization_Header}}",
+              "{{Event_Details}}"
+            ],
+            "overwriting": [],
+            "min_size_px": 11.4,
+            "min_size_pt": 4.6,
+            "small_text": [
+              "{{Event_Title}}",
+              "{{Participant_Name}}",
+              "{{Participant_Role}}"
+            ]
+          },
+          "latency_ms": 13.96,
+          "passes": false,
+          "problems": [
+            "text overflows: {{Organization_Header}} by 189.9 px (right)",
+            "text overflows: {{Event_Details}} by 47.8 px (right)"
+          ]
+        },
+        {
+          "format": "event_id",
+          "case": "all at 100% unbroken",
+          "folder": "data\\rendered\\stress_test\\event_id\\all_at_100pct_unbroken",
+          "output_candidate": "Candidate_D",
+          "f1": 1.0,
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "candidates_with_fp_or_fn": [],
+          "reading_order_violations": [],
+          "text": {
+            "nodes": [
+              {
+                "node_id": "{{Organization_Header}}",
+                "lines": 3,
+                "min_size_px": 11.7,
+                "min_size_pt": 4.7,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Event_Title}}",
+                "lines": 1,
+                "min_size_px": 8.2,
+                "min_size_pt": 3.3,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Event_Details}}",
+                "lines": 3,
+                "min_size_px": 14.2,
+                "min_size_pt": 5.7,
+                "overflow_px": 55.2,
+                "worst_side": "right",
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Participant_Name}}",
+                "lines": 1,
+                "min_size_px": 8.8,
+                "min_size_pt": 3.5,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              },
+              {
+                "node_id": "{{Participant_Role}}",
+                "lines": 1,
+                "min_size_px": 9.5,
+                "min_size_pt": 3.8,
+                "overflow_px": 0.0,
+                "worst_side": null,
+                "overwrites": [],
+                "off_canvas": false
+              }
+            ],
+            "fits": false,
+            "overflowing": [
+              "{{Event_Details}}"
+            ],
+            "overwriting": [],
+            "min_size_px": 8.2,
+            "min_size_pt": 3.3,
+            "small_text": [
+              "{{Organization_Header}}",
+              "{{Event_Title}}",
+              "{{Event_Details}}",
+              "{{Participant_Name}}",
+              "{{Participant_Role}}"
+            ]
+          },
+          "latency_ms": 18.11,
+          "passes": false,
+          "problems": [
+            "text overflows: {{Event_Details}} by 55.2 px (right)"
           ]
         },
         {
@@ -7095,13 +7155,13 @@
             "nodes": [
               {
                 "node_id": "{{Organization_Header}}",
-                "lines": 2,
-                "min_size_px": 16.3,
-                "min_size_pt": 6.5,
-                "overflow_px": 143.2,
-                "worst_side": "right",
+                "lines": 3,
+                "min_size_px": 11.7,
+                "min_size_pt": 4.7,
+                "overflow_px": 0.0,
+                "worst_side": null,
                 "overwrites": [],
-                "off_canvas": true
+                "off_canvas": false
               },
               {
                 "node_id": "{{Event_Title}}",
@@ -7144,20 +7204,18 @@
                 "off_canvas": false
               }
             ],
-            "fits": false,
-            "overflowing": [
-              "{{Organization_Header}}"
-            ],
+            "fits": true,
+            "overflowing": [],
             "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
-            "small_text": []
+            "min_size_px": 11.7,
+            "min_size_pt": 4.7,
+            "small_text": [
+              "{{Organization_Header}}"
+            ]
           },
-          "latency_ms": 14.52,
-          "passes": false,
-          "problems": [
-            "text overflows: {{Organization_Header}} by 143.2 px (right)"
-          ]
+          "latency_ms": 13.64,
+          "passes": true,
+          "problems": []
         },
         {
           "format": "event_id",
@@ -7185,8 +7243,8 @@
               {
                 "node_id": "{{Event_Title}}",
                 "lines": 2,
-                "min_size_px": 29.1,
-                "min_size_pt": 11.6,
+                "min_size_px": 15.6,
+                "min_size_pt": 6.2,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -7226,11 +7284,11 @@
             "fits": true,
             "overflowing": [],
             "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
+            "min_size_px": 15.6,
+            "min_size_pt": 6.2,
             "small_text": []
           },
-          "latency_ms": 14.47,
+          "latency_ms": 17.38,
           "passes": true,
           "problems": []
         },
@@ -7269,11 +7327,11 @@
               },
               {
                 "node_id": "{{Event_Details}}",
-                "lines": 2,
-                "min_size_px": 18.2,
-                "min_size_pt": 7.3,
-                "overflow_px": 0.0,
-                "worst_side": null,
+                "lines": 3,
+                "min_size_px": 14.2,
+                "min_size_pt": 5.7,
+                "overflow_px": 36.6,
+                "worst_side": "right",
                 "overwrites": [],
                 "off_canvas": false
               },
@@ -7298,16 +7356,22 @@
                 "off_canvas": false
               }
             ],
-            "fits": true,
-            "overflowing": [],
+            "fits": false,
+            "overflowing": [
+              "{{Event_Details}}"
+            ],
             "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
-            "small_text": []
+            "min_size_px": 14.2,
+            "min_size_pt": 5.7,
+            "small_text": [
+              "{{Event_Details}}"
+            ]
           },
-          "latency_ms": 14.93,
-          "passes": true,
-          "problems": []
+          "latency_ms": 14.02,
+          "passes": false,
+          "problems": [
+            "text overflows: {{Event_Details}} by 36.6 px (right)"
+          ]
         },
         {
           "format": "event_id",
@@ -7355,8 +7419,8 @@
               {
                 "node_id": "{{Participant_Name}}",
                 "lines": 1,
-                "min_size_px": 20.4,
-                "min_size_pt": 8.2,
+                "min_size_px": 8.8,
+                "min_size_pt": 3.5,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -7376,11 +7440,13 @@
             "fits": true,
             "overflowing": [],
             "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
-            "small_text": []
+            "min_size_px": 8.8,
+            "min_size_pt": 3.5,
+            "small_text": [
+              "{{Participant_Name}}"
+            ]
           },
-          "latency_ms": 17.64,
+          "latency_ms": 14.02,
           "passes": true,
           "problems": []
         },
@@ -7440,8 +7506,8 @@
               {
                 "node_id": "{{Participant_Role}}",
                 "lines": 1,
-                "min_size_px": 24.5,
-                "min_size_pt": 9.8,
+                "min_size_px": 9.5,
+                "min_size_pt": 3.8,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -7451,11 +7517,13 @@
             "fits": true,
             "overflowing": [],
             "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
-            "small_text": []
+            "min_size_px": 9.5,
+            "min_size_pt": 3.8,
+            "small_text": [
+              "{{Participant_Role}}"
+            ]
           },
-          "latency_ms": 14.38,
+          "latency_ms": 13.62,
           "passes": true,
           "problems": []
         },
@@ -7474,13 +7542,13 @@
             "nodes": [
               {
                 "node_id": "{{Organization_Header}}",
-                "lines": 2,
-                "min_size_px": 16.3,
-                "min_size_pt": 6.5,
-                "overflow_px": 189.9,
-                "worst_side": "right",
+                "lines": 3,
+                "min_size_px": 11.7,
+                "min_size_pt": 4.7,
+                "overflow_px": 0.0,
+                "worst_side": null,
                 "overwrites": [],
-                "off_canvas": true
+                "off_canvas": false
               },
               {
                 "node_id": "{{Event_Title}}",
@@ -7523,20 +7591,18 @@
                 "off_canvas": false
               }
             ],
-            "fits": false,
-            "overflowing": [
-              "{{Organization_Header}}"
-            ],
+            "fits": true,
+            "overflowing": [],
             "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
-            "small_text": []
+            "min_size_px": 11.7,
+            "min_size_pt": 4.7,
+            "small_text": [
+              "{{Organization_Header}}"
+            ]
           },
-          "latency_ms": 14.46,
-          "passes": false,
-          "problems": [
-            "text overflows: {{Organization_Header}} by 189.9 px (right)"
-          ]
+          "latency_ms": 13.94,
+          "passes": true,
+          "problems": []
         },
         {
           "format": "event_id",
@@ -7564,8 +7630,8 @@
               {
                 "node_id": "{{Event_Title}}",
                 "lines": 1,
-                "min_size_px": 17.7,
-                "min_size_pt": 7.1,
+                "min_size_px": 8.2,
+                "min_size_pt": 3.3,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -7605,11 +7671,13 @@
             "fits": true,
             "overflowing": [],
             "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
-            "small_text": []
+            "min_size_px": 8.2,
+            "min_size_pt": 3.3,
+            "small_text": [
+              "{{Event_Title}}"
+            ]
           },
-          "latency_ms": 14.68,
+          "latency_ms": 13.97,
           "passes": true,
           "problems": []
         },
@@ -7648,10 +7716,10 @@
               },
               {
                 "node_id": "{{Event_Details}}",
-                "lines": 2,
-                "min_size_px": 18.2,
-                "min_size_pt": 7.3,
-                "overflow_px": 47.6,
+                "lines": 3,
+                "min_size_px": 14.2,
+                "min_size_pt": 5.7,
+                "overflow_px": 55.2,
                 "worst_side": "right",
                 "overwrites": [],
                 "off_canvas": false
@@ -7682,14 +7750,16 @@
               "{{Event_Details}}"
             ],
             "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
-            "small_text": []
+            "min_size_px": 14.2,
+            "min_size_pt": 5.7,
+            "small_text": [
+              "{{Event_Details}}"
+            ]
           },
-          "latency_ms": 14.57,
+          "latency_ms": 13.76,
           "passes": false,
           "problems": [
-            "text overflows: {{Event_Details}} by 47.6 px (right)"
+            "text overflows: {{Event_Details}} by 55.2 px (right)"
           ]
         },
         {
@@ -7738,8 +7808,8 @@
               {
                 "node_id": "{{Participant_Name}}",
                 "lines": 1,
-                "min_size_px": 20.4,
-                "min_size_pt": 8.2,
+                "min_size_px": 8.8,
+                "min_size_pt": 3.5,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -7759,11 +7829,13 @@
             "fits": true,
             "overflowing": [],
             "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
-            "small_text": []
+            "min_size_px": 8.8,
+            "min_size_pt": 3.5,
+            "small_text": [
+              "{{Participant_Name}}"
+            ]
           },
-          "latency_ms": 14.35,
+          "latency_ms": 13.7,
           "passes": true,
           "problems": []
         },
@@ -7823,8 +7895,8 @@
               {
                 "node_id": "{{Participant_Role}}",
                 "lines": 1,
-                "min_size_px": 24.5,
-                "min_size_pt": 9.8,
+                "min_size_px": 9.5,
+                "min_size_pt": 3.8,
                 "overflow_px": 0.0,
                 "worst_side": null,
                 "overwrites": [],
@@ -7834,40 +7906,32 @@
             "fits": true,
             "overflowing": [],
             "overwriting": [],
-            "min_size_px": 16.3,
-            "min_size_pt": 6.5,
-            "small_text": []
+            "min_size_px": 9.5,
+            "min_size_pt": 3.8,
+            "small_text": [
+              "{{Participant_Role}}"
+            ]
           },
-          "latency_ms": 14.18,
+          "latency_ms": 13.77,
           "passes": true,
           "problems": []
         }
       ],
       "breaking_points": [
         {
-          "field": "Organization_Header",
+          "field": "Event_Details",
           "kind": "words",
-          "max_characters": 90,
-          "longest_passing": 48,
-          "shortest_failing": 49,
+          "max_characters": 160,
+          "longest_passing": 121,
+          "shortest_failing": 122,
           "problems": [
-            "text overflows: {{Organization_Header}} by 8.6 px (right)"
-          ]
-        },
-        {
-          "field": "Organization_Header",
-          "kind": "unbroken",
-          "max_characters": 90,
-          "longest_passing": 46,
-          "shortest_failing": 47,
-          "problems": [
-            "text overflows: {{Organization_Header}} by 12.2 px (right)"
+            "text overflows: {{Event_Details}} by 6.3 px (right)"
           ]
         },
         {
           "field": "Event_Details",
           "kind": "unbroken",
-          "max_characters": 80,
+          "max_characters": 160,
           "longest_passing": 50,
           "shortest_failing": 51,
           "problems": [
@@ -7878,38 +7942,38 @@
       "over_max_rejected": [
         {
           "field": "{{Organization_Header}}",
-          "length": 91,
-          "max_characters": 90,
+          "length": 151,
+          "max_characters": 150,
           "rejected": true,
-          "error": "{{Organization_Header}}: 'Camarines Sur Polytechnic Colleges Department of Information Technology Leadership Developm' is too long"
+          "error": "{{Organization_Header}}: 'Camarines Sur Polytechnic Colleges Department of Information Technology Leadership Development Excellence Outstanding Participation Recognition Academi' is too long"
         },
         {
           "field": "{{Event_Title}}",
-          "length": 41,
-          "max_characters": 40,
-          "rejected": true,
-          "error": "{{Event_Title}}: 'Camarines Sur Polytechnic Colleges Depart' is too long"
-        },
-        {
-          "field": "{{Event_Details}}",
           "length": 81,
           "max_characters": 80,
           "rejected": true,
-          "error": "{{Event_Details}}: 'Camarines Sur Polytechnic Colleges Department of Information Technology Leadershi' is too long"
+          "error": "{{Event_Title}}: 'Camarines Sur Polytechnic Colleges Department of Information Technology Leadershi' is too long"
+        },
+        {
+          "field": "{{Event_Details}}",
+          "length": 161,
+          "max_characters": 160,
+          "rejected": true,
+          "error": "{{Event_Details}}: 'Camarines Sur Polytechnic Colleges Department of Information Technology Leadership Development Excellence Outstanding Participation Recognition Academic Internat' is too long"
         },
         {
           "field": "{{Participant_Name}}",
-          "length": 31,
-          "max_characters": 30,
+          "length": 61,
+          "max_characters": 60,
           "rejected": true,
-          "error": "{{Participant_Name}}: 'Maria Angela Santos Dela Cruz J' is too long"
+          "error": "{{Participant_Name}}: 'Maria Angela Santos Dela Cruz Juan Miguel Reyes Kristine Joyx' is too long"
         },
         {
           "field": "{{Participant_Role}}",
-          "length": 25,
-          "max_characters": 24,
+          "length": 49,
+          "max_characters": 48,
           "rejected": true,
-          "error": "{{Participant_Role}}: 'Camarines Sur Polytechnic' is too long"
+          "error": "{{Participant_Role}}: 'Camarines Sur Polytechnic Colleges Department ofx' is too long"
         }
       ],
       "signatures": []
@@ -7918,30 +7982,43 @@
   "summary": {
     "certificate": {
       "runs": 33,
-      "passed": 24,
+      "passed": 19,
       "reference_passes": true,
-      "first_failure_words": null,
-      "first_failure_unbroken": {
-        "case": "all at 75% unbroken",
+      "first_failure_words": {
+        "case": "all at 50% words",
         "problems": [
+          "text overflows: {{Issuing_Organization}} by 50.3 px (left)"
+        ]
+      },
+      "first_failure_unbroken": {
+        "case": "all at 50% unbroken",
+        "problems": [
+          "text overflows: {{Issuing_Organization}} by 71.3 px (left)",
           "text overflows: {{Citation_Body}} by 14.6 px (left)"
         ]
       },
       "fields_failing_alone_at_max": [
+        "words Issuing_Organization",
         "unbroken Issuing_Organization",
         "unbroken Citation_Body"
       ],
       "breaking_points": [
         {
           "field": "Issuing_Organization",
+          "kind": "words",
+          "max_characters": 150,
+          "shortest_failing": 64
+        },
+        {
+          "field": "Issuing_Organization",
           "kind": "unbroken",
-          "max_characters": 60,
+          "max_characters": 150,
           "shortest_failing": 59
         },
         {
           "field": "Citation_Body",
           "kind": "unbroken",
-          "max_characters": 150,
+          "max_characters": 300,
           "shortest_failing": 98
         }
       ],
@@ -7959,20 +8036,20 @@
         "9": 0,
         "10": 0
       },
-      "smallest_text_pt": 7.8,
+      "smallest_text_pt": 7.5,
       "field_sizes": {
         "Issuing_Organization": {
           "reference_px": 17.3,
           "reference_pt": 11.4,
-          "smallest_px": 17.3,
-          "smallest_pt": 11.4,
+          "smallest_px": 14.6,
+          "smallest_pt": 9.6,
           "smallest_in": "all at 100% unbroken"
         },
         "Certificate_Title": {
           "reference_px": 52.8,
           "reference_pt": 34.8,
-          "smallest_px": 35.2,
-          "smallest_pt": 23.2,
+          "smallest_px": 16.8,
+          "smallest_pt": 11.1,
           "smallest_in": "all at 100% unbroken"
         },
         "Presentation_Line": {
@@ -7985,22 +8062,22 @@
         "Student_Name": {
           "reference_px": 47.4,
           "reference_pt": 31.3,
-          "smallest_px": 20.4,
-          "smallest_pt": 13.5,
+          "smallest_px": 15.0,
+          "smallest_pt": 9.9,
           "smallest_in": "all at 100% unbroken"
         },
         "Citation_Body": {
           "reference_px": 17.3,
           "reference_pt": 11.4,
-          "smallest_px": 17.3,
-          "smallest_pt": 11.4,
-          "smallest_in": "all at 100% unbroken"
+          "smallest_px": 15.9,
+          "smallest_pt": 10.5,
+          "smallest_in": "all at 100% words"
         },
         "Date_Issued": {
           "reference_px": 13.5,
           "reference_pt": 8.9,
-          "smallest_px": 13.5,
-          "smallest_pt": 8.9,
+          "smallest_px": 11.4,
+          "smallest_pt": 7.5,
           "smallest_in": "all at 100% unbroken"
         },
         "Certificate_ID": {
@@ -8014,84 +8091,77 @@
     },
     "event_id": {
       "runs": 19,
-      "passed": 12,
+      "passed": 11,
       "reference_passes": true,
       "first_failure_words": {
-        "case": "all at 75% words",
+        "case": "all at 50% words",
         "problems": [
           "text overflows: {{Organization_Header}} by 143.2 px (right)"
         ]
       },
       "first_failure_unbroken": {
-        "case": "all at 75% unbroken",
+        "case": "all at 50% unbroken",
         "problems": [
           "text overflows: {{Organization_Header}} by 189.9 px (right)",
           "text overflows: {{Event_Details}} by 47.6 px (right)"
         ]
       },
       "fields_failing_alone_at_max": [
-        "words Organization_Header",
-        "unbroken Organization_Header",
+        "words Event_Details",
         "unbroken Event_Details"
       ],
       "breaking_points": [
         {
-          "field": "Organization_Header",
+          "field": "Event_Details",
           "kind": "words",
-          "max_characters": 90,
-          "shortest_failing": 49
-        },
-        {
-          "field": "Organization_Header",
-          "kind": "unbroken",
-          "max_characters": 90,
-          "shortest_failing": 47
+          "max_characters": 160,
+          "shortest_failing": 122
         },
         {
           "field": "Event_Details",
           "kind": "unbroken",
-          "max_characters": 80,
+          "max_characters": 160,
           "shortest_failing": 51
         }
       ],
       "over_max_all_rejected": true,
       "signatures_largest_count_passing_from_1": null,
       "signatures_clean_candidates": {},
-      "smallest_text_pt": 6.5,
+      "smallest_text_pt": 3.3,
       "field_sizes": {
         "Organization_Header": {
           "reference_px": 16.3,
           "reference_pt": 6.5,
-          "smallest_px": 16.3,
-          "smallest_pt": 6.5,
+          "smallest_px": 11.7,
+          "smallest_pt": 4.7,
           "smallest_in": "all at 100% unbroken"
         },
         "Event_Title": {
           "reference_px": 74.8,
           "reference_pt": 29.9,
-          "smallest_px": 17.7,
-          "smallest_pt": 7.1,
+          "smallest_px": 8.2,
+          "smallest_pt": 3.3,
           "smallest_in": "all at 100% unbroken"
         },
         "Event_Details": {
           "reference_px": 18.2,
           "reference_pt": 7.3,
-          "smallest_px": 18.2,
-          "smallest_pt": 7.3,
+          "smallest_px": 14.2,
+          "smallest_pt": 5.7,
           "smallest_in": "all at 100% unbroken"
         },
         "Participant_Name": {
           "reference_px": 64.8,
           "reference_pt": 25.9,
-          "smallest_px": 20.4,
-          "smallest_pt": 8.2,
+          "smallest_px": 8.8,
+          "smallest_pt": 3.5,
           "smallest_in": "all at 100% unbroken"
         },
         "Participant_Role": {
           "reference_px": 47.3,
           "reference_pt": 18.9,
-          "smallest_px": 24.5,
-          "smallest_pt": 9.8,
+          "smallest_px": 9.5,
+          "smallest_pt": 3.8,
           "smallest_in": "all at 100% unbroken"
         }
       }

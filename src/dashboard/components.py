@@ -14,6 +14,7 @@ import functools
 import hashlib
 import html
 import io
+import json
 import os
 import re
 import sys
@@ -32,6 +33,7 @@ if SRC not in sys.path:
     sys.path.insert(0, SRC)
 
 import rasterize                                   # noqa: E402 — first: Cairo gets the bundled fonts
+import mail_merge                                  # noqa: E402
 import pipeline                                    # noqa: E402
 from layout_extractor import LayoutExtractor       # noqa: E402
 from stylistic_markers import cover, cut_out       # noqa: E402
@@ -1242,6 +1244,35 @@ def images_panel(session) -> None:
         _tiles("Uploads", my_uploads(), empty="Pictures you upload, or drop on the canvas, appear here.")
         st.html(_TILES_JS, unsafe_allow_javascript=True)
         st.divider()
+
+
+def mail_merge_download(session, state: dict, key: str = "merge") -> None:
+    """The mail merge's download (Step 2's Download menu, Step 3's
+    downloads): the current layout once per CSV row (mail_merge.py), as PNG
+    or PDF files in a ZIP, built on request. `key` keeps the two pages'
+    widgets apart."""
+    merge = session.merge
+    if not merge or not merge.get("rows"):
+        return
+    st.divider()
+    st.caption(f"Mail merge: {len(merge['rows'])} layouts from {merge['source']}, with "
+               f"{', '.join(merge['labels'].values())} filled in from each row.")
+    fmt = st.segmented_control("Format", ["PNG", "PDF"], default="PNG", key=f"{key}_fmt",
+                               label_visibility="collapsed") or "PNG"
+    stamp = (id(session), state["state_id"], fmt, json.dumps(session.typography, sort_keys=True))
+    built = st.session_state.get("merge_zip")
+    if not (built and built[0] == stamp and os.path.exists(built[1])):
+        if not st.button(f"Build {len(merge['rows'])} layouts ({fmt})", icon=":material/folder_zip:",
+                         width="stretch", key=f"{key}_build"):
+            return
+        bar = st.progress(0.0, text="Rendering…")
+        path = mail_merge.zip_layouts(session, fmt.lower(),
+                                      progress=lambda done, total: bar.progress(done / total,
+                                                                                text=f"{done} of {total}"))
+        built = st.session_state["merge_zip"] = (stamp, path)
+    st.download_button(f"Download the ZIP ({os.path.getsize(built[1]) / 1e6:.1f} MB)", data=reader(built[1]),
+                       file_name=os.path.basename(built[1]), mime="application/zip", type="primary",
+                       icon=":material/download:", width="stretch")
 
 
 def back_to_step_one(key: str, label: str = "Step 1") -> None:

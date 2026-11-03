@@ -146,6 +146,11 @@ with preview_col, st.container(border=True, key="card_preview"):
     d3.download_button("PDF", data=lambda: open(rasterize.svg_to_pdf(svg), "rb").read(),
                        file_name=os.path.basename(svg).replace(".svg", ".pdf"), mime="application/pdf",
                        icon=":material/download:", width="stretch")
+    merge = session.merge
+    if merge and merge.get("rows"):          # the mail merge: one layout per person (§3.67)
+        with st.popover(f"Mail merge · {len(merge['rows'])} layouts", icon=":material/folder_zip:",
+                        width="stretch"):
+            ui.mail_merge_download(session, session.chain.current, key="report_merge")
     master = st.session_state.get("orch_master")
     if master and os.path.exists(master):
         with st.popover("Master layout (theme source)", icon=":material/image:", width="stretch"):

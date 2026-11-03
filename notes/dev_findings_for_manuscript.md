@@ -1206,3 +1206,114 @@ the pipeline".
 |---|---|---|
 | p.55 (Phase 1) | Tesseract OCR "labelled the detected text regions …; the words placed in the generated layouts came from the user's validated content payload" | Still true. Optional: "…and suggested the poster's header, date and venue for the content payload, which the user confirmed or edited". |
 | p.107 (Chapter 5, Recommendation 2) | "limit the certificate to five signature blocks" | Now done in the system (1 to 5). The recommendation still stands as written for the study's evaluated version. |
+
+## J. Results re-run for the reprint — 2026-11-04
+
+The user asked to re-run what the latest system changes, to reprint only
+the pages that change. "p." is **Manu 1210.2's printed page**.
+
+**What was re-run, and why.** Since 1210.2, two things changed what a test
+measures:
+- the content schema's character limits were raised (dev notes §3.66), and
+  the stress test fills fields at fractions of those limits;
+- editing re-solves around the designer's boxes and pictures (§3.59–3.63),
+  and OCR now works on the workstation (finding I3).
+
+So `stress_test.py` and `latency_benchmark.py` were re-run on the same RTX
+3060 workstation as the recorded runs (`results/stress_test.json`,
+`results/latency_benchmark.json`, `results/figures/fig4_latency.*`). The
+latency was re-run once more after a first run overlapped a dashboard
+session (its scoring step was 20% slower); the numbers below are from the
+idle run.
+
+**Unchanged, no reprint:** layout generation, the 64 rated layouts, the
+Phase 3 battery, F1, IoU, Phase 4 (MOS and post hoc), Tables 1–10 and
+13–15. Generation and evaluate.py's simulated edits were checked
+identical to the code the experts rated (dev notes §3.59–3.64). All other
+figures re-rendered pixel-identical.
+
+### J1. p.86: Table 11 and the paragraph after it (the stress test)
+
+The renderer didn't change, so the absolute breaking points are the same
+(an unbroken issuing organization from 59 characters, an unbroken
+citation from 98, unbroken event details from 51, the event-ID header's
+lines over 48 characters). With higher limits the test reaches longer
+text, so more runs fail on text fit: certificate 19 of 33 runs clean
+(was 24), event ID 11 of 19 (was 12). F1, reading order, the over-limit
+rejections and the signature results are unchanged.
+
+| Table 11 row | Now (old limits) | New (raised limits) |
+|---|---|---|
+| Every field at its maximum (real words), certificate | All text fit | The issuing organization overflowed (60 px) |
+| … event ID | The organization header overflowed | The event details overflowed (37 px); the 150-character header wrapped onto three lines at 4.7 pt |
+| First failure (real words), certificate | None | Issuing organization from 64 of 150 characters |
+| … event ID | Organization header from 49 of 90 characters | Organization header from 49 of 150 characters (unchanged renderer; from about 60 characters it wraps, and at 150 it fits at 4.7 pt) |
+| First failure (one unbroken string), certificate | Citation from 98 of 150 characters | Issuing organization from 59 of 150; citation from 98 of 300 |
+| … event ID | Event details from 51 of 80 characters | Event details from 51 of 160 characters |
+| Maximum + 1 character | Rejected (all 7 / all 5 fields) | Unchanged |
+| Reading order, F1-score, signature blocks | Held; 1.0; clean up to 5, overlapping from 6 (F1 0.92) | Unchanged |
+
+**The paragraph after it:**
+- "The certificate's name shrank from 31.3 to 13.5 points to fit 60
+  characters" → **"from 31.3 to 9.9 points to fit 80 characters"**.
+- "event ID header lines over 48 characters overflowed, and from about 56
+  characters they ran past the canvas edge": still true.
+- **New, worth one sentence:** at the event ID's new limits, a 60-character
+  participant name shrank to 3.5 points and a 48-character role to 3.8
+  points (smallest text 3.3 points, the event title, as one unbroken
+  string). The certificate's smallest text was 7.5 points (was 7.8). The
+  higher limits let long names in, and the fixed templates fit them by
+  shrinking; that fits the existing limitation ("Long organization names
+  … need handling").
+
+### J2. p.88: Table 12 and its paragraph (latency)
+
+| Table 12 | Edits | Median | 95th pct. | Max | 0.1 s | 1.0 s |
+|---|---|---|---|---|---|---|
+| Solver | 1,012 | 0.4 → **0.5 ms** | 0.8 → **1.2 ms** | 95.9 ms(a) → **2.1 ms** | 100% | 100% |
+| Full edit | 1,360 | 90 → **91 ms** | 176 → **175 ms** | 206 → **226 ms** | 61% | 100% |
+| Certificate | 680 | 146 → **149 ms** | 182 → **181 ms** | 206 → **226 ms** | 29% | 100% |
+| Event ID | 680 | 86 ms | 103 ms | 159 → **127 ms** | 93% → **92%** | 100% |
+
+- **Footnote (a) goes:** no solve was paused by the operating system in this
+  run; the slowest took 2.1 ms. The note's means become: solver **0.55 ms
+  (SD 0.30)**; full edit **91.0 ms (SD 57.9)**.
+- **Paragraph:** "Every recalculation finished within 0.1 seconds, and all
+  but one, paused by the operating system, within 1.9 milliseconds" →
+  **"Every recalculation finished within 2.1 milliseconds."** "61%" stays.
+  "median 146 against 86 milliseconds" → **"149 against 86"**.
+
+### J3. p.89: Figure 7 and the paragraph after it
+
+- **Figure 7:** replace with the new `results/figures/fig4_latency.png`
+  (or `.pdf`); the curves barely move.
+- "Edits that only re-drew the canvas … a median of 12 milliseconds":
+  unchanged (12.4 ms).
+- "Edits that re-solved the layout (moves, resizes, and locks) had a median
+  of 105 milliseconds, and 48% of them finished within 0.1 seconds" →
+  **"a median of 104 milliseconds, and 47% of them"**.
+- "Opening a layout, which ran every stage of the pipeline, took a median of
+  3.4 seconds" → **"4.6 seconds"**. The 3.4 s run had no working OCR on the
+  workstation (finding I3); the new figure includes it, so I3's caveat is
+  no longer needed.
+
+### J4. p.106: Chapter 5, Finding 2
+
+- "Every constraint recalculation finished within 0.1 seconds (median 0.4
+  milliseconds), and every full edit within 1.0 second (median 90
+  milliseconds); 48% of the edits that re-solved the layout finished within
+  0.1 seconds" → **"median 0.5 milliseconds"**, **"median 91
+  milliseconds"**, **"47%"**.
+- "the event ID's organization header overflowed its box beyond 48
+  characters per line": still true.
+
+### J5. pp.110–111: Appendix B (the certificate's payload)
+
+Appendix B prints `data/raw/academic_payload.json`. Its `max_characters`
+values are now: Issuing_Organization **150** (was 60), Certificate_Title
+**80** (40), Presentation_Line **60** (30), Student_Name **80** (60),
+Citation_Body **300** (150), Date_Issued **60** (30), Certificate_ID
+**40** (20). Nothing else in the file changed.
+
+**Pages to reprint: 86, 88, 89, 106, 110, 111.** Check after the edit that
+each still fits its page (Table 11's cells grow by a few words).
