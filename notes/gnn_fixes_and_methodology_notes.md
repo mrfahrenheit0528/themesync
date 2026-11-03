@@ -4160,3 +4160,32 @@ Nothing here changes how a layout is generated, solved or scored.
     and left the others; Certificate Title's dropdown showed "Layout's
     own"; picking "Layout's own" again cleared it; "All text" → Black
     set the title to 900. No exceptions.
+- **Step 2: pictures dropped on the canvas, an Images sidebar, and a live
+  thumbnail** (the user's requests):
+  - **Drop a picture file on the canvas** (PNG, JPG or WEBP, up to
+    10 MB): the canvas outlines itself while one is dragged over, sends
+    the file (`add-picture`), and the session saves it with the other
+    uploads and adds it centred where it fell, about a fifth of the
+    canvas tall (`add_element(..., at=(x, y))`, a new optional argument;
+    without it, placement is as before).
+  - **Images, in the retractable left sidebar (»), as in Canva:** the
+    master's logos, its title artwork, motifs and background ("From the
+    poster"), and the pictures uploaded in this browser session
+    ("Uploads": the poster, Step 1's replacements, Step 2's pictures, and
+    an upload box of its own). Drag a tile onto the canvas to place it
+    there, or click it to add it in the layout's largest empty space. On
+    Step 2 the panel sits above the workflow links; the top bar's buttons
+    show their icons only while the sidebar narrows the page.
+  - **The thumbnail of the candidate on the canvas shows the canvas
+    itself,** re-drawn on every state (a move, nudge, drop, edit). The
+    others are re-drawn, as before, only when the words, typography,
+    styles or added/removed elements change ("Rendering the
+    candidates…"): those are what every candidate shares; a move only
+    changes the layout on the canvas.
+  - An added picture is named "Picture n" in the panel (it read
+    "Motif n+1").
+  - Checked in Edge on a full run: a dropped file, a dragged logo tile
+    and a clicked title-artwork tile each added a picture (Picture 1–3),
+    the first and second where they were dropped; the active thumbnail
+    changed after the drop and after a nudge; no exceptions. The 12
+    pipeline tests pass (`add_element` changed).

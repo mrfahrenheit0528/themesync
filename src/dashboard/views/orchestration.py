@@ -53,6 +53,8 @@ PENALTIES = (("Collision", "P_collision", "3.12"), ("Alignment", "P_align", "3.1
 
 
 def _friendly(node: dict) -> str:
+    if node["node_id"].startswith("Added_"):            # Added_Picture_1 → Picture 1 (was "Motif 2")
+        return node["node_id"][len("Added_"):].replace("_", " ")
     if node.get("structural_class") == "decor":
         return f"Motif {int(node['node_id'].rsplit('_', 1)[1]) + 1} ({node.get('slot', 'decor')})"
     return node["node_id"].replace("{", "").replace("}", "").replace("_", " ").strip()
@@ -257,6 +259,7 @@ def _mail_merge_download(session, state: dict) -> None:
 
 session = st.session_state["orch"]
 state = session.chain.current
+ui.images_panel(session)                                # the left sidebar's Images, as in Canva
 nodes = state["nodes"]
 node_by_id = {n["node_id"]: n for n in nodes}
 svg = session.rendered_path
@@ -316,6 +319,16 @@ with canvas_col:
                 uris[cid] = ui.data_uri(im, "JPEG")
         cached = {"key": thumbs_key, "items": items, "uris": uris}
         st.session_state["orch_thumbs"] = cached
+    # The candidate on the canvas shows the canvas itself, so a move, nudge
+    # or added picture shows in its thumbnail too (one render per state; the
+    # other candidates' layouts don't change when this one is edited)
+    live_key = (id(session), state["state_id"], os.stat(session.rendered_path).st_mtime_ns)
+    live = st.session_state.get("orch_live_thumb")
+    if not live or live[0] != live_key:
+        with Image.open(ui.png_of(session.rendered_path, 0.35)) as im:
+            im = im.convert("RGB")
+            im.thumbnail((360, 180))
+            live = st.session_state["orch_live_thumb"] = (live_key, ui.data_uri(im, "JPEG"))
 
     with st.container(horizontal=True, key="reco_strip", vertical_alignment="center", gap="small"):
         st.markdown('<div class="ts-strip-label">Recommendations<small>ranked by Formula 3.11 · '
@@ -326,7 +339,8 @@ with canvas_col:
             in_use = on_canvas and state["event"].get("type") == "candidate"
             rec = " rec" if cand.get("chosen_because") else ""
             with st.container(key=f"cand_{'on_' if on_canvas else ''}{cid}", width="content", gap=None):
-                st.markdown(f'<div class="ts-cand{rec}"><img src="{cached["uris"][cid]}" alt=""><b>{rank}</b></div>',
+                thumb = live[1] if on_canvas else cached["uris"][cid]
+                st.markdown(f'<div class="ts-cand{rec}"><img src="{thumb}" alt=""><b>{rank}</b></div>',
                             unsafe_allow_html=True)
                 if st.button(f"{cid.replace('_', ' ')}: details", key=f"candbtn_{cid}",
                              help=f"#{rank} · {cid.replace('_', ' ')} · C_total {cand['c_total']:.4f}"):

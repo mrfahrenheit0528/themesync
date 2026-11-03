@@ -1203,11 +1203,12 @@ class OrchestrationSession:
         return {"added": copy.deepcopy(self.added), "removed": list(self.removed)}
 
     @_timed_event
-    def add_element(self, kind: str, value: str) -> dict:
+    def add_element(self, kind: str, value: str, at: tuple = None) -> dict:
         """Adds an element to the layout: kind "text" (value: its words)
         joins the stack after the format's own elements, Soft, so the solver
         places it and the others re-flow; kind "picture" (value: an image
-        file) floats like a motif, in the largest empty gap. Either can then
+        file) floats like a motif, in the largest empty gap, or centred on
+        `at` (x, y on the canvas) when it was dropped there. Either can then
         be moved, resized, styled or deleted."""
         if kind not in ("text", "picture"):
             raise ValueError("An added element is text or a picture")
@@ -1231,7 +1232,14 @@ class OrchestrationSession:
             boxes = sorted((n["bbox"] for n in current["nodes"] if n.get("structural_class") != "decor"),
                            key=lambda b: b[1])
             gaps = [(a[1] + a[3], b[1]) for a, b in zip(boxes, boxes[1:]) if b[1] - (a[1] + a[3]) >= 0.06 * H]
-            if gaps:
+            if at is not None:
+                # dropped on the canvas: centred where it fell, about a fifth
+                # of the canvas tall, kept inside it
+                h = min(min(W, H) * 0.22, W * 0.5 / aspect)
+                w = h * aspect
+                box = [min(max(float(at[0]) - w / 2.0, 0.0), W - w), min(max(float(at[1]) - h / 2.0, 0.0), H - h),
+                       w, h]
+            elif gaps:
                 top, bottom = max(gaps, key=lambda g: g[1] - g[0])
                 h = min((bottom - top) * 0.8, W * 0.5 / aspect)
                 box = [(W - h * aspect) / 2.0, top + ((bottom - top) - h) / 2.0, h * aspect, h]

@@ -175,3 +175,5 @@
 .ts-msg:empty { display: none; }
 .ts-msg.error { color: #dc2626; font-weight: 600; white-space: pre-line; }
 .ts-msg.warn { color: #b45309; font-weight: 600; }
+/* A picture dragged over the canvas (a file, or a tile from the Images sidebar) */
+.ts-root.ts-dropping .ts-stage { outline: 3px dashed #cf4836; outline-offset: 4px; }

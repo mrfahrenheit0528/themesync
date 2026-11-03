@@ -9,6 +9,7 @@ The active canvas edited in place, like a design tool:
   double-click       edit its words (Enter saves)     → text-edit
   arrow keys         nudge 1 px (Shift: 10 px), sent as one on-drop
   L                  lock where it is / release       → lock-toggle
+  drop a picture     a file, or an Images sidebar tile → add-picture
   Ctrl+Z, Ctrl+Shift+Z   undo, redo
 
 The canvas is the page itself: the selected node's controls (undo, redo,
@@ -251,6 +252,16 @@ def _on_event(session, key: str, friendly) -> None:
             new = session.remove_element(node_id)
             st.session_state.pop("sel_node", None)
             node_id = None
+        elif kind == "add-picture":
+            # a picture file dropped on the canvas, or one of the Images
+            # sidebar's tiles (dropped, or clicked: no position)
+            path = (ui.asset_path(str(event["asset"])) if event.get("asset")
+                    else ui.save_data_uri(str(event.get("data", "")), str(event.get("name", ""))))
+            if not path or not os.path.exists(path):
+                raise ValueError("That picture is no longer available; upload it again.")
+            at = event.get("at")
+            new = session.add_element("picture", path, at=(float(at[0]), float(at[1])) if at else None)
+            node_id = new["event"]["node_id"]
         elif kind == "undo":
             new = session.undo()
         elif kind == "redo":

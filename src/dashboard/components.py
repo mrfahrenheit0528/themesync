@@ -60,7 +60,78 @@ def save_upload(uploaded_file, directory: str = UPLOAD_DIR, prefix: str = "") ->
     if not os.path.exists(path):
         with open(path, "wb") as f:
             f.write(data)
+    remember_upload(path)
     return path
+
+
+# ---------------------------------------------------------------------------
+# Images: the pictures a designer uploaded in this browser session, and the
+# keys the Images sidebar and the canvas use for them (notes §3.58)
+# ---------------------------------------------------------------------------
+
+IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".webp")
+_UPLOADS = "_my_uploads"       # this session's uploaded pictures, newest last
+_ASSETS = "_image_assets"      # key → path of every picture the sidebar shows
+
+
+def remember_upload(path: str) -> None:
+    if path.lower().endswith(IMAGE_EXTS):
+        uploads = [p for p in st.session_state.get(_UPLOADS, []) if p != path]
+        st.session_state[_UPLOADS] = uploads + [path]
+
+
+def my_uploads() -> list:
+    """This session's uploaded pictures that still exist, newest first."""
+    return [p for p in reversed(st.session_state.get(_UPLOADS, [])) if os.path.exists(p)]
+
+
+def asset_key(path: str) -> str:
+    """A short key for a picture, registered so the canvas can name it."""
+    key = hashlib.sha1(os.path.abspath(path).encode("utf-8")).hexdigest()[:12]
+    st.session_state.setdefault(_ASSETS, {})[key] = path
+    return key
+
+
+def asset_path(key: str):
+    return st.session_state.get(_ASSETS, {}).get(key)
+
+
+MAX_DROP_BYTES = 10 * 1024 * 1024
+
+
+def save_data_uri(uri: str, name: str, prefix: str = "element_") -> str:
+    """Saves a picture the browser sent as a data: URI (a file dropped on
+    the canvas), as save_upload saves an upload. Raises ValueError for
+    anything but a PNG, JPEG or WEBP under 10 MB."""
+    match = re.match(r"data:image/(png|jpeg|webp);base64,(.+)", uri or "", re.S)
+    if not match:
+        raise ValueError("Drop a PNG, JPG or WEBP picture.")
+    data = base64.b64decode(match.group(2))
+    if len(data) > MAX_DROP_BYTES:
+        raise ValueError("That picture is over 10 MB.")
+    try:
+        with Image.open(io.BytesIO(data)) as im:
+            im.verify()
+    except Exception:
+        raise ValueError("That file isn't a picture ThemeSync can read.")
+    base = os.path.splitext(safe_name(name or "picture"))[0] or "picture"
+    ext = {"png": ".png", "jpeg": ".jpg", "webp": ".webp"}[match.group(1)]
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+    path = os.path.join(UPLOAD_DIR, f"{prefix}{base}_{hashlib.sha1(data).hexdigest()[:8]}{ext}")
+    if not os.path.exists(path):
+        with open(path, "wb") as f:
+            f.write(data)
+    remember_upload(path)
+    return path
+
+
+@st.cache_data(show_spinner=False, max_entries=400)
+def thumb_uri(path: str, mtime: float, size: int = 160) -> str:
+    """A small PNG data: URI of a picture, transparency kept (sidebar tiles)."""
+    with Image.open(path) as im:
+        im = im.convert("RGBA")
+        im.thumbnail((size, size))
+        return data_uri(im, "PNG")
 
 
 @st.cache_resource(show_spinner="Loading the YOLO detector...")
@@ -670,6 +741,19 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
   padding: .15rem .2rem .15rem .55rem;}
 .st-key-merge_note [data-testid="stElementContainer"]:has([data-testid="stMarkdownContainer"]) {flex: 1;}
 .st-key-merge_note button {min-height: 1.7rem; padding: 0 .35rem;}
+/* Step 2's Images sidebar (ui.images_panel): tiles on a checkerboard, so
+   transparent cut-outs read as such; drag one onto the canvas */
+.ts-assets-h {font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: #5b6370; margin: .55rem 0 .35rem;}
+.ts-assets {display: grid; grid-template-columns: repeat(3, 1fr); gap: .4rem;}
+.ts-asset {aspect-ratio: 1; border-radius: 10px; border: 1px solid #e0e3e8; cursor: grab; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; padding: 6px;
+  background: repeating-conic-gradient(#eef0f3 0 25%, #fff 0 50%) 0 0 / 14px 14px;
+  transition: box-shadow .12s, transform .12s;}
+.ts-asset:hover {box-shadow: 0 0 0 2px #e8735a; transform: translateY(-1px);}
+.ts-asset:active {cursor: grabbing;}
+.ts-asset img {max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none;}
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"]:has(> .ts-assets-h) {margin-bottom: 0 !important;}
 /* A field the mail merge fills from the list: locked, and plainly so */
 [class*="st-key-merged_content_"] :is([data-testid="stTextInputRootElement"], [data-testid="stTextAreaRootElement"],
   [data-baseweb="input"], [data-baseweb="textarea"]) {
@@ -880,6 +964,10 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
   .st-key-s2_actions button:not([data-testid="stBaseButton-primary"]) [data-testid="stMarkdownContainer"] {
     display: none;}
 }
+/* ...and so they do while the sidebar (Images) is open and narrows the page */
+body:has([data-testid="stSidebar"][aria-expanded="true"])
+  .st-key-s2_actions button:not([data-testid="stBaseButton-primary"]) [data-testid="stMarkdownContainer"] {
+  display: none;}
 :is(.st-key-reco_strip, .st-key-ts_panel) [data-testid="stMarkdownContainer"]:has(> div[class^="ts-"]) {
   margin-bottom: 0 !important;}
 .ts-section {font-size: .7rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
@@ -1055,6 +1143,8 @@ def sidebar() -> None:
     research tools, which sit outside the workflow."""
     now = current_step()
     with st.sidebar:
+        # A page's own panel goes above the workflow (Step 2's Images)
+        st.session_state["_sidebar_top"] = st.container()
         st.markdown("**Workflow**")
         for n, page, title, icon in STEPS:
             st.page_link(page, label=f"Step {n} · {title}", icon=icon, disabled=n != now)
@@ -1062,6 +1152,64 @@ def sidebar() -> None:
         st.markdown("**Research tools**")
         for page, title, icon in RESEARCH_PAGES:
             st.page_link(page, label=title, icon=icon)
+
+
+# The Images sidebar's tiles: dragged onto the canvas they carry their key;
+# clicked, they ask the canvas (canvas_editor.js) to add them.
+_TILES_JS = """<script>
+(() => {
+  if (window.__tsTiles) return;
+  window.__tsTiles = true;
+  const doc = window.parent && window.parent !== window ? window.parent.document : document;
+  doc.addEventListener('dragstart', e => {
+    const t = e.target.closest && e.target.closest('[data-ts-asset]');
+    if (!t) return;
+    e.dataTransfer.setData('application/x-themesync-asset', t.dataset.tsAsset);
+    e.dataTransfer.effectAllowed = 'copy';
+  }, true);
+  doc.addEventListener('click', e => {
+    const t = e.target.closest && e.target.closest('[data-ts-asset]');
+    if (t) doc.dispatchEvent(new CustomEvent('themesync-add-asset', {detail: {asset: t.dataset.tsAsset}}));
+  }, true);
+})();
+</script>"""
+
+
+def _tiles(title: str, paths: list, empty: str = None) -> None:
+    paths = [p for p in dict.fromkeys(paths) if p and os.path.exists(p)]
+    if not paths and not empty:
+        return
+    tiles = "".join(
+        f'<div class="ts-asset" draggable="true" data-ts-asset="{asset_key(p)}" '
+        f'title="{html.escape(os.path.basename(p))} · drag onto the canvas, or click to add">'
+        f'<img src="{thumb_uri(p, os.path.getmtime(p))}" alt="" draggable="false"></div>' for p in paths)
+    st.markdown(f'<div class="ts-assets-h">{html.escape(title)}</div>'
+                + (f'<div class="ts-assets">{tiles}</div>' if paths else f'<div class="ts-note">{empty}</div>'),
+                unsafe_allow_html=True)
+
+
+def images_panel(session) -> None:
+    """Step 2's Images, in the retractable left sidebar as in Canva: the
+    master's logos and stylistic markers, and the pictures uploaded in this
+    session. Drag one onto the canvas to place it there, or click it to add
+    it in the layout's largest empty space."""
+    top = st.session_state.get("_sidebar_top")
+    if top is None:
+        return
+    kit = session.style_kit or {}
+    marks = [(kit.get("wordmark") or {}).get("path"), *[m.get("path") for m in kit.get("motifs") or []]]
+    with top:
+        st.markdown("**Images**")
+        st.caption("Drag a picture onto the canvas, or click it to add it.")
+        _tiles("Logos", [*(session.logos.get("row") or []), session.logos.get("primary")])
+        _tiles("From the poster", [*marks, kit.get("background")])
+        ups = st.file_uploader("Upload images", type=["png", "jpg", "jpeg", "webp"], accept_multiple_files=True,
+                               key="sidebar_uploads", label_visibility="collapsed")
+        for up in ups or []:
+            save_upload(up, prefix="element_")
+        _tiles("Uploads", my_uploads(), empty="Pictures you upload, or drop on the canvas, appear here.")
+        st.html(_TILES_JS, unsafe_allow_javascript=True)
+        st.divider()
 
 
 def back_to_step_one(key: str, label: str = "Step 1") -> None:

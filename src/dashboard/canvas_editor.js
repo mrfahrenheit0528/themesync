@@ -13,6 +13,8 @@ const HANDLE_PX = 10;           // resize handle size, screen px
 const MIN_SIZE = 8;             // smallest box, canvas px
 const NUDGE_COMMIT_MS = 700;    // arrow-key nudges are sent as one on-drop after this pause
 const PENDING_TIMEOUT_MS = 60000;
+const ASSET_TYPE = "application/x-themesync-asset";   // a tile dragged from the Images sidebar
+const MAX_DROP = 10 * 1024 * 1024;                    // largest picture file dropped on the canvas
 const HANDLES = ["nw", "n", "ne", "e", "se", "s", "sw", "w"];
 const CURSORS = { nw: "nwse-resize", se: "nwse-resize", ne: "nesw-resize", sw: "nesw-resize",
                   n: "ns-resize", s: "ns-resize", e: "ew-resize", w: "ew-resize" };
@@ -85,6 +87,13 @@ class CanvasEditor {
     this.on(this.stage, "pointercancel", () => this.cancelDrag());
     this.on(this.stage, "pointerleave", () => this.setHover(null));
     this.on(this.stage, "dblclick", (e) => this.onDouble(e));
+    // Pictures dropped on the canvas: an image file from the computer, or a
+    // tile from the Images sidebar (views/orchestration.py); a click on a
+    // tile adds it too, in the layout's largest empty space
+    this.on(this.stage, "dragover", (e) => this.onDragOver(e));
+    this.on(this.stage, "dragleave", () => this.root.classList.remove("ts-dropping"));
+    this.on(this.stage, "drop", (e) => this.onDrop(e));
+    this.on(document, "themesync-add-asset", (e) => this.addAsset(e.detail && e.detail.asset, null));
     this.on(this.textarea, "keydown", (e) => this.onEditorKey(e));
     this.on(this.textarea, "input", () => this.updateCounter());
     this.on(this.textarea, "blur", () => this.commitText());
@@ -591,6 +600,43 @@ class CanvasEditor {
     } else if (act === "edit") {
       this.openEditor(node.id);
     }
+  }
+
+  // ---- pictures dropped or added from the sidebar -------------------------
+
+  dropKind(e) {
+    const types = [...((e.dataTransfer && e.dataTransfer.types) || [])];
+    return types.includes(ASSET_TYPE) ? "asset" : types.includes("Files") ? "file" : null;
+  }
+
+  onDragOver(e) {
+    if (!this.dropKind(e) || !this.data) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+    this.root.classList.add("ts-dropping");
+  }
+
+  onDrop(e) {
+    const kind = this.dropKind(e);
+    this.root.classList.remove("ts-dropping");
+    if (!kind || !this.data) return;
+    e.preventDefault();
+    const p = this.toCanvas(e);
+    const at = p ? [round1(p.x), round1(p.y)] : null;
+    if (kind === "asset") return this.addAsset(e.dataTransfer.getData(ASSET_TYPE), at);
+    const file = [...e.dataTransfer.files].find((f) => /^image\/(png|jpeg|webp)$/.test(f.type));
+    if (!file) return this.showMessage("Drop a PNG, JPG or WEBP picture.", true);
+    if (file.size > MAX_DROP) return this.showMessage("That picture is over 10 MB.", true);
+    if (this.pending) return;
+    const reader = new FileReader();
+    reader.onload = () => this.send({ type: "add-picture", name: file.name, data: reader.result, at });
+    reader.readAsDataURL(file);
+    this.showMessage(`Adding ${file.name}…`, false);
+  }
+
+  addAsset(asset, at) {
+    if (!asset || !this.data || this.pending) return;
+    this.send({ type: "add-picture", asset, at });
   }
 
   send(event) {
