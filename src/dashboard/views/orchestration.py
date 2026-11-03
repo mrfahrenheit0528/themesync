@@ -56,6 +56,8 @@ PENALTIES = (("Collision", "P_collision", "3.12"), ("Alignment", "P_align", "3.1
 def _friendly(node: dict) -> str:
     if node["node_id"] in canvas_editor.BACKGROUND_LABELS:
         return canvas_editor.BACKGROUND_LABELS[node["node_id"]]
+    if node["node_id"].startswith("ul_"):
+        return "Underlay · " + _friendly({"node_id": node["node_id"][3:]})
     if node["node_id"].startswith("Added_"):            # Added_Picture_1 → Picture 1 (was "Motif 2")
         return node["node_id"][len("Added_"):].replace("_", " ")
     if node.get("structural_class") == "decor":
@@ -189,6 +191,71 @@ def _background_tools(session, key: str, state: dict) -> None:
               key=f"bgop_{sid}",
               on_change=lambda: apply({"opacity": None if abs(st.session_state[f"bgop_{sid}"] - default) < 1e-6
                                        else st.session_state[f"bgop_{sid}"]}))
+    if "style_error" in st.session_state:
+        st.error(st.session_state.pop("style_error"))
+
+
+def _underlay_tools(session, key: str, state: dict, from_text: bool = False) -> None:
+    """A text's underlay (notes §3.67): its colour, shape, border, shadow,
+    opacity, hide or show, and reset; from the text, a button selects it to
+    move or resize it on the canvas (it follows the text until it is moved
+    on its own)."""
+    style = session.styles.get(key, {})
+    sid = f"{state['state_id']}_{re.sub(r'[^A-Za-z0-9_]', '', key)}"
+
+    def apply(changes: dict) -> None:
+        try:
+            new = session.set_style(key, changes)
+        except (KeyError, ValueError) as e:
+            st.session_state["style_error"] = str(e.args[0]) if e.args else str(e)
+            return
+        st.session_state["flash"] = f"{new['state_id']}: {new['event']['summary']}"
+
+    _section("Underlay")
+    if from_text:
+        s_col, a_col = st.columns(2, gap="small")
+        if s_col.button("Select it", icon=":material/select:", width="stretch", key=f"ulsel_{sid}",
+                        help="Select the underlay to move or resize it on its own"):
+            st.session_state["sel_node"] = key
+            st.rerun()
+        a_col.button("Attach to text", icon=":material/link:", width="stretch", key=f"ulatt_{sid}",
+                     disabled=not style.get("box"), help="Back under its text, the text's size",
+                     on_click=apply, args=({"box": None},))
+    palette = session.palette
+    extracted = (session.ingestion or {}).get("palette_hex") or []
+    swatches = list(dict.fromkeys(c.upper() for c in [palette["primary"], palette["accent"], palette["band"],
+                                                      *extracted, "#FFFFFF", "#000000"]))[:8]
+    css = "".join(f".st-key-sw_{sid}_{i} button {{background: {c} !important;}}" for i, c in enumerate(swatches))
+    st.markdown(f'<style>{css}</style><div class="ts-wlabel">Colour</div>', unsafe_allow_html=True)
+    with st.container(horizontal=True, key=f"swatches_{sid}", gap="small", vertical_alignment="center"):
+        for i, c in enumerate(swatches):
+            st.button(c, key=f"sw_{sid}_{i}", help=c, on_click=apply, args=({"fill": c},))
+        st.color_picker("Custom colour", value=style.get("fill") or "#FFFFFF", key=f"cp_{sid}",
+                        label_visibility="collapsed", help="Any colour",
+                        on_change=lambda: apply({"fill": st.session_state[f"cp_{sid}"].upper()}))
+    shapes = {"pill": "Pill", "rounded": "Rounded", "square": "Square"}
+    st.segmented_control("Shape", list(shapes), format_func=shapes.get, key=f"ulshape_{sid}",
+                         default=style.get("shape"),
+                         on_change=lambda: apply({"shape": st.session_state[f"ulshape_{sid}"]}))
+    b_col, w_col = st.columns([1, 1.2], gap="small")
+    with b_col:
+        st.color_picker("Border", value=style.get("stroke") or palette["accent"], key=f"ulst_{sid}",
+                        on_change=lambda: apply({"stroke": st.session_state[f"ulst_{sid}"].upper()}))
+    with w_col:
+        st.slider("Border width", 0.0, 12.0, float(style.get("stroke_width", 2.5)), 0.5, key=f"ulsw_{sid}",
+                  on_change=lambda: apply({"stroke_width": st.session_state[f"ulsw_{sid}"]}))
+    st.toggle("Shadow", value=bool(style.get("shadow")), key=f"ulsh_{sid}",
+              on_change=lambda: apply({"shadow": True if st.session_state[f"ulsh_{sid}"] else None}))
+    st.slider("Opacity", 0.1, 1.0, float(style.get("opacity", 1.0)), 0.05, key=f"ulop_{sid}",
+              on_change=lambda: apply({"opacity": st.session_state[f"ulop_{sid}"]
+                                       if st.session_state[f"ulop_{sid}"] < 1 else None}))
+    hidden = bool(style.get("hidden"))
+    h_col, r_col = st.columns(2, gap="small")
+    h_col.button("Show" if hidden else "Hide", icon=":material/visibility:" if hidden else ":material/visibility_off:",
+                 width="stretch", key=f"ulhide_{sid}", on_click=apply, args=({"hidden": None if hidden else True},))
+    r_col.button("Reset", icon=":material/format_color_reset:", width="stretch", key=f"ulreset_{sid}",
+                 disabled=not style, help="Back to how the layout drew it",
+                 on_click=apply, args=({k: None for k in style},))
     if "style_error" in st.session_state:
         st.error(st.session_state.pop("style_error"))
 
@@ -449,6 +516,7 @@ with panel_col, st.container(key="ts_panel"):
     sel = st.session_state.get("sel_node")
     node = node_by_id.get(sel)
     background = sel in session.BACKGROUND_ITEMS
+    underlay = bool(sel) and sel.startswith("ul_") and sel in session.underlay_boxes
     with st.container(horizontal=True, key="sel_head", vertical_alignment="center", gap="small"):
         if st.button("", icon=":material/undo:", key="panel_undo", disabled=not session.can_undo,
                      help="Undo (Ctrl+Z)"):
@@ -465,11 +533,20 @@ with panel_col, st.container(key="ts_panel"):
         elif background:
             st.markdown(f'<div class="ts-selname"><b>{html.escape(canvas_editor.BACKGROUND_LABELS[sel])}</b>'
                         '<span class="ts-chip">Background layer</span></div>', unsafe_allow_html=True)
+        elif underlay:
+            st.markdown(f'<div class="ts-selname"><b>{html.escape(_friendly({"node_id": sel}))}</b>'
+                        '<span class="ts-chip">Underlay</span></div>', unsafe_allow_html=True)
         else:
             st.markdown('<div class="ts-selname"><span class="ts-muted">Click an element on the canvas to '
                         "select it.</span></div>", unsafe_allow_html=True)
     if background:
         _background_tools(session, sel, state)
+    if underlay:
+        box = session.underlay_boxes.get(sel)
+        st.markdown('<div class="ts-status">' + "".join(
+            f'<span class="ts-pill">{k} {round(v)}</span>' for k, v in zip("XYWH", box))
+            + '<span class="ts-unit">px · drag or resize it on the canvas</span></div>', unsafe_allow_html=True)
+        _underlay_tools(session, sel, state)
     if node:
         x0, y0, w0, h0 = node["bbox"]
         st.markdown('<div class="ts-status">' + "".join(
@@ -497,11 +574,13 @@ with panel_col, st.container(key="ts_panel"):
                         icon=":material/lock_open:" if hard else ":material/lock:",
                         help="Hand it back to the algorithm (L)" if hard else "Pin it exactly where it is (L)"):
             _flash(session.apply_event("lock-toggle", node["node_id"], hard=not hard))
-    if not background:
+    if not background and not underlay:
         st.caption("A moved or resized element becomes Hard: the solver keeps it exactly there and re-flows "
                    "the Soft ones around it (Formula 3.10).")
     if node:
         _style_tools(session, node, state)
+        if f"ul_{node['node_id']}" in session.underlay_boxes:
+            _underlay_tools(session, f"ul_{node['node_id']}", state, from_text=True)
     _background_list(session)
 
     _section("All text")

@@ -4502,3 +4502,41 @@ no » shown; Step 1 doesn't scroll. The 12 tests pass.
   `stress_test.py` would test the new ones, so quote the recorded file
   with the old limits. The 12 tests pass (the over-limit edit test uses
   200 characters).
+
+### 3.67 Step 2, event IDs: logos as separate elements; the name pill and role band as underlays; Step 3's mail merge (2026-11-04)
+
+The user's requests for event IDs, to match the certificate:
+- **The logo row as separate elements** (`OrchestrationSession.split_logo_row`,
+  called after Initialize for an event ID): the format's logo element keeps
+  the first logo (`logo_index` 0, drawn alone by the renderer, at its own
+  size through `designer_size`), and each other logo becomes a picture
+  beside it, Soft, in one row with it (§3.61), at the place the row had
+  drawn it. Each can then be moved, resized, locked, released, styled or
+  deleted. The session's candidates, guided and base nodes are split the
+  same way, so every recommendation carries it; the generated layouts on
+  disk and the scores they were ranked by don't change, and the split is
+  one state ("split-logos", not counted as a designer edit).
+- **The name's pill and the role's band are their own elements**
+  (`aesthetic_renderer._underlay`): drawn in `<g data-node-id="ul_<node>"
+  data-kind="underlay">` under the text, with the designer's style
+  (`set_style` on `ul_<node>`): a box (moved or resized on its own; without
+  one it follows its text), a fill, a shape (pill, rounded, square), a
+  border (colour, width), a shadow, an opacity, hidden. The text's colour
+  check reads the underlay's fill. On the canvas, the text is picked by its
+  letters and the rest of the box picks the underlay (`noHitBox`); the
+  right panel shows the underlay's tools under the text's, with "Select it"
+  and "Attach to text". Unstyled, it draws exactly as before.
+- **Step 3's mail merge download** (`ui.mail_merge_download`, shared with
+  Step 2's Download menu).
+- Fixed: the faint title artwork's opacity (§3.64) could be set below
+  0.1 on the slider, but the session refused it; opacity is now 0.02–1.
+
+**Checked:** KAINANG event ID: the two logos split into one row (gap 20
+px), kept as a row through a lock and release; a restyled underlay drew
+its fill, corners and shadow; the moved name kept its pill; a detached
+pill stayed put; another candidate kept the split and the style.
+Untouched layouts render pixel-identical to the previous commit (36
+renders). In Edge: two logo elements on the canvas; a click on the pill
+selected the underlay and Square redrew it; a click on the letters
+selected the name with the underlay's section; a click on a logo selected
+it; a two-person mail merge downloaded from Step 3. The 12 tests pass.

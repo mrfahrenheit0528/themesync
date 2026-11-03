@@ -224,7 +224,7 @@ class CanvasEditor {
       const node = this.nodes.get(id);
       this.groups.set(id, g);
       // The whole box is clickable, not just the painted glyphs.
-      if (node && !LOOSE.has(node.kind)) {
+      if (node && !LOOSE.has(node.kind) && !node.noHitBox) {
         const [x, y, w, h] = node.bbox;
         g.insertBefore(svgEl("rect", { x, y, width: w, height: h, fill: "transparent",
                                        "pointer-events": "all", class: "ts-hit" }), g.firstChild);

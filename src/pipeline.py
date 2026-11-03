@@ -662,6 +662,7 @@ class OrchestrationSession:
         self.styles = {}
         self.background_boxes = {}      # the background layer's items on the canvas (§3.64)
         self.text_sizes = {}            # text node → the font size it is drawn at (§3.65)
+        self.underlay_boxes = {}        # a text's underlay (ul_<node>) → its box (§3.67)
         self.style_contrast = {}          # styled text's contrast in the last render
         # Elements the designer added (id → node) and deleted (ids), in
         # effect at the current state; restore, undo and redo bring them
@@ -867,6 +868,7 @@ class OrchestrationSession:
         self.style_contrast = renderer.style_contrast
         self.background_boxes = dict(renderer.bg_boxes)
         self.text_sizes = dict(renderer.text_sizes)
+        self.underlay_boxes = dict(renderer.ul_boxes)
         return out
 
     def render_merged(self, values: dict, path: str) -> str:
@@ -917,7 +919,7 @@ class OrchestrationSession:
         content += [copy.deepcopy(current.get(nid, spec)) for nid, spec in self.added.items()
                     if nid not in removed and spec.get("structural_class") != "decor"]   # added text (§3.56)
         for n in content:
-            for key in ("designer_size", "text_scale"):          # a resize outlasts a release (§3.62)
+            for key in ("designer_size", "text_scale", "logo_index"):   # a resize outlasts a release (§3.62)
                 if key in current.get(n["node_id"], {}):
                     n[key] = copy.deepcopy(current[n["node_id"]][key])
             if n["node_id"] in hard:
@@ -1006,6 +1008,76 @@ class OrchestrationSession:
              "latency_ms": latency},
             resolved, fitness=fitness,
             candidate_id=current.get("candidate_id"), variation=variation)
+        self.render(resolved, self.rendered_path, variation)
+        self.chain.save(self.chain_path)
+        return state
+
+    @_timed_event
+    def split_logo_row(self) -> dict:
+        """An event ID's logo row as separate elements (Step 2; notes §3.67),
+        as a certificate's logos are: the format's logo element keeps the
+        first logo, and each other logo becomes a picture beside it, Soft, in
+        one row with it, so each can be moved, resized, locked, released,
+        styled or deleted on its own. Every candidate is split the same way
+        (the session's copies; the generated layouts on disk and the scores
+        they were ranked by don't change). Returns the new state, or None
+        when there is no row of two or more logos."""
+        row = [p for p in (self.logos.get("row") or []) if p and os.path.exists(p)]
+        current = self.chain.current
+        lead = next((n for n in current["nodes"] if n.get("structural_class") == "image_node"
+                     and "Logos" in n["node_id"]), None)
+        if len(row) < 2 or lead is None or lead.get("logo_index") is not None:
+            return None
+        aspects = []
+        for path in row:
+            with Image.open(path) as im:
+                aspects.append(im.width / max(1, im.height))
+
+        def boxes(box):
+            # where the renderer drew each logo of the row in `box`
+            x, y, w, h = (float(v) for v in box)
+            gap = h * 0.25
+            natural = sum(h * a for a in aspects) + gap * (len(aspects) - 1)
+            scale = min(1.0, w / natural) if natural > 0 else 1.0
+            lh = h * scale
+            cursor = x + (w - natural * scale) / 2.0
+            out = []
+            for a in aspects:
+                out.append([round(cursor, 2), round(y + (h - lh) / 2.0, 2), round(lh * a, 2), round(lh, 2)])
+                cursor += lh * a + gap * scale
+            return out
+
+        def split(nodes):
+            for n in nodes:
+                if n["node_id"] == lead["node_id"]:
+                    first = boxes(n["bbox"])[0]
+                    n.update(bbox=first, logo_index=0, designer_size=first[2:])
+            return nodes
+
+        nid = lead["node_id"]
+        for c in self.candidates:
+            c["nodes"] = split(copy.deepcopy(c["nodes"]))
+        self.guided_nodes = split(copy.deepcopy(self.guided_nodes))
+        self.base_nodes = split(copy.deepcopy(self.base_nodes))
+        placed = boxes(lead["bbox"])
+        nodes = split(copy.deepcopy(current["nodes"]))
+        n0 = 1 + sum(1 for k in self.added if k.startswith("Added_Picture_"))
+        added = {}
+        for i, (path, box) in enumerate(zip(row[1:], placed[1:])):
+            pid = f"Added_Picture_{n0 + i}"
+            added[pid] = {"node_id": pid, "semantic_category": "added", "structural_class": "decor",
+                          "motif_path": path, "spatial_hierarchy": 200 + len(self.added) + i, "bbox": box,
+                          "constraint_type": "Soft", "designer_size": box[2:]}
+        self._mark()
+        self.added = dict(self.added, **added)
+        variation = current.get("variation") or dict(variations_for(self.domain)[0])
+        resolved = self._resolve(nodes + list(added.values()), variation)
+        state = self.chain.append(f"Logos split [{nid}]",
+                                  {"type": "split-logos", "node_id": nid,
+                                   "summary": f"The {len(row)} logos are separate elements"},
+                                  resolved, fitness=self._fitness(resolved, variation),
+                                  candidate_id=current.get("candidate_id"), variation=variation,
+                                  elements=self._elements())
         self.render(resolved, self.rendered_path, variation)
         self.chain.save(self.chain_path)
         return state
@@ -1225,7 +1297,7 @@ class OrchestrationSession:
         return state
 
     STYLE_KEYS = ("fill", "bold", "italic", "align", "opacity", "flip", "image", "font", "weight",
-                  "box", "hidden", "behind")
+                  "box", "hidden", "behind", "shape", "stroke", "stroke_width", "shadow")
     # The background layer's items (notes §3.64): the master's background,
     # the panel or card, the faint title artwork and a split layout's art
     BACKGROUND_ITEMS = ("bg_backdrop", "bg_panel", "bg_watermark", "bg_art")
@@ -1238,11 +1310,16 @@ class OrchestrationSession:
         an opacity (0.1-1). A value of None removes that setting. The layout
         isn't re-solved; the canvas re-renders, and the change is one state
         in the chain (notes §3.53)."""
+        on_canvas = {n["node_id"] for n in self.chain.current["nodes"]}
         background = node_id in self.BACKGROUND_ITEMS
-        if not background and node_id not in {n["node_id"] for n in self.chain.current["nodes"]}:
+        # an underlay (ul_<node>): a text's pill or band as its own element (§3.67)
+        underlay = node_id.startswith("ul_") and node_id[3:] in on_canvas
+        if not background and not underlay and node_id not in on_canvas:
             raise KeyError(f"No node '{node_id}' on the canvas")
-        if "box" in changes and not background:
+        if "box" in changes and not (background or underlay):
             raise ValueError("Move or resize an element on the canvas")
+        if any(k in changes for k in ("shape", "stroke", "stroke_width", "shadow")) and not underlay:
+            raise ValueError("Shape, border and shadow belong to an underlay")
         if "behind" in changes and node_id not in self.added:
             raise ValueError("Only a picture you added can go to the background")
         before = dict(self.styles.get(node_id, {}))
@@ -1256,8 +1333,14 @@ class OrchestrationSession:
                 raise ValueError(f"'{value}' is not a #RRGGBB colour")
             elif key == "align" and value not in ("left", "center", "right"):
                 raise ValueError("Alignment is left, center or right")
-            elif key == "opacity" and not 0.1 <= float(value) <= 1.0:
-                raise ValueError("Opacity is between 0.1 and 1")
+            elif key == "opacity" and not 0.02 <= float(value) <= 1.0:      # the faint artwork starts at 0.08
+                raise ValueError("Opacity is between 0.02 and 1")
+            elif key in ("fill", "stroke") and not re.fullmatch(r"#[0-9A-Fa-f]{6}", str(value)):
+                raise ValueError(f"'{value}' is not a #RRGGBB colour")
+            elif key == "shape" and value not in ("pill", "rounded", "square"):
+                raise ValueError("A shape is pill, rounded or square")
+            elif key == "stroke_width" and not 0.0 <= float(value) <= 12.0:
+                raise ValueError("A border is 0 to 12 px wide")
             elif key == "image" and not os.path.exists(str(value)):
                 raise ValueError(f"No image at '{value}'")
             elif key == "font" and not (isinstance(value, str) and 0 < len(value) <= 200):
@@ -1269,8 +1352,8 @@ class OrchestrationSession:
             elif key == "box":
                 after[key] = [round(float(v), 2) for v in value]
             else:
-                after[key] = float(value) if key == "opacity" else int(value) if key == "weight" else bool(
-                    value) if key in ("bold", "italic", "flip") else value
+                after[key] = float(value) if key in ("opacity", "stroke_width") else int(value) if key == "weight" \
+                    else bool(value) if key in ("bold", "italic", "flip", "shadow") else value
         if after == before:
             raise ValueError("The style is unchanged.")
         self._mark()

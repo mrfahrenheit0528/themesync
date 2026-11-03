@@ -196,8 +196,20 @@ def _nodes(session, friendly) -> list:
             "bbox": [round(float(v), 1) for v in n["bbox"]],
             "hard": n.get("constraint_type") == "Hard",
             "text": text.get(nid), "maxLength": limits.get(nid), "note": note,
-            "lockAspect": kind == "decor" or bool(schema.get(base, {}).get("lock_aspect_ratio")),
+            "lockAspect": kind == "decor" or bool(schema.get(base, {}).get("lock_aspect_ratio"))
+                          or n.get("logo_index") is not None,
+            # a text on its own underlay is picked by its letters; the rest
+            # of the box picks the underlay (§3.67)
+            "noHitBox": f"ul_{nid}" in getattr(session, "underlay_boxes", {}),
         })
+    # The texts' underlays (§3.67): the event ID's name pill and role band
+    for key, box in getattr(session, "underlay_boxes", {}).items():
+        if (session.styles.get(key) or {}).get("hidden"):
+            continue
+        out.append({"id": key, "label": f"Underlay · {friendly({'node_id': key[3:]})}", "kind": "background",
+                    "bbox": box, "hard": False, "text": None, "maxLength": None,
+                    "note": "the text's underlay: move, resize or restyle it; the text stays where it is",
+                    "lockAspect": False})
     # The background layer's items (notes §3.64), under the content: the
     # master's background itself is chosen from the right-hand panel
     for key, box in getattr(session, "background_boxes", {}).items():
@@ -258,7 +270,7 @@ def _on_event(session, key: str, friendly) -> None:
             st.session_state.pop("sel_node", None)
         return
     try:
-        if node_id in session.BACKGROUND_ITEMS:          # the background layer (notes §3.64)
+        if node_id in session.BACKGROUND_ITEMS or str(node_id).startswith("ul_"):   # §3.64, §3.67
             if kind in ("on-drop", "on-resize-complete"):
                 new = session.set_style(node_id, {"box": [float(v) for v in event["bbox"]]})
             elif kind == "remove":
@@ -266,7 +278,8 @@ def _on_event(session, key: str, friendly) -> None:
                 st.session_state.pop("sel_node", None)
                 node_id = None
             elif kind == "lock-toggle":
-                raise ValueError("The background layer isn't placed by the solver: move it freely.")
+                raise ValueError("The background layer and underlays aren't placed by the solver: "
+                                 "move them freely.")
             else:
                 return
         elif kind in ("on-drop", "on-resize-complete"):

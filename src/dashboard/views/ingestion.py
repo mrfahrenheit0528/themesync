@@ -758,6 +758,8 @@ if drawer is not None:
             try:
                 with notice, st.spinner("Running Stages 1-6..."):
                     session.run()
+                    if session.domain == "identification_card":
+                        session.split_logo_row()     # each logo its own element, as on a certificate (§3.67)
             except ValueError as e:
                 notice.error(str(e))
             else:

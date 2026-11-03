@@ -397,6 +397,8 @@ class AestheticSVGRenderer:
         self.style_contrast = {}   # node id → its styled text colour's contrast, per render
         self.bg_boxes = {}         # background item → its box, per render (notes §3.64)
         self.text_sizes = {}       # text node → the largest font size it was drawn at (§3.65)
+        self.ul_boxes = {}         # underlay (ul_<node>) → its box, per render (§3.67)
+        self._current = {}         # the content node being drawn
 
     def _clean_node_id(self, node_id: str) -> str:
         return self.mock_data.get(
@@ -694,6 +696,12 @@ class AestheticSVGRenderer:
     def _render_image_node(self, x, y, w, h, node_id, content) -> list:
         """Dispatches an image node to the renderer for its role, by schema name."""
         name = node_id.lower()
+        index = self._current.get("logo_index")
+        if "logos" in name and index is not None and 0 <= int(index) < len(self.logo_row):
+            # one logo of the row: the row was split into elements (§3.67)
+            uri = self.logo_row[int(index)][0]
+            return [f'<image x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
+                    f'preserveAspectRatio="xMidYMid meet" xlink:href="{uri}" />']
         if "logos" in name:
             return self._render_logo_row(x, y, w, h, content)
         if "logo" in name:
@@ -813,7 +821,43 @@ class AestheticSVGRenderer:
     # The designer's styles (Step 2's Style tools)
     # ------------------------------------------------------------------
 
-    def _apply_style(self, node: dict, elements: list) -> list:
+    UNDERLAY_SHAPES = ("pill", "rounded", "square")
+
+    def _underlay(self, node_id: str, rects: list) -> list:
+        """A text's underlay as its own element (§3.67): the event ID's name
+        pill or role band, in <g data-node-id="ul_<node>" data-kind=
+        "underlay">. The designer's style (styles["ul_<node>"]) may move or
+        resize it (box), recolour it (fill), change its shape (pill, rounded,
+        square), its border (stroke, stroke_width), add a shadow, fade or
+        hide it; without one it draws exactly as before."""
+        key = f"ul_{node_id}"
+        style = self.styles.get(key) or {}
+        attrs = dict(self._ATTR.findall(rects[0].split(">", 1)[0]))
+        box = [float(attrs.get(k, 0)) for k in ("x", "y", "width", "height")]
+        if style.get("box"):
+            box = [float(v) for v in style["box"]]
+        self.ul_boxes[key] = [round(v, 1) for v in box]
+        if style.get("hidden"):
+            return []
+        if style:
+            x, y, w, h = box
+            rx = {"pill": h / 2.0, "rounded": min(w, h) * 0.2, "square": 0.0}.get(style.get("shape"),
+                                                                                   float(attrs.get("rx", 0)))
+            fill = style.get("fill") or attrs.get("fill", "#FFFFFF")
+            stroke = style.get("stroke") or attrs.get("stroke")
+            width = float(style.get("stroke_width", attrs.get("stroke-width", 0) if stroke else 0))
+            border = f' stroke="{stroke}" stroke-width="{width:.1f}"' if stroke and width > 0 else ""
+            rects = [f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="{rx:.1f}" '
+                     f'fill="{fill}"{border} />']
+            if style.get("shadow"):
+                off = max(2.0, h * 0.08)
+                rects.insert(0, f'<rect x="{x + off * 0.4:.1f}" y="{y + off:.1f}" width="{w:.1f}" height="{h:.1f}" '
+                                f'rx="{rx:.1f}" fill="#000000" fill-opacity="0.28" />')
+            if style.get("opacity") is not None and float(style["opacity"]) < 1:
+                rects = [f'<g opacity="{float(style["opacity"]):.2f}">'] + rects + ["</g>"]
+        return [f'<g data-node-id="{key}" data-kind="underlay">'] + rects + ["</g>"]
+
+    def _apply_style(self, node: dict, elements: list, shaped: bool = None) -> list:
         """A node's drawn elements with the designer's style: a replacement
         picture; font, weight, colour, italic and alignment on its text (the
         shadow copies keep their colour); opacity and a horizontal flip on
@@ -828,12 +872,15 @@ class AestheticSVGRenderer:
                 elements = [f'<image x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
                             f'preserveAspectRatio="xMidYMid meet" xlink:href="{uri}" />']
         if any(k in style for k in ("fill", "bold", "italic", "align", "font", "weight")):
-            shaped = any(e.startswith("<rect") for e in elements)          # a pill or band behind the text
+            if shaped is None:
+                shaped = any(e.startswith("<rect") for e in elements)      # a pill or band behind the text
             elements = [self._style_text(e, style, x, w, shaped) if e.startswith("<text") else e
                         for e in elements]
             if style.get("fill"):
                 nid = node["node_id"]
-                under = (self.palette["card_bg"] if "Participant_Name" in nid
+                ul = self.styles.get(f"ul_{nid}") or {}                    # its underlay's colour (§3.67)
+                under = (ul["fill"] if ul.get("fill") and not ul.get("hidden")
+                         else self.palette["card_bg"] if "Participant_Name" in nid
                          else self.palette["band"] if "Participant_Role" in nid
                          else _hex_mean(self._raster, [x, y, w, h]) if self._raster is not None
                          else self.palette["background"])
@@ -903,6 +950,7 @@ class AestheticSVGRenderer:
         for node in content_nodes:
             # a text the designer resized scales its type with the box (§3.62)
             self.base_size = base * float(node.get("text_scale") or 1.0)
+            self._current = node
             x, y, w, h = node['bbox']
             node_id = node['node_id']
             struct_class = node.get('structural_class', 'text_node')
@@ -916,8 +964,18 @@ class AestheticSVGRenderer:
             sizes = [float(v) for e in elements for v in re.findall(r'font-size="([\d.]+)"', e)]
             if sizes and struct_class != "image_node":
                 self.text_sizes[node_id] = round(max(sizes), 1)
+            if struct_class == "text_node" and any(e.startswith("<rect") for e in elements) \
+                    and ("Participant_Name" in node_id or "Participant_Role" in node_id):
+                # The name's pill and the role's band are their own element,
+                # under the text (§3.67); unstyled, they draw as before
+                rects = [e for e in elements if e.startswith("<rect")]
+                texts = [e for e in elements if not e.startswith("<rect")]
+                svg_elements.extend(self._underlay(node_id, rects))
+                svg_elements.extend(group(node, self._apply_style(node, texts, shaped=True)))
+                continue
             svg_elements.extend(group(node, self._apply_style(node, elements)))
         self.base_size = base
+        self._current = {}
 
         svg_content = (
             f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
