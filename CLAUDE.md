@@ -105,7 +105,8 @@ Read first: `notes/system_development_progress.md`, then the tail of
       out; the flood-fill is the fallback. A squarish box isn't merged into
       the title group (DONATION's title had swallowed its logo row).
     - Even gaps after anchoring (Recommendation 3): `EVEN` strength in
-      `cassowary_engine`, structure-guided conditions only.
+      `cassowary_engine`, every condition (the baseline's gaps were even
+      already); certificate content kept inside the panel's border.
     - Two elements on one line (`row` on a node): the organisation text
       beside the logos when the poster has them so (6 of the 16 posters),
       and the certificate's date and number at the two margins.
