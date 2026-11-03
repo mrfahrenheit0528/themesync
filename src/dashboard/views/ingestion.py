@@ -58,6 +58,16 @@ _CONTENT_DATA_BY_DOMAIN = {
     "academic_certificate": os.path.join(_ROOT, "data", "raw", "sample_content.json"),
     "identification_card":  os.path.join(_ROOT, "data", "raw", "sample_content_id.json"),
 }
+# The dashboard's own hints over those files (the user's, 2026-11-03). The
+# files stay as they are: Phase 4, the Phase 3 battery and the stress test
+# render their text.
+_HINTS_BY_DOMAIN = {
+    "academic_certificate": {
+        "{{Signature_Blocks}}_0": "Dr. Amado A. Oliva Jr.\nCollege President",
+        "{{Signature_Blocks}}_1": "Dr. Rosel O. Onesa\nDean, College of Computer Studies",
+        "{{Signature_Blocks}}_2": "Mark Vincent S. Raña\nPresident, JPCS - CSPC Chapter",
+    },
+}
 
 CATEGORY_COLOURS = {"logo": (0, 200, 90), "text": (40, 120, 255), "underlay": (255, 170, 0),
                     "embellishment": (220, 60, 220), "illustration": (0, 190, 200)}
@@ -522,7 +532,8 @@ target_meta = dict(target["meta"], variable_schema=schema)
 # Content payload (right, bottom): two columns of fields
 # ---------------------------------------------------------------------------
 sample_path = _CONTENT_DATA_BY_DOMAIN.get(domain)
-sample = json.load(open(sample_path)) if sample_path and os.path.exists(sample_path) else {}
+sample = json.load(open(sample_path, encoding="utf-8")) if sample_path and os.path.exists(sample_path) else {}
+sample.update(_HINTS_BY_DOMAIN.get(domain, {}))
 content = {}
 with card_content:
     with st.container(horizontal=True, key="content_head", vertical_alignment="center"):

@@ -4129,3 +4129,10 @@ Nothing here changes how a layout is generated, solved or scored.
     Colleges" and commits on the next Tab; "For ex" + → completes the
     citation; "Juan" in Student Name shows nothing and Tab moves on; the
     page still doesn't scroll.
+  - **The certificate's signature hints** are now the CSPC signatories
+    the user gave: Dr. Amado A. Oliva Jr. (College President), Dr. Rosel
+    O. Onesa (Dean, College of Computer Studies), and Mark Vincent S.
+    Raña (President, JPCS - CSPC Chapter). They override
+    `data/raw/sample_content.json` in the dashboard only
+    (`ingestion._HINTS_BY_DOMAIN`); the file is unchanged, since Phase 4,
+    the Phase 3 battery and the stress test render its text.
