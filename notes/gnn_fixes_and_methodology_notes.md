@@ -4150,3 +4150,13 @@ Nothing here changes how a layout is generated, solved or scored.
     on Student Name changed that text only; selecting Certificate Title
     showed its own font (Montserrat) in the picker; after clicking two
     more texts, only Student Name was Tinos.
+- **Step 2's weight dropdowns are Step 1's** (the user's request): the
+  selected text's Weight and "All text"'s Font weight use
+  `ui.weight_picker`, each weight drawn in that text's font, listing the
+  weights the font ships. The selected text's list starts with "Layout's
+  own" (no weight of its own). `weight_picker` gained a label, that first
+  option and an `on_pick` callback.
+  - Checked in Edge on a full run: Black on Student Name drew it at 900
+    and left the others; Certificate Title's dropdown showed "Layout's
+    own"; picking "Layout's own" again cleared it; "All text" → Black
+    set the title to 900. No exceptions.

@@ -354,28 +354,40 @@ def _pick_value(state_key: str, value, popover_key: str) -> None:
     st.session_state[popover_key] = False          # close the list
 
 
-def weight_picker(key: str, stack: str, current: int = 700, help: str = None) -> int:
+def weight_picker(key: str, stack: str, current: int = 700, help: str = None, label: str = None,
+                  default_label: str = None, on_pick=None) -> int:
     """A dropdown of the family's weights, each drawn in its own weight.
-    A weight the newly picked family lacks moves to its nearest one."""
+    A weight the family lacks shows as its nearest one. `label` goes above
+    it as a widget's label; `default_label` adds a first option, value 0
+    (Step 2's "Layout's own"); `on_pick(weight)` runs when one is picked."""
     state_key = f"{key}_weight"
     available = font_weights(stack)
-    weight = int(st.session_state.get(state_key, current))
-    if weight not in available:
+    options = ([0] if default_label else []) + available
+    weight = int(st.session_state.get(state_key, current) or 0)
+    if weight not in options:
         weight = min(available, key=lambda w: (abs(w - weight), -w))
     st.session_state[state_key] = weight
+    names = {**WEIGHT_NAMES, **({0: default_label} if default_label else {})}
     folder = font_folder(stack) or "montserrat"
     css = [f'.st-key-{key}_weight_btn button p {{font-family: "TSW {folder}", sans-serif; '
-           f'font-weight: {weight} !important;}}']
+           f'font-weight: {weight or 400} !important;}}']
     css += [f'.st-key-{key}_weight_opt_{w} button p {{font-family: "TSW {folder}", sans-serif; '
-            f'font-weight: {w} !important; font-size: 1rem;}}' for w in available]
+            f'font-weight: {w or 400} !important; font-size: 1rem;}}' for w in options]
+
+    def _pick(w: int) -> None:
+        _pick_value(state_key, w, f"{key}_weight_pop")
+        if on_pick:
+            on_pick(w)
+
     with st.container(key=f"{key}_weight_btn", gap=None):
-        st.markdown(f"<style>{weight_preview_css(folder)}\n{''.join(css)}</style>", unsafe_allow_html=True)
-        with st.popover(WEIGHT_NAMES[weight], width="stretch", key=f"{key}_weight_pop", on_change="rerun",
+        st.markdown(f"<style>{weight_preview_css(folder)}\n{''.join(css)}</style>"
+                    + (f'<div class="ts-wlabel">{html.escape(label)}</div>' if label else ""),
+                    unsafe_allow_html=True)
+        with st.popover(names[weight], width="stretch", key=f"{key}_weight_pop", on_change="rerun",
                         help=help):
-            for w in available:
-                st.button(WEIGHT_NAMES[w], key=f"{key}_weight_opt_{w}", width="stretch",
-                          type="primary" if w == weight else "tertiary",
-                          on_click=_pick_value, args=(state_key, w, f"{key}_weight_pop"))
+            for w in options:
+                st.button(names[w], key=f"{key}_weight_opt_{w}", width="stretch",
+                          type="primary" if w == weight else "tertiary", on_click=_pick, args=(w,))
     return weight
 
 
@@ -685,13 +697,15 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
    a selectbox, and a list where each font is drawn in its own typeface */
 .ts-wlabel {font-size: .875rem; color: #31333f; line-height: 1.6; margin: 0 0 .25rem;}
 .st-key-card_type .ts-wlabel {font-size: .76rem; color: #3c4250; margin-bottom: 7px; padding-top: 2px;}
-[class*="_font_btn"] [data-testid="stMarkdownContainer"]:has(> .ts-wlabel) {margin-bottom: 0 !important;}
+:is([class*="_font_btn"], [class*="_weight_btn"]) [data-testid="stMarkdownContainer"]:has(> .ts-wlabel) {
+  margin-bottom: 0 !important;}
 /* Measured from the selectbox beside it: #f4f5f7, 1px #e0e2e7, 8px corners,
    40px tall, 14px regular text 8px in, a dark chevron on the right */
-[class*="_font_btn"] button {background: #f4f5f7 !important; border: 1px solid #e0e2e7 !important;
+:is([class*="_font_btn"], [class*="_weight_btn"]) button {background: #f4f5f7 !important;
+  border: 1px solid #e0e2e7 !important;
   border-radius: 8px; height: 40px; min-height: 40px; padding: 0 .4rem 0 .5rem !important;
   color: #0e1318 !important; box-shadow: none !important;}
-[class*="_font_btn"] button:hover, [class*="_font_btn"] button:focus-visible {border-color: #c3c8d0 !important;
+:is([class*="_font_btn"], [class*="_weight_btn"]) button:is(:hover, :focus-visible) {border-color: #c3c8d0 !important;
   color: #0e1318 !important;}
 [class*="_font_btn"] button > div {width: 100%; justify-content: space-between;}
 [class*="_font_btn"] button [data-testid="stMarkdownContainer"] {flex: 1; min-width: 0; text-align: left;}

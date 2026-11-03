@@ -44,10 +44,7 @@ import components as ui                                       # noqa: E402
 import canvas_editor                                          # noqa: E402
 import mail_merge                                             # noqa: E402
 import rasterize                                              # noqa: E402
-from schema_validation import FONT_WEIGHTS                    # noqa: E402
 
-WEIGHT_NAMES = {100: "Thin", 200: "Extra Light", 300: "Light", 400: "Regular", 500: "Medium",
-                600: "Semibold", 700: "Bold", 800: "Extra Bold", 900: "Black"}
 SHORTCUTS = ("Drag to move · handles resize (Shift keeps proportions) · double-click text to edit · "
              "arrows nudge 1 px (Shift: 10 px) · L locks / releases · Tab cycles · Ctrl+Z / Ctrl+Shift+Z "
              "undo / redo · hold Alt to move without snapping")
@@ -189,11 +186,11 @@ def _style_tools(session, node: dict, state: dict) -> None:
         with f_col:
             picked = ui.font_picker(f"elfont_{sid}", "Font", own_font)
         with w_col:
-            weights = [0, *FONT_WEIGHTS]
-            st.selectbox("Weight", weights, key=f"elwt_{sid}",
-                         index=weights.index(int(style["weight"])) if style.get("weight") else 0,
-                         format_func=lambda v: "Layout's own" if not v else f"{v} — {WEIGHT_NAMES[v]}",
-                         on_change=lambda: apply({"weight": st.session_state[f"elwt_{sid}"] or None}))
+            # Step 1's weight dropdown, each weight drawn in this text's font
+            ui.weight_picker(f"elwt_{sid}", own_font, int(style.get("weight") or 0), label="Weight",
+                             default_label="Layout's own",
+                             on_pick=lambda w: apply({"weight": w or None}) if w != (style.get("weight") or 0)
+                             else None)
         if picked != own_font:
             apply({"font": picked})
             st.rerun()
@@ -442,9 +439,8 @@ with panel_col, st.container(key="ts_panel"):
     with st.expander("Administrative typography (schema-validated)", icon=":material/text_fields:"):
         st.caption("Changes every text element at once, unless it has its own font or weight above.")
         fam = ui.font_picker(f"fam_{sid_all}", "Font", t["family"])
-        st.selectbox("Font weight", FONT_WEIGHTS, index=FONT_WEIGHTS.index(int(t["weight"])),
-                     format_func=lambda v: f"{v} — {WEIGHT_NAMES[v]}", key=f"wt_{sid_all}",
-                     on_change=lambda: set_all({"weight": int(st.session_state[f"wt_{sid_all}"])}))
+        ui.weight_picker(f"wt_{sid_all}", t["family"], int(t["weight"]), label="Font weight",
+                         on_pick=lambda w: set_all({"weight": int(w)}) if w != int(t["weight"]) else None)
         st.number_input("Base size (px)", value=float(t["base_size"]), step=1.0, key=f"bs_{sid_all}",
                         on_change=lambda: set_all({"base_size": float(st.session_state[f"bs_{sid_all}"])}))
         if fam != t["family"]:
