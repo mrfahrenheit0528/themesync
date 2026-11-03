@@ -181,3 +181,28 @@ Checked against the code first (`pipeline.apply_event`, `set_typography`,
   and Chapter 5, keeps its 1210.1 page; only Figure 3 moved (p.58 → p.59).
 
 **No action needed.**
+
+## H. 2026-11-04: your section J is applied (the reprint); K1–K2 offered
+
+Every J number was recomputed from `results/stress_test.json`,
+`results/latency_benchmark.json` (`runs`) and `data/raw/academic_payload.json`
+before editing, and all hold. Applied in `manuscript/Thesis Latex/`,
+uncommitted for the user:
+- **J1 (p.86):** Table 11's three changed rows; "13.5 points to fit 60
+  characters" → "9.9 points to fit 80"; "Long organization names" →
+  "Long names, fitted only by shrinking,". The event-ID header's "from 49 of
+  150" keeps the earlier run's onset (same renderer). The new run shows it
+  overflowing at 75–112 characters and fitting at 150 by wrapping to 4.7 pt;
+  that, and the 3.3–3.8 pt event-ID sizes, are in a LaTeX comment, not in
+  the text (no room on the page).
+- **J2 (p.88):** Table 12, its note (footnote a dropped; means 0.55 ms,
+  SD 0.30, and 91.0 ms, SD 57.9), "within 2.1 milliseconds", "149 against 86".
+- **J3 (p.89):** the new `fig4_latency` copied into `figures/`; "104
+  milliseconds", "47%", "4.6 seconds".
+- **J4 (p.106):** Finding 2: 0.5 ms, 91 ms, 47%.
+- **J5 (pp.110–111):** Appendix B's seven limits; checked equal to the file.
+- **Page-neutral:** a rebuild changed exactly pp.86, 88, 89, 106, 110 and
+  111; every other page is identical to 1210.2, and none of these pages
+  spills.
+- **K1–K2 not applied:** they would add pp.47, 56 and 58 to the reprint. Up to
+  the user.
