@@ -195,6 +195,13 @@ class ConstraintSolverEngine:
         # (a box out of its reading-order slot, or an added picture): a Hard
         # node left in its slot solves exactly as before (notes §3.58)
         has_hard = bool(fixed) or bool(below_row) or [n['node_id'] for n in singular_nodes] != reading
+        # Rows a Soft picture sits in beside other elements (notes §3.61)
+        rows = self._picture_rows(singular_nodes, reference) if has_hard else []
+        row_of, followers = {}, set()
+        for row in rows:
+            for m in row['members']:
+                row_of[m['node_id']] = row
+            followers |= {m['node_id'] for m in row['followers']}
 
         locked_coordinates = set()
         region_centre = (self.left_bound + self.right_bound) / 2.0
@@ -223,7 +230,16 @@ class ConstraintSolverEngine:
                 # the region's left edge instead) — at `strong`, the tier of the
                 # other design rules (margins, stacking, balance), so it
                 # outranks the GNN's `medium` preferences below.
-                if self.align == "left":
+                row = row_of.get(node_id)
+                if row is not None:
+                    # in a row: the row is placed as a whole (_row_constraints);
+                    # its lead keeps the axis as a preference when a Hard
+                    # member fixes where the row is
+                    if node_id not in followers and row['hard']:
+                        target_x = (self.left_bound if self.align == "left"
+                                    else max(self.left_bound, region_centre - tensor_w / 2.0))
+                        self.solver.addConstraint((current_var['left'] == target_x) | kiwi.strength.medium)
+                elif self.align == "left":
                     self.solver.addConstraint((current_var['left'] == self.left_bound) | kiwi.strength.strong)
                 elif picture:    # centred whatever size it shrinks to
                     self.solver.addConstraint((current_var['left'] + current_var['right'] == 2.0 * region_centre)
@@ -247,9 +263,13 @@ class ConstraintSolverEngine:
         # pushes only the nearest Soft node above and below it that shares
         # its columns: what sits beside a box can share its height (a logo
         # beside the logos the designer placed).
-        chain = [n for n in singular_nodes if n.get('constraint_type') != "Hard"] if has_hard else singular_nodes
+        chain = ([n for n in singular_nodes if n.get('constraint_type') != "Hard" and n['node_id'] not in followers]
+                 if has_hard else singular_nodes)
         if has_hard:
-            self._stack_around_boxes(singular_nodes, chain, region_centre)
+            loose = {m['node_id'] for row in rows if row['lead'] is None for m in row['followers']}
+            self._stack_around_boxes(singular_nodes, chain, region_centre, loose, reference)
+            for row in rows:
+                self._row_constraints(row, chain, region_centre, reference)
         for i in range(1, len(singular_nodes)) if not has_hard else ():
             curr_var = self.variables[singular_nodes[i]['node_id']]
             prev_var = self.variables[singular_nodes[i-1]['node_id']]
@@ -274,9 +294,17 @@ class ConstraintSolverEngine:
                     n['bbox'][2] = round(w, 2)
             gap = max(15.0, (avail_w - sum(widths)) / (count + 1))
 
+            # A signature block the designer moved holds its place; the others
+            # spread evenly in the space either side of it, at its height
+            # (notes §3.61). Without one, the row is as before.
+            spread = self._spread_row(repeating_nodes, widths, reference) if any(
+                n.get('constraint_type') == "Hard" for n in repeating_nodes) else None
             first_rep_var = None
             cursor = self.left_bound + gap
-            for i, node in enumerate(repeating_nodes):
+            sequence = list(enumerate(repeating_nodes))
+            if spread:
+                sequence.sort(key=lambda item: item[1].get('constraint_type') != "Hard")   # a Hard one leads
+            for i, node in sequence:
                 node_id = node['node_id']
                 tensor_w = widths[i]
                 tensor_h = float(node['bbox'][3])
@@ -294,7 +322,8 @@ class ConstraintSolverEngine:
                     self.solver.addConstraint(current_var['top'] == human_y)
                 else:
                     # Distribute repeating nodes evenly across the region
-                    self.solver.addConstraint((current_var['left'] == cursor) | kiwi.strength.strong)
+                    x = spread[node_id] if spread else cursor
+                    self.solver.addConstraint((current_var['left'] == x) | kiwi.strength.strong)
                     self.solver.addConstraint((current_var['bottom'] <= self.canvas_h - self.margin_y) | kiwi.strength.strong)
                 cursor += tensor_w + gap
 
@@ -364,7 +393,123 @@ class ConstraintSolverEngine:
 
         return resolved_nodes
 
-    def _stack_around_boxes(self, order, chain, region_centre):
+    @staticmethod
+    def _picture_rows(order, reference):
+        """
+        The rows a Soft picture sits in (notes §3.61): a picture the designer
+        released, or added from the panel, that was beside other elements
+        (sharing at least half its height with them, not its columns) stays
+        in a row with them. Returns [{"members" left to right, "hard", "lead",
+        "anchor", "followers"}]: the lead is the row's own Soft element of the
+        format (it keeps its place in the stack), the anchor fixes the row's
+        line (a Hard member, else the lead), the followers are placed in the
+        row beside them.
+        """
+        box = lambda n: [float(v) for v in reference.get(n['node_id'], n['bbox'])]
+        pictures = [n for n in order if n.get('structural_class') == 'decor' and n.get('constraint_type') != "Hard"]
+        if not pictures:
+            return []
+        parent = {n['node_id']: n['node_id'] for n in order}
+
+        def find(i):
+            while parent[i] != i:
+                parent[i] = parent[parent[i]]
+                i = parent[i]
+            return i
+
+        def beside(a, b):
+            ax, ay, aw, ah = box(a)
+            bx, by, bw, bh = box(b)
+            return (min(ay + ah, by + bh) - max(ay, by) >= 0.5 * min(ah, bh)
+                    and min(ax + aw, bx + bw) - max(ax, bx) <= 1)
+
+        for p in pictures:
+            for n in order:
+                if n is not p and beside(p, n):
+                    parent[find(p['node_id'])] = find(n['node_id'])
+        groups = {}
+        for n in order:
+            groups.setdefault(find(n['node_id']), []).append(n)
+        rows = []
+        for members in groups.values():
+            if len(members) < 2 or not any(m in pictures for m in members):
+                continue
+            hard = [m for m in members if m.get('constraint_type') == "Hard"]
+            soft = [m for m in members if m.get('constraint_type') != "Hard"]
+            lead = next((m for m in soft if m.get('structural_class') != 'decor'), None)
+            if lead is None and not hard:
+                lead = soft[0]
+            rows.append({"members": sorted(members, key=lambda m: box(m)[0]), "hard": hard, "lead": lead,
+                         "anchor": hard[0] if hard else lead,
+                         "followers": [m for m in soft if m is not lead]})
+        return rows
+
+    def _row_constraints(self, row, chain, region_centre, reference):
+        """One row of the stack (notes §3.61): its members side by side, left
+        to right as they were, with one even gap between them, on the
+        anchor's centre line; centred on the axis (or at the left edge) as a
+        whole unless a Hard member fixes where it is. Followers keep clear of
+        the elements above and below the lead."""
+        members = row['members']
+        var = lambda n: self.variables[n['node_id']]
+        box = lambda n: [float(v) for v in reference.get(n['node_id'], n['bbox'])]
+        gaps = [box(b)[0] - (box(a)[0] + box(a)[2]) for a, b in zip(members, members[1:])]
+        gap = kiwi.Variable(f"row_gap_{members[0]['node_id']}")
+        self.solver.addConstraint(gap >= 8.0)
+        self.solver.addConstraint((gap == max(8.0, sum(gaps) / len(gaps))) | kiwi.strength.weak)
+        for a, b in zip(members, members[1:]):
+            if a.get('constraint_type') == "Hard" and b.get('constraint_type') == "Hard":
+                continue
+            self.solver.addConstraint((var(b)['left'] == var(a)['right'] + gap) | kiwi.strength.strong)
+        anchor = var(row['anchor'])
+        for m in members:
+            if m is not row['anchor'] and m.get('constraint_type') != "Hard":
+                self.solver.addConstraint((var(m)['top'] + var(m)['bottom'] == anchor['top'] + anchor['bottom'])
+                                          | kiwi.strength.strong)
+        if not row['hard']:
+            first, last = var(members[0]), var(members[-1])
+            if self.align == "left":
+                self.solver.addConstraint((first['left'] == self.left_bound) | kiwi.strength.strong)
+            else:
+                self.solver.addConstraint((first['left'] + last['right'] == 2.0 * region_centre)
+                                          | kiwi.strength.strong)
+        lead = row['lead']
+        if lead is not None and lead in chain:
+            i = chain.index(lead)
+            prev, nxt = (chain[i - 1] if i else None), (chain[i + 1] if i + 1 < len(chain) else None)
+            for f in row['followers']:
+                if prev is not None:
+                    self.solver.addConstraint((var(f)['top'] >= var(prev)['bottom'] + self.v_gap)
+                                              | kiwi.strength.strong)
+                if nxt is not None:
+                    self.solver.addConstraint((var(nxt)['top'] >= var(f)['bottom'] + self.v_gap)
+                                              | kiwi.strength.strong)
+
+    def _spread_row(self, reps, widths, reference):
+        """{node_id: left} of the Soft signature blocks when the designer
+        moved one or more (notes §3.61): the Hard ones hold their places and
+        split the row into stretches, and the Soft ones spread evenly in the
+        stretch they were in (equal gaps, edges included)."""
+        width = {n['node_id']: w for n, w in zip(reps, widths)}
+        hard = sorted((n for n in reps if n.get('constraint_type') == "Hard"), key=lambda n: float(n['bbox'][0]))
+        cuts = [(float(n['bbox'][0]), float(n['bbox'][0]) + float(n['bbox'][2])) for n in hard]
+        edges = [self.left_bound] + [v for c in cuts for v in c] + [self.right_bound]
+        stretches = [[] for _ in range(len(cuts) + 1)]
+        for n in reps:
+            if n.get('constraint_type') != "Hard":
+                x, _, w, _ = (float(v) for v in reference.get(n['node_id'], n['bbox']))
+                stretches[sum(1 for c0, c1 in cuts if (c0 + c1) / 2.0 < x + w / 2.0)].append(n)
+        out = {}
+        for k, members in enumerate(stretches):
+            start, end = edges[2 * k], edges[2 * k + 1]
+            g = max(15.0, (end - start - sum(width[m['node_id']] for m in members)) / (len(members) + 1))
+            cursor = start + g
+            for m in members:
+                out[m['node_id']] = cursor
+                cursor += width[m['node_id']] + g
+        return out
+
+    def _stack_around_boxes(self, order, chain, region_centre, loose=(), reference=None):
         """
         The stacking constraints when a designer's box changed the stack
         (notes §3.59). `order` is the whole stack top to bottom; `chain` its
@@ -373,9 +518,14 @@ class ConstraintSolverEngine:
         its columns (where a Soft node will sit across: the region's axis,
         or its left edge); a gap that a box sits in may stretch by the box.
         """
+        reference = reference or {}
+
         def span(n):
             x, _, w, _ = (float(v) for v in n['bbox'])
             if n.get('constraint_type') == "Hard":
+                return x, x + w
+            if n['node_id'] in loose:     # a picture in a Hard box's row: about where it was
+                x, _, w, _ = (float(v) for v in reference.get(n['node_id'], n['bbox']))
                 return x, x + w
             x0 = self.left_bound if self.align == "left" else max(self.left_bound, region_centre - w / 2.0)
             return x0, x0 + w
@@ -392,7 +542,7 @@ class ConstraintSolverEngine:
             self.solver.addConstraint((cv['top'] >= pv['bottom'] + self.v_gap) | kiwi.strength.strong)
             self.solver.addConstraint((cv['top'] == pv['bottom'] + self.v_gap) | kiwi.strength.weak)
             self.solver.addConstraint((cv['top'] <= pv['bottom'] + self.max_gap + room) | kiwi.strength.strong)
-        for box in (n for n in order if n.get('constraint_type') == "Hard"):
+        for box in (n for n in order if n.get('constraint_type') == "Hard" or n['node_id'] in loose):
             i, bv = pos[box['node_id']], self.variables[box['node_id']]
             above = next((n for n in reversed(chain) if pos[n['node_id']] < i and shares(n, box)), None)
             below = next((n for n in chain if pos[n['node_id']] > i and shares(n, box)), None)

@@ -4289,3 +4289,46 @@ onto the axis in the stack.
 **A full certificate leaves little room:** DONATION's has about 50 px of
 height to spare, so a released 198 px picture is placed at 79 px. To keep
 a picture large, resize or lock it; the text re-flows around it.
+
+### 3.61 Step 2: a released picture stays in its row; signatures spread around a moved one; added pictures scored (2026-11-04)
+
+The user's findings: (1) a picture placed beside another, when released,
+went above or below instead of staying in the row; (2) with one signature
+block moved to the right, the other two kept their old places, so the
+gaps were uneven; and a question, whether Formula 3.11 scores only the
+vertical spacing.
+
+**What Formula 3.11 scores** (`optimization_engine`): collision is the
+overlapping area (both axes); alignment (3.13) is horizontal only, each
+element's left edge, centre or right edge against the grid; whitespace
+(3.14) is the empty share of the area, with no notion of where the space
+is; legibility (3.15) is text over a busy background. No term scores the
+vertical spacing (the post-hoc finding of §3.49). But alignment and
+whitespace skipped every picture, the designer's own included, so a
+placed picture was judged on collision alone.
+
+**Changes:**
+- **Rows** (`cassowary_engine._picture_rows`, `_row_constraints`): a Soft
+  picture that was beside other elements (sharing at least half its
+  height, not its columns) stays in a row with them: left to right as
+  they were, one even gap between them, on one centre line (a Hard
+  member's, else the row's own element of the format). The row is centred
+  (or left-aligned) as a whole unless a Hard member fixes where it is; then
+  the format's element in it keeps the axis as a `medium` preference. The
+  row is one step of the stack.
+- **Signature blocks** (`_spread_row`): a moved (Hard) block holds its
+  place and splits the row into stretches; the Soft blocks spread evenly
+  in the stretch they were in, edges included, at the Hard block's height.
+  Without a Hard block the row is as before.
+- **Scoring** (`_poster_decor`): a picture the designer added
+  (`semantic_category` "added") counts as content in collision, alignment
+  and whitespace; the master's motifs are still skipped. Generated layouts
+  have no added pictures, so their scores are as before.
+
+**Measured:** DONATION's seal with two 97 px pictures beside it: releasing
+either, then both, kept all three in one row with even 15 px gaps on the
+seal's centre line (both released: centred on the page). Signature 3
+moved to the right: the others spread with gaps of 79, 80, 79 px. No
+overlap and nothing past the margins in the 72 drops and releases of
+§3.60. Against the pre-§3.59 code: candidates and evaluate.py's simulated
+edits within 0.01 px, every score identical. The 12 tests pass.

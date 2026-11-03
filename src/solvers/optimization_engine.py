@@ -1,6 +1,14 @@
 import json
 import os
 
+def _poster_decor(node) -> bool:
+    """The master's motifs (background decoration), as opposed to a picture
+    the designer added on the canvas (semantic_category "added"), which
+    Formula 3.11 scores as content (notes §3.61). Generated layouts have no
+    added pictures, so their scores are as before."""
+    return node.get('structural_class') == 'decor' and node.get('semantic_category') != 'added'
+
+
 class HeuristicEvaluator:
     def __init__(self, canvas_width=1200, canvas_height=900, saliency_map=None,
                  fallback_saliency=0.75, grid_margin=50.0, grid_bounds=None, content_region=None):
@@ -62,7 +70,7 @@ class HeuristicEvaluator:
             for j in range(i + 1, n):
                 # Motifs overlapping each other is decoration, not occlusion;
                 # a motif over content still counts.
-                if nodes[i].get('structural_class') == 'decor' and nodes[j].get('structural_class') == 'decor':
+                if _poster_decor(nodes[i]) and _poster_decor(nodes[j]):
                     continue
                 b2 = self._box(nodes[j])
                 x2_min, y2_min, w2, h2 = b2
@@ -97,8 +105,9 @@ class HeuristicEvaluator:
 
         for node in nodes:
             # Signature rows are distributed by design; motifs are placed
-            # off-grid on purpose (corners, bleeding off the edge).
-            if node.get('structural_class') in ('repeating_group', 'decor'):
+            # off-grid on purpose (corners, bleeding off the edge). A picture
+            # the designer added is content and is judged (notes §3.61).
+            if node.get('structural_class') == 'repeating_group' or _poster_decor(node):
                 continue
 
             x, _, w, _ = self._clamp_coordinates(node['bbox'])
@@ -124,7 +133,7 @@ class HeuristicEvaluator:
         # Content only: motifs are part of the background layer the
         # negative space is read against, and partly bleed off the canvas.
         total_element_area = sum(float(n['bbox'][2]) * float(n['bbox'][3]) for n in nodes
-                                 if n.get('structural_class') != 'decor')
+                                 if not _poster_decor(n))
         whitespace_ratio = (area - total_element_area) / area
         return abs(whitespace_ratio - self.r_target)
 
