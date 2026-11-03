@@ -29,7 +29,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.64).
+§3.65).
 
 **Branches (user, 2026-11-03):**
 - **`main` is the version the printed manuscript describes:** the 13
@@ -98,7 +98,8 @@ Read first: `notes/system_development_progress.md`, then the tail of
       `canvas_editor.request_edit`.
     - The canvas renders in a shadow DOM: test it with Playwright locators,
       not `document.querySelector`.
-  - The top bar is pinned, with Streamlit's » and ⋮ inside it.
+  - The top bar is pinned, with Streamlit's ⋮ inside it; the » is hidden
+    and the brand (a puzzle icon, temporary) opens the sidebar (§3.65).
   - **Added 2026-10-13, after the evaluation** (§3.53, dev findings I;
     rollback tag `pre-oral-demo`). None changes generation or scoring:
     - a font picker that shows each font in its typeface (Steps 1 and 2),

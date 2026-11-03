@@ -525,6 +525,14 @@ h1, h2, h3 {letter-spacing: -0.01em;}
 [data-testid="stExpandSidebarButton"], [data-testid="stExpandSidebarButton"] *,
 [data-testid="stMainMenuButton"], [data-testid="stMainMenuButton"] *,
 [data-testid="stStatusWidget"], [data-testid="stStatusWidget"] * {color: #fff !important;}
+/* Blocks that only carry a script (the brand toggle, autocomplete, image
+   tiles) take no room: out of the flow, so the page's gaps skip them */
+[data-testid="stElementContainer"]:has(> [data-testid="stHtml"] > script:only-child),
+[data-testid="stHtml"]:has(> script:only-child) {position: absolute !important; width: 0; height: 0; overflow: hidden;}
+/* The » is hidden: the brand opens the sidebar (§3.65) */
+[data-testid="stExpandSidebarButton"] {display: none !important;}
+.ts-brand[data-ts-sidebar] {cursor: pointer; border-radius: 10px; padding: 2px 6px 2px 2px;}
+.ts-brand[data-ts-sidebar]:hover {background: rgba(255, 255, 255, .10);}
 [data-testid="stExpandSidebarButton"]:hover, [data-testid="stMainMenuButton"]:hover {
   background: rgba(255, 255, 255, .16) !important;}
 /* The bar spans the window and stays put when the sidebar (Step 2's
@@ -533,7 +541,7 @@ h1, h2, h3 {letter-spacing: -0.01em;}
 [data-testid="stLayoutWrapper"]:has(> .st-key-ts_topbar) {height: 60px; margin: 0 0 1rem; flex: none;}
 .st-key-ts_topbar {position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 60px;
   background: linear-gradient(90deg, #13294b 0%, #1d3f6e 55%, #2a5a8c 100%);
-  padding: 0 3.6rem 0 3.4rem; justify-content: center;
+  padding: 0 3.6rem 0 1.4rem; justify-content: center;
   box-shadow: 0 2px 12px rgba(19, 41, 75, .28);}
 [data-testid="stSidebar"] {top: 60px !important; height: calc(100vh - 60px) !important;}
 .st-key-ts_topbar [data-testid="stMarkdownContainer"] p {margin: 0;}
@@ -986,6 +994,7 @@ h1, h2, h3 {letter-spacing: -0.01em;}
 def theme() -> None:
     """The editor look, on every page (app.py calls it first)."""
     st.html(EDITOR_CSS)
+    st.html(_BRAND_JS, unsafe_allow_javascript=True)
 
 
 # Autocomplete from the sample text: a content field whose hint is
@@ -1088,6 +1097,31 @@ def _step_pills(active: int) -> str:
     return '<div class="ts-steps">' + '<div class="ts-line"></div>'.join(cells) + "</div>"
 
 
+# A temporary logo (the user's request, §3.65): a puzzle piece, Material's
+# "extension" glyph
+PUZZLE_ICON = ('<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" '
+               'd="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 '
+               '2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 '
+               '2.7-2.7 1.49 0 2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 '
+               '11z"/></svg>')
+
+# The » that opens the sidebar is hidden; the brand opens and closes it
+_BRAND_JS = """<script>
+(() => {
+  if (window.__tsBrand) return;
+  window.__tsBrand = true;
+  const doc = window.parent && window.parent !== window ? window.parent.document : document;
+  doc.addEventListener('click', e => {
+    if (!(e.target.closest && e.target.closest('[data-ts-sidebar]'))) return;
+    const open = doc.querySelector('[data-testid="stSidebar"][aria-expanded="true"]');
+    const btn = open ? doc.querySelector('[data-testid="stSidebarCollapseButton"] button')
+                     : doc.querySelector('[data-testid="stExpandSidebarButton"]');
+    if (btn) btn.click();
+  }, true);
+})();
+</script>"""
+
+
 def top_bar(active: int, subtitle: str = "", tool: str = None):
     """The bar across the top of a page, like a design tool's header: the
     brand and the design being edited, the three steps (or, on a research
@@ -1095,7 +1129,8 @@ def top_bar(active: int, subtitle: str = "", tool: str = None):
     with its actions (returned)."""
     with st.container(key="ts_topbar"):
         brand, steps, actions = st.columns([1.25, 2.7, 2.05], vertical_alignment="center", gap="small")
-        brand.markdown(f'<div class="ts-brand"><span class="ts-logo">T</span><span><b>ThemeSync</b>'
+        brand.markdown(f'<div class="ts-brand" data-ts-sidebar title="Show or hide the sidebar">'
+                       f'<span class="ts-logo">{PUZZLE_ICON}</span><span><b>ThemeSync</b>'
                        + (f'<small title="{html.escape(subtitle)}">{html.escape(subtitle)}</small>' if subtitle else "")
                        + "</span></div>", unsafe_allow_html=True)
         steps.markdown(_step_pills(active) if tool is None else

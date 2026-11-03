@@ -18,6 +18,9 @@ const MAX_DROP = 10 * 1024 * 1024;                    // largest picture file dr
 // Drawn outside the solver (motifs, the background layer): no hit box, may
 // bleed off the canvas, no snapping to them, under the content
 const LOOSE = new Set(["decor", "background"]);
+const KEEP_SELECTION = '.st-key-ts_panel, .st-key-ts_topbar, [data-testid="stSidebar"], [data-testid="stPopoverBody"], '
+  + '[role="dialog"], [data-baseweb="popover"], [data-baseweb="menu"], [data-testid="stToast"]';
+const ANCHOR_ALIGN = { start: "left", middle: "center", end: "right" };
 const HANDLES = ["nw", "n", "ne", "e", "se", "s", "sw", "w"];
 const CURSORS = { nw: "nwse-resize", se: "nwse-resize", ne: "nesw-resize", sw: "nesw-resize",
                   n: "ns-resize", s: "ns-resize", e: "ew-resize", w: "ew-resize" };
@@ -98,7 +101,16 @@ class CanvasEditor {
     this.on(this.stage, "drop", (e) => this.onDrop(e));
     this.on(document, "themesync-add-asset", (e) => this.addAsset(e.detail && e.detail.asset, null));
     this.on(this.textarea, "keydown", (e) => this.onEditorKey(e));
-    this.on(this.textarea, "input", () => this.updateCounter());
+    this.on(this.textarea, "input", () => { this.fitLive(); this.updateCounter(); });
+    // A click outside the canvas deselects, except in the controls that act
+    // on the selection (the right panel, popovers, dialogs, the sidebar, the
+    // top bar) (notes §3.65)
+    this.on(document, "pointerdown", (e) => {
+      const path = e.composedPath ? e.composedPath() : [];
+      if (path.includes(this.root)) return;
+      if (path.some((el) => el.matches && el.matches(KEEP_SELECTION))) return;
+      this.deselect();
+    }, true);
     this.on(this.textarea, "blur", () => this.commitText());
     this.on(this.textarea, "pointerdown", (e) => e.stopPropagation());
     for (const [act, b] of Object.entries(this.buttons)) this.on(b, "click", () => this.action(act));
@@ -345,7 +357,7 @@ class CanvasEditor {
     const g = e.target.closest && e.target.closest("[data-node-id]");
     const id = g && g.getAttribute("data-node-id");
     if (!id || !this.nodes.has(id)) {
-      this.select(null);
+      this.deselect();
       return;
     }
     this.flushNudge();
@@ -443,6 +455,17 @@ class CanvasEditor {
     this.redrawOverlay();
   }
 
+  deselect() {
+    // Clear the selection here and in the right-hand panel (notes §3.65).
+    if (this.editing) this.commitText();
+    this.flushNudge();
+    this.select(null);
+    if (this.remoteSel != null && !this.pending) {
+      this.remoteSel = null;
+      this.trigger("event", { type: "select", node_id: null, nonce: `${Date.now()}-${++this.seq}` });
+    }
+  }
+
   notifySelect() {
     // Tell Python, so the Constraint Editor shows the same node.
     if (this.sel && this.sel !== this.remoteSel) {
@@ -476,7 +499,7 @@ class CanvasEditor {
       this.send({ type: "remove", node_id: this.sel });
       return;
     }
-    if (key === "Escape") { e.preventDefault(); this.flushNudge(); this.select(null); }
+    if (key === "Escape") { e.preventDefault(); this.deselect(); }
   }
 
   cycle(dir) {
@@ -531,22 +554,59 @@ class CanvasEditor {
     this.editing = id;
     const r = this.stageRect(node.bbox);
     const sw = this.stage.clientWidth, sh = this.stage.clientHeight;
-    const width = Math.min(sw, Math.max(r.width, 240));
-    const height = Math.min(sh, Math.max(r.height, node.text.includes("\n") ? 64 : 46));
     const ta = this.textarea;
+    // Live editing (notes §3.65): the editor takes the rendered text's font,
+    // size, weight, colour and alignment and sits in its box, and the
+    // rendered words hide meanwhile, so typing shows as it will look. Enter
+    // saves, and the renderer fits the words to the box as before.
+    const g = this.groups.get(id);
+    const texts = g ? [...g.querySelectorAll("text")] : [];
+    const main = texts.find((t) => t.getAttribute("fill-opacity") !== "0.45") || texts[0];
+    if (main) {
+      const k = 1 / this.unitsPerPx();
+      const at = (a, d) => main.getAttribute(a) || d;
+      const size = parseFloat(at("font-size", "16")) * k;
+      const shown = texts.map((t) => t.textContent).join(" ");
+      Object.assign(ta.style, {
+        fontFamily: at("font-family", "inherit"), fontSize: `${size}px`, fontWeight: at("font-weight", "400"),
+        fontStyle: at("font-style", "normal"), color: at("fill", "#111"), lineHeight: "1.35",
+        letterSpacing: `${parseFloat(at("letter-spacing", "0")) * k}px`,
+        textAlign: ANCHOR_ALIGN[at("text-anchor", "start")] || "left",
+        textTransform: shown && shown === shown.toUpperCase() && node.text !== node.text.toUpperCase() ? "uppercase" : "none",
+      });
+      ta.classList.add("ts-live");
+      for (const t of texts) t.style.visibility = "hidden";
+      this.editHidden = texts;
+    }
+    const width = main ? r.width : Math.min(sw, Math.max(r.width, 240));
+    const height = main ? r.height : Math.min(sh, Math.max(r.height, node.text.includes("\n") ? 64 : 46));
     Object.assign(ta.style, {
       display: "block",
-      left: `${clamp(r.left, 0, sw - width)}px`,
-      top: `${clamp(r.top, 0, sh - height - 18)}px`,
+      left: `${main ? r.left : clamp(r.left, 0, sw - width)}px`,
+      top: `${main ? r.top : clamp(r.top, 0, sh - height - 18)}px`,
       width: `${width}px`,
       height: `${height}px`,
     });
+    this.liveHeight = height;
     if (node.maxLength) ta.setAttribute("maxlength", String(node.maxLength));
     else ta.removeAttribute("maxlength");
     ta.value = node.text;
+    this.fitLive();
     this.updateCounter();
     ta.focus({ preventScroll: true });
     ta.select();
+  }
+
+  fitLive() {
+    // Centre the words in the box as the renderer does, and let the box
+    // grow while the words run past it.
+    const ta = this.textarea;
+    if (!ta.classList.contains("ts-live")) return;
+    ta.style.paddingTop = "0px";
+    ta.style.height = `${this.liveHeight}px`;
+    const need = ta.scrollHeight;
+    if (need > this.liveHeight) ta.style.height = `${need}px`;
+    else ta.style.paddingTop = `${Math.max(0, (this.liveHeight - need) / 2)}px`;
   }
 
   updateCounter() {
@@ -581,7 +641,15 @@ class CanvasEditor {
 
   hideEditor() {
     this.editing = null;
-    this.textarea.style.display = "none";
+    const ta = this.textarea;
+    ta.style.display = "none";
+    if (ta.classList.contains("ts-live")) {
+      ta.classList.remove("ts-live");
+      for (const p of ["fontFamily", "fontSize", "fontWeight", "fontStyle", "color", "lineHeight", "letterSpacing",
+                       "textAlign", "textTransform", "paddingTop"]) ta.style[p] = "";
+    }
+    for (const t of this.editHidden || []) t.style.visibility = "";
+    this.editHidden = null;
     this.counter.style.display = "none";
   }
 

@@ -396,6 +396,7 @@ class AestheticSVGRenderer:
         self.styles = styles or {}
         self.style_contrast = {}   # node id → its styled text colour's contrast, per render
         self.bg_boxes = {}         # background item → its box, per render (notes §3.64)
+        self.text_sizes = {}       # text node → the largest font size it was drawn at (§3.65)
 
     def _clean_node_id(self, node_id: str) -> str:
         return self.mock_data.get(
@@ -912,6 +913,9 @@ class AestheticSVGRenderer:
                 elements = self._render_signature_block(x, y, w, h, content)
             else:
                 elements = self._render_text_node(x, y, w, h, node_id, content)
+            sizes = [float(v) for e in elements for v in re.findall(r'font-size="([\d.]+)"', e)]
+            if sizes and struct_class != "image_node":
+                self.text_sizes[node_id] = round(max(sizes), 1)
             svg_elements.extend(group(node, self._apply_style(node, elements)))
         self.base_size = base
 

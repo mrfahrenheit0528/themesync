@@ -661,6 +661,7 @@ class OrchestrationSession:
         # state; restore, undo and redo bring the styles back with it.
         self.styles = {}
         self.background_boxes = {}      # the background layer's items on the canvas (§3.64)
+        self.text_sizes = {}            # text node → the font size it is drawn at (§3.65)
         self.style_contrast = {}          # styled text's contrast in the last render
         # Elements the designer added (id → node) and deleted (ids), in
         # effect at the current state; restore, undo and redo bring them
@@ -865,6 +866,7 @@ class OrchestrationSession:
         out = renderer.render_nodes(nodes, path, archetype=self.archetype_of(variation))
         self.style_contrast = renderer.style_contrast
         self.background_boxes = dict(renderer.bg_boxes)
+        self.text_sizes = dict(renderer.text_sizes)
         return out
 
     def render_merged(self, values: dict, path: str) -> str:
@@ -1003,6 +1005,45 @@ class OrchestrationSession:
              "constraint_type": target["constraint_type"], "summary": f"{verb} {node_id}",
              "latency_ms": latency},
             resolved, fitness=fitness,
+            candidate_id=current.get("candidate_id"), variation=variation)
+        self.render(resolved, self.rendered_path, variation)
+        self.chain.save(self.chain_path)
+        return state
+
+    @_timed_event
+    def set_font_size(self, node_id: str, size: float) -> dict:
+        """The selected text at a font size (Step 2's Style; notes §3.65): its
+        box grows or shrinks by the same ratio (wider only as far as the
+        canvas allows) and its type with it, as a resize does (§3.62), and
+        the layout re-solves around it. The element stays Hard or Soft as it
+        was. `size` is in canvas px, 4 to 400."""
+        size = float(size)
+        if not 4.0 <= size <= 400.0:
+            raise ValueError("A font size is 4 to 400 px")
+        current = self.chain.current
+        nodes = copy.deepcopy(current["nodes"])
+        target = next((n for n in nodes if n["node_id"] == node_id), None)
+        shown = self.text_sizes.get(node_id)
+        if target is None or not shown:
+            raise KeyError(f"'{node_id}' has no text drawn on the canvas")
+        ratio = size / shown
+        if abs(ratio - 1.0) < 1e-3:
+            raise ValueError("The font size is unchanged.")
+        x, y, w, h = (float(v) for v in target["bbox"])
+        w2 = min(w * ratio, 0.96 * self.canvas_w) if ratio > 1 else w
+        h2 = h * ratio
+        target["bbox"] = [round(max(0.0, min(x - (w2 - w) / 2.0, self.canvas_w - w2)), 2), round(y, 2),
+                          round(w2, 2), round(h2, 2)]
+        target["designer_size"] = [target["bbox"][2], target["bbox"][3]]
+        target["text_scale"] = round(float(target.get("text_scale") or 1.0) * ratio, 4)
+        variation = current.get("variation") or dict(variations_for(self.domain)[0])
+        resolved = self._resolve(nodes, variation)
+        self._mark()
+        state = self.chain.append(
+            f"Font size [{node_id}]",
+            {"type": "font-size", "node_id": node_id, "before": shown, "after": size,
+             "summary": f"{node_id} at {size:g} px"},
+            resolved, fitness=self._fitness(resolved, variation),
             candidate_id=current.get("candidate_id"), variation=variation)
         self.render(resolved, self.rendered_path, variation)
         self.chain.save(self.chain_path)

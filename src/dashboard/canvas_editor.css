@@ -177,3 +177,15 @@
 .ts-msg.warn { color: #b45309; font-weight: 600; }
 /* A picture dragged over the canvas (a file, or a tile from the Images sidebar) */
 .ts-root.ts-dropping .ts-stage { outline: 3px dashed #cf4836; outline-offset: 4px; }
+
+/* Live editing (notes §3.65): the editor looks like the rendered text, in its box */
+.ts-editor.ts-live {
+  padding: 0;
+  background: transparent;
+  border: 1.5px dashed #cf4836;
+  border-radius: 2px;
+  box-shadow: none;
+  overflow: hidden;
+  white-space: pre-wrap;
+  caret-color: #cf4836;
+}

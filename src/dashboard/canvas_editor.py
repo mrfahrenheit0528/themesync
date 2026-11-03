@@ -253,6 +253,8 @@ def _on_event(session, key: str, friendly) -> None:
     if kind == "select":
         if node_id:
             st.session_state["sel_node"] = node_id
+        else:                           # deselected on the canvas or outside it (§3.65)
+            st.session_state.pop("sel_node", None)
         return
     try:
         if node_id in session.BACKGROUND_ITEMS:          # the background layer (notes §3.64)

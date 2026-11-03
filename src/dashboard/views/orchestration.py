@@ -268,6 +268,21 @@ def _style_tools(session, node: dict, state: dict) -> None:
         if picked != own_font:
             apply({"font": picked})
             st.rerun()
+        # Its font size (§3.65): the box grows or shrinks with it, like a resize
+        shown = session.text_sizes.get(nid)
+        if shown:
+            st.markdown('<div class="ts-wlabel">Font size (px)</div>', unsafe_allow_html=True)
+            with st.container(key=f"fsize_row_{sid}"):
+                size = ui.size_stepper(f"elsize_{sid}", round(shown, 1), lo=4.0, hi=400.0,
+                                       help="The text's font size; its box grows or shrinks with it")
+            if abs(size - round(shown, 1)) > 0.05:
+                try:
+                    new = session.set_font_size(nid, size)
+                except (KeyError, ValueError) as e:
+                    st.session_state["style_error"] = str(e.args[0]) if e.args else str(e)
+                else:
+                    st.session_state["flash"] = f"{new['state_id']}: {new['event']['summary']}"
+                st.rerun()
         palette = session.palette
         extracted = (session.ingestion or {}).get("palette_hex") or []
         swatches = list(dict.fromkeys(c.upper() for c in [palette["primary"], palette["accent"], palette["muted"],

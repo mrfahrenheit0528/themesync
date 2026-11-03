@@ -4437,3 +4437,37 @@ the candidates and evaluate.py's simulated edits are unchanged (0.01 px
 float noise, identical scores). In Edge: a click on an empty spot selected
 the panel, a drag moved it, the slider faded it to 0.70, and the list
 selected the background image. The 12 tests pass.
+
+### 3.65 Step 2: live text editing, deselect outside the canvas, a font size; the brand (2026-11-04)
+
+The user's requests:
+- **Live text editing** (`canvas_editor.js` `openEditor`, `fitLive`): the
+  editor takes the rendered text's font family, size (scaled to the
+  screen), weight, style, colour, letter-spacing, alignment and
+  uppercase, sits in the element's box with a dashed outline, centred as
+  the renderer centres it, and grows while the words run past the box;
+  the rendered words hide meanwhile, so typing shows as it will look.
+  Enter saves, and the renderer fits the words to the box as before.
+- **Deselect** (`deselect`): a click outside the canvas clears the
+  selection, except in the controls that act on it (the right panel, the
+  top bar, the sidebar, popovers, dialogs, toasts). A click on empty
+  canvas and Escape now clear the right panel too: before, the canvas
+  dropped its highlight but never told Python, so the panel kept the old
+  element (`_on_event` "select" with no node).
+- **Font size** (`OrchestrationSession.set_font_size`, `ui.size_stepper`
+  in the Style section): the selected text at a size in px; its box grows
+  or shrinks by the same ratio (wider only as far as the canvas allows)
+  and its type with it, as a resize does (§3.62), and the layout
+  re-solves around it; the element stays Hard or Soft. The renderer
+  records each text's drawn size (`text_sizes`), which the control shows.
+- **The brand:** a puzzle icon (Material's "extension") replaces the "T"
+  as a temporary logo; Streamlit's » is hidden, and a click on the brand
+  opens and closes the sidebar (Step 2's Images). Blocks that only carry a
+  script take no room (the brand script had added a 16 px gap).
+
+**Checked in Edge:** the editor on Student Name showed Montserrat at the
+canvas's 31.5 px (47.4 px on the canvas), its colour, centred, with the
+rendered text hidden; "Maria Santos" saved on Enter. Font size 30 drew
+the name at 30 px, still Soft. A click outside cleared the panel; the
+panel's Lock kept the selection. The brand opened and closed the sidebar;
+no » shown; Step 1 doesn't scroll. The 12 tests pass.
