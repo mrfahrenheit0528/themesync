@@ -206,3 +206,8 @@ uncommitted for the user:
   spills.
 - **K1–K2 not applied:** they would add pp.47, 56 and 58 to the reprint. Up to
   the user.
+- **Update, same day: K1 applied (user's go-ahead), except the optional p.58 wording.**
+  p.47 "the master's decorative motifs"; p.56 "keep, remove, or replace by
+  dropping a picture on it". The p.58 thumbnail wording pushed a word onto
+  p.59, so it was left out. The reprint is now pp.47, 56, 86, 88, 89, 106,
+  110, 111; every other page is identical to 1210.2.
