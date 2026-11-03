@@ -4112,3 +4112,20 @@ Nothing here changes how a layout is generated, solved or scored.
   - Checked again at both screen sizes: +, typing 60, the 72 preset, a
     font change and − each keep the size; the certificate's template has
     the two person columns.
+- **Then (the user's feedback, same day):**
+  - **Fields filled from the list are plainly locked.** They were already
+    disabled, showing «Student Name», but looked like an empty field. Now
+    they are striped with a dashed border, their label reads
+    "Student Name · from the list" in the accent colour with a people
+    icon, and the tooltip says to stop the mail merge to type them.
+  - **Autocomplete from the sample text.** While what is typed in a
+    content field matches the start of its hint (any case), the rest of
+    the hint shows in grey after it, with a small "Tab" key. Tab, or →
+    at the end, takes it; a second Tab moves on as usual, and a field
+    that doesn't match keeps Tab's normal behaviour. A script in the
+    page (`ui.autocomplete_samples`, `st.html` with JavaScript) sets the
+    value through React's setter, so Streamlit receives it as typed text.
+  - Checked in Edge: "cam" + Tab gives "Camarines Sur Polytechnic
+    Colleges" and commits on the next Tab; "For ex" + → completes the
+    citation; "Juan" in Student Name shows nothing and Tab moves on; the
+    page still doesn't scroll.

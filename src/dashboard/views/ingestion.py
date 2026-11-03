@@ -647,8 +647,9 @@ with card_content:
                     # One layout to edit: the merged field shows its placeholder
                     content[key] = merge["placeholders"][key]
                     widget = col.text_area if long else col.text_input
-                    widget(label, value=content[key], disabled=True, key=f"merged_{wkey}",
-                           help=f"Filled from {merge['source']} for each layout")
+                    widget(f":material/group: {label} · from the list", value=content[key], disabled=True,
+                           key=f"merged_{wkey}",
+                           help=f"Filled from {merge['source']} for each person; stop the mail merge to type it")
                     continue
                 hint = f"e.g. {examples[key]}" if examples.get(key) else ""
                 shown = f"{label} · from the poster" if key in from_poster else label
@@ -660,6 +661,8 @@ with card_content:
                     value = col.text_input(shown, key=wkey, max_chars=max_chars, placeholder=hint, help=tip)
                 # An empty field becomes a placeholder on the canvas, editable in Step 2
                 content[key] = value if value.strip() else mail_merge.placeholder(label, max_chars)
+
+ui.autocomplete_samples()                          # Tab takes a field's sample text
 
 # Pre-orchestration schema validation (Chapter 3, p.43)
 checks = {"typography": validate_typography(typography, canvas_w, canvas_h),

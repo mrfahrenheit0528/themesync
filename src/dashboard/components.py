@@ -658,6 +658,22 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
   padding: .15rem .2rem .15rem .55rem;}
 .st-key-merge_note [data-testid="stElementContainer"]:has([data-testid="stMarkdownContainer"]) {flex: 1;}
 .st-key-merge_note button {min-height: 1.7rem; padding: 0 .35rem;}
+/* A field the mail merge fills from the list: locked, and plainly so */
+[class*="st-key-merged_content_"] :is([data-testid="stTextInputRootElement"], [data-testid="stTextAreaRootElement"],
+  [data-baseweb="input"], [data-baseweb="textarea"]) {
+  background: repeating-linear-gradient(135deg, #eceef2 0 8px, #e4e7ec 8px 16px) !important;
+  border: 1px dashed #b9c0cb !important; cursor: not-allowed;}
+[class*="st-key-merged_content_"] :is(input, textarea) {background: transparent !important;
+  color: #5b6370 !important; -webkit-text-fill-color: #5b6370; font-style: italic; cursor: not-allowed;}
+[class*="st-key-merged_content_"] [data-testid="stWidgetLabel"] p {color: #b8392a !important; font-weight: 600;}
+/* Autocomplete from the sample text (ui.autocomplete_samples): the rest of
+   the hint, grey, after what was typed; Tab or → takes it */
+.ts-ghost {position: absolute; inset: 0; pointer-events: none; overflow: hidden; color: transparent;
+  white-space: pre; z-index: 1;}
+.ts-ghost.multi {white-space: pre-wrap; overflow-wrap: break-word;}
+.ts-ghost b {font-weight: inherit; color: #a3a9b3;}
+.ts-ghost i {font-style: normal; font-size: .68rem; color: #8a919c; border: 1px solid #d6dae1;
+  border-radius: 4px; padding: 0 .25rem; margin-left: .4rem; background: #fff; vertical-align: 1px;}
 .st-key-content_fields {height: 100%; overflow-y: auto; scrollbar-width: thin;
   padding-right: .3rem; gap: .35rem;}
 /* Streamlit pulls the element after a markdown block up by 1rem (its
@@ -871,6 +887,79 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
 def theme() -> None:
     """The editor look, on every page (app.py calls it first)."""
     st.html(EDITOR_CSS)
+
+
+# Autocomplete from the sample text: a content field whose hint is
+# "e.g. <sample>" shows the rest of the sample, grey, while what is typed
+# matches its start (any case); Tab, or → at the end, takes it. The value
+# is set through React's own setter, so Streamlit sees a typed change.
+_AUTOCOMPLETE_JS = """<script>
+(() => {
+  if (window.__tsAutocomplete) return;
+  window.__tsAutocomplete = true;
+  const doc = window.parent && window.parent.document && window.parent !== window ? window.parent.document : document;
+  const FIELD = '.st-key-content_fields input, .st-key-content_fields textarea';
+  const sample = el => (el.placeholder || '').startsWith('e.g. ') ? el.placeholder.slice(5) : '';
+  const rest = el => {
+    const s = sample(el), v = el.value;
+    return v && !el.disabled && s.length > v.length && s.toLowerCase().startsWith(v.toLowerCase())
+      ? s.slice(v.length) : '';
+  };
+  const ghostOf = el => {
+    const box = el.parentElement;
+    let g = box.querySelector(':scope > .ts-ghost');
+    if (!g) {
+      g = doc.createElement('div');
+      g.className = 'ts-ghost' + (el.tagName === 'TEXTAREA' ? ' multi' : '');
+      if (getComputedStyle(box).position === 'static') box.style.position = 'relative';
+      box.appendChild(g);
+    }
+    const cs = getComputedStyle(el);
+    for (const p of ['fontFamily', 'fontSize', 'fontWeight', 'letterSpacing', 'lineHeight', 'paddingTop',
+                     'paddingRight', 'paddingBottom', 'paddingLeft', 'borderTopWidth', 'borderLeftWidth'])
+      g.style[p] = cs[p];
+    g.style.borderStyle = 'solid'; g.style.borderColor = 'transparent';
+    g.style.borderRightWidth = '0'; g.style.borderBottomWidth = '0';
+    return g;
+  };
+  const show = el => {
+    const r = rest(el);
+    const g = r || el.parentElement.querySelector(':scope > .ts-ghost') ? ghostOf(el) : null;
+    if (!g) return;
+    g.textContent = '';
+    if (!r || doc.activeElement !== el) return;
+    g.scrollTop = el.scrollTop;
+    g.append(doc.createTextNode(el.value));
+    const b = doc.createElement('b'); b.textContent = r; g.append(b);
+    const i = doc.createElement('i'); i.textContent = 'Tab'; g.append(i);
+  };
+  const take = el => {
+    const r = rest(el);
+    if (!r) return false;
+    const proto = el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+    Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, sample(el));
+    el.dispatchEvent(new Event('input', {bubbles: true}));
+    el.setSelectionRange(el.value.length, el.value.length);
+    show(el);
+    return true;
+  };
+  doc.addEventListener('input', e => e.target.matches && e.target.matches(FIELD) && show(e.target), true);
+  doc.addEventListener('focusin', e => e.target.matches && e.target.matches(FIELD) && show(e.target), true);
+  doc.addEventListener('focusout', e => e.target.matches && e.target.matches(FIELD) && setTimeout(() => show(e.target)), true);
+  doc.addEventListener('scroll', e => e.target.matches && e.target.matches(FIELD) && show(e.target), true);
+  doc.addEventListener('keydown', e => {
+    const el = e.target;
+    if (!el.matches || !el.matches(FIELD) || e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) return;
+    const atEnd = el.selectionStart === el.value.length && el.selectionEnd === el.value.length;
+    if ((e.key === 'Tab' || (e.key === 'ArrowRight' && atEnd)) && take(el)) e.preventDefault();
+  }, true);
+})();
+</script>"""
+
+
+def autocomplete_samples() -> None:
+    """Tab-completion of the content fields from their sample text (Step 1)."""
+    st.html(_AUTOCOMPLETE_JS, unsafe_allow_javascript=True)
 
 
 def current_step() -> int:
