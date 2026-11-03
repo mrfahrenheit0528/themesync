@@ -10,37 +10,37 @@
         "{{Issuing_Organization}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 1,
-            "max_characters": 60
+            "max_characters": 150
         },
         "{{Certificate_Title}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 2,
-            "max_characters": 40
+            "max_characters": 80
         },
         "{{Presentation_Line}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 3,
-            "max_characters": 30
+            "max_characters": 60
         },
         "{{Student_Name}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 4,
-            "max_characters": 60
+            "max_characters": 80
         },
         "{{Citation_Body}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 5,
-            "max_characters": 150
+            "max_characters": 300
         },
         "{{Date_Issued}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 6,
-            "max_characters": 30
+            "max_characters": 60
         },
         "{{Certificate_ID}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 7,
-            "max_characters": 20
+            "max_characters": 40
         },
         "{{Signature_Blocks}}": {
             "structural_class": "repeating_group",

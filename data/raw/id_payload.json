@@ -10,27 +10,27 @@
         "{{Organization_Header}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 1,
-            "max_characters": 90
+            "max_characters": 150
         },
         "{{Event_Title}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 2,
-            "max_characters": 40
+            "max_characters": 80
         },
         "{{Event_Details}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 3,
-            "max_characters": 80
+            "max_characters": 160
         },
         "{{Participant_Name}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 4,
-            "max_characters": 30
+            "max_characters": 60
         },
         "{{Participant_Role}}": {
             "structural_class": "text_node",
             "spatial_hierarchy": 5,
-            "max_characters": 24
+            "max_characters": 48
         }
     }
 }

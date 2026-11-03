@@ -366,7 +366,8 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
     come from the server.
 - **Results:** `experiment_runner.py` (the Phase 3 battery),
   `gnn_heldout_eval.py`, `evaluate.py`, `yolo_iou.py` (the detector's mean
-  IoU, p.62), `stress_test.py` (p.55's extreme payloads; analysis only),
+  IoU, p.62), `stress_test.py` (p.55's extreme payloads; analysis only; `results/stress_test.json`
+  was measured at the content schema's old limits, raised on 2026-11-04, §3.66),
   `latency_benchmark.py` (p.62's edit latency), `rated_layouts_check.py`
   (F1 and text fit of the 64 rated layouts, read-only),
   `r_target_analysis.py` (a master-derived R_target; analysis only),

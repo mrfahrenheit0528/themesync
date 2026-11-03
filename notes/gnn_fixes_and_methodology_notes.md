@@ -4488,3 +4488,17 @@ no » shown; Step 1 doesn't scroll. The 12 tests pass.
   Shift 780 × 66 (ratio 11.84 → 11.82); Alt 660 × 136 about the centre
   (centre unchanged); Alt+Shift 660 × 56 about the centre, ratio kept. A
   click on the grey left of the page cleared the selection.
+- **Text limits raised** (the user chose this over removing them,
+  2026-11-04): the content schema still checks every field (p.43–44), at
+  limits real organisation names fit. Certificate: Issuing Organization
+  60 → 150, Certificate Title 40 → 80, Presentation Line 30 → 60, Student
+  Name 60 → 80, Citation Body 150 → 300, Date Issued 30 → 60, Certificate
+  ID 20 → 40. Event ID: Organization Header 90 → 150, Event Title 40 → 80,
+  Event Details 80 → 160, Participant Name 30 → 60, Participant Role
+  24 → 48. Nothing in generation reads them (the renderer wraps by its own
+  width; the GNN and solver don't use them), so the rated layouts are
+  unaffected. **`results/stress_test.json` was measured at the old
+  limits** (its breaking points are fractions of them); a re-run of
+  `stress_test.py` would test the new ones, so quote the recorded file
+  with the old limits. The 12 tests pass (the over-limit edit test uses
+  200 characters).
