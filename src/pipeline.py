@@ -660,6 +660,7 @@ class OrchestrationSession:
         # {fill, bold, italic, align, opacity, flip, image}. Each change is a
         # state; restore, undo and redo bring the styles back with it.
         self.styles = {}
+        self.background_boxes = {}      # the background layer's items on the canvas (§3.64)
         self.style_contrast = {}          # styled text's contrast in the last render
         # Elements the designer added (id → node) and deleted (ids), in
         # effect at the current state; restore, undo and redo bring them
@@ -826,7 +827,9 @@ class OrchestrationSession:
         master's map."""
         if not self.style_kit.get("background"):
             return self.saliency_map
-        return self._explorer().saliency(nodes, variation)
+        explorer = self._explorer()
+        explorer.background_edits = {k: v for k, v in self.styles.items() if k.startswith("bg_")}
+        return explorer.saliency(nodes, variation)
 
     def _fitness(self, nodes: list, variation: dict) -> dict:
         solver = solver_for(variation, self.canvas_w, self.canvas_h, self.structure_guided)
@@ -861,6 +864,7 @@ class OrchestrationSession:
         renderer = self.renderer()
         out = renderer.render_nodes(nodes, path, archetype=self.archetype_of(variation))
         self.style_contrast = renderer.style_contrast
+        self.background_boxes = dict(renderer.bg_boxes)
         return out
 
     def render_merged(self, values: dict, path: str) -> str:
@@ -924,13 +928,19 @@ class OrchestrationSession:
         for p in pictures:          # a Soft picture is placed at its own size, not one it shrank to
             if p.get("constraint_type") != "Hard" and p.get("designer_size"):
                 p["bbox"][2], p["bbox"][3] = (float(v) for v in p["designer_size"])
+            # one the designer sent to the background stays where it is,
+            # outside the solver and the score, like the master's motifs (§3.64)
+            if self.styles.get(p["node_id"], {}).get("behind"):
+                p["layer"] = "back"
+            else:
+                p.pop("layer", None)
         # The stack is ordered around the Hard boxes and the added pictures
         # where they are on the canvas, so the Soft nodes re-flow around
         # them (notes §3.58); a Hard picture stays where it is, a Soft one
         # is placed in the stack (§3.59)
         engine = solver_for(variation, self.canvas_w, self.canvas_h, self.structure_guided)
         content = engine.execute_relational_logic(content, reference={n["node_id"]: n["bbox"] for n in nodes},
-                                                  fixed=pictures)
+                                                  fixed=[p for p in pictures if p.get("layer") != "back"])
 
         decor = [copy.deepcopy(n) for n in nodes if n.get("structural_class") == "decor"
                  and n["node_id"] not in removed and n["node_id"] not in self.added]
@@ -1173,7 +1183,11 @@ class OrchestrationSession:
         self.chain.save(self.chain_path)
         return state
 
-    STYLE_KEYS = ("fill", "bold", "italic", "align", "opacity", "flip", "image", "font", "weight")
+    STYLE_KEYS = ("fill", "bold", "italic", "align", "opacity", "flip", "image", "font", "weight",
+                  "box", "hidden", "behind")
+    # The background layer's items (notes §3.64): the master's background,
+    # the panel or card, the faint title artwork and a split layout's art
+    BACKGROUND_ITEMS = ("bg_backdrop", "bg_panel", "bg_watermark", "bg_art")
 
     @_timed_event
     def set_style(self, node_id: str, changes: dict) -> dict:
@@ -1183,8 +1197,13 @@ class OrchestrationSession:
         an opacity (0.1-1). A value of None removes that setting. The layout
         isn't re-solved; the canvas re-renders, and the change is one state
         in the chain (notes §3.53)."""
-        if node_id not in {n["node_id"] for n in self.chain.current["nodes"]}:
+        background = node_id in self.BACKGROUND_ITEMS
+        if not background and node_id not in {n["node_id"] for n in self.chain.current["nodes"]}:
             raise KeyError(f"No node '{node_id}' on the canvas")
+        if "box" in changes and not background:
+            raise ValueError("Move or resize an element on the canvas")
+        if "behind" in changes and node_id not in self.added:
+            raise ValueError("Only a picture you added can go to the background")
         before = dict(self.styles.get(node_id, {}))
         after = dict(before)
         for key, value in changes.items():
@@ -1204,6 +1223,10 @@ class OrchestrationSession:
                 raise ValueError("A font is a family name of 1 to 200 characters")
             elif key == "weight" and int(value) not in FONT_WEIGHTS:
                 raise ValueError(f"Font weight {value} isn't one of {FONT_WEIGHTS}")
+            elif key == "box" and not (len(value) == 4 and float(value[2]) >= 8 and float(value[3]) >= 8):
+                raise ValueError("A box is x, y, width and height, at least 8 px each way")
+            elif key == "box":
+                after[key] = [round(float(v), 2) for v in value]
             else:
                 after[key] = float(value) if key == "opacity" else int(value) if key == "weight" else bool(
                     value) if key in ("bold", "italic", "flip") else value
@@ -1217,13 +1240,20 @@ class OrchestrationSession:
             styles.pop(node_id, None)
         self.styles = styles
         current = self.chain.current
+        nodes, fitness = current["nodes"], current.get("fitness")
+        variation = current.get("variation") or dict(variations_for(self.domain)[0])
+        if "behind" in changes:          # into or out of the background: the stack re-flows (§3.64)
+            nodes = self._resolve(copy.deepcopy(current["nodes"]), variation)
+            fitness = self._fitness(nodes, variation)
+        elif background:                 # what the text is read against changed: re-score (§3.64)
+            fitness = self._fitness(current["nodes"], variation)
         state = self.chain.append(f"Style [{node_id}]",
                                   {"type": "style", "node_id": node_id, "before": before, "after": after,
                                    "summary": f"Styled {node_id}" if after else f"Reset the style of {node_id}"},
-                                  current["nodes"], fitness=current.get("fitness"),
+                                  nodes, fitness=fitness,
                                   candidate_id=current.get("candidate_id"), variation=current.get("variation"),
                                   styles=copy.deepcopy(styles))
-        self.render(current["nodes"], self.rendered_path, current.get("variation"))
+        self.render(nodes, self.rendered_path, current.get("variation"))
         self.chain.save(self.chain_path)
         return state
 

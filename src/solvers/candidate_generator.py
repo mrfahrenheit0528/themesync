@@ -128,9 +128,12 @@ class MetaheuristicStateExplorer:
                               dark=background_is_dark(self.style_kit["background"]))
         wordmark = self.style_kit.get("wordmark")
         art = wordmark or (self.style_kit.get("motifs") or [None])[0]
+        edits = getattr(self, "background_edits", None) or {}      # the designer's (notes §3.64)
+        if layers["panel"] and (edits.get("bg_panel") or {}).get("box"):
+            layers["panel"] = [float(v) for v in edits["bg_panel"]["box"]]
         return compose_background(self.style_kit["background"], int(self.canvas_w), int(self.canvas_h),
                                   decor_nodes, panel_rgb=self.panel_rgb, layers=layers,
-                                  watermark=wordmark, art=art)
+                                  watermark=wordmark, art=art, edits=edits)
 
     def saliency(self, nodes, variation):
         """SIFT saliency map of the candidate's own composed background."""

@@ -29,7 +29,7 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.63).
+§3.64).
 
 **Branches (user, 2026-11-03):**
 - **`main` is the version the printed manuscript describes:** the 13
@@ -41,7 +41,10 @@ Read first: `notes/system_development_progress.md`, then the tail of
     pushes only what shares its columns; a Soft picture is placed, in a
     row when it was beside others; signature blocks in rows like the logos;
     a resize outlasts a release and scales the text), and Formula 3.11
-    scores the designer's added pictures as content. It was
+    scores the designer's added pictures as content.
+  - Also on `main` (§3.64, dashboard): the background layer (panel,
+    faint title artwork, art column, background image) is editable as
+    reserved styles `bg_*`; untouched layouts render pixel-identical. It was
     checked against the old code: generation and evaluate.py's simulated
     edits are unchanged.
   - Waiting for `refinements` (not built): recommendations re-solved

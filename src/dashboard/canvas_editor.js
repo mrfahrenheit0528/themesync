@@ -15,6 +15,9 @@ const NUDGE_COMMIT_MS = 700;    // arrow-key nudges are sent as one on-drop afte
 const PENDING_TIMEOUT_MS = 60000;
 const ASSET_TYPE = "application/x-themesync-asset";   // a tile dragged from the Images sidebar
 const MAX_DROP = 10 * 1024 * 1024;                    // largest picture file dropped on the canvas
+// Drawn outside the solver (motifs, the background layer): no hit box, may
+// bleed off the canvas, no snapping to them, under the content
+const LOOSE = new Set(["decor", "background"]);
 const HANDLES = ["nw", "n", "ne", "e", "se", "s", "sw", "w"];
 const CURSORS = { nw: "nwse-resize", se: "nwse-resize", ne: "nesw-resize", sw: "nesw-resize",
                   n: "ns-resize", s: "ns-resize", e: "ew-resize", w: "ew-resize" };
@@ -203,7 +206,7 @@ class CanvasEditor {
       const node = this.nodes.get(id);
       this.groups.set(id, g);
       // The whole box is clickable, not just the painted glyphs.
-      if (node && node.kind !== "decor") {
+      if (node && !LOOSE.has(node.kind)) {
         const [x, y, w, h] = node.bbox;
         g.insertBefore(svgEl("rect", { x, y, width: w, height: h, fill: "transparent",
                                        "pointer-events": "all", class: "ts-hit" }), g.firstChild);
@@ -256,7 +259,7 @@ class CanvasEditor {
     // Content stays on the canvas; a motif may bleed off it by half its size.
     const [, , w, h] = node.bbox;
     const W = this.data.width, H = this.data.height;
-    return node.kind === "decor" ? [-w / 2, -h / 2, W - w / 2, H - h / 2] : [0, 0, W - w, H - h];
+    return LOOSE.has(node.kind) ? [-w / 2, -h / 2, W - w / 2, H - h / 2] : [0, 0, W - w, H - h];
   }
 
   snapLines(id) {
@@ -264,7 +267,7 @@ class CanvasEditor {
     const xs = [W / 2, ...(this.data.grid || [])];
     const ys = [H / 2];
     for (const n of this.nodes.values()) {
-      if (n.id === id || n.kind === "decor") continue;
+      if (n.id === id || LOOSE.has(n.kind)) continue;
       const [x, y, w, h] = n.bbox;
       xs.push(x, x + w / 2, x + w);
       ys.push(y, y + h / 2, y + h);
@@ -305,7 +308,7 @@ class CanvasEditor {
       if (hd.includes("w")) l = r - nw; else r = l + nw;
       if (hd.includes("n")) t = b - nh; else b = t + nh;
     }
-    if (node.kind !== "decor") {
+    if (!LOOSE.has(node.kind)) {
       l = Math.max(0, l); t = Math.max(0, t);
       r = Math.min(this.data.width, r); b = Math.min(this.data.height, b);
     }
@@ -419,7 +422,7 @@ class CanvasEditor {
     let hit = null;
     for (const n of this.nodes.values()) {
       const [x, y, w, h] = n.bbox;
-      if (p.x >= x && p.x <= x + w && p.y >= y && p.y <= y + h && (!hit || hit.kind === "decor" || n.kind !== "decor")) {
+      if (p.x >= x && p.x <= x + w && p.y >= y && p.y <= y + h && (!hit || LOOSE.has(hit.kind) || !LOOSE.has(n.kind))) {
         hit = n;
       }
     }

@@ -280,10 +280,14 @@ def _paste(canvas: Image.Image, path: str, box: list, opacity: float = 1.0, flip
     return Image.alpha_composite(canvas, layer)
 
 
+BACKGROUND_ITEMS = ("bg_backdrop", "bg_panel", "bg_watermark", "bg_art")
+
+
 def compose_background(background_path: str, width: int, height: int,
                        decor_nodes: list = (), panel: list = None,
                        panel_rgb: tuple = (255, 255, 255), panel_opacity: float = PANEL_OPACITY,
-                       watermark: dict = None, layers: dict = None, art: dict = None) -> Image.Image:
+                       watermark: dict = None, layers: dict = None, art: dict = None,
+                       edits: dict = None) -> Image.Image:
     """
     Rasterises the output's background layer at canvas size: the text-free
     master background (scaled to cover), the frame (`layers`, from
@@ -291,27 +295,40 @@ def compose_background(background_path: str, width: int, height: int,
     as a watermark or in a split layout's art column (`watermark`/`art`: a
     style-kit wordmark or motif entry), and the motifs — the same stack the
     SVG renderer draws, used for the saliency map (Legibility Penalty) and
-    for picking legible text colours.
+    for picking legible text colours. `edits`: the designer's background
+    styles (bg_backdrop, bg_panel, bg_watermark, bg_art: box, opacity,
+    image, hidden; notes §3.64), drawn as the renderer draws them.
     """
-    canvas = _covered(_file_key(background_path), int(width), int(height)).convert("RGBA")
+    e = lambda k: (edits or {}).get(k) or {}
+    backdrop = e("bg_backdrop")
+    canvas = _covered(_file_key(backdrop.get("image") or background_path), int(width), int(height)).convert("RGBA")
+    if backdrop.get("hidden") or backdrop.get("opacity") is not None:
+        white = Image.new("RGBA", canvas.size, (255, 255, 255, 255))
+        canvas = white if backdrop.get("hidden") else Image.blend(white, canvas, float(backdrop["opacity"]))
     if layers is None:
         layers = {"panel": panel, "panel_style": "panel", "overlays": [], "art_box": None,
                   "watermark": bool(panel and watermark)}
     shapes = []
-    if layers.get("panel"):
+    if layers.get("panel") and not e("bg_panel").get("hidden"):
         fill = _hex_rgb(layers["panel_fill"]) if layers.get("panel_fill") else panel_rgb
-        shapes.append((layers["panel"], fill, layers.get("panel_opacity", panel_opacity)))
+        shapes.append((layers["panel"], fill,
+                       layers.get("panel_opacity", panel_opacity) * float(e("bg_panel").get("opacity", 1.0))))
     shapes += [(o["box"], _hex_rgb(o["fill"]), o["opacity"]) for o in layers.get("overlays", [])]
     for box, rgb, opacity in shapes:
         x, y, w, h = [int(round(v)) for v in box]
         overlay = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
         overlay.paste(Image.new("RGBA", (max(1, w), max(1, h)), tuple(rgb) + (int(255 * opacity),)), (x, y))
         canvas = Image.alpha_composite(canvas, overlay)
-    if watermark and layers.get("watermark") and layers.get("panel"):
-        canvas = _paste(canvas, watermark["path"], watermark_box(layers["panel"], watermark["aspect"]),
-                        opacity=WATERMARK_OPACITY)
-    if art and layers.get("art_box"):
-        canvas = _paste(canvas, art["path"], art_image_box(layers["art_box"], art["aspect"]))
+    mark = e("bg_watermark")
+    if watermark and layers.get("watermark") and layers.get("panel") and not mark.get("hidden"):
+        canvas = _paste(canvas, mark.get("image") or watermark["path"],
+                        mark.get("box") or watermark_box(layers["panel"], watermark["aspect"]),
+                        opacity=float(mark.get("opacity", WATERMARK_OPACITY)))
+    column = e("bg_art")
+    if art and layers.get("art_box") and not column.get("hidden"):
+        canvas = _paste(canvas, column.get("image") or art["path"],
+                        column.get("box") or art_image_box(layers["art_box"], art["aspect"]),
+                        opacity=float(column.get("opacity", 1.0)))
     for node in decor_nodes or []:
         canvas = _paste(canvas, node["motif_path"], node["bbox"], flip=node.get("flip", False))
     return canvas.convert("RGB")

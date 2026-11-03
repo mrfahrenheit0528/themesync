@@ -53,6 +53,8 @@ PENALTIES = (("Collision", "P_collision", "3.12"), ("Alignment", "P_align", "3.1
 
 
 def _friendly(node: dict) -> str:
+    if node["node_id"] in canvas_editor.BACKGROUND_LABELS:
+        return canvas_editor.BACKGROUND_LABELS[node["node_id"]]
     if node["node_id"].startswith("Added_"):            # Added_Picture_1 → Picture 1 (was "Motif 2")
         return node["node_id"][len("Added_"):].replace("_", " ")
     if node.get("structural_class") == "decor":
@@ -142,6 +144,71 @@ ALIGN_ICONS = {"left": ":material/format_align_left:", "center": ":material/form
                "right": ":material/format_align_right:"}
 
 
+BACKGROUND_OPACITY = {"bg_backdrop": 1.0, "bg_panel": 1.0, "bg_watermark": 0.08, "bg_art": 1.0}
+
+
+def _background_tools(session, key: str, state: dict) -> None:
+    """A background item's tools (notes §3.64): where it is, its opacity, a
+    replacement picture, a flip, hide or show, and reset. Each change is one
+    state in the chain; the content stays where it is, and the score is
+    taken again against the edited background (Legibility Penalty)."""
+    style = session.styles.get(key, {})
+    sid = f"{state['state_id']}_{key}"
+
+    def apply(changes: dict) -> None:
+        try:
+            new = session.set_style(key, changes)
+        except (KeyError, ValueError) as e:
+            st.session_state["style_error"] = str(e.args[0]) if e.args else str(e)
+            return
+        st.session_state["flash"] = f"{new['state_id']}: {new['event']['summary']}"
+
+    box = session.background_boxes.get(key)
+    if box and key != "bg_backdrop":
+        st.markdown('<div class="ts-status">' + "".join(
+            f'<span class="ts-pill">{k} {round(v)}</span>' for k, v in zip("XYWH", box))
+            + '<span class="ts-unit">px · drag or resize it on the canvas</span></div>', unsafe_allow_html=True)
+    _section("Style")
+    hidden = bool(style.get("hidden"))
+    h_col, r_col = st.columns(2, gap="small")
+    h_col.button("Show" if hidden else "Hide", icon=":material/visibility:" if hidden else ":material/visibility_off:",
+                 width="stretch", key=f"bghide_{sid}", on_click=apply, args=({"hidden": None if hidden else True},))
+    r_col.button("Reset", icon=":material/format_color_reset:", width="stretch", key=f"bgreset_{sid}",
+                 disabled=not style, help="Back to how the layout drew it",
+                 on_click=apply, args=({k: None for k in style},))
+    if key != "bg_panel":
+        with st.popover("Replace", icon=":material/add_photo_alternate:", width="stretch"):
+            up = st.file_uploader("A picture for this part of the background", type=["png", "jpg", "jpeg", "webp"],
+                                  key=f"bgimg_{sid}")
+        if up is not None:
+            apply({"image": ui.save_upload(up, prefix="background_")})
+            st.rerun()
+    default = BACKGROUND_OPACITY[key]
+    st.slider("Opacity", 0.02 if key == "bg_watermark" else 0.1, 1.0, float(style.get("opacity", default)), 0.01,
+              key=f"bgop_{sid}",
+              on_change=lambda: apply({"opacity": None if abs(st.session_state[f"bgop_{sid}"] - default) < 1e-6
+                                       else st.session_state[f"bgop_{sid}"]}))
+    if "style_error" in st.session_state:
+        st.error(st.session_state.pop("style_error"))
+
+
+def _background_list(session) -> None:
+    """The background layer's items, to select one (the master's background
+    can't be clicked on the canvas: it is the canvas)."""
+    items = [k for k in session.BACKGROUND_ITEMS if k in session.background_boxes]
+    if not items:
+        return
+    _section("Background layer")
+    with st.container(horizontal=True, key="bg_list", gap="small"):
+        for key in items:
+            hidden = (session.styles.get(key) or {}).get("hidden")
+            label = canvas_editor.BACKGROUND_LABELS[key] + (" (hidden)" if hidden else "")
+            if st.button(label, key=f"bgsel_{key}", type="primary" if st.session_state.get("sel_node") == key
+                         else "secondary"):
+                st.session_state["sel_node"] = key
+                st.rerun()
+
+
 def _style_tools(session, node: dict, state: dict) -> None:
     """The selected element's Style tools (notes §3.53): a text colour (the
     poster's palette first), bold, italic and alignment for text; replace,
@@ -177,6 +244,11 @@ def _style_tools(session, node: dict, state: dict) -> None:
         st.slider("Opacity", 0.1, 1.0, float(style.get("opacity", 1.0)), 0.05, key=f"op_{sid}",
                   on_change=lambda: apply({"opacity": st.session_state[f"op_{sid}"]
                                            if st.session_state[f"op_{sid}"] < 1 else None}))
+        if nid in session.added:
+            st.toggle("In the background", value=bool(style.get("behind")), key=f"bh_{sid}",
+                      help="Behind the content, like the poster's motifs: the solver leaves it where it is, "
+                           "the other elements don't move for it, and it isn't scored",
+                      on_change=lambda: apply({"behind": True if st.session_state[f"bh_{sid}"] else None}))
         if up is not None:
             apply({"image": ui.save_upload(up, prefix="element_")})
             st.rerun()
@@ -387,6 +459,7 @@ with panel_col, st.container(key="ts_panel"):
     _section("Selected element")
     sel = st.session_state.get("sel_node")
     node = node_by_id.get(sel)
+    background = sel in session.BACKGROUND_ITEMS
     with st.container(horizontal=True, key="sel_head", vertical_alignment="center", gap="small"):
         if st.button("", icon=":material/undo:", key="panel_undo", disabled=not session.can_undo,
                      help="Undo (Ctrl+Z)"):
@@ -400,9 +473,14 @@ with panel_col, st.container(key="ts_panel"):
                         f'<span class="ts-chip {"hard" if hard else "soft"}">'
                         f'{"Hard · manual override" if hard else "Soft · algorithmic"}</span></div>',
                         unsafe_allow_html=True)
+        elif background:
+            st.markdown(f'<div class="ts-selname"><b>{html.escape(canvas_editor.BACKGROUND_LABELS[sel])}</b>'
+                        '<span class="ts-chip">Background layer</span></div>', unsafe_allow_html=True)
         else:
             st.markdown('<div class="ts-selname"><span class="ts-muted">Click an element on the canvas to '
                         "select it.</span></div>", unsafe_allow_html=True)
+    if background:
+        _background_tools(session, sel, state)
     if node:
         x0, y0, w0, h0 = node["bbox"]
         st.markdown('<div class="ts-status">' + "".join(
@@ -430,10 +508,12 @@ with panel_col, st.container(key="ts_panel"):
                         icon=":material/lock_open:" if hard else ":material/lock:",
                         help="Hand it back to the algorithm (L)" if hard else "Pin it exactly where it is (L)"):
             _flash(session.apply_event("lock-toggle", node["node_id"], hard=not hard))
-    st.caption("A moved or resized element becomes Hard: the solver keeps it exactly there and re-flows "
-               "the Soft ones around it (Formula 3.10).")
+    if not background:
+        st.caption("A moved or resized element becomes Hard: the solver keeps it exactly there and re-flows "
+                   "the Soft ones around it (Formula 3.10).")
     if node:
         _style_tools(session, node, state)
+    _background_list(session)
 
     _section("All text")
     t = session.typography

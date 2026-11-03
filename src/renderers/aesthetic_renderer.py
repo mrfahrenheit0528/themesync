@@ -395,6 +395,7 @@ class AestheticSVGRenderer:
         # is drawn, so an unstyled node renders as before (notes §3.53).
         self.styles = styles or {}
         self.style_contrast = {}   # node id → its styled text colour's contrast, per render
+        self.bg_boxes = {}         # background item → its box, per render (notes §3.64)
 
     def _clean_node_id(self, node_id: str) -> str:
         return self.mock_data.get(
@@ -468,50 +469,82 @@ class AestheticSVGRenderer:
         W, H = self.canvas_w, self.canvas_h
         layers = frame_layers(self.domain, archetype.get("frame", "panel"), W, H, list(content_nodes),
                               self.palette, dark=background_is_dark(background))
+        # The designer's background edits (notes §3.64): each item of the
+        # background layer can be moved, resized, replaced, faded or hidden
+        # without touching the content
+        edits = {k: v for k, v in self.styles.items() if k.startswith("bg_")}
+        e = lambda k: edits.get(k) or {}
+        if layers["panel"] and e("bg_panel").get("box"):
+            layers["panel"] = [float(v) for v in e("bg_panel")["box"]]
         self._layers, self._panel = layers, layers["panel"]
         panel_hex = self.palette["panel"]
         wordmark = self.style_kit.get("wordmark")
         art = wordmark or (self.style_kit.get("motifs") or [None])[0]
         self._raster = compose_background(background, int(W), int(H), decor_nodes,
                                           panel_rgb=tuple(int(panel_hex[i:i + 2], 16) for i in (1, 3, 5)),
-                                          layers=layers, watermark=wordmark, art=art)
-        uri = _background_uri(file_key(background), max(1, int(W // 2)), max(1, int(H // 2)))
-        elements = [f'<image x="0" y="0" width="{W}" height="{H}" preserveAspectRatio="none" '
-                    f'xlink:href="{uri}" />']
+                                          layers=layers, watermark=wordmark, art=art, edits=edits)
+        self.bg_boxes = {}
+
+        def item(key, box, drawn, own_opacity=False):
+            """One background item, wrapped for the canvas (data-kind
+            "background"), with the designer's flip and, unless the drawing
+            carries it itself, opacity."""
+            self.bg_boxes[key] = [round(float(v), 1) for v in box]
+            if e(key).get("hidden"):
+                return []
+            x, _, w, _ = (float(v) for v in box)
+            wrap = [f'transform="translate({2 * x + w:.1f},0) scale(-1,1)"'] if e(key).get("flip") else []
+            if not own_opacity and e(key).get("opacity") is not None:
+                wrap.append(f'opacity="{float(e(key)["opacity"]):.2f}"')
+            inner = [f'<g {" ".join(wrap)}>'] + drawn + ["</g>"] if wrap else drawn
+            return [f'<g data-node-id="{key}" data-kind="background">'] + inner + ["</g>"]
+
+        backdrop = e("bg_backdrop")
+        uri = _background_uri(file_key(backdrop.get("image") or background), max(1, int(W // 2)), max(1, int(H // 2)))
+        elements = [f'<rect width="{W}" height="{H}" fill="#FFFFFF" />'] + item("bg_backdrop", [0, 0, W, H], [
+            f'<image x="0" y="0" width="{W}" height="{H}" preserveAspectRatio="none" xlink:href="{uri}" />'])
         p, a = self.palette["primary"], self.palette["accent"]
         if self._panel and layers["panel_style"] == "panel":
             x, y, w, h = self._panel
-            elements += [
+            elements += item("bg_panel", self._panel, [
                 f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="14" '
                 f'fill="{panel_hex}" fill-opacity="{PANEL_OPACITY}" />',
                 f'<rect x="{x + 10:.1f}" y="{y + 10:.1f}" width="{w - 20:.1f}" height="{h - 20:.1f}" '
                 f'rx="8" fill="none" stroke="{p}" stroke-width="2" />',
                 f'<rect x="{x + 17:.1f}" y="{y + 17:.1f}" width="{w - 34:.1f}" height="{h - 34:.1f}" '
                 f'rx="5" fill="none" stroke="{a}" stroke-width="1.2" />',
-            ]
+            ])
         elif self._panel:  # event-ID card
             x, y, w, h = self._panel
-            elements.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="22" '
-                            f'fill="{layers["panel_fill"]}" fill-opacity="{layers["panel_opacity"]}" '
-                            f'stroke="{a}" stroke-width="2" />')
+            elements += item("bg_panel", self._panel, [
+                f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="22" '
+                f'fill="{layers["panel_fill"]}" fill-opacity="{layers["panel_opacity"]}" '
+                f'stroke="{a}" stroke-width="2" />'])
         for o in layers["overlays"]:
             x, y, w, h = o["box"]
             elements.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
                             f'rx="{o.get("rx", 0)}" fill="{o["fill"]}" fill-opacity="{o["opacity"]}" />')
         if layers["watermark"] and self._panel and wordmark and self.wordmark_uri:
             # The event's title artwork, faint, behind the certificate text.
-            wx, wy, ww, wh = watermark_box(self._panel, wordmark["aspect"])
-            elements.append(f'<image x="{wx:.1f}" y="{wy:.1f}" width="{ww:.1f}" height="{wh:.1f}" '
-                            f'preserveAspectRatio="xMidYMid meet" opacity="{WATERMARK_OPACITY}" '
-                            f'xlink:href="{self.wordmark_uri}" />')
+            mark = e("bg_watermark")
+            wx, wy, ww, wh = mark.get("box") or watermark_box(self._panel, wordmark["aspect"])
+            uri = _load_image(mark["image"], max_side=1024)[0] if mark.get("image") else self.wordmark_uri
+            elements += item("bg_watermark", [wx, wy, ww, wh], own_opacity=True, drawn=[
+                f'<image x="{wx:.1f}" y="{wy:.1f}" width="{ww:.1f}" height="{wh:.1f}" '
+                f'preserveAspectRatio="xMidYMid meet" opacity="{float(mark.get("opacity", WATERMARK_OPACITY)):.2f}" '
+                f'xlink:href="{uri}" />'])
         if layers["art_box"] and art:
             # A split layout's art column shows the title artwork (or the top
             # motif) at full strength on the master's own background.
-            uri = self.wordmark_uri if art is wordmark else _load_image(art["path"], max_side=1024)[0]
+            column = e("bg_art")
+            uri = (_load_image(column["image"], max_side=1024)[0] if column.get("image")
+                   else self.wordmark_uri if art is wordmark else _load_image(art["path"], max_side=1024)[0])
             if uri:
-                ax, ay, aw, ah = art_image_box(layers["art_box"], art["aspect"])
-                elements.append(f'<image x="{ax:.1f}" y="{ay:.1f}" width="{aw:.1f}" height="{ah:.1f}" '
-                                f'preserveAspectRatio="xMidYMid meet" xlink:href="{uri}" />')
+                ax, ay, aw, ah = column.get("box") or art_image_box(layers["art_box"], art["aspect"])
+                elements += item("bg_art", [ax, ay, aw, ah], own_opacity=True, drawn=[
+                    f'<image x="{ax:.1f}" y="{ay:.1f}" width="{aw:.1f}" height="{ah:.1f}" '
+                    f'preserveAspectRatio="xMidYMid meet" opacity="{float(column.get("opacity", 1.0)):.2f}" '
+                    f'xlink:href="{uri}" />'])
         return elements
 
     def _render_decor(self, node: dict) -> list:

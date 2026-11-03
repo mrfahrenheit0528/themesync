@@ -197,7 +197,20 @@ def _nodes(session, friendly) -> list:
             "text": text.get(nid), "maxLength": limits.get(nid), "note": note,
             "lockAspect": kind == "decor" or bool(schema.get(base, {}).get("lock_aspect_ratio")),
         })
+    # The background layer's items (notes §3.64), under the content: the
+    # master's background itself is chosen from the right-hand panel
+    for key, box in getattr(session, "background_boxes", {}).items():
+        if key == "bg_backdrop" or (session.styles.get(key) or {}).get("hidden"):
+            continue
+        out.append({"id": key, "label": BACKGROUND_LABELS[key], "kind": "background", "bbox": box,
+                    "hard": False, "text": None, "maxLength": None,
+                    "note": "the background layer: move, resize or fade it; the content stays put",
+                    "lockAspect": key != "bg_panel"})
     return out
+
+
+BACKGROUND_LABELS = {"bg_backdrop": "Background image", "bg_panel": "Panel", "bg_watermark": "Title artwork (faint)",
+                     "bg_art": "Art column"}
 
 
 def _grid(session, variation: dict) -> list:
@@ -242,7 +255,18 @@ def _on_event(session, key: str, friendly) -> None:
             st.session_state["sel_node"] = node_id
         return
     try:
-        if kind in ("on-drop", "on-resize-complete"):
+        if node_id in session.BACKGROUND_ITEMS:          # the background layer (notes §3.64)
+            if kind in ("on-drop", "on-resize-complete"):
+                new = session.set_style(node_id, {"box": [float(v) for v in event["bbox"]]})
+            elif kind == "remove":
+                new = session.set_style(node_id, {"hidden": True})
+                st.session_state.pop("sel_node", None)
+                node_id = None
+            elif kind == "lock-toggle":
+                raise ValueError("The background layer isn't placed by the solver: move it freely.")
+            else:
+                return
+        elif kind in ("on-drop", "on-resize-complete"):
             new = session.apply_event(kind, node_id, bbox=[float(v) for v in event["bbox"]])
         elif kind == "lock-toggle":
             new = session.apply_event(kind, node_id, hard=bool(event.get("hard")))

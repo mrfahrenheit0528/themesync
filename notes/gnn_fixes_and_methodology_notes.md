@@ -4393,3 +4393,47 @@ region. No overlap. The drops and releases of §3.60: no overlap, nothing
 past the margins. Against the pre-§3.59 code: candidates and evaluate.py's
 simulated edits identical (0.000 px), every score identical. The 12 tests
 pass.
+
+### 3.64 Step 2: the background layer is editable (2026-11-04)
+
+The user's request: the faint title artwork behind the text, the white
+panel (and the split layout's art column) should be editable: resized,
+replaced, faded, and more pictures added behind the content, without
+affecting the content.
+
+**What is editable** (reserved style ids, `OrchestrationSession.BACKGROUND_ITEMS`):
+`bg_backdrop` (the master's text-free background), `bg_panel` (the
+certificate panel with its double border, or the event-ID card),
+`bg_watermark` (the faint title artwork on a certificate), `bg_art` (a
+split layout's art column picture). Each takes a box, an opacity, a
+replacement picture (not the panel), a flip, and hidden.
+- They are styles (`set_style`), so each edit is one state in the chain,
+  with undo, redo, the State Timeline, and candidate switches for free.
+  Styles are carried across candidates, so a background edit is too.
+- The renderer draws each item in `<g data-node-id="bg_…"
+  data-kind="background">` and reports its box (`bg_boxes`); the canvas
+  lists them (kind "background", like a motif: no hit box, may bleed off,
+  no snapping), so clicking an empty spot selects the panel, and it can be
+  dragged and resized; Delete hides it. The background image is the
+  canvas, so it is chosen from the right panel's "Background layer" list.
+- The right panel shows a background item's X/Y/W/H, Hide/Show, Reset,
+  Replace and an opacity slider.
+- `decor.compose_background` applies the same edits to the raster, so the
+  text colours and the Legibility Penalty read the edited background; an
+  edit re-scores the layout (`_fitness`, through the explorer's
+  `background_edits`).
+- **A picture the designer added can go to the background** ("In the
+  background", style `behind`): it stays where it is, outside the solver
+  and the score (node `layer` "back", treated as a motif by
+  `_poster_decor`), and the stack re-flows as if it weren't there.
+
+**Measured:** DONATION certificate: the panel moved, resized and faded to
+60%, the watermark replaced, moved and faded to 30%, the backdrop at 50%,
+the watermark hidden and brought back by undo, all without moving a
+content box; a picture sent to the background let the content re-flow;
+another candidate kept the edits. Untouched layouts render pixel-identical
+to the previous code (36 candidate renders, 3 posters × 2 formats), and
+the candidates and evaluate.py's simulated edits are unchanged (0.01 px
+float noise, identical scores). In Edge: a click on an empty spot selected
+the panel, a drag moved it, the slider faded it to 0.70, and the list
+selected the background image. The 12 tests pass.

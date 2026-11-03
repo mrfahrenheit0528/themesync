@@ -5,8 +5,10 @@ def _poster_decor(node) -> bool:
     """The master's motifs (background decoration), as opposed to a picture
     the designer added on the canvas (semantic_category "added"), which
     Formula 3.11 scores as content (notes §3.61). Generated layouts have no
-    added pictures, so their scores are as before."""
-    return node.get('structural_class') == 'decor' and node.get('semantic_category') != 'added'
+    added pictures, so their scores are as before. A picture the designer
+    sent to the background (layer "back", §3.64) is decoration again."""
+    return node.get('structural_class') == 'decor' and (node.get('semantic_category') != 'added'
+                                                        or node.get('layer') == 'back')
 
 
 class HeuristicEvaluator:
