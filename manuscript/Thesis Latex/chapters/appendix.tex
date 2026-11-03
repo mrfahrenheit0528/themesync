@@ -125,6 +125,40 @@
 }
 \end{lstlisting}
 
+\chapter{Sample Annotated Master Layouts From the Empirical Dataset}
+\label{annex:empirical-samples}
+
+The empirical dataset held 200 event posters (160 for training, 40 for validation), annotated in Roboflow with four classes. \ref{fig:empirical-samples} shows six of them, and \ref{tab:empirical-counts} counts the annotated boxes by class.
+
+% Let the figure and the table share this page (Appendix C is the document's last part).
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\setcounter{totalnumber}{4}
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.66\textwidth]{figures/appendix_c_samples}
+    \caption{Sample Annotated Master Layouts From the Empirical Dataset}
+    \label{fig:empirical-samples}
+\end{figure}
+% Drawn from data/raw/master_layout_batch (Roboflow export, version 3) by the manuscript chat's
+% appendix_c_figure.py; boxes over 50% of the canvas are left out, as in the training pipeline.
+
+\begin{table}[!ht]
+\centering
+\caption{Annotated Boxes in the Empirical Dataset by Class}
+\label{tab:empirical-counts}
+\begin{tabular}{l c c c}
+\hline
+\textbf{Class} & \textbf{Training (160 images)} & \textbf{Validation (40 images)} & \textbf{Total} \\ \hline
+Logo & 544 & 140 & 684 \\
+Text & 1,053 & 260 & 1,313 \\
+Underlay & 175 & 41 & 216 \\
+Embellishment & 740 & 166 & 906 \\ \hline
+\textbf{All} & \textbf{2,512} & \textbf{607} & \textbf{3,119} \\ \hline
+\multicolumn{4}{p{0.86\textwidth}}{\footnotesize Counts after boxes covering more than 50\% of the canvas were removed (18 in training, 3 in validation). The validation counts are those of \ref{tab:iou}.}
+\end{tabular}
+\end{table}
 
 
 \end{theappendices}
