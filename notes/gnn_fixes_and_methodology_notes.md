@@ -4136,3 +4136,17 @@ Nothing here changes how a layout is generated, solved or scored.
     `data/raw/sample_content.json` in the dashboard only
     (`ingestion._HINTS_BY_DOMAIN`); the file is unchanged, since Phase 4,
     the Phase 3 battery and the stress test render its text.
+- **Fixed: a font picked for one text spread to every text clicked
+  afterwards** (the user's report, Step 2). The right panel's Style
+  widgets were keyed by the state alone (`elfont_<state>`), so after a
+  font was picked for one text, selecting another text (no new state)
+  found the old choice still in the picker, read it as a new pick, and
+  applied it there too. Each change touched one element, as designed, but
+  clicking around carried the font to everything. The weight box showed
+  the previous element's value the same way. The keys now carry the
+  element too (`_style_tools`: state + node id, letters only, since the
+  key becomes a CSS class).
+  - Checked in Edge on a full run (DONATION_PROGRAM, certificate): Tinos
+    on Student Name changed that text only; selecting Certificate Title
+    showed its own font (Montserrat) in the picker; after clicking two
+    more texts, only Student Name was Tinos.

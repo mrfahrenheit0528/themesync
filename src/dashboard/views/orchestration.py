@@ -33,6 +33,7 @@ report, and "Step 1" (confirmed) closes the layout.
 import html
 import json
 import os
+import re
 import sys
 
 import streamlit as st
@@ -147,7 +148,12 @@ def _style_tools(session, node: dict, state: dict) -> None:
     poster's palette first), bold, italic and alignment for text; replace,
     flip and opacity for a picture. Each change is one state in the chain
     and only re-draws the canvas, like a typography change."""
-    nid, sid = node["node_id"], state["state_id"]
+    # Keyed by the state and the element: with the state alone, a font
+    # picked for one text stayed in the picker when another was selected,
+    # and was applied to that one too (notes §3.58). Letters only, since the
+    # key becomes a CSS class.
+    nid = node["node_id"]
+    sid = f"{state['state_id']}_{re.sub(r'[^A-Za-z0-9_]', '', nid)}"
     kind = node.get("structural_class", "text_node")
     style = session.styles.get(nid, {})
     picture = kind in ("image_node", "decor") or ("Event_Title" in nid and bool(session.style_kit.get("wordmark")))
