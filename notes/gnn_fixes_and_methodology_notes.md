@@ -4332,3 +4332,38 @@ moved to the right: the others spread with gaps of 79, 80, 79 px. No
 overlap and nothing past the margins in the 72 drops and releases of
 §3.60. Against the pre-§3.59 code: candidates and evaluate.py's simulated
 edits within 0.01 px, every score identical. The 12 tests pass.
+
+### 3.62 Step 2: a resize outlasts a release; resized text scales with its box (2026-11-04)
+
+The user's findings: a logo resized and then released went back to its
+original size, and an added text ("Hello") couldn't be made bigger.
+
+**Causes:**
+- A re-solve rebuilds every Soft element from its GNN-guided box, size
+  included, so releasing an element dropped the designer's resize.
+- Text the renderer has no type role for (added text; also dates and IDs)
+  is drawn at min(0.3 B, half the box height): a larger box never made the
+  words larger. The format's own roles are capped by the type scale the
+  same way (title 1.1 B, name 1.0 B, …).
+- Related: a Soft picture's preferred size was its last box, so a picture
+  shrunk to fit a full page never grew back.
+
+**Changes:**
+- A resize records the designer's size on the element (`designer_size`),
+  and for text and signature blocks a type scale (`text_scale`, new height
+  over old, compounding). Re-solves carry both; a Soft element takes the
+  designer's size, so after a release the solver places it at that size.
+  An added picture records its size when added, and a Soft picture is
+  placed from that size, not from one it shrank to.
+- The renderer draws a resized element's text on B × text_scale, so the
+  type scales with the box, as in a design tool. Elements never resized
+  have no scale and render as before.
+
+**Measured:** DONATION's seal resized to 60% then released: 55 × 59,
+re-centred on the axis. "Hello" at twice the height: 14.4 → 28.8 px, kept
+after release. Student Name at 70% height: 47.4 → 33.2 px. The drops and
+releases of §3.60 leave no overlap and nothing past the margins. Against
+the pre-§3.59 code: candidates and evaluate.py's simulated edits identical
+(0.000 px), every score identical; the simulated resize now also scales
+that node's text in the rendered SVG, which no Chapter 4 measure reads.
+The 12 tests pass.

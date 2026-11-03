@@ -29,18 +29,19 @@ code; notes go stale.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
-§3.61).
+§3.62).
 
 **Branches (user, 2026-11-03):**
 - **`main` is the version the printed manuscript describes:** the 13
   October generation (unchanged from tag `phase4-rated`) plus the dashboard
   features. Until the defense, only **dashboard** changes go on `main`:
   nothing that changes how a layout is generated, solved or scored.
-  - One exception, at the user's request (§3.59–3.61): re-solves after a
+  - One exception, at the user's request (§3.59–3.62): re-solves after a
     designer's event re-flow around Hard boxes and added pictures (a box
     pushes only what shares its columns; a Soft picture is placed, in a
-    row when it was beside others; signatures spread around a moved one),
-    and Formula 3.11 scores the designer's added pictures as content. It was
+    row when it was beside others; signatures spread around a moved one;
+    a resize outlasts a release and scales the text), and Formula 3.11
+    scores the designer's added pictures as content. It was
     checked against the old code: generation and evaluate.py's simulated
     edits are unchanged.
   - Waiting for `refinements` (not built): recommendations re-solved

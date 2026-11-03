@@ -911,11 +911,19 @@ class OrchestrationSession:
         content += [copy.deepcopy(current.get(nid, spec)) for nid, spec in self.added.items()
                     if nid not in removed and spec.get("structural_class") != "decor"]   # added text (§3.56)
         for n in content:
+            for key in ("designer_size", "text_scale"):          # a resize outlasts a release (§3.62)
+                if key in current.get(n["node_id"], {}):
+                    n[key] = copy.deepcopy(current[n["node_id"]][key])
             if n["node_id"] in hard:
                 n["bbox"] = [float(v) for v in hard[n["node_id"]]["bbox"]]
                 n["constraint_type"] = "Hard"
+            elif n.get("designer_size"):
+                n["bbox"][2], n["bbox"][3] = (float(v) for v in n["designer_size"])
         pictures = [copy.deepcopy(n) for n in nodes if n["node_id"] in self.added   # added pictures
                     and n.get("structural_class") == "decor" and n["node_id"] not in removed]
+        for p in pictures:          # a Soft picture is placed at its own size, not one it shrank to
+            if p.get("constraint_type") != "Hard" and p.get("designer_size"):
+                p["bbox"][2], p["bbox"][3] = (float(v) for v in p["designer_size"])
         # The stack is ordered around the Hard boxes and the added pictures
         # where they are on the canvas, so the Soft nodes re-flow around
         # them (notes §3.58); a Hard picture stays where it is, a Soft one
@@ -954,6 +962,13 @@ class OrchestrationSession:
         before = list(target["bbox"])
         if bbox is not None:
             target["bbox"] = [round(float(v), 2) for v in bbox]
+        if event_type == "on-resize-complete":
+            # The designer's size outlasts a release (the solver places the
+            # element, at this size), and a text's type scales with its box
+            # by the same ratio, as in a design tool (§3.62)
+            target["designer_size"] = [target["bbox"][2], target["bbox"][3]]
+            if target.get("structural_class", "text_node") in ("text_node", "repeating_group") and before[3] > 0:
+                target["text_scale"] = round(float(target.get("text_scale") or 1.0) * target["bbox"][3] / before[3], 4)
         if event_type == "lock-toggle":
             target["constraint_type"] = "Hard" if hard else "Soft"
         else:
@@ -1266,7 +1281,8 @@ class OrchestrationSession:
             # is Soft, so the solver places it in the stack (§3.59)
             node = {"node_id": nid, "semantic_category": "added", "structural_class": "decor", "motif_path": value,
                     "spatial_hierarchy": 200 + len(self.added), "bbox": [round(v, 2) for v in box],
-                    "constraint_type": "Hard" if at is not None else "Soft"}
+                    "constraint_type": "Hard" if at is not None else "Soft",
+                    "designer_size": [round(box[2], 2), round(box[3], 2)]}
         variation = current.get("variation") or dict(variations_for(self.domain)[0])
         self._mark()
         self.added = dict(self.added, **{nid: node})

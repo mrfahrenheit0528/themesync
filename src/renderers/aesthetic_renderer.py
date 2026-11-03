@@ -865,7 +865,10 @@ class AestheticSVGRenderer:
         for node in decor:
             svg_elements.extend(group(node, self._apply_style(node, self._render_decor(node))))
 
+        base = self.base_size
         for node in content_nodes:
+            # a text the designer resized scales its type with the box (§3.62)
+            self.base_size = base * float(node.get("text_scale") or 1.0)
             x, y, w, h = node['bbox']
             node_id = node['node_id']
             struct_class = node.get('structural_class', 'text_node')
@@ -877,6 +880,7 @@ class AestheticSVGRenderer:
             else:
                 elements = self._render_text_node(x, y, w, h, node_id, content)
             svg_elements.extend(group(node, self._apply_style(node, elements)))
+        self.base_size = base
 
         svg_content = (
             f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
