@@ -4098,3 +4098,17 @@ Nothing here changes how a layout is generated, solved or scored.
   box; that box now starts empty); the template downloads with the
   certificate's ten columns; a template filled in the name column only
   merges two rows with the form's date.
+- **Revised the same day (the user's feedback):**
+  - **The mail merge has its own button** (a people icon) in Content
+    Payload's header, apart from the JSON upload: "one certificate (or
+    ID) per person". Its template holds the fields that change per
+    person (`mail_merge.PERSON_FIELDS`): Student Name and Certificate Id
+    on the certificate, Participant Name and Participant Role on the
+    event ID. Any other field can still take a column named after it.
+    The JSON popover now takes JSON only.
+  - **The size is typed in place:** the number between − and + is the
+    input itself (Enter applies it), with a small ▾ beside it for the
+    common sizes. The separate "Other size" box is gone.
+  - Checked again at both screen sizes: +, typing 60, the 72 preset, a
+    font change and − each keep the size; the certificate's template has
+    the two person columns.

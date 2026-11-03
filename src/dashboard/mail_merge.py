@@ -64,6 +64,18 @@ def placeholder(label: str, max_chars: int = None) -> str:
     return text
 
 
+# The fields that change from person to person: the template's columns
+PERSON_FIELDS = ("Student_Name", "Certificate_ID", "Participant_Name", "Participant_Role")
+
+
+def person_fields(fields: dict) -> dict:
+    """The fields (content key → (label, max_characters)) that name the
+    person a layout is for; every field when the format has none of
+    them."""
+    own = {k: v for k, v in fields.items() if k.strip("{}") in PERSON_FIELDS}
+    return own or dict(fields)
+
+
 def template(fields: dict) -> bytes:
     """A CSV with one column per text field, named by its label (content
     key → (label, max_characters)), to fill in one row per layout. UTF-8

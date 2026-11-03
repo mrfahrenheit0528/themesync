@@ -383,29 +383,26 @@ SIZE_PRESETS = [12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80, 96, 120]
 
 
 def size_stepper(key: str, current: float = 48.0, lo: float = 1.0, hi: float = 400.0, help: str = None) -> float:
-    """A font size as Canva and Word set it: − and + on either side, and
-    the value a dropdown of common sizes with a box for any other."""
-    state_key, custom_key = f"{key}_size", f"{key}_size_custom"
-    size = float(st.session_state.setdefault(state_key, float(current)))
+    """A font size as Canva and Word set it: − and + on either side, the
+    value typed in place, and a dropdown of common sizes beside it. The
+    number box holds the size itself (its key is the state)."""
+    state_key = f"{key}_size"
+    st.session_state.setdefault(state_key, float(current))
 
     def _step(delta: float) -> None:
-        st.session_state[state_key] = min(hi, max(lo, st.session_state[state_key] + delta))
+        st.session_state[state_key] = min(hi, max(lo, float(st.session_state[state_key] or current) + delta))
 
-    def _custom() -> None:
-        # the box starts empty each time: a closed list's box would otherwise
-        # send back a stale size on the next rerun
-        if st.session_state[custom_key] is not None:
-            st.session_state[state_key] = float(st.session_state[custom_key])
-            st.session_state[custom_key] = None
-            st.session_state[f"{key}_size_pop"] = False
+    def _typed() -> None:
+        if st.session_state[state_key] is None:    # a cleared box keeps the size it had
+            st.session_state[state_key] = float(current)
 
+    size = float(st.session_state[state_key] or current)
     with st.container(horizontal=True, key=f"{key}_size_box", gap=None, vertical_alignment="center"):
         st.button("", icon=":material/remove:", key=f"{key}_size_dn", type="tertiary", help="Smaller",
                   on_click=_step, args=(-1.0,), disabled=size <= lo)
-        with st.popover(f"{size:g}", key=f"{key}_size_pop", on_change="rerun", help=help):
-            st.session_state.setdefault(custom_key, None)
-            st.number_input("Other size (px)", min_value=lo, max_value=hi, step=1.0, format="%g",
-                            placeholder="Type a size", key=custom_key, on_change=_custom)
+        st.number_input("Size (px)", min_value=lo, max_value=hi, step=1.0, format="%g", key=state_key,
+                        on_change=_typed, label_visibility="collapsed", help=help)
+        with st.popover("", key=f"{key}_size_pop", on_change="rerun", help="Common sizes"):
             for preset in SIZE_PRESETS:
                 st.button(str(preset), key=f"{key}_size_opt_{preset}", width="stretch",
                           type="primary" if preset == size else "tertiary",
@@ -717,10 +714,17 @@ body:has([data-testid="stSidebar"][aria-expanded="true"]) .ts-step:not(.ts-activ
 [class*="_size_box"] {flex-wrap: nowrap !important; align-items: center;}
 [class*="_size_box"] button {height: 36px; min-height: 36px; border-radius: 7px; color: #0e1318 !important;
   border: 1px solid transparent !important; box-shadow: none !important; background: transparent !important;}
-[class*="_size_box"] [data-testid="stPopover"] button {min-width: 4.4rem; padding: 0 .3rem 0 .55rem !important;
-  font-variant-numeric: tabular-nums;}
-[class*="_size_box"] [data-testid="stPopover"] button p {font-size: 14px; font-weight: 600;}
-[class*="_size_box"] > :not(:has([data-testid="stPopover"])) button {width: 34px; padding: 0 !important;}
+[class*="_size_box"] > * {width: auto !important; flex: none !important;}
+[class*="_size_box"] [data-testid="stNumberInput"] {width: 3.6rem;}
+[class*="_size_box"] [data-testid="stNumberInputContainer"] {height: 36px; border-radius: 7px;
+  background: #fff; border: 1px solid #d9dde3;}
+[class*="_size_box"] [data-testid="stNumberInputContainer"] input {text-align: center; font-weight: 600;
+  font-size: 14px; padding: 0 .2rem; font-variant-numeric: tabular-nums; background: transparent;}
+[class*="_size_box"] :is([data-testid="stNumberInputStepDown"], [data-testid="stNumberInputStepUp"]),
+[class*="_size_box"] [data-testid="InputInstructions"] {display: none !important;}
+[class*="_size_box"] [data-testid="stPopover"] button {width: 24px; padding: 0 !important; min-width: 0;}
+[class*="_size_box"] > :not(:has(:is([data-testid="stPopover"], [data-testid="stNumberInput"]))) button {
+  width: 34px; padding: 0 !important;}
 /* Their lists read like a menu: compact rows, left-aligned, the current
    choice tinted rather than filled */
 [data-testid="stPopoverBody"]:has(:is([class*="_font_opt_"], [class*="_weight_opt_"], [class*="_size_opt_"]))

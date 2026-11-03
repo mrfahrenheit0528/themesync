@@ -533,17 +533,19 @@ with card_content:
             st.caption("Read from the master layout by OCR, top to bottom. Copy a line into any field.")
             for line in lines:
                 st.code(line["text"], language=None)
-        with st.popover("", icon=":material/upload_file:",
-                        help="Load a JSON payload, or a CSV for a mail merge (a template is inside)"):
-            st.caption("A CSV makes a mail merge: one layout per row. The template has a column for every "
-                       "field; fill in the ones that change per layout and leave the others blank.")
+        noun = "ID" if domain == "identification_card" else "certificate"
+        with st.popover("", icon=":material/group:",
+                        help=f"Mail merge: one {noun} per person, from a list (CSV)"):
+            st.markdown(f"**Mail merge: one {noun} per person**")
+            st.caption(f"Download the template, write one row per person, and upload it. You design one {noun} "
+                       f"here and in Step 2; Step 2's Download menu then gives a ZIP with one {noun} per row. "
+                       "Any other field can get its own column too, named after it.")
             template_slot = st.empty()             # filled once the fields are known, below
-            payload_upload = st.file_uploader(
-                "A JSON payload fills the fields below; a CSV starts a mail merge.",
-                type=["json", "csv"], key=f"payload_{domain}")
-    upload_is_csv = payload_upload is not None and payload_upload.name.lower().endswith(".csv")
-    if (payload_upload is not None and not upload_is_csv
-            and st.session_state.get("payload_applied") != payload_upload.file_id):
+            merge_upload = st.file_uploader("The list of people (CSV)", type=["csv"], key=f"merge_upload_{domain}")
+        with st.popover("", icon=":material/upload_file:", help="Load a JSON payload into the fields"):
+            payload_upload = st.file_uploader("A JSON payload fills the fields below.", type=["json"],
+                                              key=f"payload_{domain}")
+    if payload_upload is not None and st.session_state.get("payload_applied") != payload_upload.file_id:
         # applied once per file, so edits made afterwards aren't overwritten on rerun
         try:
             loaded = json.loads(payload_upload.getvalue().decode("utf-8"))
@@ -589,25 +591,25 @@ with card_content:
             long = ("\n" in example or props.get("max_characters", 0) > 80
                     or props.get("structural_class") == "repeating_group")
             fields.append((key, label, long, props.get("max_characters")))
+    merge_fields = {k: (label, mx) for k, label, _, mx in fields}
     template_slot.download_button(
-        "Download the CSV template", mail_merge.template({k: (label, mx) for k, label, _, mx in fields}),
-        file_name=f"ThemeSync_{domain}_mail_merge.csv", mime="text/csv", icon=":material/download:",
+        "Download the template", mail_merge.template(mail_merge.person_fields(merge_fields)),
+        file_name=f"ThemeSync_{noun}_mail_merge.csv", mime="text/csv", icon=":material/download:",
         width="stretch", on_click="ignore")
-    # A CSV: the mail merge (mail_merge.py), applied once per file
+    # The list of people: the mail merge (mail_merge.py), applied once per file
     merge_key = f"merge_{domain}"
-    if upload_is_csv and st.session_state.get("payload_applied") != payload_upload.file_id:
-        st.session_state["payload_applied"] = payload_upload.file_id
+    if merge_upload is not None and st.session_state.get("merge_applied") != merge_upload.file_id:
+        st.session_state["merge_applied"] = merge_upload.file_id
         try:
             st.session_state[merge_key] = mail_merge.build(
-                payload_upload.getvalue(), {k: (label, mx) for k, label, _, mx in fields}, base_content,
-                target_meta, payload_upload.name)
+                merge_upload.getvalue(), merge_fields, base_content, target_meta, merge_upload.name)
         except ValueError as e:
             st.error(f"Mail merge: {e}")
     merge = st.session_state.get(merge_key)
     if merge:
         with st.container(horizontal=True, key="merge_note", vertical_alignment="center", gap="small"):
             left_out = f' · <b>{len(merge["invalid"])} left out</b>' if merge["invalid"] else ""
-            st.markdown(f'<div class="ts-note"><b>Mail merge</b> · {len(merge["rows"])} of {merge["total"]} rows '
+            st.markdown(f'<div class="ts-note"><b>Mail merge</b> · {len(merge["rows"])} of {merge["total"]} people '
                         f'from {html.escape(merge["source"])} · {html.escape(", ".join(merge["labels"].values()))}'
                         f'{left_out}</div>', unsafe_allow_html=True)
             if merge["invalid"]:
