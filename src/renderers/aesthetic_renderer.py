@@ -373,7 +373,6 @@ class AestheticSVGRenderer:
         self._panel = None
         self._layers = None       # the archetype's frame (decor.frame_layers), per render
         self._align = "center"    # the archetype's alignment, per render
-        self._node = None         # the node being drawn (its own text_align, row)
 
         # Palette and typography
         self.palette = _palette_from_centroids(color_centroids)
@@ -551,17 +550,12 @@ class AestheticSVGRenderer:
                        weight: str, fill: str, shadow: bool, spacing: str = "0",
                        style: str = "normal", line: float = 1.35) -> list:
         """Lines of text vertically centred in the node's box — centred on
-        it, or flush with its left edge in a left-aligned archetype, or with
-        the edge a node on a shared line names (`text_align`: the date at the
-        left margin, the certificate number at the right) — with an offset
-        dark copy underneath when `shadow` (a text shadow every SVG renderer,
-        Cairo included, draws the same way)."""
+        it, or flush with its left edge in a left-aligned archetype — with an
+        offset dark copy underneath when `shadow` (a text shadow every SVG
+        renderer, Cairo included, draws the same way)."""
         x, top, w, h = box
-        align = (self._node or {}).get("text_align") or self._align
-        if align == "left":
+        if self._align == "left":
             tx, anchor = x, "start"
-        elif align == "right":
-            tx, anchor = x + w, "end"
         else:
             tx, anchor = x + w / 2.0, "middle"
         line_h = size * line
@@ -705,13 +699,8 @@ class AestheticSVGRenderer:
             return self._text_elements(bbox, lines, size, "900", fill, shadow, spacing="1.0")
 
         if "Organization_Header" in node_id:
-            if (self._node or {}).get("row"):
-                # beside the logos the box is narrower: wrap to its width
-                lines, size = self._fit_wrapped(content.upper(), w, h, max(9.0, min(0.34 * B, h * 0.5)),
-                                                min_size=8.0, em=0.8)   # caps plus the 1.5 px tracking
-            else:
-                lines = self._wrap_text_lines(content.upper(), max_chars=60)
-                size = max(9.0, min(0.34 * B, h / (len(lines) * 1.35)))
+            lines = self._wrap_text_lines(content.upper(), max_chars=60)
+            size = max(9.0, min(0.34 * B, h / (len(lines) * 1.35)))
             fill, shadow = self._text_fill(bbox, muted)
             return self._text_elements(bbox, lines, size, "600", fill, shadow, spacing="1.5")
 
@@ -877,7 +866,6 @@ class AestheticSVGRenderer:
             svg_elements.extend(group(node, self._apply_style(node, self._render_decor(node))))
 
         for node in content_nodes:
-            self._node = node
             x, y, w, h = node['bbox']
             node_id = node['node_id']
             struct_class = node.get('structural_class', 'text_node')
@@ -889,7 +877,6 @@ class AestheticSVGRenderer:
             else:
                 elements = self._render_text_node(x, y, w, h, node_id, content)
             svg_elements.extend(group(node, self._apply_style(node, elements)))
-        self._node = None
 
         svg_content = (
             f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '

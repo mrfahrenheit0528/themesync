@@ -31,6 +31,18 @@ Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
 §3.57).
 
+**Branches (user, 2026-11-03):**
+- **`main` is the version the printed manuscript describes:** the 13
+  October generation (unchanged from tag `phase4-rated`) plus the dashboard
+  features. Until the defense, only **dashboard** changes go on `main`:
+  nothing that changes how a layout is generated, solved or scored.
+- **`refinements`** holds §3.57 (SAM 2.1 cut-outs, even gaps after
+  anchoring, two elements on one line). It is merged into `main` after the
+  defense.
+- **Merging:** `main` undid §3.57 with a revert commit, so a plain merge
+  would keep the revert and drop §3.57. First revert that revert on `main`
+  (`git revert <the revert's hash>`), then `git merge refinements`.
+
 - **Progress:** the statistics consultant put the project at **70%** after
   a live demo (2026-09-29). Quote that, not the progress file's internal
   ~88%. The 2026-10-09 consultation concluded **"recommended for POD"**
@@ -95,21 +107,6 @@ Read first: `notes/system_development_progress.md`, then the tail of
       once (the whole design's typography is the collapsed "All text");
       add text or a picture, delete with the button or the Delete key
       (`add_element`, `remove_element`); canvas notes fade.
-  - **Changed 2026-11-03, after the evaluation: layout generation itself**
-    (§3.57; the defense was postponed). **The rated layouts come
-    from tag `phase4-rated` (commit 8422282)**; regenerate them from there,
-    not from `main`. `src/evaluation/refinement_check.py` measures the
-    current code the way the rated set was measured (analysis only).
-    - Cut-outs: SAM 2.1 tiny (`assets/models/sam2.1_t.pt`, Apache 2.0)
-      prompted with the YOLO box, soft edges with the poster's colour taken
-      out; the flood-fill is the fallback. A squarish box isn't merged into
-      the title group (DONATION's title had swallowed its logo row).
-    - Even gaps after anchoring (Recommendation 3): `EVEN` strength in
-      `cassowary_engine`, every condition (the baseline's gaps were even
-      already); certificate content kept inside the panel's border.
-    - Two elements on one line (`row` on a node): the organisation text
-      beside the logos when the poster has them so (6 of the 16 posters),
-      and the certificate's date and number at the two margins.
   - **Step 3:** the evaluated layout is fixed on the left at the window's
     height; the report (intro, headline tiles, cards) scrolls on the right
     in `report_scroll`; the page itself doesn't scroll (§3.39). The
@@ -164,11 +161,12 @@ Read first: `notes/system_development_progress.md`, then the tail of
       folder; its rows follow that packet's page order.
   - The group went ahead without the TA: four experts and the blind no-GNN
     baseline (revision-list items 1.3, 3.7 and 3.8 updated).
-  - The rated layouts come from the code at commit `8422282` (tag
-    `phase4-rated`). **The experts won't re-score** (no time; user,
-    2026-10-08). The fitness weights (α–δ) stay as they are. Layout
-    generation changed on 2026-11-03 at the user's request (§3.57), so the
-    MOS describes the tagged version: say so wherever results are quoted.
+  - The rated layouts come from the code at commit `8422282`. **The
+    experts won't re-score** (no time; user, 2026-10-08), so keep layout
+    generation and the fitness weights (α–δ) as they are. A change there
+    would mean the MOS rates a system that no longer exists. Run anything
+    that would change them (e.g. the weight calibration, item 3.25) as an
+    analysis only.
 - **Consultant's remarks** (received 2026-10-07) and their status are in
   `notes/system_development_progress.md`. All three are done: the steps
   (§3.32), a report on the user's layout (§3.32), the dataset (v5).
@@ -386,11 +384,6 @@ streamlit run src/dashboard/app.py --server.address 127.0.0.1 --server.port 8502
     registers the families Windows lacks for the session at import. It
     skips installed ones, and the first render waits 2 s for DirectWrite.
   - Add a family to `ui.FONTS` and rebuild with the script.
-- **Cut-outs need `assets/models/sam2.1_t.pt`** (75 MB, in git; loaded
-  through Ultralytics' `SAM2Predictor`, no extra package). The poster is
-  encoded once (about 1.5 s on CPU, under 1 s on the RTX 3060), then each
-  element takes a few ms to 0.2 s. Without the file, `stylistic_markers`
-  falls back to the flood-fill silently.
 - **Tesseract's English model ships in `assets/tessdata`** (§3.55). The
   Windows install had none, so OCR silently returned nothing there before
   2026-10-13; `poster_text` sets `TESSDATA_PREFIX` to that folder on every

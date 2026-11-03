@@ -3943,6 +3943,13 @@ manuscript is printed (user, 2026-10-13), so these are recorded here only.
 
 ### 3.57 Cut-outs with SAM 2.1; even gaps after anchoring; two elements on one line (2026-11-03)
 
+**On branch `refinements` only, not on `main`** (user, 2026-11-03). The
+defense shows the system the printed manuscript describes: `main` stays at
+the 13 October generation (the rated layouts' code plus the dashboard
+features), and only dashboard changes go there before the defense. This
+section's code returns to `main` after the defense (see CLAUDE.md for the
+merge step).
+
 The pre-oral defense was postponed (user, 2026-10-29), and the user asked
 to make the system usable by school organisations. Their two complaints:
 the cut-outs (poster background left around logos and title artwork), and

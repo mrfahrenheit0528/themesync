@@ -159,53 +159,6 @@ def master_composition(detected_nodes: list, image_w: float, image_h: float) -> 
     return out
 
 
-BESIDE_REACH = 0.12    # a header starts within this of the logo row's end...
-
-
-def header_beside_logos(detected_nodes: list, image_w: float, image_h: float, logo_row: list):
-    """
-    "right" or "left" when the master sets its organisation text beside its
-    logo row, as one band (6 of the 16 Phase 4 posters: the logos, then the
-    school and organisation names), else None (notes §3.57). A text group
-    (not the title, not the footer) whose centre lies within the row's
-    height and which starts within BESIDE_REACH of the row's right end (or
-    ends that close to its left end).
-    """
-    if not logo_row:
-        return None
-    W, H = float(image_w), float(image_h)
-    x0 = min(n["bbox"][0] for n in logo_row)
-    y0 = min(n["bbox"][1] for n in logo_row)
-    x1 = max(n["bbox"][0] + n["bbox"][2] for n in logo_row)
-    y1 = max(n["bbox"][1] + n["bbox"][3] for n in logo_row)
-    title = title_group_box(detected_nodes, W, H)
-    groups = text_groups(detected_nodes, W, H)
-    # Squarish "text" on the row's line next to it is a logo YOLO read as
-    # text (DONATION_PROGRAM: one of its three logos found as a logo): the
-    # row reaches over it.
-    grown = True
-    while grown:
-        grown = False
-        for g in groups:
-            x, y, w, h = g["bbox"]
-            if w < 1.5 * h and y0 <= y + h / 2.0 <= y1:
-                if x1 - 0.01 * W <= x <= x1 + 0.03 * W:
-                    x1, grown = x + w, True
-                elif x0 - 0.03 * W <= x + w <= x0 + 0.01 * W:
-                    x0, grown = x, True
-    for g in groups:
-        x, y, w, h = g["bbox"]
-        if title and abs(y - title[1]) < 1 and abs(h - title[3]) < 1:
-            continue
-        if not (y0 <= y + h / 2.0 <= y1) or w < 1.5 * h or y + h / 2.0 >= 0.9 * H:
-            continue
-        if x1 - 0.01 * W <= x <= x1 + BESIDE_REACH * W:
-            return "right"
-        if x0 - BESIDE_REACH * W <= x + w <= x0 + 0.01 * W:
-            return "left"
-    return None
-
-
 def archetype_for(composition: dict, domain: str) -> str:
     """The layout archetype (candidate_generator.ARCHETYPES) that follows
     the master's composition. In order: left-aligned text → left; a large

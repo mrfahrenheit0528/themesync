@@ -391,42 +391,6 @@ def _resolve_logos(logo_images: list, template_image: str, detected_layout_nodes
             "source": f"Stage 0b crop of {len(row)} logo(s), conf={confs}"}
 
 
-def _arrange_rows(nodes: list, header_side: str, logos: dict) -> None:
-    """
-    Puts pairs of nodes on one line (cassowary_engine's `row`; notes §3.57):
-      - the organisation text beside the logo row, on the side the master
-        has it (`header_side`); the logos' box is cut to their natural width
-        so the text sits right against them;
-      - the certificate number beside the date, one at each margin, as on
-        printed certificates.
-    In place; a node keeps its Spatial Hierarchy Index.
-    """
-    def find(*keys):
-        return next((n for n in nodes if any(k in n["node_id"] for k in keys)), None)
-
-    logo = next((n for n in nodes if n.get("structural_class") == "image_node" and "Logo" in n["node_id"]), None)
-    header = find("Organization_Header", "Issuing_Organization")
-    if header_side and logo and header:
-        paths = (logos.get("row") if "Logos" in logo["node_id"] else None) or \
-                ([logos["primary"]] if logos.get("primary") else [])
-        aspects = []
-        for path in paths:
-            try:
-                with Image.open(path) as im:
-                    aspects.append(im.width / max(1, im.height))
-            except OSError:
-                pass
-        if aspects:
-            h = float(logo["bbox"][3])
-            logo["bbox"][2] = round(h * sum(aspects) + 0.25 * h * (len(aspects) - 1), 2)
-        header["row"] = {"with": logo["node_id"], "side": header_side}
-        header["text_align"] = "left" if header_side == "right" else "right"
-    date, number = find("Date_Issued"), find("Certificate_ID")
-    if date and number:
-        number["row"] = {"with": date["node_id"], "side": "right", "split": True}
-        date["text_align"], number["text_align"] = "left", "right"
-
-
 def _stack(nodes: list) -> list:
     return sorted((n for n in nodes if n.get("structural_class") not in ("repeating_group", "decor")),
                   key=lambda n: n["spatial_hierarchy"])
@@ -756,16 +720,9 @@ class OrchestrationSession:
                 # archetype); only GNN and mapping use its structure.
                 self.composition = structure_mapping.master_composition(self.detected_nodes, mw, mh)
                 self.preferred_archetype = structure_mapping.archetype_for(self.composition, self.domain)
-                logo_row = _select_logo_row(self.detected_nodes, mh)
-                # Logos and organisation text on one line, like the master
-                # (every condition, as with the archetype; notes §3.57)
-                side = structure_mapping.header_beside_logos(self.detected_nodes, mw, mh, logo_row)
-                if side:
-                    self.composition = dict(self.composition, header_beside_logos=side,
-                                            evidence=self.composition.get("evidence", [])
-                                            + [f"organisation text {side} of the logo row"])
                 if self.use_structure:
-                    self.structure = structure_mapping.master_structure(self.detected_nodes, mw, mh, logo_row)
+                    self.structure = structure_mapping.master_structure(
+                        self.detected_nodes, mw, mh, _select_logo_row(self.detected_nodes, mh))
         else:
             self.timings["stylistic_markers"] = 0.0
         self.structure_guided = bool(self.structure) and self.use_structure
@@ -796,7 +753,6 @@ class OrchestrationSession:
         self.base_nodes, self.timings["instantiation"] = stage_instantiate(
             self.payload_path, self.canvas_w, self.canvas_h,
             detected_logo_ratio=self.logos["ratio"], logo_source=self.logos["source"])
-        _arrange_rows(self.base_nodes, self.composition.get("header_beside_logos"), self.logos)
 
         # Stage 2
         structure = self.structure if self.use_structure else None
