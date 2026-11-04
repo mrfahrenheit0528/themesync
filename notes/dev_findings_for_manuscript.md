@@ -1418,3 +1418,31 @@ text.
 - **Known text-fit limit (J1):** at the raised limits, very long event-ID
   names shrink to about 3.5 pt; the templates fit text by shrinking. The
   manuscript already names long names as a limitation.
+
+## L. Reference [7], Pomelli (2026-11-04, reprint of pp.2 and 13)
+
+The printed Chapter 1 cited Pomelli with a 2024 date, a title that does not
+exist ("Pomelli: exploring semantic style in automated user interfaces"), a
+URL that returns "Page not found" (`labs.google/pomelli/about`), and a
+description (semantic modelling for UI component styles) that does not
+match the product. Pomelli is an AI experiment from Google Labs and Google
+DeepMind, announced on 28 October 2025. A business enters its website, and
+Pomelli builds a "Business DNA" profile (tone, fonts, imagery, colours) and
+then generates editable on-brand marketing assets.
+
+Applied in `manuscript/Thesis Latex/` (uncommitted, for the user):
+- `chapter1.tex`, p.2: "Pomelli analyzes a business website to build a
+  "Business DNA" profile of its tone, fonts, imagery, and colors, then
+  generates on-brand marketing assets that are editable [7]."
+- `references.bib`: key `GooglePomelli2025`. Google Labs. 2025. *Create
+  on-brand marketing content for your business with Pomelli*. Google.
+  Retrieved November 4, 2026 from
+  https://blog.google/technology/google-labs/pomelli/. The post's
+  authors are Daniel Adonai (Google Labs) and Bea Alessio (Google DeepMind).
+  The corporate author keeps the entry at [7]; the individual names would
+  move it to [1] and renumber Chapter 1.
+- A local rebuild against an unedited build changed only pp.2 and 13 (text
+  compared page by page; 112 pages).
+- In Prism, replace only this one entry in `references.bib`, and the
+  sentence in Chapter 1. Prism's bib has a few URLs the local copy lacks
+  (ITU-T P.800, Cohen), so don't replace the whole file.
