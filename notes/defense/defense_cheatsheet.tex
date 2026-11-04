@@ -1,0 +1,269 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=1.7cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{needspace}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{navy}{HTML}{1F2A44}
+\definecolor{coral}{HTML}{E4572E}
+\definecolor{soft}{HTML}{F3F4F7}
+
+\titleformat{\section}{\large\bfseries\color{navy}}{\thesection}{0.6em}{}[\vspace{-0.4em}{\color{coral}\rule{\linewidth}{1pt}}]
+\titleformat{\subsection}{\normalsize\bfseries\color{navy}}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{1.0em}{0.5em}
+\titlespacing*{\subsection}{0pt}{0.7em}{0.25em}
+\setlist{nosep,leftmargin=1.3em,topsep=2pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\renewcommand{\arraystretch}{1.15}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\color{navy}ThemeSync: defense cheat sheet}
+\rhead{\small\color{navy}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newtcolorbox{key}[1][]{colback=soft,colframe=navy,boxrule=0.6pt,arc=2pt,left=6pt,right=6pt,top=4pt,bottom=4pt,#1}
+\newtcolorbox{trap}{colback=coral!7,colframe=coral,boxrule=0.6pt,arc=2pt,left=6pt,right=6pt,top=3pt,bottom=3pt}
+\newcommand{\Q}[1]{\par\smallskip\textbf{\color{navy}Q: #1}\par}
+\newcommand{\A}{\textbf{A:} }
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries\color{navy} ThemeSync: Defense Cheat Sheet}\\[2pt]
+{\small Hermoso, Quite, Tercero \;$\cdot$\; based on Manu 0411.3 (printed) and the system on \texttt{main} \;$\cdot$\; 2026-11-04}
+\end{center}
+
+\begin{key}
+\textbf{How to use this.} Don't memorize sentences. Know the \emph{beats}, the \emph{reason for each method}, and the \emph{numbers} in Section 7. Answer in short sentences: one point each. If you don't know, say what you do know and what the study did not measure.
+\end{key}
+
+%=====================================================
+\section{The panel and what they will check}
+
+\begin{tabularx}{\linewidth}{@{}p{3.4cm}p{4.6cm}X@{}}
+\toprule
+\textbf{Panelist} & \textbf{Background} & \textbf{Likely focus} \\
+\midrule
+Mr.\ Joseph Jessie S.\ Oñate, MSc (Chairman) & AI, NLP, remote sensing, data viz; heads the AI Research Center; deep-learning segmentation (RAU-Net) & YOLO and GNN training, the 200-image dataset, overfitting, boxes vs.\ segmentation masks, the CGL domain gap, why keep the GNN \\
+Dr.\ Rosel O.\ Onesa (Member 1) & CCS OIC Dean; data science and NLP & Statistics (Wilcoxon, Holm, Kendall's $W$), sample sizes, purposive sampling, data quality, choice of $k$, the OCR \\
+Mr.\ Allan O.\ Ibo Jr., MSc (Member 2) & CSPC Web and Social Media Administrator & Real use by a pubmat team, output formats and print, Canva comparison, where it runs, the dashboard's ease of use \\
+\bottomrule
+\end{tabularx}
+
+\smallskip
+\textbf{They will check their own May comments} (RSC sheet). Have the page ready:
+\begin{itemize}
+\item Sizes and font in the Visual DNA: p.45 and Figure 2 (p.56). \quad Pomelli: p.2, ref.\ [7] on p.13.
+\item How the Visual DNA's correctness is ensured: \emph{Validation of Hybrid Visual DNA Correctness}, p.45--46 (elbow method; JSON Schema).
+\item Training data and a sample dataset: p.49--52 and Appendix C (p.112).
+\item Evaluation by experts: Phase 4 (p.60), MOS (p.64), Statistical Treatment (p.65), results p.93--99.
+\item Correct evaluation metrics: IoU limited to Phase 1 (p.62); F1 defined by constraint satisfaction (p.63).
+\end{itemize}
+Our sample signatories in the dashboard include ``Dr.\ Rosel O.\ Onesa, Dean, College of Computer Studies''. Expect it to be noticed.
+
+%=====================================================
+\section{The question you cannot avoid: the experts preferred the baseline}
+
+\textbf{Expect:} ``Your own experts rated the version without your method higher. What did the thesis achieve?''
+
+\begin{key}
+\begin{enumerate}
+\item \textbf{We were rigorous.} The statistical plan was fixed and committed (\texttt{b9a60ab}) before the scores were imported, and we report the result as it came out.
+\item \textbf{What it means.} Following the poster's structure does not, by itself, make a better certificate or ID. Experts judge the target format on its own, and they penalized uneven gaps. This is Conclusion 3, and it is a valid finding.
+\item \textbf{Why our metric missed it.} Formula 3.11 scores collision, alignment, the \emph{amount} of whitespace and legibility, but not how \emph{evenly} the gaps are spread. It still agreed in direction: the baseline also had a slightly better fitness (0.0855 vs.\ 0.0879, lower is better). Post hoc: mapping + GNN left a larger largest gap in 23 of 32 pairs.
+\item \textbf{What still holds.} SO1 and SO2 were met: the structure transfers, all 64 rated layouts are valid, edits are never lost, and re-solves are real-time. The designer can fix the spacing in a few edits, and the system keeps them: that is the ``stateful refinement'' in the title.
+\end{enumerate}
+\end{key}
+
+\begin{trap}
+\textbf{``So remove the GNN?''} Don't agree. The GNN does reduce structure error (0.050$\to$0.036 held out; 0.117$\to$0.045 on IDs). The study tested mapping and GNN \emph{together}, so it cannot separate them; Recommendation 3 compares mapping alone, mapping + GNN, and the baseline.\\[2pt]
+\textbf{``Have you fixed it?''} An even-gap step exists on a separate branch, built after the evaluation. It has not been rated, so we claim no result. Don't present it as an improvement.\\[2pt]
+\textbf{``Was SO3 met?''} SO3 was \emph{to evaluate}. The evaluation was carried out fully as planned; its result did not support the mapping + GNN condition. ``Carried out'' (objective) is not the same as ``supported'' (result).
+\end{trap}
+
+%=====================================================
+\section{Part 1: the one-minute story}
+
+\textbf{Four beats:} \textbf{Problem $\to$ Theme $\to$ Sync $\to$ Results.}
+\begin{itemize}
+\item \textbf{Problem:} materials redesigned by hand; a theme change can undo manual edits.
+\item \textbf{Theme:} poster in $\to$ Visual DNA $\to$ certificate or event ID out.
+\item \textbf{Sync:} you move one element; the rest re-arrange around it, and earlier edits stay.
+\item \textbf{Results:} valid, fast; next to fix is the spacing.
+\end{itemize}
+
+\begin{key}
+\small
+Student organizations make the same materials again and again: a poster for an event, then the certificates and IDs that go with it, each redesigned by hand. And in most tools, a change to the theme can undo the designer's manual adjustments.
+
+ThemeSync is a graph-based design orchestration framework that addresses this in two parts. \textbf{Theme:} it reads the organization's master poster (its colours, logos, fonts, and the arrangement of its elements) and builds a Visual DNA from it. That DNA generates new layouts: certificates or event IDs. \textbf{Sync:} every element is a node in a graph. When the designer moves or resizes one, it becomes a Hard constraint, and a constraint solver re-arranges every Soft element around it in real time, without losing earlier edits. This repeats until the designer is satisfied.
+
+We designed, built, and evaluated it. Every layout stayed valid, and the solver recalculated each edit within a tenth of a second. Four expert designers' ratings showed us that even spacing is what we must improve next.
+\end{key}
+
+\begin{trap}
+``Within a tenth of a second'' is the \emph{solver}: every recalculation (median 0.5\,ms, max 2.1\,ms). A \emph{full} edit (re-solve, re-score, re-draw, save) has a median of 91\,ms, all within 1\,s; only 47\% of re-solving edits finished within 0.1\,s. Never say ``every edit takes under a tenth of a second''.
+\end{trap}
+
+%=====================================================
+\section{Part 2: the system, stage by stage}
+
+\textbf{The chain:} Poster $\to$ colours, details, elements $\to$ \textbf{Visual DNA} $\to$ structure mapping + GNN $\to$ the user's content $\to$ \textbf{Cassowary} $\to$ \textbf{6 candidates} $\to$ \textbf{Formula 3.11} $\to$ render $\to$ designer edits $\to$ \textbf{state machine} $\to$ re-solve $\to$ repeat.
+
+\subsection*{Step 1: reading the master poster (Phase 1)}
+\textbf{1. Palette: K-Means in CIE L*a*b* (F3.1).} Groups pixels into primary, secondary and accent colours. \emph{Why Lab:} distance in Lab matches perceived difference; RGB doesn't. \emph{Why K-Means:} directly minimizes within-cluster spread (WCSS); simple; seeded so the same poster always gives the same palette. $k$ = 2 to 6, best of five seeded starts, chosen at the elbow (drawn in the Step 3 report). This answers the May ``correctness'' comment (p.45).
+
+\textbf{2. Stylistic markers: SIFT (F3.2).} Keypoints (corners, dense texture) measure where the poster is visually busy: (a) a saliency map of the text-free background for the legibility penalty; (b) ranking the motifs YOLO found; (c) choosing artwork to carry over. \emph{Why SIFT:} scale-invariant, so detail density compares fairly across poster sizes; no training; deterministic. \emph{Why not SURF:} patented, outside OpenCV's standard build; SIFT covers the need.
+
+\textbf{3. Elements: YOLOv8s + Tesseract OCR.} Boxes for logo, text, underlay, embellishment; OCR labels which text box is title, header or details. \emph{Why YOLOv8s:} one-stage, fast, fits an RTX 3060, and it outputs \emph{boxes}, which is exactly what the solver needs (x, y, w, h). \emph{1024\,px:} small logos vanish at 640. \emph{Own 200 images:} the CGL-only detector made \textbf{zero} detections at 0.25 on real posters (domain gap: CGL is e-commerce). mAP50 0.728; mean IoU 0.644; recall 75\%. Logos strongest (IoU 0.844), embellishments weakest (0.445). Better annotations helped more than a bigger model.
+
+\textbf{4. Background (Stage 0c).} Text removed; the background rebuilt from the poster's borders (inpainting); title artwork and motifs kept as separate assets.
+
+\textbf{Hybrid Visual DNA} = extracted (palette, saliency, structure, markers) + user-entered (font, weight, size). The user's part is validated by JSON Schema before anything runs: weights 100--900, sizes 8\,px to 15\% of the shorter side, every field present and within its limit (p.46).
+
+\subsection*{Step 2: building the layout (Phases 2--3)}
+\textbf{5. Structure mapping.} Target elements with a counterpart on the poster (logo row, header, title, details) are pinned at the poster's positions; the rest go in reading order between them. This is what makes the certificate look like it came from the same poster.
+
+\textbf{6. GNN (F3.6--3.8).} Refines the unmapped elements. Node = [x, y, w, h, colour, saliency]; edge = [$\Delta$x, $\Delta$y, IoU, alignment]. Message passing: an MLP computes messages, they are aggregated, a GRU updates each node. Trained on CGL from deliberately distorted starts; output registered back to the poster's anchors. \emph{Why a graph network:} a layout is a set of elements and relations with a varying count; a GNN handles any number of nodes and is order-invariant. Held-out position error 0.050$\to$0.036.
+
+\textbf{7. Node instantiation.} The content payload becomes nodes: a \emph{Spatial Hierarchy Index} (reading order, 0 = logo row \ldots\ 8 = signatures) and a baseline size per role. CGL labels every text as ``text'', so hierarchy is carried by size and order (``implicit geometric hierarchy'').
+
+\textbf{8. Cassowary (F3.3--3.5).} Relations become linear equations and inequalities, solved for every x, y, w, h. Hard = required (never broken); Soft = weighted (violation minimized). \emph{Why:} built for interactive layout (Apple's Auto Layout is based on it), native required/weighted constraints, incremental re-solve. Median 0.5\,ms.
+
+\textbf{9. Six candidates + Formula 3.11.} Vary archetype, margin, vertical rhythm, motif arrangement. The poster's composition picks the archetype; Formula 3.11 ranks within it. Penalties: collision (overlap area), alignment (distance to grid), whitespace (deviation from 0.65), legibility (saliency under text). Weights (code, not printed): $\alpha$ = 50, $\beta$ = 2, $\gamma$ = 1, $\delta$ = 1.5.
+
+\textbf{10. Rendering.} SVG with palette, fonts, rebuilt background, motifs and title artwork; PNG/PDF via cairosvg.
+
+\textbf{11. State machine (F3.9--3.10).} Only a \emph{finished} action is an event (drop, end of resize, lock, text edit); drag streams are ignored. The edited element becomes Hard, Cassowary re-solves the rest, a new state is appended to the JSON chain. Undo appends an older state; nothing is erased.
+
+\subsection*{Step 3: the Evaluation Report}
+Formula 3.11 term by term, F1 per element, manual edits kept, latency, the elbow graph, schema checks; plus the mail-merge download.
+
+\begin{trap}
+SIFT does \textbf{not} find the logos; YOLO does. The detector is COCO-pretrained, \textbf{not} CGL-pretrained; CGL trains only the GNN. OCR words are \textbf{never} placed in the output; content comes from the user's validated payload. The GNN's gain after anchoring is small (0.075 vs.\ 0.081 for interpolation); colour and saliency are per-layout, not per-element (stated limitation).
+\end{trap}
+
+\textbf{Cross-cutting questions.}
+\Q{Where exactly is the graph?}
+\A Twice: in the GNN (elements = nodes, relations = edges) and in the solver's constraints, which follow the same relations.
+\Q{Why not generative AI?}
+\A It produces pixels: flat, not editable, different each run. Administrative documents need exact names, editable vector elements, and the same output for the same input.
+\Q{What is ``real-time''?}
+\A Nielsen's limits: 0.1\,s feels instant (each solver recalculation) and 1.0\,s keeps the task uninterrupted (each full edit). Both were met.
+
+%=====================================================
+\section{Part 3: methodology and evaluation per objective}
+
+\textbf{Research design: Constructive.} The problem required \emph{building} an artifact and then evaluating it, not observing existing tools. Phase 4 is a blind, paired comparison inside that design.
+
+\textbf{Four phases:} (1) extraction and graph construction; (2) CSP and state synchronization; (3) heuristic testing, 96 runs: 16 posters $\times$ 2 formats $\times$ 3 conditions; (4) expert validation, 64 layouts.
+
+\subsection{SO1: Relational Logic and Feature Extraction model}
+\textbf{Data:} 40-image validation split (607 elements); 2,900 held-out CGL layouts (a seeded 5\%); 16 unseen posters, three conditions (mapping + GNN, mapping only, baseline).\\
+\textbf{Metrics:} IoU, mAP50, recall for the detector (Phase 1 only); position error for the GNN; structure error for the transfer.\\
+\textbf{Results:} detector as above; GNN 0.050$\to$0.036; structure error 0.117$\to$0.045 (IDs), 0.089$\to$0.056 (certificates); mapping + GNN equals mapping only, so the transfer comes from the mapping, and the GNN moved unmapped elements by at most 7.5\% of the height.\\
+\textbf{Verdict:} met, with caveats: in-domain data was needed; artwork and motifs still need human review; the GNN changed final layouts little.
+
+\Q{Why is IoU used only in Phase 1?}
+\A A generated layout in a new format has no ground-truth positions, so there is nothing to overlap with.
+\Q{Is 200 images enough? Overfitting?}
+\A A held-out 40-image validation split; mAP50 rose from 0.486 to 0.728 when annotations improved. It is small; Recommendation 1 expands it. COCO pretraining helps with little data.
+\Q{Why boxes, not segmentation?}
+\A The solver works with boxes; a mask would be reduced to a box anyway. Boxes also match the CGL four-class schema.
+\Q{How were annotations kept consistent?}
+\A Written class definitions; two annotators, the group leader reviewed; an outside designer checked 15 images (boxes correct on all 15, classes on 10), then the set was expanded to 200 and re-annotated (p.51).
+
+\subsection{SO2: Reactive Layout Synthesis engine}
+\textbf{Data:} the 64 rated layouts; the synthetic stress test; 34 sessions $\times$ 40 edits = 1,360 edits on the RTX 3060 workstation.\\
+\textbf{Metrics:} F1 defined by constraint satisfaction (TP: generated and violating nothing; FP: overlaps or leaves the canvas; FN: missing); latency against 0.1\,s and 1.0\,s.\\
+\textbf{Results:} F1 = 1.0 on all 64; every edit kept through later re-solves; solver 100\% within 0.1\,s; full edits 100\% within 1\,s (61\% within 0.1\,s). Stress test: ID header overflows past 48 characters per line; certificate signature blocks overlap from six.\\
+\textbf{Verdict:} met; limits are text fit and the time of re-solving edits.
+
+\Q{F1 is 1.0 everywhere. Isn't that a weak metric?}
+\A It checks structural validity, which Cassowary guarantees. It can't see text overflow, so we added a text-fit check (Tables 10--11), and Recommendation 2 measures text fit with the F1.
+\Q{Why are re-solves slower than the solver?}
+\A Re-scoring legibility against the poster's background takes most of the time; on the synthetic theme a full edit took about 4\,ms. Recommendation 2: cheaper legibility scoring.
+
+\subsection{SO3: Heuristic Fitness Function and expert validation}
+\textbf{Data:} Phase 3 battery (96 runs, RTX A5000 server); Phase 4 ratings.\\
+\textbf{Fitness:} baseline slightly better (p = 0.030). The fitness alone could not pick archetypes (top candidates tied), so the poster's composition picks the archetype and the fitness ranks within it.\\
+\textbf{Calibration (Table 15):} rule fixed in advance: keep a weight change only if the selected layouts improve on one design rule and worsen on none. No change was kept; halving or doubling any weight changed $\le$1 of 64. The weights are stable; improving the function needs new \emph{terms}, not new weights.\\
+\textbf{Phase 4 design:} 4 professional designers; 16 posters by purposive sampling (real school posters; unseen, verified by an image-duplicate test; text fits both formats) $\times$ 2 formats $\times$ 2 conditions = 64 layouts $\times$ 3 parameters = 768 ratings. Blind: random codes, page order randomized per expert, pages from the same poster never adjacent; printed packets with the master beside each layout; 5-point scale adapted from ITU-T P.800.
+
+\subsection*{The statistics, in plain words}
+\begin{itemize}
+\item \textbf{MOS} = mean rating (with SD), per parameter and overall (the mean of the three). Overall 3.53, between Acceptable and Good.
+\item \textbf{Kendall's $W$}: do the experts \emph{order} the layouts the same way? 0 = no, 1 = perfectly. Overall 0.630 = moderate (Schmidt: 0.5--0.7). ICC(2,1) 0.16--0.31 and Krippendorff's $\alpha$ 0.01--0.23 are low: they ranked alike but used the scale differently (expert means 2.88 to 4.32). So the paired comparison is more dependable than absolute MOS values.
+\item \textbf{Wilcoxon signed-rank (two-sided):} ratings are ordinal; the layouts are matched pairs (same poster, same format); 32 pairs is small; no normality assumed. Each layout's score = mean of four experts (the layout is the unit, so the 768 ratings are not treated as independent). Two-sided: no direction assumed, which mattered, since the result went the opposite way.
+\item \textbf{Holm correction:} four tests (overall + three parameters) inflate false positives; Holm controls that and is less conservative than Bonferroni. Overall was named the main test in advance.
+\item \textbf{Rank-biserial $r$:} effect size from $-1$ to $+1$; negative favours the baseline; $|r| \ge 0.5$ is large. Overall $r = -0.95$: 25 pairs favoured the baseline, 2 mapping + GNN, 5 equal.
+\item \textbf{Sensitivity:} paired t-test and Bonferroni agreed. Without the one identical pair, Hierarchy became borderline significant (p = 0.046).
+\item \textbf{Post hoc (exploratory, uncorrected):} largest gap 0.072 vs.\ 0.020; gap CV 0.47 vs.\ 0.00; pairs whose gaps grew lost more MOS (Spearman $\rho$ $-0.42$ to $-0.45$). Correlational: it does not prove the cause.
+\end{itemize}
+
+\Q{Why only four experts?}
+\A Nielsen and Molich: three to five evaluators find most problems; the CGL studies used designer panels. It is a stated limitation. Thirty-two pairs can miss small effects, which is why a non-significant result is reported as ``not detected''; the main effect, though, was large and significant.
+\Q{Likert data is ordinal. Can you average it?}
+\A The MOS is the ITU-T P.800 convention. The test itself uses ranks (Wilcoxon), which respects the ordinal scale; the t-test was only a sensitivity check.
+\Q{Why not a separate test per format?}
+\A Planned in advance: both formats tested together, each format's MOS reported without a test, so as not to multiply tests.
+\Q{Isn't purposive sampling biased?}
+\A The criteria ensured valid test inputs (real, unseen, text that fits). It does not claim to represent all posters; that is a limitation.
+\Q{How do you know the difference came from your method?}
+\A The baseline shared everything else (archetype, palette, background, markers); only the mapping and GNN differed. Because the GNN's output is registered to the anchors, the difference reflects mainly the mapping.
+
+%=====================================================
+\section{Pomelli (the panel asked for it in May)}
+Pomelli is a Google Labs and Google DeepMind experiment (announced 28 October 2025). A business enters its website; Pomelli builds a ``Business DNA'' (tone, fonts, imagery, colours) and generates editable on-brand marketing images. \textbf{Answer:} ``Pomelli is industry context. It builds a brand profile from a website and generates marketing images. ThemeSync starts from the organization's own master poster, keeps each element editable, solves the layout under constraints, and keeps the designer's edits.''
+
+%=====================================================
+
+\needspace{14\baselineskip}
+\section{Numbers to know}
+\begin{tabularx}{\linewidth}{@{}Xr@{}}
+\toprule
+Detector (YOLOv8s, 200 images, 160/40): mAP50 / mean IoU / recall & 0.728 / 0.644 / 75\% \\
+CGL-only detector on real posters (detections at 0.25) & 0 \\
+GNN position error, 2,900 held-out layouts & 0.050 $\to$ 0.036 \\
+GNN unmapped placement vs.\ interpolation (anchors exact) & 0.075 vs.\ 0.081 \\
+Structure error, mapping + GNN vs.\ baseline: event ID / certificate & 0.045 vs.\ 0.117 / 0.056 vs.\ 0.089 \\
+F1, all 64 rated layouts & 1.0 \\
+Solver median / max; full edit median; full edits within 1\,s & 0.5\,ms / 2.1\,ms; 91\,ms; 100\% \\
+Re-solving edits within 0.1\,s; opening a layout & 47\%; 4.6\,s \\
+Stress limits: ID header / certificate signatures & 48 chars per line / overlap from 6 \\
+Fitness, baseline vs.\ mapping + GNN (lower is better) & 0.0855 vs.\ 0.0879 (p = 0.030) \\
+Weights $\alpha, \beta, \gamma, \delta$ & 50, 2, 1, 1.5 \\
+Phase 4: experts / posters / layouts / ratings & 4 / 16 / 64 / 768 \\
+MOS overall, baseline vs.\ mapping + GNN & 3.73 vs.\ 3.33 \\
+Constraint and Whitespace Harmony & 3.77 vs.\ 2.92 \\
+Wilcoxon overall: $p_{Holm}$ / $r$; pairs B$>$M, M$>$B, equal & $<$0.001 / $-0.95$; 25, 2, 5 \\
+Kendall's $W$ overall & 0.630 (moderate) \\
+Largest gap, mapping + GNN vs.\ baseline (post hoc) & 0.072 vs.\ 0.020 \\
+\bottomrule
+\end{tabularx}
+
+%=====================================================
+
+\needspace{10\baselineskip}
+\section{Never say}
+\begin{itemize}
+\item ``Every edit takes under 0.1 s.'' (Only the solver does.)
+\item ``The detector was trained on CGL.'' (COCO-pretrained; CGL trains the GNN.)
+\item ``SIFT detects the logos.'' (YOLO does.)
+\item ``The GNN made the layouts better.'' (It reduced structure error; the experts preferred the baseline.)
+\item ``We already fixed the spacing.'' (Built after the evaluation, never rated.)
+\item ``The weights were tuned to the experts' scores.'' (Calibrated on the formula's own terms, before any rating was analyzed.)
+\end{itemize}
+
+\end{document}
