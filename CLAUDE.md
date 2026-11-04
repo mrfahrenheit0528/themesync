@@ -27,10 +27,13 @@ code; notes go stale.
 
 ## Where things stand (2026-10-10)
 
-**Next (user, 2026-11-04):** the manuscript chat edits the manuscript from
-`notes/dev_findings_for_manuscript.md` sections J and K (only the changed
-pages are reprinted, so edits stay page-neutral); then a discussion of the
-whole system and defense preparation.
+**The pre-oral defense (POD) is passed** (user, after 2026-11-04). The
+panel said the manuscript is "perfect" and the system good. The user wants
+to push the system further, but **waits for the POD's RSC sheet before
+acting**. Next milestone: the final oral defense (FOD). The defense prep is
+`notes/defense/defense_cheatsheet.pdf`; the Pomelli reference fix is dev
+findings L. Merging `refinements` (below) is now possible, but wait for the
+user and the RSC.
 
 Read first: `notes/system_development_progress.md`, then the tail of
 `notes/gnn_fixes_and_methodology_notes.md`, which is chronological (latest
